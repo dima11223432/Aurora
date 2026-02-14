@@ -1,6 +1,6 @@
 env: "local"
 
-storage_pass: ""
+storage_pass: "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable"
 
 auth:
   jwt_secret: "test-secret"

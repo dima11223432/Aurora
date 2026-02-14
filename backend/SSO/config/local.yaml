@@ -1,6 +1,6 @@
 env: "local"
 
-storage_pass: ""
+storage_pass: "postgres://postgres:pass@localhost:5432/users?sslmode=disable"
 token_ttl: 1h
 
 grpc:
