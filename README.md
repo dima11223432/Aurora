@@ -1,7 +1,5 @@
-Отлично! Вот README.md только с миграциями и запуском через make, без Docker:
-
 ````markdown
-# Название проекта
+# Aurora
 
 Микросервисная архитектура с API Gateway и SSO (Single Sign-On).
 
@@ -11,6 +9,10 @@
 - PostgreSQL 14+
 - Make
 - [golang-migrate](https://github.com/golang-migrate/migrate) для миграций
+
+```bash
+git clone https://gitlab.informatics.ru/2025-2026/ydex/s103d/final-project-t1918.git
+```
 
 ```bash
 # Установка migrate (если не установлен)
@@ -23,9 +25,6 @@ go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@lat
 ### Важно! Устанавливаем правильную версию protos
 
 ```bash
-# В корне проекта
-go get github.com/dima11223432/protos@v0.0.10
-go mod download
 
 # Для SSO сервиса
 cd SSO && go get github.com/dima11223432/protos@v0.0.10 && go mod download && cd ..
@@ -34,29 +33,9 @@ cd SSO && go get github.com/dima11223432/protos@v0.0.10 && go mod download && cd
 cd Api_Gateway && go get github.com/dima11223432/protos@v0.0.10 && go mod download && cd ..
 ```
 
-Или одной командой через make:
-
-```bash
-make deps
-```
-
 ## 🗄 Настройка PostgreSQL
 
 ### Создание баз данных
-
-```bash
-# Подключитесь к PostgreSQL
-psql -U postgres -h localhost -p 5432
-
-# Создайте базы данных
-CREATE DATABASE users;
-CREATE DATABASE aurora;
-
-# Выйдите из psql
-\q
-```
-
-Или через make:
 
 ```bash
 make db-create
@@ -95,29 +74,6 @@ make migrate-gateway
 make migrate-aurora
 ```
 
-### Управление миграциями
-
-```bash
-# Создать новую миграцию для SSO
-make migrate-sso-create name=название_миграции
-
-# Создать новую миграцию для Gateway
-make migrate-gateway-create name=название_миграции
-
-# Создать новую миграцию для Aurora
-make migrate-aurora-create name=название_миграции
-
-# Откатить последнюю миграцию SSO
-make migrate-sso-down
-
-# Откатить последнюю миграцию Gateway
-make migrate-gateway-down
-
-# Проверить статус миграций
-make migrate-sso-version
-make migrate-gateway-version
-```
-
 ### Если миграции не применяются
 
 Если вы видите сообщение "no migrations to apply", проверьте:
@@ -128,8 +84,8 @@ ls -la Api_Gateway/migrations/
 ls -la SSO/migrations/
 
 # 2. Убедитесь, что файлы имеют правильный формат:
-#    000001_init.up.sql
-#    000001_init.down.sql
+#    1_init.up.sql
+#    1_init.down.sql
 
 # 3. Принудительно сбросьте версию (если нужно)
 migrate -database "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable" \
@@ -144,7 +100,7 @@ make migrate-gateway
 ### Запуск SSO сервиса
 
 ```bash
-# Из корня проекта
+# Из backend
 make run-sso
 
 # Или вручную:
@@ -157,7 +113,7 @@ go run ./cmd/sso/main.go --config=./config/local.yaml
 ### Запуск API Gateway
 
 ```bash
-# Из корня проекта
+# из backed
 make run-gateway
 
 # Или вручную:
