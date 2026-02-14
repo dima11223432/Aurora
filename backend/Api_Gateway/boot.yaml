@@ -1,0 +1,19 @@
+# boot.yaml
+grpc:
+  - name: API_Service
+    port: 8080
+    enabled: true
+    commonService:
+      enabled: true
+    sw:
+      enabled: true
+    docs:
+      enabled: true
+    prom:
+      enabled: true
+    middleware:
+      logging:
+        enabled: true
+      prom:
+        enabled: true
+
