@@ -65,7 +65,7 @@ make db-create
 ### Проверка создания баз
 
 ```bash
-psql -U postgres -h localhost -p 5432 -c "\l" | grep -E "users|ens|aurora"
+psql -U postgres -h localhost -p 5432 -c "\l" | grep -E "users|aurora"
 ```
 
 ## 📊 Миграции
@@ -88,7 +88,7 @@ make migrate-all
 # SSO миграции (база users)
 make migrate-sso
 
-# API Gateway миграции (база ens)
+# API Gateway миграции (база aurora)
 make migrate-gateway
 
 # Aurora миграции (база aurora)
@@ -132,7 +132,7 @@ ls -la SSO/migrations/
 #    000001_init.down.sql
 
 # 3. Принудительно сбросьте версию (если нужно)
-migrate -database "postgres://postgres:pass@localhost:5432/ens?sslmode=disable" \
+migrate -database "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable" \
   -path ./Api_Gateway/migrations force 0
 
 # 4. Примените миграции заново
@@ -191,14 +191,14 @@ make help
 make deps              # установить все Go-зависимости (включая protos v0.0.10)
 
 # Базы данных
-make db-create         # создать все БД (users, ens, aurora)
+make db-create         # создать все БД (users, aurora)
 make db-list           # показать список БД
 make db-drop           # удалить все БД (осторожно!)
 
 # Миграции
 make migrate-all       # применить все миграции
 make migrate-sso       # миграции для users DB (SSO)
-make migrate-gateway   # миграции для ens DB (Gateway)
+make migrate-gateway   # миграции для aurora DB (Gateway)
 make migrate-aurora    # миграции для aurora DB
 make migrate-sso-down  # откат последней миграции SSO
 make migrate-gateway-down # откат последней миграции Gateway
@@ -222,30 +222,6 @@ make test-gateway     # тесты Gateway
 make fmt              # форматирование кода
 make lint             # запуск линтера
 make clean            # очистка
-```
-
-## 📝 Конфигурация
-
-### SSO сервис (`SSO/config/local.yaml`)
-
-```yaml
-env: "local"
-database_url: "postgres://postgres:pass@localhost:5432/users?sslmode=disable"
-grpc:
-  port: 44044
-  timeout: 1h
-```
-
-### API Gateway (`Api_Gateway/config/local.yaml`)
-
-```yaml
-server:
-  port: 8080
-database:
-  ens:
-    url: "postgres://postgres:pass@localhost:5432/ens?sslmode=disable"
-sso:
-  addr: "localhost:44044"
 ```
 
 ## ✅ Проверка работоспособности
@@ -293,7 +269,7 @@ pg_isready -U postgres -h localhost -p 5432
 │   ├── cmd/             # точка входа
 │   ├── config/          # конфигурация
 │   ├── internal/        # внутренний код
-│   └── migrations/      # миграции для ens БД
+│   └── migrations/      # миграции для aurora БД
 ├── SSO/                  # SSO микросервис
 │   ├── cmd/             # точка входа
 │   ├── config/          # конфигурация
