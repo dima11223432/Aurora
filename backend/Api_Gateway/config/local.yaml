@@ -1,6 +1,6 @@
 env: "local"
 
-storage_pass: "postgres://postgres:pass@localhost:5432/ens?sslmode=disable"
+storage_pass: ""
 
 auth:
   jwt_secret: "test-secret"
