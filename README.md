@@ -50,7 +50,6 @@ psql -U postgres -h localhost -p 5432
 
 # Создайте базы данных
 CREATE DATABASE users;
-CREATE DATABASE ens;
 CREATE DATABASE aurora;
 
 # Выйдите из psql
@@ -76,8 +75,7 @@ psql -U postgres -h localhost -p 5432 -c "\l" | grep -E "users|ens|aurora"
 Проект использует [golang-migrate](https://github.com/golang-migrate/migrate) для управления миграциями:
 
 - `SSO/migrations/` - миграции для базы `users` (SSO сервис)
-- `Api_Gateway/migrations/` - миграции для базы `ens` (API Gateway)
-- `migrations/aurora/` - миграции для базы `aurora` (опционально)
+- `Api_Gateway/migrations/` - миграции для базы `aurora` (API Gateway)
 
 ### Применение миграций
 
