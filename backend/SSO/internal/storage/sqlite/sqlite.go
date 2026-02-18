@@ -15,7 +15,6 @@ type Storage struct {
 	db *sql.DB
 }
 
-// NOTE:
 // New creates a new instance of the Storage
 func New(storagePath string) (*Storage, error) {
 	const op = "internal.storage.postgres.new"
@@ -33,15 +32,24 @@ func New(storagePath string) (*Storage, error) {
 	}, nil
 }
 
-func (s *Storage) SaveUser(ctx context.Context, email string, Passhash []byte, isAdmin bool) (int64, error) {
+func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "storage.postgres.SaveUser"
 
 	query := `
-	INSERT INTO users (email, pass_hash, is_admin) VALUES ($1, $2, $3) RETURNING id
+	INSERT INTO users (telegram_id, username, first_name, last_name, is_admin) 
+	VALUES ($1, $2, $3, $4, $5) 
+	RETURNING id
 	`
 	var userID int64
 
-	err := s.db.QueryRowContext(ctx, query, email, Passhash, isAdmin).Scan(&userID)
+	err := s.db.QueryRowContext(ctx, query,
+		user.Telegram_id,
+		user.Username,
+		user.First_name,
+		user.Last_name,
+		user.Is_admin,
+	).Scan(&userID)
+
 	if err != nil {
 		return 0, fmt.Errorf("%s: %w", op, err)
 	}
@@ -49,57 +57,72 @@ func (s *Storage) SaveUser(ctx context.Context, email string, Passhash []byte, i
 	return userID, nil
 }
 
-func (s *Storage) User(ctx context.Context, email string) (models.User, error) {
+func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) {
 	const op = "storage.postgres.User"
 
 	query := `
-	SELECT id, email, pass_hash, is_admin FROM users WHERE email = $1
+	SELECT id, telegram_id, username, first_name, last_name, is_admin 
+	FROM users 
+	WHERE telegram_id = $1
 	`
-	row := s.db.QueryRowContext(ctx, query, email)
+
 	var user models.User
-	if err := row.Scan(&user.ID, &user.Email, &user.PassHash, &user.IsAdmin); err != nil {
+	err := s.db.QueryRowContext(ctx, query, telegram_id).Scan(
+		&user.ID,
+		&user.Telegram_id,
+		&user.Username,
+		&user.First_name,
+		&user.Last_name,
+		&user.Is_admin,
+	)
+
+	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.User{}, fmt.Errorf("%s: %w", op, sql.ErrNoRows)
+			return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
 		}
 		return models.User{}, fmt.Errorf("%s: %w", op, err)
 	}
 	return user, nil
 }
 
-func (s *Storage) IsAdmin(ctx context.Context, userID int64) (bool, error) {
+func (s *Storage) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) {
 	const op = "storage.postgres.IsAdmin"
 
 	query := `
-	SELECT is_admin FROM users WHERE id = $1
+	SELECT is_admin 
+	FROM users 
+	WHERE telegram_id = $1
 	`
 
-	var IsAdmin bool
+	var isAdmin bool
 
-	err := s.db.QueryRowContext(ctx, query, userID).Scan(&IsAdmin)
+	err := s.db.QueryRowContext(ctx, query, telegram_id).Scan(&isAdmin)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return false, fmt.Errorf("%s: %w", op, storage.ErrAppNotFound)
+			return false, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
 		}
 		return false, fmt.Errorf("%s: %w", op, err)
 	}
-	return IsAdmin, nil
+	return isAdmin, nil
 }
 
 func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 	const op = "storage.postgres.App"
 
 	query := `
-	SELECT id, name, secret FROM apps WHERE id = $1
+	SELECT id, name, secret 
+	FROM apps 
+	WHERE id = $1
 	`
 
-	var App models.App
+	var app models.App
 
-	err := s.db.QueryRowContext(ctx, query, appID).Scan(&App.ID, &App.Name, &App.Secret)
+	err := s.db.QueryRowContext(ctx, query, appID).Scan(&app.ID, &app.Name, &app.Secret)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return models.App{}, fmt.Errorf("invalid appID")
+			return models.App{}, fmt.Errorf("%s: %w", op, storage.ErrAppNotFound)
 		}
-		return models.App{}, err
+		return models.App{}, fmt.Errorf("%s: %w", op, err)
 	}
-	return App, nil
+	return app, nil
 }

@@ -4,9 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     username TEXT,                      
     first_name TEXT NOT NULL,          
     last_name TEXT,                   
-    is_admin BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    last_login_at TIMESTAMP WITH TIME ZONE  
+    is_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 CREATE INDEX IF NOT EXISTS idx_users_telegram_id ON users (telegram_id);
