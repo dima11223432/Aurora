@@ -19,7 +19,14 @@ message LoginRequest {
 
 message LoginResponse {
   string token = 1;
-  bool is_admin = 2;
+}
+
+message IsAdminRequest {
+  string telegram_id = 1;
+}
+
+message IsAdminResponse {
+  bool is_admin = 1;
 }
 
 
