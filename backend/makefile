@@ -163,6 +163,7 @@ db-create:
 	@echo "$(GREEN)Создание баз данных...$(NC)"
 	psql -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -c "CREATE DATABASE users;" 2>/dev/null || echo "БД users уже существует"
 	psql -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -c "CREATE DATABASE aurora;" 2>/dev/null || echo "БД aurora уже существует"
+	psql -U $(DB_USER) -h $(DB_HOST) -p $(DB_PORT) -c "CREATE DATABASE parser;" 2>/dev/null || echo "БД aurora уже существует"
 	@echo "$(GREEN)Готово!$(NC)"
 
 db-drop:
