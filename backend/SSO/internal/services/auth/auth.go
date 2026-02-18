@@ -9,8 +9,6 @@ import (
 	"fmt"
 	"log/slog"
 	"time"
-
-	"golang.org/x/crypto/bcrypt"
 )
 
 type Auth struct {
@@ -62,18 +60,27 @@ func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, 
 
 	log := a.log.With(
 		slog.String("op", op),
-		slog.Int64("email", user.Telegram_id),
+		slog.Int64("telegram_id", user.Telegram_id),
 	)
 	log.Info("attempting to login User")
 
 	user, err := a.userProvider.User(ctx, user.Telegram_id)
 	if err != nil {
 		if errors.Is(err, storage.ErrUserNotFound) {
-			a.log.Warn("user not found")
-			return "", fmt.Errorf("%s, %w", op, ErrInvalidCredentials)
+			id, err := a.RegisterNewUser(ctx, user)
+			if err != nil {
+				return "", fmt.Errorf("%s, %w", op, err)
+			}
+			user, err = a.userProvider.User(ctx, user.Telegram_id)
+			if err != nil {
+				return "", fmt.Errorf("%s, %w", op, err)
+			}
+
+			slog.Info("user registered successfully", slog.Int64("id", id))
+
+		} else {
+			return "", fmt.Errorf("%s, %w", op, err)
 		}
-		a.log.Error("failed to get user")
-		return "", fmt.Errorf("%s, %w", op, err)
 	}
 
 	app, err := a.appProvider.App(ctx, int64(appID))
@@ -98,13 +105,7 @@ func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, er
 
 	log.Info("attempting to register new user")
 
-	passHash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Error("failed to generate password hash")
-		return 0, fmt.Errorf("%s: %w", op, err)
-	}
-
-	id, err := a.userSaver.SaveUser(ctx, email, passHash, isAdmin)
+	id, err := a.userSaver.SaveUser(ctx, user)
 	if err != nil {
 		if errors.Is(err, storage.ErrUserExists) {
 			log.Warn("user already exists")
@@ -117,15 +118,15 @@ func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, er
 	log.Info("user registered successfully", slog.Int64("user_id", id))
 	return id, nil
 }
-func (a *Auth) IsAdmin(ctx context.Context, UserID int) (bool, error) {
+func (a *Auth) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) {
 	const op = "auth.IsAdmin"
 	log := a.log.With(
 		slog.String("op", op),
-		slog.Int("userID", UserID),
+		slog.Int64("userID", telegram_id),
 	)
 	log.Info("checking id user is admin")
 
-	isAdmin, err := a.userProvider.IsAdmin(ctx, int64(UserID))
+	isAdmin, err := a.userProvider.IsAdmin(ctx, telegram_id)
 	if err != nil {
 		if errors.Is(err, storage.ErrUserNotFound) {
 			log.Warn("user not found")
