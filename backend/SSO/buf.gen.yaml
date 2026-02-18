@@ -13,6 +13,5 @@ plugins:
     out: api/gen
     opt:
       - paths=source_relative
-      - grpc_api_configuration=api/v1/gw_mapping.yaml
       - allow_repeated_fields_in_body=true
       - generate_unbound_methods=true
