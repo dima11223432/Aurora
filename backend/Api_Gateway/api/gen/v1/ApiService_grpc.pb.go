@@ -19,9 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ApiService_Login_FullMethodName               = "/api.v1.ApiService/Login"
-	ApiService_IsAdmin_FullMethodName             = "/api.v1.ApiService/IsAdmin"
-	ApiService_SetPriorityChannels_FullMethodName = "/api.v1.ApiService/SetPriorityChannels"
+	ApiService_Login_FullMethodName   = "/api.v1.ApiService/Login"
+	ApiService_IsAdmin_FullMethodName = "/api.v1.ApiService/IsAdmin"
 )
 
 // ApiServiceClient is the client API for ApiService service.

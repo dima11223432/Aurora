@@ -277,13 +277,11 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_ApiService_Login_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "login"}, ""))
-	pattern_ApiService_IsAdmin_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "is_admin"}, ""))
-	pattern_ApiService_SetPriorityChannels_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "set_priority_channels"}, ""))
+	pattern_ApiService_Login_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "login"}, ""))
+	pattern_ApiService_IsAdmin_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "is_admin"}, ""))
 )
 
 var (
-	forward_ApiService_Login_0               = runtime.ForwardResponseMessage
-	forward_ApiService_IsAdmin_0             = runtime.ForwardResponseMessage
-	forward_ApiService_SetPriorityChannels_0 = runtime.ForwardResponseMessage
+	forward_ApiService_Login_0   = runtime.ForwardResponseMessage
+	forward_ApiService_IsAdmin_0 = runtime.ForwardResponseMessage
 )

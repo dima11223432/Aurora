@@ -20,31 +20,6 @@ service ApiService {
       body:"*"
     };
   }
-  rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse) {
-    option (google.api.http) = {
-      post: "/v1/set_priority_channels"
-      body:"*"
-    };
-  }
-  rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse) {
-    option (google.api.http) = {
-      post: "/v1/get_recommendated_posts"
-      body:"*"
-    };
-  }
-}
-
-message GetRecommendatedPostsRequest {
-}
-message GetRecommendatedPostsResponse {
-  repeated Post posts = 1;
-}
-
-message SetPriorityChannelsRequest {
-  repeated string priority_channels = 1;
-}
-
-message SetPriorityChannelsResponse {
 }
 
 

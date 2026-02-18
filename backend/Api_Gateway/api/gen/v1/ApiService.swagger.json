@@ -79,38 +79,6 @@
           "ApiService"
         ]
       }
-    },
-    "/v1/set_priority_channels": {
-      "post": {
-        "operationId": "ApiService_SetPriorityChannels",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/v1SetPriorityChannelsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1SetPriorityChannelsRequest"
-            }
-          }
-        ],
-        "tags": [
-          "ApiService"
-        ]
-      }
     }
   },
   "definitions": {
@@ -191,20 +159,6 @@
           "type": "string"
         }
       }
-    },
-    "v1SetPriorityChannelsRequest": {
-      "type": "object",
-      "properties": {
-        "priorityChannels": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "v1SetPriorityChannelsResponse": {
-      "type": "object"
     }
   }
 }
