@@ -23,6 +23,8 @@ github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f h1:lO4WD4F/r
 github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f/go.mod h1:cuUVRXasLTGF7a8hSLbxyZXjz+1KgoB3wDUb6vlszIc=
 github.com/dhui/dktest v0.4.6 h1:+DPKyScKSEp3VLtbMDHcUq6V5Lm5zfZZVb0Sk7Ahom4=
 github.com/dhui/dktest v0.4.6/go.mod h1:JHTSYDtKkvFNFHJKqCzVzqXecyv+tKt8EzceOmQOgbU=
+github.com/dima11223432/Aurora_SSO_Protos v0.0.0-20260218194627-5733d749a24a h1:i5DH9eRXYz0Ir1u3uMibyJ7rh6EEtvZZ49AGM/t5eeI=
+github.com/dima11223432/Aurora_SSO_Protos v0.0.0-20260218194627-5733d749a24a/go.mod h1:PhodFnxMkP4JU/8JRKNF+5BpOxiw9KaSz21iyj+8r6I=
 github.com/dima11223432/protos v0.0.10 h1:JAiYV5e1Fz2JbLYhg9saf00cyhKZVOYJHEdOTYvMeTc=
 github.com/dima11223432/protos v0.0.10/go.mod h1:E4g6RFxG9CAWpE9uWWXLTVmYRtqtmpSvguD+TWxCZd4=
 github.com/distribution/reference v0.6.0 h1:0IXCQ5g4/QMHHkarYzh5l+u8T3t73zM5QvfrDyIgxBk=

@@ -3,14 +3,15 @@ package services
 import (
 	"context"
 
-	ssov1 "github.com/dima11223432/protos/gen/go/sso"
+	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
+	ssov1 "github.com/dima11223432/Aurora_SSO_Protos"
 )
 
 type AuthService struct {
-	AuthClient ssov1.AuthClient
+	AuthClient ssov1.AuthServiceClient
 }
 
-func NewAuthService(authClient ssov1.AuthClient) *AuthService {
+func NewAuthService(authClient ssov1.AuthServiceClient) *AuthService {
 	return &AuthService{
 		AuthClient: authClient,
 	}
