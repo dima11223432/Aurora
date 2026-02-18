@@ -22,12 +22,12 @@ type Auth struct {
 }
 
 type UserSaver interface {
-	SaveUser(ctx context.Context, email string, PassHash []byte, isAdmin bool) (uid int64, err error)
+	SaveUser(ctx context.Context, user models.User) (uid int64, err error)
 }
 
 type UserProvider interface {
-	User(ctx context.Context, email string) (models.User, error)
-	IsAdmin(ctx context.Context, userID int64) (bool, error)
+	User(ctx context.Context, telegram_id int64) (models.User, error)
+	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 }
 
 type AppProvider interface {
@@ -57,16 +57,16 @@ func New(
 	}
 }
 
-func (a *Auth) Login(ctx context.Context, email string, password string, appID int) (string, error) {
+func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, error) {
 	const op = "auth.Login"
 
 	log := a.log.With(
 		slog.String("op", op),
-		slog.String("email", email),
+		slog.Int64("email", user.Telegram_id),
 	)
 	log.Info("attempting to login User")
 
-	user, err := a.userProvider.User(ctx, email)
+	user, err := a.userProvider.User(ctx, user.Telegram_id)
 	if err != nil {
 		if errors.Is(err, storage.ErrUserNotFound) {
 			a.log.Warn("user not found")
@@ -74,10 +74,6 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appID i
 		}
 		a.log.Error("failed to get user")
 		return "", fmt.Errorf("%s, %w", op, err)
-	}
-	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(password)); err != nil {
-		a.log.Info("invalid credentials")
-		return "", fmt.Errorf("%s %w", op, ErrInvalidCredentials)
 	}
 
 	app, err := a.appProvider.App(ctx, int64(appID))
@@ -92,12 +88,12 @@ func (a *Auth) Login(ctx context.Context, email string, password string, appID i
 	}
 	return token, nil
 }
-func (a *Auth) RegisterNewUser(ctx context.Context, email string, password string, isAdmin bool) (int64, error) {
+func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "auth.RegisterNewUser"
 
 	log := a.log.With(
 		slog.String("op", op),
-		slog.String("email", email),
+		slog.Int64("email", user.Telegram_id),
 	)
 
 	log.Info("attempting to register new user")
