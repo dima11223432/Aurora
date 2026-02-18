@@ -7,6 +7,7 @@ import (
 	"net"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 type App struct {
@@ -18,6 +19,7 @@ type App struct {
 func New(log *slog.Logger, authService grpcauth.Auth, port int) *App {
 	gRPCServer := grpc.NewServer()
 	grpcauth.Register(gRPCServer, authService)
+	reflection.Register(gRPCServer)
 
 	return &App{
 		log:        log,

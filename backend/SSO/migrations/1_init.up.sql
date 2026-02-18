@@ -1,11 +1,14 @@
 CREATE TABLE IF NOT EXISTS users (
     id BIGSERIAL PRIMARY KEY,
-    email TEXT NOT NULL UNIQUE,
-    pass_hash TEXT NOT NULL,
+    telegram_id BIGINT NOT NULL UNIQUE,  
+    username TEXT,                      
+    first_name TEXT NOT NULL,          
+    last_name TEXT,                   
     is_admin BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE INDEX IF NOT EXISTS idx_users_email ON users (email);
+CREATE INDEX IF NOT EXISTS idx_users_telegram_id ON users (telegram_id);
+
 
 CREATE TABLE IF NOT EXISTS apps (
     id BIGSERIAL PRIMARY KEY,
