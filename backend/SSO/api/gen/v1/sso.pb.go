@@ -23,11 +23,12 @@ const (
 
 type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TelegramId    string                 `protobuf:"bytes,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
+	TelegramId    int64                  `protobuf:"varint,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
 	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
 	FirstName     string                 `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
 	LastName      string                 `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
 	IsAdmin       bool                   `protobuf:"varint,5,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
+	AppId         int64                  `protobuf:"varint,6,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -62,11 +63,11 @@ func (*LoginRequest) Descriptor() ([]byte, []int) {
 	return file_v1_sso_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LoginRequest) GetTelegramId() string {
+func (x *LoginRequest) GetTelegramId() int64 {
 	if x != nil {
 		return x.TelegramId
 	}
-	return ""
+	return 0
 }
 
 func (x *LoginRequest) GetUsername() string {
@@ -95,6 +96,13 @@ func (x *LoginRequest) GetIsAdmin() bool {
 		return x.IsAdmin
 	}
 	return false
+}
+
+func (x *LoginRequest) GetAppId() int64 {
+	if x != nil {
+		return x.AppId
+	}
+	return 0
 }
 
 type LoginResponse struct {
@@ -143,7 +151,7 @@ func (x *LoginResponse) GetToken() string {
 
 type IsAdminRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	TelegramId    string                 `protobuf:"bytes,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
+	TelegramId    int64                  `protobuf:"varint,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -178,11 +186,11 @@ func (*IsAdminRequest) Descriptor() ([]byte, []int) {
 	return file_v1_sso_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *IsAdminRequest) GetTelegramId() string {
+func (x *IsAdminRequest) GetTelegramId() int64 {
 	if x != nil {
 		return x.TelegramId
 	}
-	return ""
+	return 0
 }
 
 type IsAdminResponse struct {
@@ -233,19 +241,20 @@ var File_v1_sso_proto protoreflect.FileDescriptor
 
 const file_v1_sso_proto_rawDesc = "" +
 	"\n" +
-	"\fv1/sso.proto\x12\aauth.v1\"\xa2\x01\n" +
+	"\fv1/sso.proto\x12\aauth.v1\"\xb9\x01\n" +
 	"\fLoginRequest\x12\x1f\n" +
-	"\vtelegram_id\x18\x01 \x01(\tR\n" +
+	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\x12\x1a\n" +
 	"\busername\x18\x02 \x01(\tR\busername\x12\x1d\n" +
 	"\n" +
 	"first_name\x18\x03 \x01(\tR\tfirstName\x12\x1b\n" +
 	"\tlast_name\x18\x04 \x01(\tR\blastName\x12\x19\n" +
-	"\bis_admin\x18\x05 \x01(\bR\aisAdmin\"%\n" +
+	"\bis_admin\x18\x05 \x01(\bR\aisAdmin\x12\x15\n" +
+	"\x06app_id\x18\x06 \x01(\x03R\x05appId\"%\n" +
 	"\rLoginResponse\x12\x14\n" +
 	"\x05token\x18\x01 \x01(\tR\x05token\"1\n" +
 	"\x0eIsAdminRequest\x12\x1f\n" +
-	"\vtelegram_id\x18\x01 \x01(\tR\n" +
+	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\",\n" +
 	"\x0fIsAdminResponse\x12\x19\n" +
 	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\x83\x01\n" +
