@@ -2,10 +2,8 @@ package app
 
 import (
 	grpcApp "API_Service/internal/app/grpc"
-	apiKafka "API_Service/internal/broker/kafka"
 	"API_Service/internal/cache"
 	"API_Service/internal/config"
-	apiService "API_Service/internal/services"
 	"context"
 	"time"
 

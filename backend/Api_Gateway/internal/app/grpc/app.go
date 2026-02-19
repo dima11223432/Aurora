@@ -8,7 +8,8 @@ import (
 	"log"
 	"net"
 
-	ssov1 "github.com/dima11223432/protos/gen/go/sso"
+	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -35,10 +36,10 @@ func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string
 	if err != nil {
 		log.Fatalf("cant connect to authService: %v", err)
 	}
-	authClient := ssov1.NewAuthClient(authConn)
+	authClient := ssov1.NewAuthServiceClient(authConn)
 	authService := services.NewAuthService(authClient)
 
-	grpcAuth.RegisterGrpcServer(gRPCServer, api, authService)
+	grpcAuth.RegisterGrpcServer(gRPCServer, authService)
 	reflection.Register(gRPCServer)
 	logger.Infof("gRPC server initialized on port %d", port)
 

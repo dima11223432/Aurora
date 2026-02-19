@@ -5,9 +5,6 @@ import (
 	services "API_Service/internal/services"
 	"context"
 	"fmt"
-	"log"
-
-	"API_Service/internal/grpc/AuthInterceptor"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -42,14 +39,13 @@ func (a *ApiService) Login(
 		return nil, err
 	}
 
-	telegramID, err := authinterceptor.GetUserIdFromContext(ctx)
 	if err != nil {
 		logrus.WithError(err).Error("failed to parse jwt user id from context")
 		return nil, fmt.Errorf("fail to parse jwt")
 	}
 
 	logrus.WithFields(logrus.Fields{
-		"telegram_id": telegramID,
+		"telegram_id": req.TelegramId,
 		"username":    req.GetUsername(),
 		"app_id":      req.AppId,
 	}).Info("user logged in successfully")
