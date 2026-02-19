@@ -17,30 +17,21 @@ func NewAuthService(authClient ssov1.AuthServiceClient) *AuthService {
 	}
 }
 
-func (a *AuthService) Register(
-	ctx context.Context,
-	email string,
-	password string,
-	is_admin bool,
-) (int64, error) {
-	resp, err := a.AuthClient.Register(ctx, &ssov1.RegisterRequest{Email: email, Password: password, IsAdmin: is_admin})
-	if err != nil {
-		return 0, err
-	}
-
-	return resp.UserId, nil
-}
-
 func (a *AuthService) Login(
 	ctx context.Context,
-	email string,
-	password string,
-	appId int32,
+	telegram_id int64,
+	username string,
+	firstName string,
+	lastName string,
+	appId int64,
 ) (string, error) {
 	resp, err := a.AuthClient.Login(ctx, &ssov1.LoginRequest{
-		Email:    email,
-		Password: password,
-		AppId:    appId,
+		TelegramId: telegram_id,
+		Username:   username,
+		AppId:      appId,
+		FirstName:  firstName,
+		LastName:   lastName,
+		IsAdmin:    false,
 	})
 
 	if err != nil {
@@ -52,10 +43,10 @@ func (a *AuthService) Login(
 
 func (a *AuthService) IsAdmin(
 	ctx context.Context,
-	userId int64,
+	telegram_id int64,
 ) (bool, error) {
 	resp, err := a.AuthClient.IsAdmin(ctx, &ssov1.IsAdminRequest{
-		UserId: userId,
+		TelegramId: telegram_id,
 	})
 	if err != nil {
 		return false, err

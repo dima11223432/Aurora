@@ -3,13 +3,13 @@ module API_Service
 go 1.24.5
 
 require (
+	github.com/dima11223432/Aurora_SSO_Protos v0.0.0-20260218194627-5733d749a24a
 	github.com/dima11223432/protos v0.0.10
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
-	github.com/lib/pq v1.10.9
 	github.com/redis/go-redis/v9 v9.17.3
 	github.com/segmentio/kafka-go v0.4.49
 	github.com/sirupsen/logrus v1.9.3
@@ -22,10 +22,10 @@ require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dima11223432/Aurora_SSO_Protos v0.0.0-20260218194627-5733d749a24a // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/klauspost/compress v1.17.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/lib/pq v1.10.9 // indirect
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/pierrec/lz4/v4 v4.1.17 // indirect
 	github.com/rogpeppe/go-internal v1.10.0 // indirect

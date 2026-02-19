@@ -21,7 +21,7 @@ type App struct {
 	port int
 }
 
-func New(api grpcAuth.API, port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string) *App {
+func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string) *App {
 	gRPCServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
 			authinterceptor.AuthInterceptor(authinterceptor.AuthConfig{
