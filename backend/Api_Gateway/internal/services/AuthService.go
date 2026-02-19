@@ -26,39 +26,6 @@ func NewAuthService(authClient ssov1.AuthServiceClient) *AuthService {
 	}
 }
 
-func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) error {
-	const op = "services.AuthService.SetPriorityChannels"
-
-	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
-	if err != nil {
-		a.log.Error("failed to get user id from context",
-			slog.String("op", op),
-			slog.Any("err", err),
-		)
-		return fmt.Errorf("%s: %w", op, err)
-	}
-
-	_, err = a.AuthClient.SetPriorityChannels(ctx, &ssov1.SetPriorityChannelsRequest{
-		UserId:            userID,
-		ChannelsUsernames: channels,
-	})
-
-	if err != nil {
-		if status.Code(err) == codes.AlreadyExists {
-			return custom_errors.ErrChannelExists
-		}
-
-		a.log.Error("failed to set priority channels",
-			slog.String("op", op),
-			slog.Int64("user_id", userID),
-			slog.Any("err", err),
-		)
-
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	return nil
-}
-
 func (a *AuthService) Login(
 	ctx context.Context,
 	telegram_id int64,
