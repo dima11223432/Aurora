@@ -1,6 +1,6 @@
 module API_Service
 
-go 1.24.5
+go 1.25.5
 
 require (
 	github.com/dima11223432/Aurora_SSO_Protos v0.0.0-20260218194627-5733d749a24a
