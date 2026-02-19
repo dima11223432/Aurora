@@ -22,1298 +22,21 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Contact struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Contact) Reset() {
-	*x = Contact{}
-	mi := &file_v1_ApiService_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Contact) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Contact) ProtoMessage() {}
-
-func (x *Contact) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Contact.ProtoReflect.Descriptor instead.
-func (*Contact) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *Contact) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *Contact) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-type Group struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	Contacts      []*Contact             `protobuf:"bytes,3,rep,name=contacts,proto3" json:"contacts,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *Group) Reset() {
-	*x = Group{}
-	mi := &file_v1_ApiService_proto_msgTypes[1]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *Group) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*Group) ProtoMessage() {}
-
-func (x *Group) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[1]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use Group.ProtoReflect.Descriptor instead.
-func (*Group) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *Group) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *Group) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *Group) GetContacts() []*Contact {
-	if x != nil {
-		return x.Contacts
-	}
-	return nil
-}
-
-type DeleteGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteGroupRequest) Reset() {
-	*x = DeleteGroupRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteGroupRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteGroupRequest) ProtoMessage() {}
-
-func (x *DeleteGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteGroupRequest.ProtoReflect.Descriptor instead.
-func (*DeleteGroupRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *DeleteGroupRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-type DeleteGroupResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteGroupResponse) Reset() {
-	*x = DeleteGroupResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteGroupResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteGroupResponse) ProtoMessage() {}
-
-func (x *DeleteGroupResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteGroupResponse.ProtoReflect.Descriptor instead.
-func (*DeleteGroupResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *DeleteGroupResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-type UpdateGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateGroupRequest) Reset() {
-	*x = UpdateGroupRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateGroupRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateGroupRequest) ProtoMessage() {}
-
-func (x *UpdateGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateGroupRequest.ProtoReflect.Descriptor instead.
-func (*UpdateGroupRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *UpdateGroupRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *UpdateGroupRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type UpdateGroupResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateGroupResponse) Reset() {
-	*x = UpdateGroupResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateGroupResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateGroupResponse) ProtoMessage() {}
-
-func (x *UpdateGroupResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateGroupResponse.ProtoReflect.Descriptor instead.
-func (*UpdateGroupResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *UpdateGroupResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-type GetAllContactsByGroupIDRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	GroupId       int64                  `protobuf:"varint,1,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetAllContactsByGroupIDRequest) Reset() {
-	*x = GetAllContactsByGroupIDRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetAllContactsByGroupIDRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetAllContactsByGroupIDRequest) ProtoMessage() {}
-
-func (x *GetAllContactsByGroupIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetAllContactsByGroupIDRequest.ProtoReflect.Descriptor instead.
-func (*GetAllContactsByGroupIDRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *GetAllContactsByGroupIDRequest) GetGroupId() int64 {
-	if x != nil {
-		return x.GroupId
-	}
-	return 0
-}
-
-type GetAllContactsByGroupIDResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Contacts      []*Contact             `protobuf:"bytes,1,rep,name=contacts,proto3" json:"contacts,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetAllContactsByGroupIDResponse) Reset() {
-	*x = GetAllContactsByGroupIDResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetAllContactsByGroupIDResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetAllContactsByGroupIDResponse) ProtoMessage() {}
-
-func (x *GetAllContactsByGroupIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetAllContactsByGroupIDResponse.ProtoReflect.Descriptor instead.
-func (*GetAllContactsByGroupIDResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *GetAllContactsByGroupIDResponse) GetContacts() []*Contact {
-	if x != nil {
-		return x.Contacts
-	}
-	return nil
-}
-
-type DeleteContactRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteContactRequest) Reset() {
-	*x = DeleteContactRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteContactRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteContactRequest) ProtoMessage() {}
-
-func (x *DeleteContactRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteContactRequest.ProtoReflect.Descriptor instead.
-func (*DeleteContactRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *DeleteContactRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-type DeleteContactResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *DeleteContactResponse) Reset() {
-	*x = DeleteContactResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteContactResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteContactResponse) ProtoMessage() {}
-
-func (x *DeleteContactResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteContactResponse.ProtoReflect.Descriptor instead.
-func (*DeleteContactResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *DeleteContactResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-type UpdateContactRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Email         string                 `protobuf:"bytes,2,opt,name=email,proto3" json:"email,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateContactRequest) Reset() {
-	*x = UpdateContactRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateContactRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateContactRequest) ProtoMessage() {}
-
-func (x *UpdateContactRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateContactRequest.ProtoReflect.Descriptor instead.
-func (*UpdateContactRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *UpdateContactRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *UpdateContactRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-type UpdateContactResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateContactResponse) Reset() {
-	*x = UpdateContactResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateContactResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateContactResponse) ProtoMessage() {}
-
-func (x *UpdateContactResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateContactResponse.ProtoReflect.Descriptor instead.
-func (*UpdateContactResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *UpdateContactResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-type UpdateNotificationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Text          string                 `protobuf:"bytes,3,opt,name=text,proto3" json:"text,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateNotificationRequest) Reset() {
-	*x = UpdateNotificationRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateNotificationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateNotificationRequest) ProtoMessage() {}
-
-func (x *UpdateNotificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateNotificationRequest.ProtoReflect.Descriptor instead.
-func (*UpdateNotificationRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *UpdateNotificationRequest) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *UpdateNotificationRequest) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *UpdateNotificationRequest) GetText() string {
-	if x != nil {
-		return x.Text
-	}
-	return ""
-}
-
-type UpdateNotificationResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *UpdateNotificationResponse) Reset() {
-	*x = UpdateNotificationResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateNotificationResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateNotificationResponse) ProtoMessage() {}
-
-func (x *UpdateNotificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateNotificationResponse.ProtoReflect.Descriptor instead.
-func (*UpdateNotificationResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *UpdateNotificationResponse) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
-}
-
-type SendNotificationRequest struct {
-	state          protoimpl.MessageState `protogen:"open.v1"`
-	NotificationId int64                  `protobuf:"varint,1,opt,name=notification_id,json=notificationId,proto3" json:"notification_id,omitempty"`
-	GroupId        int64                  `protobuf:"varint,2,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
-}
-
-func (x *SendNotificationRequest) Reset() {
-	*x = SendNotificationRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SendNotificationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SendNotificationRequest) ProtoMessage() {}
-
-func (x *SendNotificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SendNotificationRequest.ProtoReflect.Descriptor instead.
-func (*SendNotificationRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *SendNotificationRequest) GetNotificationId() int64 {
-	if x != nil {
-		return x.NotificationId
-	}
-	return 0
-}
-
-func (x *SendNotificationRequest) GetGroupId() int64 {
-	if x != nil {
-		return x.GroupId
-	}
-	return 0
-}
-
-type SendNotificationResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	EventId       string                 `protobuf:"bytes,1,opt,name=event_id,json=eventId,proto3" json:"event_id,omitempty"`
-	Status        string                 `protobuf:"bytes,2,opt,name=status,proto3" json:"status,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *SendNotificationResponse) Reset() {
-	*x = SendNotificationResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SendNotificationResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SendNotificationResponse) ProtoMessage() {}
-
-func (x *SendNotificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SendNotificationResponse.ProtoReflect.Descriptor instead.
-func (*SendNotificationResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *SendNotificationResponse) GetEventId() string {
-	if x != nil {
-		return x.EventId
-	}
-	return ""
-}
-
-func (x *SendNotificationResponse) GetStatus() string {
-	if x != nil {
-		return x.Status
-	}
-	return ""
-}
-
-type CreateGroupRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Name          string                 `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateGroupRequest) Reset() {
-	*x = CreateGroupRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateGroupRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateGroupRequest) ProtoMessage() {}
-
-func (x *CreateGroupRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateGroupRequest.ProtoReflect.Descriptor instead.
-func (*CreateGroupRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *CreateGroupRequest) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type CreateGroupResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Name          string                 `protobuf:"bytes,2,opt,name=Name,proto3" json:"Name,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateGroupResponse) Reset() {
-	*x = CreateGroupResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateGroupResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateGroupResponse) ProtoMessage() {}
-
-func (x *CreateGroupResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateGroupResponse.ProtoReflect.Descriptor instead.
-func (*CreateGroupResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *CreateGroupResponse) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *CreateGroupResponse) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-type GetAllGroupsRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetAllGroupsRequest) Reset() {
-	*x = GetAllGroupsRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetAllGroupsRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetAllGroupsRequest) ProtoMessage() {}
-
-func (x *GetAllGroupsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetAllGroupsRequest.ProtoReflect.Descriptor instead.
-func (*GetAllGroupsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *GetAllGroupsRequest) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
-type GetAllGroupsResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Groups        []*Group               `protobuf:"bytes,1,rep,name=groups,proto3" json:"groups,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetAllGroupsResponse) Reset() {
-	*x = GetAllGroupsResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetAllGroupsResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetAllGroupsResponse) ProtoMessage() {}
-
-func (x *GetAllGroupsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetAllGroupsResponse.ProtoReflect.Descriptor instead.
-func (*GetAllGroupsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *GetAllGroupsResponse) GetGroups() []*Group {
-	if x != nil {
-		return x.Groups
-	}
-	return nil
-}
-
-type CreateContactRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	GroupId       int64                  `protobuf:"varint,2,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateContactRequest) Reset() {
-	*x = CreateContactRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateContactRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateContactRequest) ProtoMessage() {}
-
-func (x *CreateContactRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateContactRequest.ProtoReflect.Descriptor instead.
-func (*CreateContactRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *CreateContactRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *CreateContactRequest) GetGroupId() int64 {
-	if x != nil {
-		return x.GroupId
-	}
-	return 0
-}
-
-type CreateContactResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateContactResponse) Reset() {
-	*x = CreateContactResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateContactResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateContactResponse) ProtoMessage() {}
-
-func (x *CreateContactResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateContactResponse.ProtoReflect.Descriptor instead.
-func (*CreateContactResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *CreateContactResponse) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-type CreateNotificationRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	Text          string                 `protobuf:"bytes,2,opt,name=text,proto3" json:"text,omitempty"`
-	GroupId       int64                  `protobuf:"varint,3,opt,name=group_id,json=groupId,proto3" json:"group_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateNotificationRequest) Reset() {
-	*x = CreateNotificationRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateNotificationRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateNotificationRequest) ProtoMessage() {}
-
-func (x *CreateNotificationRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateNotificationRequest.ProtoReflect.Descriptor instead.
-func (*CreateNotificationRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *CreateNotificationRequest) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *CreateNotificationRequest) GetText() string {
-	if x != nil {
-		return x.Text
-	}
-	return ""
-}
-
-func (x *CreateNotificationRequest) GetGroupId() int64 {
-	if x != nil {
-		return x.GroupId
-	}
-	return 0
-}
-
-type CreateNotificationResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Id            int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title         string                 `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Text          string                 `protobuf:"bytes,3,opt,name=text,proto3" json:"text,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *CreateNotificationResponse) Reset() {
-	*x = CreateNotificationResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *CreateNotificationResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*CreateNotificationResponse) ProtoMessage() {}
-
-func (x *CreateNotificationResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use CreateNotificationResponse.ProtoReflect.Descriptor instead.
-func (*CreateNotificationResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *CreateNotificationResponse) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *CreateNotificationResponse) GetTitle() string {
-	if x != nil {
-		return x.Title
-	}
-	return ""
-}
-
-func (x *CreateNotificationResponse) GetText() string {
-	if x != nil {
-		return x.Text
-	}
-	return ""
-}
-
-type RegisterRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	IsAdmin       bool                   `protobuf:"varint,3,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RegisterRequest) Reset() {
-	*x = RegisterRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RegisterRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RegisterRequest) ProtoMessage() {}
-
-func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
-func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *RegisterRequest) GetEmail() string {
-	if x != nil {
-		return x.Email
-	}
-	return ""
-}
-
-func (x *RegisterRequest) GetPassword() string {
-	if x != nil {
-		return x.Password
-	}
-	return ""
-}
-
-func (x *RegisterRequest) GetIsAdmin() bool {
-	if x != nil {
-		return x.IsAdmin
-	}
-	return false
-}
-
-type RegisterResponse struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *RegisterResponse) Reset() {
-	*x = RegisterResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *RegisterResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*RegisterResponse) ProtoMessage() {}
-
-func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
-func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *RegisterResponse) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
 type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Email         string                 `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
-	Password      string                 `protobuf:"bytes,2,opt,name=password,proto3" json:"password,omitempty"`
-	AppId         int32                  `protobuf:"varint,3,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
+	TelegramId    int64                  `protobuf:"varint,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	FirstName     string                 `protobuf:"bytes,3,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`
+	LastName      string                 `protobuf:"bytes,4,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`
+	IsAdmin       bool                   `protobuf:"varint,5,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
+	AppId         int64                  `protobuf:"varint,6,opt,name=app_id,json=appId,proto3" json:"app_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[26]
+	mi := &file_v1_ApiService_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1325,7 +48,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[26]
+	mi := &file_v1_ApiService_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1338,24 +61,45 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{26}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *LoginRequest) GetEmail() string {
+func (x *LoginRequest) GetTelegramId() int64 {
 	if x != nil {
-		return x.Email
+		return x.TelegramId
+	}
+	return 0
+}
+
+func (x *LoginRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
 	}
 	return ""
 }
 
-func (x *LoginRequest) GetPassword() string {
+func (x *LoginRequest) GetFirstName() string {
 	if x != nil {
-		return x.Password
+		return x.FirstName
 	}
 	return ""
 }
 
-func (x *LoginRequest) GetAppId() int32 {
+func (x *LoginRequest) GetLastName() string {
+	if x != nil {
+		return x.LastName
+	}
+	return ""
+}
+
+func (x *LoginRequest) GetIsAdmin() bool {
+	if x != nil {
+		return x.IsAdmin
+	}
+	return false
+}
+
+func (x *LoginRequest) GetAppId() int64 {
 	if x != nil {
 		return x.AppId
 	}
@@ -1371,7 +115,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[27]
+	mi := &file_v1_ApiService_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1383,7 +127,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[27]
+	mi := &file_v1_ApiService_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1396,7 +140,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{27}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *LoginResponse) GetToken() string {
@@ -1408,14 +152,14 @@ func (x *LoginResponse) GetToken() string {
 
 type IsAdminRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	TelegramId    int64                  `protobuf:"varint,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *IsAdminRequest) Reset() {
 	*x = IsAdminRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[28]
+	mi := &file_v1_ApiService_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1427,7 +171,7 @@ func (x *IsAdminRequest) String() string {
 func (*IsAdminRequest) ProtoMessage() {}
 
 func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[28]
+	mi := &file_v1_ApiService_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1440,12 +184,12 @@ func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminRequest.ProtoReflect.Descriptor instead.
 func (*IsAdminRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{28}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *IsAdminRequest) GetUserId() int64 {
+func (x *IsAdminRequest) GetTelegramId() int64 {
 	if x != nil {
-		return x.UserId
+		return x.TelegramId
 	}
 	return 0
 }
@@ -1459,7 +203,7 @@ type IsAdminResponse struct {
 
 func (x *IsAdminResponse) Reset() {
 	*x = IsAdminResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[29]
+	mi := &file_v1_ApiService_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1471,7 +215,7 @@ func (x *IsAdminResponse) String() string {
 func (*IsAdminResponse) ProtoMessage() {}
 
 func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[29]
+	mi := &file_v1_ApiService_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1484,7 +228,7 @@ func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminResponse.ProtoReflect.Descriptor instead.
 func (*IsAdminResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{29}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *IsAdminResponse) GetIsAdmin() bool {
@@ -1498,101 +242,25 @@ var File_v1_ApiService_proto protoreflect.FileDescriptor
 
 const file_v1_ApiService_proto_rawDesc = "" +
 	"\n" +
-	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\"/\n" +
-	"\aContact\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\"X\n" +
-	"\x05Group\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12+\n" +
-	"\bcontacts\x18\x03 \x03(\v2\x0f.api.v1.ContactR\bcontacts\"$\n" +
-	"\x12DeleteGroupRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"/\n" +
-	"\x13DeleteGroupResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"8\n" +
-	"\x12UpdateGroupRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\"/\n" +
-	"\x13UpdateGroupResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\";\n" +
-	"\x1eGetAllContactsByGroupIDRequest\x12\x19\n" +
-	"\bgroup_id\x18\x01 \x01(\x03R\agroupId\"N\n" +
-	"\x1fGetAllContactsByGroupIDResponse\x12+\n" +
-	"\bcontacts\x18\x01 \x03(\v2\x0f.api.v1.ContactR\bcontacts\"&\n" +
-	"\x14DeleteContactRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"1\n" +
-	"\x15DeleteContactResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"<\n" +
-	"\x14UpdateContactRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
-	"\x05email\x18\x02 \x01(\tR\x05email\"1\n" +
-	"\x15UpdateContactResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"U\n" +
-	"\x19UpdateNotificationRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12\x12\n" +
-	"\x04text\x18\x03 \x01(\tR\x04text\"6\n" +
-	"\x1aUpdateNotificationResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess\"]\n" +
-	"\x17SendNotificationRequest\x12'\n" +
-	"\x0fnotification_id\x18\x01 \x01(\x03R\x0enotificationId\x12\x19\n" +
-	"\bgroup_id\x18\x02 \x01(\x03R\agroupId\"M\n" +
-	"\x18SendNotificationResponse\x12\x19\n" +
-	"\bevent_id\x18\x01 \x01(\tR\aeventId\x12\x16\n" +
-	"\x06status\x18\x02 \x01(\tR\x06status\"(\n" +
-	"\x12CreateGroupRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"9\n" +
-	"\x13CreateGroupResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
-	"\x04Name\x18\x02 \x01(\tR\x04Name\".\n" +
-	"\x13GetAllGroupsRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\"=\n" +
-	"\x14GetAllGroupsResponse\x12%\n" +
-	"\x06groups\x18\x01 \x03(\v2\r.api.v1.GroupR\x06groups\"G\n" +
-	"\x14CreateContactRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\x19\n" +
-	"\bgroup_id\x18\x02 \x01(\x03R\agroupId\"'\n" +
-	"\x15CreateContactResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\"`\n" +
-	"\x19CreateNotificationRequest\x12\x14\n" +
-	"\x05title\x18\x01 \x01(\tR\x05title\x12\x12\n" +
-	"\x04text\x18\x02 \x01(\tR\x04text\x12\x19\n" +
-	"\bgroup_id\x18\x03 \x01(\x03R\agroupId\"V\n" +
-	"\x1aCreateNotificationResponse\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
-	"\x05title\x18\x02 \x01(\tR\x05title\x12\x12\n" +
-	"\x04text\x18\x03 \x01(\tR\x04text\"^\n" +
-	"\x0fRegisterRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x19\n" +
-	"\bis_admin\x18\x03 \x01(\bR\aisAdmin\"+\n" +
-	"\x10RegisterResponse\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\"W\n" +
-	"\fLoginRequest\x12\x14\n" +
-	"\x05email\x18\x01 \x01(\tR\x05email\x12\x1a\n" +
-	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x15\n" +
-	"\x06app_id\x18\x03 \x01(\x05R\x05appId\"%\n" +
+	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\"\xb9\x01\n" +
+	"\fLoginRequest\x12\x1f\n" +
+	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
+	"telegramId\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12\x1d\n" +
+	"\n" +
+	"first_name\x18\x03 \x01(\tR\tfirstName\x12\x1b\n" +
+	"\tlast_name\x18\x04 \x01(\tR\blastName\x12\x19\n" +
+	"\bis_admin\x18\x05 \x01(\bR\aisAdmin\x12\x15\n" +
+	"\x06app_id\x18\x06 \x01(\x03R\x05appId\"%\n" +
 	"\rLoginResponse\x12\x14\n" +
-	"\x05token\x18\x01 \x01(\tR\x05token\")\n" +
-	"\x0eIsAdminRequest\x12\x17\n" +
-	"\auser_id\x18\x01 \x01(\x03R\x06userId\",\n" +
+	"\x05token\x18\x01 \x01(\tR\x05token\"1\n" +
+	"\x0eIsAdminRequest\x12\x1f\n" +
+	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
+	"telegramId\",\n" +
 	"\x0fIsAdminResponse\x12\x19\n" +
-	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\xf2\n" +
+	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\xad\x01\n" +
 	"\n" +
-	"\n" +
-	"ApiService\x12]\n" +
-	"\vCreateGroup\x12\x1a.api.v1.CreateGroupRequest\x1a\x1b.api.v1.CreateGroupResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
-	"/v1/groups\x12d\n" +
-	"\vDeleteGroup\x12\x1a.api.v1.DeleteGroupRequest\x1a\x1b.api.v1.DeleteGroupResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/groups/delete\x12d\n" +
-	"\vUpdateGroup\x12\x1a.api.v1.UpdateGroupRequest\x1a\x1b.api.v1.UpdateGroupResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/groups/update\x12e\n" +
-	"\rCreateContact\x12\x1c.api.v1.CreateContactRequest\x1a\x1d.api.v1.CreateContactResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/contacts\x12\x8b\x01\n" +
-	"\x17GetAllContactsByGroupID\x12&.api.v1.GetAllContactsByGroupIDRequest\x1a'.api.v1.GetAllContactsByGroupIDResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/v1/contacts/{group_id}\x12j\n" +
-	"\rUpdateContact\x12\x1c.api.v1.UpdateContactRequest\x1a\x1d.api.v1.UpdateContactResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*2\x11/v1/contacts/{id}\x12g\n" +
-	"\rDeleteContact\x12\x1c.api.v1.DeleteContactRequest\x1a\x1d.api.v1.DeleteContactResponse\"\x19\x82\xd3\xe4\x93\x02\x13*\x11/v1/contacts/{id}\x12y\n" +
-	"\x12CreateNotification\x12!.api.v1.CreateNotificationRequest\x1a\".api.v1.CreateNotificationResponse\"\x1c\x82\xd3\xe4\x93\x02\x16:\x01*\"\x11/v1/notifications\x12\x80\x01\n" +
-	"\x12UpdateNotification\x12!.api.v1.UpdateNotificationRequest\x1a\".api.v1.UpdateNotificationResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1/notifications/update\x12x\n" +
-	"\x10SendNotification\x12\x1f.api.v1.SendNotificationRequest\x1a .api.v1.SendNotificationResponse\"!\x82\xd3\xe4\x93\x02\x1b:\x01*\"\x16/v1/notifications/send\x12V\n" +
-	"\bRegister\x12\x17.api.v1.RegisterRequest\x1a\x18.api.v1.RegisterResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/register\x12J\n" +
+	"ApiService\x12J\n" +
 	"\x05Login\x12\x14.api.v1.LoginRequest\x1a\x15.api.v1.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12S\n" +
 	"\aIsAdmin\x12\x16.api.v1.IsAdminRequest\x1a\x17.api.v1.IsAdminResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/is_adminB\x13Z\x11api/v1/ApiServiceb\x06proto3"
 
@@ -1608,74 +276,23 @@ func file_v1_ApiService_proto_rawDescGZIP() []byte {
 	return file_v1_ApiService_proto_rawDescData
 }
 
-var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 30)
+var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_v1_ApiService_proto_goTypes = []any{
-	(*Contact)(nil),                         // 0: api.v1.Contact
-	(*Group)(nil),                           // 1: api.v1.Group
-	(*DeleteGroupRequest)(nil),              // 2: api.v1.DeleteGroupRequest
-	(*DeleteGroupResponse)(nil),             // 3: api.v1.DeleteGroupResponse
-	(*UpdateGroupRequest)(nil),              // 4: api.v1.UpdateGroupRequest
-	(*UpdateGroupResponse)(nil),             // 5: api.v1.UpdateGroupResponse
-	(*GetAllContactsByGroupIDRequest)(nil),  // 6: api.v1.GetAllContactsByGroupIDRequest
-	(*GetAllContactsByGroupIDResponse)(nil), // 7: api.v1.GetAllContactsByGroupIDResponse
-	(*DeleteContactRequest)(nil),            // 8: api.v1.DeleteContactRequest
-	(*DeleteContactResponse)(nil),           // 9: api.v1.DeleteContactResponse
-	(*UpdateContactRequest)(nil),            // 10: api.v1.UpdateContactRequest
-	(*UpdateContactResponse)(nil),           // 11: api.v1.UpdateContactResponse
-	(*UpdateNotificationRequest)(nil),       // 12: api.v1.UpdateNotificationRequest
-	(*UpdateNotificationResponse)(nil),      // 13: api.v1.UpdateNotificationResponse
-	(*SendNotificationRequest)(nil),         // 14: api.v1.SendNotificationRequest
-	(*SendNotificationResponse)(nil),        // 15: api.v1.SendNotificationResponse
-	(*CreateGroupRequest)(nil),              // 16: api.v1.CreateGroupRequest
-	(*CreateGroupResponse)(nil),             // 17: api.v1.CreateGroupResponse
-	(*GetAllGroupsRequest)(nil),             // 18: api.v1.GetAllGroupsRequest
-	(*GetAllGroupsResponse)(nil),            // 19: api.v1.GetAllGroupsResponse
-	(*CreateContactRequest)(nil),            // 20: api.v1.CreateContactRequest
-	(*CreateContactResponse)(nil),           // 21: api.v1.CreateContactResponse
-	(*CreateNotificationRequest)(nil),       // 22: api.v1.CreateNotificationRequest
-	(*CreateNotificationResponse)(nil),      // 23: api.v1.CreateNotificationResponse
-	(*RegisterRequest)(nil),                 // 24: api.v1.RegisterRequest
-	(*RegisterResponse)(nil),                // 25: api.v1.RegisterResponse
-	(*LoginRequest)(nil),                    // 26: api.v1.LoginRequest
-	(*LoginResponse)(nil),                   // 27: api.v1.LoginResponse
-	(*IsAdminRequest)(nil),                  // 28: api.v1.IsAdminRequest
-	(*IsAdminResponse)(nil),                 // 29: api.v1.IsAdminResponse
+	(*LoginRequest)(nil),    // 0: api.v1.LoginRequest
+	(*LoginResponse)(nil),   // 1: api.v1.LoginResponse
+	(*IsAdminRequest)(nil),  // 2: api.v1.IsAdminRequest
+	(*IsAdminResponse)(nil), // 3: api.v1.IsAdminResponse
 }
 var file_v1_ApiService_proto_depIdxs = []int32{
-	0,  // 0: api.v1.Group.contacts:type_name -> api.v1.Contact
-	0,  // 1: api.v1.GetAllContactsByGroupIDResponse.contacts:type_name -> api.v1.Contact
-	1,  // 2: api.v1.GetAllGroupsResponse.groups:type_name -> api.v1.Group
-	16, // 3: api.v1.ApiService.CreateGroup:input_type -> api.v1.CreateGroupRequest
-	2,  // 4: api.v1.ApiService.DeleteGroup:input_type -> api.v1.DeleteGroupRequest
-	4,  // 5: api.v1.ApiService.UpdateGroup:input_type -> api.v1.UpdateGroupRequest
-	20, // 6: api.v1.ApiService.CreateContact:input_type -> api.v1.CreateContactRequest
-	6,  // 7: api.v1.ApiService.GetAllContactsByGroupID:input_type -> api.v1.GetAllContactsByGroupIDRequest
-	10, // 8: api.v1.ApiService.UpdateContact:input_type -> api.v1.UpdateContactRequest
-	8,  // 9: api.v1.ApiService.DeleteContact:input_type -> api.v1.DeleteContactRequest
-	22, // 10: api.v1.ApiService.CreateNotification:input_type -> api.v1.CreateNotificationRequest
-	12, // 11: api.v1.ApiService.UpdateNotification:input_type -> api.v1.UpdateNotificationRequest
-	14, // 12: api.v1.ApiService.SendNotification:input_type -> api.v1.SendNotificationRequest
-	24, // 13: api.v1.ApiService.Register:input_type -> api.v1.RegisterRequest
-	26, // 14: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
-	28, // 15: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
-	17, // 16: api.v1.ApiService.CreateGroup:output_type -> api.v1.CreateGroupResponse
-	3,  // 17: api.v1.ApiService.DeleteGroup:output_type -> api.v1.DeleteGroupResponse
-	5,  // 18: api.v1.ApiService.UpdateGroup:output_type -> api.v1.UpdateGroupResponse
-	21, // 19: api.v1.ApiService.CreateContact:output_type -> api.v1.CreateContactResponse
-	7,  // 20: api.v1.ApiService.GetAllContactsByGroupID:output_type -> api.v1.GetAllContactsByGroupIDResponse
-	11, // 21: api.v1.ApiService.UpdateContact:output_type -> api.v1.UpdateContactResponse
-	9,  // 22: api.v1.ApiService.DeleteContact:output_type -> api.v1.DeleteContactResponse
-	23, // 23: api.v1.ApiService.CreateNotification:output_type -> api.v1.CreateNotificationResponse
-	13, // 24: api.v1.ApiService.UpdateNotification:output_type -> api.v1.UpdateNotificationResponse
-	15, // 25: api.v1.ApiService.SendNotification:output_type -> api.v1.SendNotificationResponse
-	25, // 26: api.v1.ApiService.Register:output_type -> api.v1.RegisterResponse
-	27, // 27: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
-	29, // 28: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
-	16, // [16:29] is the sub-list for method output_type
-	3,  // [3:16] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	0, // 0: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
+	2, // 1: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
+	1, // 2: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
+	3, // 3: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
+	2, // [2:4] is the sub-list for method output_type
+	0, // [0:2] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_v1_ApiService_proto_init() }
@@ -1689,7 +306,7 @@ func file_v1_ApiService_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_ApiService_proto_rawDesc), len(file_v1_ApiService_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   30,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
