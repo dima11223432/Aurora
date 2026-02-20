@@ -2,12 +2,11 @@
 // versions:
 // 	protoc-gen-go v1.36.11
 // 	protoc        (unknown)
-// source: v1/ApiService.proto
+// source: v1/sso.proto
 
-package ApiService
+package v1
 
 import (
-	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -36,7 +35,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[0]
+	mi := &file_v1_sso_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -48,7 +47,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[0]
+	mi := &file_v1_sso_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -61,7 +60,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
+	return file_v1_sso_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *LoginRequest) GetTelegramId() int64 {
@@ -115,7 +114,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[1]
+	mi := &file_v1_sso_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -127,7 +126,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[1]
+	mi := &file_v1_sso_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -140,7 +139,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{1}
+	return file_v1_sso_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *LoginResponse) GetToken() string {
@@ -159,7 +158,7 @@ type IsAdminRequest struct {
 
 func (x *IsAdminRequest) Reset() {
 	*x = IsAdminRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[2]
+	mi := &file_v1_sso_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -171,7 +170,7 @@ func (x *IsAdminRequest) String() string {
 func (*IsAdminRequest) ProtoMessage() {}
 
 func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[2]
+	mi := &file_v1_sso_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -184,7 +183,7 @@ func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminRequest.ProtoReflect.Descriptor instead.
 func (*IsAdminRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{2}
+	return file_v1_sso_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *IsAdminRequest) GetTelegramId() int64 {
@@ -203,7 +202,7 @@ type IsAdminResponse struct {
 
 func (x *IsAdminResponse) Reset() {
 	*x = IsAdminResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[3]
+	mi := &file_v1_sso_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -215,7 +214,7 @@ func (x *IsAdminResponse) String() string {
 func (*IsAdminResponse) ProtoMessage() {}
 
 func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[3]
+	mi := &file_v1_sso_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -228,7 +227,7 @@ func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminResponse.ProtoReflect.Descriptor instead.
 func (*IsAdminResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{3}
+	return file_v1_sso_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *IsAdminResponse) GetIsAdmin() bool {
@@ -238,11 +237,11 @@ func (x *IsAdminResponse) GetIsAdmin() bool {
 	return false
 }
 
-var File_v1_ApiService_proto protoreflect.FileDescriptor
+var File_v1_sso_proto protoreflect.FileDescriptor
 
-const file_v1_ApiService_proto_rawDesc = "" +
+const file_v1_sso_proto_rawDesc = "" +
 	"\n" +
-	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\"\xb9\x01\n" +
+	"\fv1/sso.proto\x12\aauth.v1\"\xb9\x01\n" +
 	"\fLoginRequest\x12\x1f\n" +
 	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\x12\x1a\n" +
@@ -258,36 +257,35 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\",\n" +
 	"\x0fIsAdminResponse\x12\x19\n" +
-	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\xad\x01\n" +
-	"\n" +
-	"ApiService\x12J\n" +
-	"\x05Login\x12\x14.api.v1.LoginRequest\x1a\x15.api.v1.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12S\n" +
-	"\aIsAdmin\x12\x16.api.v1.IsAdminRequest\x1a\x17.api.v1.IsAdminResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/is_adminB\x13Z\x11api/v1/ApiServiceb\x06proto3"
+	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\x83\x01\n" +
+	"\vAuthService\x12<\n" +
+	"\aIsAdmin\x12\x17.auth.v1.IsAdminRequest\x1a\x18.auth.v1.IsAdminResponse\x126\n" +
+	"\x05Login\x12\x15.auth.v1.LoginRequest\x1a\x16.auth.v1.LoginResponseB\bZ\x06sso/v1b\x06proto3"
 
 var (
-	file_v1_ApiService_proto_rawDescOnce sync.Once
-	file_v1_ApiService_proto_rawDescData []byte
+	file_v1_sso_proto_rawDescOnce sync.Once
+	file_v1_sso_proto_rawDescData []byte
 )
 
-func file_v1_ApiService_proto_rawDescGZIP() []byte {
-	file_v1_ApiService_proto_rawDescOnce.Do(func() {
-		file_v1_ApiService_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_ApiService_proto_rawDesc), len(file_v1_ApiService_proto_rawDesc)))
+func file_v1_sso_proto_rawDescGZIP() []byte {
+	file_v1_sso_proto_rawDescOnce.Do(func() {
+		file_v1_sso_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_v1_sso_proto_rawDesc), len(file_v1_sso_proto_rawDesc)))
 	})
-	return file_v1_ApiService_proto_rawDescData
+	return file_v1_sso_proto_rawDescData
 }
 
-var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
-var file_v1_ApiService_proto_goTypes = []any{
-	(*LoginRequest)(nil),    // 0: api.v1.LoginRequest
-	(*LoginResponse)(nil),   // 1: api.v1.LoginResponse
-	(*IsAdminRequest)(nil),  // 2: api.v1.IsAdminRequest
-	(*IsAdminResponse)(nil), // 3: api.v1.IsAdminResponse
+var file_v1_sso_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_sso_proto_goTypes = []any{
+	(*LoginRequest)(nil),    // 0: auth.v1.LoginRequest
+	(*LoginResponse)(nil),   // 1: auth.v1.LoginResponse
+	(*IsAdminRequest)(nil),  // 2: auth.v1.IsAdminRequest
+	(*IsAdminResponse)(nil), // 3: auth.v1.IsAdminResponse
 }
-var file_v1_ApiService_proto_depIdxs = []int32{
-	0, // 0: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
-	2, // 1: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
-	1, // 2: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
-	3, // 3: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
+var file_v1_sso_proto_depIdxs = []int32{
+	2, // 0: auth.v1.AuthService.IsAdmin:input_type -> auth.v1.IsAdminRequest
+	0, // 1: auth.v1.AuthService.Login:input_type -> auth.v1.LoginRequest
+	3, // 2: auth.v1.AuthService.IsAdmin:output_type -> auth.v1.IsAdminResponse
+	1, // 3: auth.v1.AuthService.Login:output_type -> auth.v1.LoginResponse
 	2, // [2:4] is the sub-list for method output_type
 	0, // [0:2] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -295,26 +293,26 @@ var file_v1_ApiService_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_v1_ApiService_proto_init() }
-func file_v1_ApiService_proto_init() {
-	if File_v1_ApiService_proto != nil {
+func init() { file_v1_sso_proto_init() }
+func file_v1_sso_proto_init() {
+	if File_v1_sso_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_ApiService_proto_rawDesc), len(file_v1_ApiService_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_sso_proto_rawDesc), len(file_v1_sso_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_v1_ApiService_proto_goTypes,
-		DependencyIndexes: file_v1_ApiService_proto_depIdxs,
-		MessageInfos:      file_v1_ApiService_proto_msgTypes,
+		GoTypes:           file_v1_sso_proto_goTypes,
+		DependencyIndexes: file_v1_sso_proto_depIdxs,
+		MessageInfos:      file_v1_sso_proto_msgTypes,
 	}.Build()
-	File_v1_ApiService_proto = out.File
-	file_v1_ApiService_proto_goTypes = nil
-	file_v1_ApiService_proto_depIdxs = nil
+	File_v1_sso_proto = out.File
+	file_v1_sso_proto_goTypes = nil
+	file_v1_sso_proto_depIdxs = nil
 }
