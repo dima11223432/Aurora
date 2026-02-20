@@ -4,28 +4,18 @@ import psycopg2
 class ChannelStorage:
     def __init__(self, dbname, user, password, host="localhost", port=5432):
         self.conn = psycopg2.connect(
-            dbname=dbname, user=user,
-            password=password, host=host, port=port
+            dbname=dbname, user=user, password=password, host=host, port=port
         )
         self.conn.autocommit = False
 
-        cur = self.conn.cursor()
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS channels (
-                id SERIAL PRIMARY KEY,
-                username TEXT UNIQUE NOT NULL
-            )
-        """)
         self.conn.commit()
-        cur.close()
 
     def add_channel(self, username):
         username = username.lstrip("@")
         cur = self.conn.cursor()
         try:
             cur.execute(
-                "INSERT INTO channels (username) VALUES (%s) RETURNING id",
-                (username,)
+                "INSERT INTO channels (username) VALUES (%s) RETURNING id", (username,)
             )
             new_id = cur.fetchone()[0]
             self.conn.commit()
@@ -53,3 +43,11 @@ class ChannelStorage:
     def close(self):
         self.conn.close()
 
+
+def main():
+    c = ChannelStorage("parser", "postgres", "pass")
+    print(c.get_all_channels())
+
+
+if __name__ == "__main__":
+    main()
