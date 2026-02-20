@@ -16,8 +16,6 @@ CREATE TABLE IF NOT EXISTS channels (
     user_id BIGINT NOT NULL,
     username TEXT NOT NULL,
 
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-
     CONSTRAINT fk_channels_user
         FOREIGN KEY (user_id)
         REFERENCES users(id)
