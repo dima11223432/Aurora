@@ -10,6 +10,20 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE INDEX IF NOT EXISTS idx_users_telegram_id ON users (telegram_id);
 
 
+CREATE TABLE IF NOT EXISTS channels (
+    id BIGSERIAL PRIMARY KEY,
+
+    user_id BIGINT NOT NULL,
+    username TEXT NOT NULL,
+
+    CONSTRAINT fk_channels_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT uq_channels_username UNIQUE (username)
+);
+
 CREATE TABLE IF NOT EXISTS apps (
     id BIGSERIAL PRIMARY KEY,
     name TEXT NOT NULL UNIQUE,
