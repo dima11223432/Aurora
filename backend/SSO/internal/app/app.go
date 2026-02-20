@@ -3,7 +3,7 @@ package app
 import (
 	grpcApp "authService/internal/app/grpc"
 	"authService/internal/services/auth"
-	"authService/internal/storage/sqlite"
+	"authService/internal/storage/postgres"
 	"log/slog"
 	"time"
 )
