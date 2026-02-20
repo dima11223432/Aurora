@@ -42,12 +42,3 @@ class ChannelStorage:
 
     def close(self):
         self.conn.close()
-
-
-def main():
-    c = ChannelStorage("parser", "postgres", "pass")
-    print(c.get_all_channels())
-
-
-if __name__ == "__main__":
-    main()
