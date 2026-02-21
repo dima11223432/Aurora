@@ -1,7 +1,8 @@
 from telethon import TelegramClient, events
 import asyncio
 
-class ParserService():
+
+class ParserService:
     def __init__(self, api_id, api_hash, phone_number):
         self.phone_number = phone_number
         self.is_connect = False
@@ -9,6 +10,7 @@ class ParserService():
             self.client = TelegramClient("pars", api_id, api_hash)
         except:
             print("err in init")
+
     def connect(self):
         try:
             await self.client.start(self.phone_number)
@@ -23,27 +25,28 @@ class ParserService():
         except:
             print("err in disconnect")
 
-    def last_post(self, us_chanal):
+    async def last_post(self, us_chanal):
         if not self.is_connect:
             self.connect()
-        
+
         try:
             channel = await self.client.get_entity(us_chanal)
             message = await self.client.get_messages(channel, limit=1)
 
             if not message:
                 print("err: not messages")
-            
+
             post_data = {
                 "id": message[0].id,
-                "date": message[0].date
-                "text": message.text
+                "date": message[0].date,
+                "text": message.text,
             }
 
-            return post_data 
+            return post_data
         except:
             print("err in message")
-            
+
+
 """
     def pars_posts(self, channels_usernams):
 
