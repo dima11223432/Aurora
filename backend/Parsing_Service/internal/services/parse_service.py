@@ -87,9 +87,9 @@ class ParserService:
 
 
 async def test_last_post():
-    API_ID = int(os.getenv("API_ID", 28130214))
-    API_HASH = os.getenv("API_HASH", "2b6608b8fbe7b20d2a17a331c0edc54a")
-    PHONE_NUMBER = os.getenv("PHONE_NUMBER", "79254196820")
+    API_ID = int(os.getenv("API_ID", 26904763))
+    API_HASH = os.getenv("API_HASH", "dec79b93c39beb751dbb1e6b62a5f16e")
+    PHONE_NUMBER = os.getenv("PHONE_NUMBER", "19294487570")
 
     TEST_CHANNEL = "@durov"
 
