@@ -39,7 +39,7 @@ class ParserService:
             post_data = {
                 "id": message[0].id,
                 "date": message[0].date,
-                "text": message.text,
+                "text": message[0].text,
             }
 
             return post_data
