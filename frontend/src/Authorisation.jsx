@@ -14,25 +14,26 @@ export const Landing = () => {
       setIsLoading(true);
 
       try {
-        const telegramUser = {
-          telegram_id: user.id,
-          username: user.username,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          is_admin: false,
-          app_id: 1,
-        };
-
         fetch("https://24c2-2605-e440-9-00-3a.ngrok-free.app/v1/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(telegramUser),
+          body: JSON.stringify({
+            telegram_id: 12345,
+            username: "",
+            first_name: "",
+            last_name: "",
+            is_admin: false,
+            app_id: 1,
+          }),
         })
           .then((res) => res.json())
-          .then((data) => console.log("Login response:", data))
-          .catch((err) => console.error(err));
+          .then((data) => {
+            console.log("JWT Token:", data.token);
+            localStorage.setItem("jwt", data.token);
+          })
+          .catch(console.error);
       } catch (err) {
         console.error("Login API error:", err);
         setError("Ошибка авторизации на сервере");
