@@ -9,6 +9,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.28.0
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/redis/go-redis/v9 v9.18.0
+	github.com/rs/cors v1.11.1
 	github.com/segmentio/kafka-go v0.4.50
 	github.com/sirupsen/logrus v1.9.4
 	google.golang.org/genproto/googleapis/api v0.0.0-20260217215200-42d3e9bedb6d
@@ -27,7 +28,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
 	github.com/pierrec/lz4/v4 v4.1.16 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
-	github.com/rs/cors v1.11.1 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	golang.org/x/net v0.48.0 // indirect
 	golang.org/x/sys v0.39.0 // indirect
