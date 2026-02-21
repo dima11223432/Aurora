@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package auth.v1;
+
+option go_package = "sso/v1";
+
+service AuthService {
+  rpc IsAdmin(IsAdminRequest) returns (IsAdminResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message LoginRequest {
+  int64 telegram_id = 1;
+  string username = 2;
+  string first_name = 3;
+  string last_name = 4;
+  bool is_admin = 5;
+  int64 app_id = 6;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message IsAdminRequest {
+  int64 telegram_id = 1;
+}
+
+message IsAdminResponse {
+  bool is_admin = 1;
+}
+
+
