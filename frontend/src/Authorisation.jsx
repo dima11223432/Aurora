@@ -7,30 +7,30 @@ export const Landing = () => {
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
   const widgetContainerRef = useRef(null);
-
+  const API_URL = "https://c61a-2605-e440-9-00-3a.ngrok-free.app/v1/login";
   useEffect(() => {
     window.onTelegramAuth = async (user) => {
       console.log("Telegram auth success:", user);
       setIsLoading(true);
 
       try {
-        fetch("https://24c2-2605-e440-9-00-3a.ngrok-free.app/v1/login", {
+        fetch(API_URL, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            telegram_id: 12345,
-            username: "",
-            first_name: "",
-            last_name: "",
+            telegram_id: user.id,
+            username: user.username || "",
+            first_name: user.first_name || "",
+            last_name: user.last_name || "",
             is_admin: false,
             app_id: 1,
           }),
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("JWT Token:", data.token);
+            alert("JWT Token:" + data.token);
             localStorage.setItem("jwt", data.token);
           })
           .catch(console.error);
