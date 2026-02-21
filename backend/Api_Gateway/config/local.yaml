@@ -4,7 +4,8 @@ storage_pass: "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable"
 
 auth:
   jwt_secret: "test-secret"
-  cors_url:"https://0920-2605-e440-9-00-3a.ngrok-free.app"
+  cors_urls:
+    - "https://0920-2605-e440-9-00-3a.ngrok-free.app"
   public_methods:
     - "/api.v1.ApiService/Register"
     - "/api.v1.ApiService/Login"

@@ -52,7 +52,7 @@ func main() {
 	}
 
 	c := cors.New(cors.Options{
-		AllowedOrigins:   []string{"https://0920-2605-e440-9-00-3a.ngrok-free.app"}, // или твой ngrok фронтенд
+		AllowedOrigins:   cfg.Auth.Cors_urls,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Authorization"},
 		AllowCredentials: true,
