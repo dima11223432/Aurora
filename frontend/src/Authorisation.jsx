@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./styles/Landing.css";
 import Logo from "./assets/Aurora.png";
 
@@ -6,14 +6,39 @@ export const Landing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
+  const widgetContainerRef = useRef(null);
 
   useEffect(() => {
-    window.onTelegramAuth = (user) => {
+    window.onTelegramAuth = async (user) => {
       console.log("Telegram auth success:", user);
-      setTelegramUser(user);
-      setIsLoading(false);
+      setIsLoading(true);
 
-      localStorage.setItem("telegramUser", JSON.stringify(user));
+      try {
+        const telegramUser = {
+          telegram_id: user.id,
+          username: user.username,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          is_admin: false,
+          app_id: 1,
+        };
+
+        fetch("https://24c2-2605-e440-9-00-3a.ngrok-free.app/v1/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(telegramUser),
+        })
+          .then((res) => res.json())
+          .then((data) => console.log("Login response:", data))
+          .catch((err) => console.error(err));
+      } catch (err) {
+        console.error("Login API error:", err);
+        setError("Ошибка авторизации на сервере");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     const script = document.createElement("script");
@@ -26,14 +51,19 @@ export const Landing = () => {
 
     script.onload = () => {
       console.log("Telegram widget loaded successfully");
+      setIsLoading(false);
     };
 
     script.onerror = () => {
       console.error("Failed to load Telegram widget");
       setError("Не удалось загрузить виджет Telegram");
+      setIsLoading(false);
     };
 
-    document.body.appendChild(script);
+    if (widgetContainerRef.current) {
+      widgetContainerRef.current.innerHTML = "";
+      widgetContainerRef.current.appendChild(script);
+    }
 
     const savedUser = localStorage.getItem("telegramUser");
     if (savedUser) {
@@ -41,8 +71,8 @@ export const Landing = () => {
     }
 
     return () => {
-      if (document.body.contains(script)) {
-        document.body.removeChild(script);
+      if (widgetContainerRef.current) {
+        widgetContainerRef.current.innerHTML = "";
       }
       delete window.onTelegramAuth;
     };
@@ -51,11 +81,20 @@ export const Landing = () => {
   const handleLogout = () => {
     localStorage.removeItem("telegramUser");
     setTelegramUser(null);
-  };
 
-  const openTelegramBot = () => {
-    const botUsername = "AuroraFinances_bot";
-    window.open(`https://t.me/${botUsername}`, "_blank");
+    if (widgetContainerRef.current) {
+      widgetContainerRef.current.innerHTML = "";
+
+      const newScript = document.createElement("script");
+      newScript.src = "https://telegram.org/js/telegram-widget.js?22";
+      newScript.setAttribute("data-telegram-login", "AuroraFinances_bot");
+      newScript.setAttribute("data-size", "large");
+      newScript.setAttribute("data-onauth", "onTelegramAuth(user)");
+      newScript.setAttribute("data-request-access", "write");
+      newScript.async = true;
+
+      widgetContainerRef.current.appendChild(newScript);
+    }
   };
 
   return (
@@ -145,34 +184,20 @@ export const Landing = () => {
           </div>
         </section>
 
-        <div className="cta-section">
+        <div className="telegram-auth-section">
           {!telegramUser ? (
             <>
-              <div
-                id="telegram-login-container"
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  margin: "20px 0",
-                  minHeight: "58px",
-                }}
-              />
-
-              <button
-                className="get-started-btn"
-                onClick={openTelegramBot}
-                disabled={isLoading}
-                style={{ marginTop: "10px" }}
-              >
-                <svg
-                  className="telegram-icon"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.146-.357.292-.611.292-.005 0-.01 0-.016 0l.213-3.053 5.56-5.023c.242-.213-.054-.328-.375-.115l-6.869 4.332-2.961-.924c-.643-.204-.657-.643.136-.953l11.566-4.458c.529-.196 1.083.128.897.983z" />
-                </svg>
-                Открыть бота
-              </button>
+              {isLoading ? (
+                <div className="loading-widget">
+                  <span className="loading-spinner"></span>
+                </div>
+              ) : (
+                <div
+                  id="telegram-login-container"
+                  ref={widgetContainerRef}
+                  className="telegram-widget-wrapper"
+                />
+              )}
             </>
           ) : (
             <div className="user-profile">
@@ -202,20 +227,22 @@ export const Landing = () => {
               </button>
             </div>
           )}
-
-          {error && (
-            <div className="error-message">
-              <span>⚠️</span>
-              <p>{error}</p>
-            </div>
-          )}
         </div>
+
+        {error && (
+          <div className="error-message">
+            <span>⚠️</span>
+            <p>{error}</p>
+          </div>
+        )}
 
         <footer className="landing-footer">
           <p className="footer-main">Начните прогнозировать сейчас</p>
           <p className="footer-secondary">
             На базе продвинутого ИИ • Не является финансовым советом
           </p>
+
+          {/* Виджет Telegram слева снизу */}
         </footer>
       </main>
     </div>
