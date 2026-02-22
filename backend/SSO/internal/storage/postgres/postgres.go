@@ -40,7 +40,7 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 	}
 
 	query := `
-	INSERT INTO channels (user_id, username) VALUES
+	INSERT INTO channels (user_id, channel_username) VALUES
 	`
 
 	args := make([]interface{}, 0, len(channels)*2)
