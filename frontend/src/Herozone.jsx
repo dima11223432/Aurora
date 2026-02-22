@@ -5,7 +5,7 @@ const Herozone = () => {
       const [error, setError] = useState(null);
       const [telegramUser, setTelegramUser] = useState(null);
       const widgetContainerRef = useRef(null);
-      const API_URL = "https://c61a-2605-e440-9-00-3a.ngrok-free.app/v1/login";
+      const API_URL = "https://27dc-213-176-17-134.ngrok-free.app/v1/login";
     
       useEffect(() => {
         window.onTelegramAuth = async (user) => {
