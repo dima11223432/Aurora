@@ -14,4 +14,3 @@ export default defineConfig({
     host: true, // Прослушивать все сетевые интерфейсы
   },
 });
-
