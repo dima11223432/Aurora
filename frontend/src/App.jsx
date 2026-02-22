@@ -1,7 +1,6 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import './styles/App.css'
+import { Landing } from "./Authorisation.jsx";
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HeroZone from './Herozone.jsx'

@@ -38,7 +38,7 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	query := `
 	INSERT INTO users (telegram_id, username, first_name, last_name, is_admin) 
 	VALUES ($1, $2, $3, $4, $5) 
-	RETURNING id
+	RETURNING user_id
 	`
 	var userID int64
 
@@ -61,7 +61,7 @@ func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, err
 	const op = "storage.postgres.User"
 
 	query := `
-	SELECT id, telegram_id, username, first_name, last_name, is_admin 
+	SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
 	FROM users 
 	WHERE telegram_id = $1
 	`
