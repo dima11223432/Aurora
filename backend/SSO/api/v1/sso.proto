@@ -6,7 +6,17 @@ option go_package = "sso/v1";
 
 service AuthService {
   rpc IsAdmin(IsAdminRequest) returns (IsAdminResponse);
+  rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse); 
   rpc Login(LoginRequest) returns (LoginResponse);
+}
+
+message SetPriorityChannelsRequest {
+  int64 user_id = 1;
+  repeated string channels_usernames = 2;
+}
+
+message SetPriorityChannelsResponse {
+  int32 status = 1;
 }
 
 message LoginRequest {
