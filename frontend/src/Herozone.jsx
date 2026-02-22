@@ -3,20 +3,20 @@ import React from 'react';
 const Herozone = () => {
     const items = [
         {
-            title: 'AI-Powered Predictions',
-            description: 'Advanced machine learning models analyze market trends',
+            title: 'ИИ аналитика',
+            description: 'Продвинутые модели машинного обучения анализируют рыночные тенденции',
         },
         {
-            title: 'Real-Time Analysis',
-            description: 'Live market data and instant prediction updates',
+            title: 'Анализ в реальном времени',
+            description: 'Текущие рыночные данные и мгновенное обновление прогнозов',
         },
         {
-            title: 'High Accuracy',
-            description: '89.3% prediction accuracy rate',
+            title: 'Высокая точность',
+            description: '*% точности прогнозов на основе исторических данных и текущих рыночных условий',
         },
         {
-            title: 'Secure & Private',
-            description: 'Your data is encrypted and protected',
+            title: 'Безопасный и приватный',
+            description: 'Ваши данные зашифрованы и защищены',
         }
     ];
 
@@ -29,8 +29,8 @@ const Herozone = () => {
                     className="w-20 h-20 mb-2 mx-auto"
                 />
                 
-                <p className="text-[#95bec7] text-base sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
-                    Welcome to <span className="text-[#0fd2f5] font-bold">Aurora</span><br /> AI-Powered TON & T-Investments Predictions
+                <p className="text-[#95bec7] text-base text-center sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
+                    Добро пожаловать в <span className="text-[#0fd2f5] font-bold">Aurora</span><br /> ИИ-поддерживаемые прогнозы TON и T-Investments
                 </p>
 
                 <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-12">
@@ -56,7 +56,7 @@ const Herozone = () => {
 
                 <div className="text-center">
                     <button className="bg-[#0fd2f5] text-black text-lg sm:text-xl md:text-2xl font-semibold px-6 sm:px-8 md:px-5 py-3 sm:py-4 rounded-full shadow-[0_10px_25px_-5px_#014b5c] hover:shadow-[0_15px_30px_-5px_#014b5c] hover:scale-105 active:scale-95 transition-all duration-200">
-                        Get started →
+                        Начать работу →
                     </button>
                 </div>
             </div>
