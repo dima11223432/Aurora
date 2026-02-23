@@ -32,13 +32,40 @@ func New(storagePath string) (*Storage, error) {
 	}, nil
 }
 
+func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
+	const op = "storage.postgres.SetPriorityChannels"
+
+	if len(channels) == 0 {
+		return nil
+	}
+
+	query := `
+	INSERT INTO channels (user_id, channel_username) VALUES
+	`
+
+	args := make([]interface{}, 0, len(channels)*2)
+
+	for i, channel := range channels {
+		query += fmt.Sprintf("($%d, $%d)", i*2+1, i*2+2)
+		if i != len(channels)-1 {
+			query += ","
+		}
+		args = append(args, user_id, channel)
+	}
+	_, err := s.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
 func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "storage.postgres.SaveUser"
 
 	query := `
 	INSERT INTO users (telegram_id, username, first_name, last_name, is_admin) 
 	VALUES ($1, $2, $3, $4, $5) 
-	RETURNING id
+	RETURNING user_id
 	`
 	var userID int64
 
@@ -61,7 +88,7 @@ func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, err
 	const op = "storage.postgres.User"
 
 	query := `
-	SELECT id, telegram_id, username, first_name, last_name, is_admin 
+	SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
 	FROM users 
 	WHERE telegram_id = $1
 	`

@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-    id BIGSERIAL PRIMARY KEY,
+    user_id BIGSERIAL PRIMARY KEY,
     telegram_id BIGINT NOT NULL UNIQUE,  
     username TEXT,                      
     first_name TEXT NOT NULL,          
@@ -14,16 +14,14 @@ CREATE TABLE IF NOT EXISTS channels (
     id BIGSERIAL PRIMARY KEY,
 
     user_id BIGINT NOT NULL,
-    username TEXT NOT NULL,
-
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    channel_username TEXT NOT NULL,
 
     CONSTRAINT fk_channels_user
         FOREIGN KEY (user_id)
-        REFERENCES users(id)
+        REFERENCES users(user_id)
         ON DELETE CASCADE,
 
-    CONSTRAINT uq_channels_username UNIQUE (username)
+    CONSTRAINT uq_channels_username UNIQUE (channel_username)
 );
 
 CREATE TABLE IF NOT EXISTS apps (
