@@ -36,7 +36,7 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 	const op = "storage.postgres.SetPriorityChannels"
 
 	if len(channels) == 0 {
-		return nil
+		return errors.New("channels is empty")
 	}
 
 	query := `
