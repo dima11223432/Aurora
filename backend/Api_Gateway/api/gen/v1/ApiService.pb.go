@@ -24,7 +24,7 @@ const (
 
 type SetPriorityChannelsRequest struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
-	PriorityChannels []int64                `protobuf:"varint,1,rep,packed,name=priority_channels,json=priorityChannels,proto3" json:"priority_channels,omitempty"`
+	PriorityChannels []string               `protobuf:"bytes,1,rep,name=priority_channels,json=priorityChannels,proto3" json:"priority_channels,omitempty"`
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -59,7 +59,7 @@ func (*SetPriorityChannelsRequest) Descriptor() ([]byte, []int) {
 	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *SetPriorityChannelsRequest) GetPriorityChannels() []int64 {
+func (x *SetPriorityChannelsRequest) GetPriorityChannels() []string {
 	if x != nil {
 		return x.PriorityChannels
 	}
@@ -332,7 +332,7 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\n" +
 	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\"I\n" +
 	"\x1aSetPriorityChannelsRequest\x12+\n" +
-	"\x11priority_channels\x18\x01 \x03(\x03R\x10priorityChannels\"5\n" +
+	"\x11priority_channels\x18\x01 \x03(\tR\x10priorityChannels\"5\n" +
 	"\x1bSetPriorityChannelsResponse\x12\x16\n" +
 	"\x06status\x18\x01 \x01(\x05R\x06status\"\xb9\x01\n" +
 	"\fLoginRequest\x12\x1f\n" +

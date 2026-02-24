@@ -29,7 +29,7 @@ service ApiService {
 }
 
 message SetPriorityChannelsRequest {
-  repeated int64 priority_channels = 1;
+  repeated string priority_channels = 1;
 }
 
 message SetPriorityChannelsResponse {

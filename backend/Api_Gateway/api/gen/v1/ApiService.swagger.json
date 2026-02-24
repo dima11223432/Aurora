@@ -198,8 +198,7 @@
         "priorityChannels": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "int64"
+            "type": "string"
           }
         }
       }
