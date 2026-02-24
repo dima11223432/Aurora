@@ -59,14 +59,18 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 
 }
 
-func (s *serverAPI) SetPriorityChannels(ctx context.Context, req *ssov1.SetPriorityChannelsRequest) (*ssov1.SetPriorityChannelsResponse, error) {
-  	status, err := s.SetPriorityChannels(ctx context.Context, req.GetUserId(), req.GetChannelsUsernames())
+func (s *serverAPI) SetPriorityChannels(
+	ctx context.Context,
+	req *ssov1.SetPriorityChannelsRequest) (
+	*ssov1.SetPriorityChannelsResponse, error) {
+
+	status, err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 
 	if err != nil {
-		return nil, status.Error(codes.Internal, "internal error")
+		return nil, err
 	}
-	return &ssov1.SetPriorityChannelsResponse {
-		Status: status, 
+	return &ssov1.SetPriorityChannelsResponse{
+		Status: status,
 	}, nil
 
 }
