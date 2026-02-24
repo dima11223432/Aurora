@@ -60,7 +60,15 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 }
 
 func (s *serverAPI) SetPriorityChannels(ctx context.Context, req *ssov1.SetPriorityChannelsRequest) (*ssov1.SetPriorityChannelsResponse, error) {
-  status, err := s.SetPriorityChannels(ctx context.Context, req.GetUserId(), req.GetChannelsUsernames())
+  	status, err := s.SetPriorityChannels(ctx context.Context, req.GetUserId(), req.GetChannelsUsernames())
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &ssov1.SetPriorityChannelsResponse {
+		Status: status, 
+	}, nil
+
 }
 
 func (s *serverAPI) IsAdmin(ctx context.Context, req *ssov1.IsAdminRequest) (*ssov1.IsAdminResponse, error) {
