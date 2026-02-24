@@ -84,6 +84,29 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	return userID, nil
 }
 
+func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, error) {
+	const op = "storage.postgres.GetUserById"
+
+	query := `
+	SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
+	FROM users 
+	WHERE user_id = $1
+	`
+
+	var user models.User
+	err := s.db.QueryRowContext(ctx, query, user_id).Scan(
+		&user.ID, &user.Telegram_id, &user.Username, &user.First_name, &user.Last_name, &user.Is_admin,
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+
+			return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+		}
+		return models.User{}, fmt.Errorf("%s: %w", op, err)
+	}
+	return user, nil
+}
+
 func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) {
 	const op = "storage.postgres.User"
 
