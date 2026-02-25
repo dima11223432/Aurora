@@ -21,19 +21,6 @@ func RegisterGrpcServer(gRPC *grpc.Server, auth *services.AuthService) {
 	})
 }
 
-func (a *ApiService) SetPriorityChannels(
-	ctx context.Context,
-	req *v1.SetPriorityChannelsRequest,
-) (*v1.SetPriorityChannelsResponse, error) {
-	err := a.auth.SetPriorityChannels(ctx, req.GetPriorityChannels())
-	if err != nil {
-		return nil, err
-	}
-	return &v1.SetPriorityChannelsResponse{
-		Status: 200,
-	}, nil
-}
-
 func (a *ApiService) Login(
 	ctx context.Context,
 	req *v1.LoginRequest,
