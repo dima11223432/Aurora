@@ -1,9 +1,7 @@
 package services
 
 import (
-	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"context"
-	"fmt"
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
