@@ -1,7 +1,9 @@
 package services
 
 import (
+	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"context"
+	"fmt"
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
@@ -15,6 +17,22 @@ func NewAuthService(authClient ssov1.AuthServiceClient) *AuthService {
 	return &AuthService{
 		AuthClient: authClient,
 	}
+}
+
+func (a *AuthService) SetPriorityChannels(
+	ctx context.Context,
+	channels []string,
+) error {
+	const op = "auth.SetPriorityChannels"
+	userID, err := authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	_, err = a.AuthClient.SetPriorityChannels(ctx, &ssov1.SetPriorityChannelsRequest{
+		UserId:            userID,
+		ChannelsUsernames: channels,
+	})
+	return err
 }
 
 func (a *AuthService) Login(
