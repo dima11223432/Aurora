@@ -64,13 +64,17 @@ func (s *serverAPI) SetPriorityChannels(
 	req *ssov1.SetPriorityChannelsRequest) (
 	*ssov1.SetPriorityChannelsResponse, error) {
 
-	status, err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
+	statusCode, err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 
 	if err != nil {
+		switch {
+		case errors.Is(err, storage.ErrChannelExists):
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
 		return nil, err
 	}
 	return &ssov1.SetPriorityChannelsResponse{
-		Status: status,
+		Status: statusCode,
 	}, nil
 
 }
