@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 
-	_ "github.com/lib/pq"
+	pq "github.com/lib/pq"
 )
 
 type Storage struct {
@@ -54,6 +54,10 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 	}
 	_, err := s.db.ExecContext(ctx, query, args...)
 	if err != nil {
+		if isDuplicateError(err) {
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+		}
+
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
@@ -175,4 +179,11 @@ func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 		return models.App{}, fmt.Errorf("%s: %w", op, err)
 	}
 	return app, nil
+}
+func isDuplicateError(err error) bool {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) {
+		return pqErr.Code == "23505"
+	}
+	return false
 }
