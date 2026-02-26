@@ -23,12 +23,11 @@ type App struct {
 }
 
 func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string) *App {
+	AuthInterceptor := authinterceptor.NewAuthInterceptor(authinterceptor.AuthConfig{JwtSecret: jwtSecret, PublicRoutes: publicRoutes})
+
 	gRPCServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
-			authinterceptor.AuthInterceptor(authinterceptor.AuthConfig{
-				JwtSecret:    jwtSecret,
-				PublicRoutes: publicRoutes,
-			}),
+			AuthInterceptor.SetAuthInterceptor(),
 		),
 	)
 	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -37,7 +36,7 @@ func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string
 		log.Fatalf("cant connect to authService: %v", err)
 	}
 	authClient := ssov1.NewAuthServiceClient(authConn)
-	authService := services.NewAuthService(authClient)
+	authService := services.NewAuthService(authClient, AuthInterceptor)
 
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService)
 	reflection.Register(gRPCServer)

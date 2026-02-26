@@ -2,7 +2,6 @@ package grpc
 
 import (
 	v1 "API_Service/api/gen/v1"
-	services "API_Service/internal/services"
 	"context"
 	"fmt"
 
@@ -10,12 +9,18 @@ import (
 	"google.golang.org/grpc"
 )
 
-type ApiService struct {
-	v1.UnimplementedApiServiceServer
-	auth *services.AuthService
+type Auth interface {
+	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
+	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
+	SetPriorityChannels(ctx context.Context, channels []string) (int32, error)
 }
 
-func RegisterGrpcServer(gRPC *grpc.Server, auth *services.AuthService) {
+type ApiService struct {
+	v1.UnimplementedApiServiceServer
+	auth Auth
+}
+
+func RegisterGrpcServer(gRPC *grpc.Server, auth Auth) {
 	v1.RegisterApiServiceServer(gRPC, &ApiService{
 		auth: auth,
 	})
