@@ -12,7 +12,6 @@ import (
 type Auth interface {
 	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
-	SetPriorityChannels(ctx context.Context, channels []string) (int32, error)
 }
 
 type ApiService struct {
