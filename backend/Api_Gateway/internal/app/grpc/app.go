@@ -23,12 +23,11 @@ type App struct {
 }
 
 func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string) *App {
+	AuthInterceptor := authinterceptor.NewAuthInterceptor(authinterceptor.AuthConfig{})
+
 	gRPCServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
-			authinterceptor.AuthInterceptor(authinterceptor.AuthConfig{
-				JwtSecret:    jwtSecret,
-				PublicRoutes: publicRoutes,
-			}),
+			AuthInterceptor.SetAuthInterceptor(),
 		),
 	)
 	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
