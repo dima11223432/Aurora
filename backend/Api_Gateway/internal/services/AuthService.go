@@ -5,15 +5,22 @@ import (
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+	"google.golang.org/grpc"
 )
 
+type AuthInterceptor interface {
+	SetAuthInterceptor() grpc.UnaryServerInterceptor
+	GetUserIdFromContext(ctx context.Context) (int64, error)
+}
 type AuthService struct {
-	AuthClient ssov1.AuthServiceClient
+	AuthClient      ssov1.AuthServiceClient
+	AuthInterceptor AuthInterceptor
 }
 
-func NewAuthService(authClient ssov1.AuthServiceClient) *AuthService {
+func NewAuthService(authClient ssov1.AuthServiceClient, authinterceptor AuthInterceptor) *AuthService {
 	return &AuthService{
-		AuthClient: authClient,
+		AuthClient:      authClient,
+		AuthInterceptor: authinterceptor,
 	}
 }
 
