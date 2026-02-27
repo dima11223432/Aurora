@@ -12,7 +12,11 @@ load_dotenv(env_path)
 class KafkaController:
     def __init__(self):
         self.producer = Producer(
-            {"bootstrap.servers": os.getenv("KAFKA_BOOTSTRAP_SERVERS")}
+            {
+                "bootstrap.servers": os.getenv(
+                    "KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"
+                )
+            }
         )
 
     def send_message(self, topic: str, message: Telegram_Post) -> None:
