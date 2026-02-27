@@ -1,11 +1,18 @@
-from telethon import TelegramClient, events
+from telethon import TelegramClient
+from dotenv import load_dotenv
 
+from ..domains.domains import Telegram_Post
+from ..brokers.kafka import KafkaController
 import asyncio
 import os
+
+env_path = os.path.join(os.path.dirname(__file__), "../../config/config.env")
+load_dotenv(env_path)
 
 
 class ParserService:
     def __init__(self, api_id, api_hash, phone_number):
+        self.kafka_controller = KafkaController()
         self.phone_number = phone_number
         self.is_connect = False
         self.api_id = api_id
@@ -17,7 +24,7 @@ class ParserService:
 
     async def connect(self):
         try:
-            await self.client.start()
+            await self.client.start(self.phone_number)
             self.is_connect = True
             print("Successfully connected!")
         except Exception as e:
@@ -46,80 +53,16 @@ class ParserService:
             message = messages[0]
             post_data = {
                 "id": message.id,
-                "date": message.date.isoformat() if message.date else None,
+                "date": message.date.isoformat(),
                 "text": message.text,
                 "channel": us_channel,
-                "channel_title": (
-                    channel.title if hasattr(channel, "title") else us_channel
-                ),
+                "channel_title": channel.title,
             }
-
+            telegram_post = Telegram_Post(**post_data)
+            self.kafka_controller.send_message(
+                str(os.getenv("KAFKA_TOPIC")), telegram_post
+            )
             return post_data
         except Exception as e:
             print(f"err in getting message: {e}")
             return None
-
-    async def pars_posts(self, channels_usernames):
-        if not self.is_connect:
-            await self.connect()
-
-        list_channels = []
-        for channel_un in channels_usernames:
-            try:
-                channel = await self.client.get_entity(channel_un)
-                list_channels.append(channel)
-                print(f"Added channel: {channel_un}")
-            except Exception as e:
-                print(f"cant add channel {channel_un}: {e}")
-
-        if not list_channels:
-            print("no channels")
-            return
-
-        @self.client.on(events.NewMessage(chats=list_channels))
-        async def new_message(event):
-            message = event.message
-            channel = await event.get_chat()
-            print(f"New message in {getattr(channel, 'title', channel.username)}:")
-            print(
-                f"Message text: {message.text[:100]}..." if message.text else "No text"
-            )
-            print("-" * 50)
-
-
-async def test_last_post():
-    API_ID = int(os.getenv("API_ID", 28130214))
-    API_HASH = os.getenv("API_HASH", "2b6608b8fbe7b20d2a17a331c0edc54a")
-    PHONE_NUMBER = os.getenv("PHONE_NUMBER", "79254196820")
-
-    TEST_CHANNEL = "@durov"
-
-    parser = ParserService(API_ID, API_HASH, PHONE_NUMBER)
-
-    try:
-        print(f"Testing last_post for channel: {TEST_CHANNEL}")
-        result = await parser.last_post(TEST_CHANNEL)
-
-        if result:
-            print("\n✅ Test successful!")
-            print(f"Channel: {result['channel_title']}")
-            print(f"Post ID: {result['id']}")
-            print(f"Date: {result['date']}")
-            print(
-                f"Text preview: {result['text'][:200]}..."
-                if result["text"]
-                else "No text"
-            )
-        else:
-            print("\nTest failed: No result returned")
-
-    except Exception as e:
-        print(f"\n Test error: {e}")
-
-
-async def main():
-    await test_last_post()
-
-
-if __name__ == "__main__":
-    asyncio.run(main())
