@@ -15,7 +15,8 @@ load_dotenv(env_path)
 
 class App:
 
-    def __init__(self, config: Config):
+    def __init__(self, logger, config: Config):
+        self.log = logger
         self.parser_service = None
         self.api_id = config.API_ID
         self.api_hash = config.API_HASH
@@ -24,15 +25,18 @@ class App:
 
     async def initialize(self):
         self.parser_service = ParserService(
+            self.log,
             self.api_id,
             self.api_hash,
             self.phone_number,
         )
+        self.log.debug("ParserService initialized")
+        self.log.debug("Connectiong to telegram...")
 
         await self.parser_service.connect()
 
     async def run_last_post(self, channel: str = ""):
-
+        self.log.info(f"Scanning last post for channel: {channel}")
         await self.parser_service.last_post(channel)
 
     async def run(self):
