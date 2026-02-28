@@ -7,6 +7,7 @@ from pathlib import Path
 from ..domains.domains import Telegram_Post
 from ..brokers.kafka import KafkaController
 from ..services.parse_service import ParserService
+from ..config.config import Config
 
 env_path = Path(__file__).parent / "config" / "config.env"
 load_dotenv(env_path)
@@ -14,14 +15,12 @@ load_dotenv(env_path)
 
 class App:
 
-    def __init__(self):
+    def __init__(self, config: Config):
         self.parser_service = None
-
-    def load_config(self):
-        self.api_id = int(os.getenv("API_ID", 0))
-        self.api_hash = os.getenv("API_HASH", "")
-        self.phone_number = os.getenv("PHONE_NUMBER", "")
-        self.kafka_topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
+        self.api_id = config.API_ID
+        self.api_hash = config.API_HASH
+        self.phone_number = config.PHONE_NUMBER
+        self.kafka_topic = config.KAFKA_TOPIC
 
     async def initialize(self):
         self.parser_service = ParserService(
@@ -32,21 +31,10 @@ class App:
 
         await self.parser_service.connect()
 
-    async def run_last_post(self, channel=None):
-        channel = "Kafka_Channel1"
+    async def run_last_post(self, channel: str = ""):
 
         await self.parser_service.last_post(channel)
 
     async def run(self):
-        self.load_config()
         await self.initialize()
-        await self.run_last_post()
-
-
-def main():
-    app = App()
-    asyncio.run(app.run())
-
-
-if __name__ == "__main__":
-    main()
+        await self.run_last_post("Kafka_Channel1")
