@@ -7,7 +7,7 @@ import (
 	"context"
 	"fmt"
 
-	"API_Service/internal/grpc/AuthInterceptor"
+	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -237,5 +237,26 @@ func (a *ApiService) SendNotification(ctx context.Context, req *v1.SendNotificat
 	return &v1.SendNotificationResponse{
 		EventId: EventId,
 		Status:  "ok",
+	}, nil
+}
+
+func (a *ApiService) SetPriorityChannels(
+	ctx context.Context,
+	req *v1.SetPriorityChannelsRequest,
+) (*v1.SetPriorityChannelsResponse, error) {
+	channels := req.GetPriorityChannels()
+
+	if len(channels) == 0 {
+		return nil, fmt.Errorf("priority channels list cannot be empty")
+	}
+
+	status, err := a.auth.SetPriorityChannels(ctx, channels)
+	if err != nil {
+		logrus.WithError(err).Error("failed to set priority channels in auth service")
+		return nil, err
+	}
+
+	return &v1.SetPriorityChannelsResponse{
+		Status: status,
 	}, nil
 }
