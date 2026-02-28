@@ -24,6 +24,16 @@ func NewAuthService(authClient ssov1.AuthServiceClient, authinterceptor AuthInte
 	}
 }
 
+func (a *AuthService) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) (int32, error) {
+    const op = "Api_Gateway.internal.services.AuthService.go"
+    resp, err := a.AuthClient.SetPriorityChannels(ctx, user_id, channels)
+    if err != nil{
+        return 400, fmt.Errorf("%s: %w", op, err)
+    }
+    return resp.Status, nil
+
+}
+
 func (a *AuthService) Login(
 	ctx context.Context,
 	telegram_id int64,
