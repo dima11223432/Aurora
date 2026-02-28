@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
@@ -22,6 +23,26 @@ func NewAuthService(authClient ssov1.AuthServiceClient, authinterceptor AuthInte
 		AuthClient:      authClient,
 		AuthInterceptor: authinterceptor,
 	}
+}
+
+func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) (int32, error) {
+	const op = "Api_Gateway.internal.services.AuthService.go"
+
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		return 400, fmt.Errorf("%s: %w", op, err)
+	}
+	resp, err := a.AuthClient.SetPriorityChannels(
+		ctx,
+		&ssov1.SetPriorityChannelsRequest{
+			UserId:            userID,
+			ChannelsUsernames: channels,
+		})
+	if err != nil {
+		return 400, fmt.Errorf("%s: %w", op, err)
+	}
+	return resp.Status, nil
+
 }
 
 func (a *AuthService) Login(
