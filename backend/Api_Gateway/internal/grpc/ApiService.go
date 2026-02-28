@@ -12,7 +12,7 @@ import (
 type Auth interface {
 	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
-	// SetPriorityChannels(ctx context.Context, channels []string) (int32, error)
+	SetPriorityChannels(ctx context.Context, channels []string) (int32, error)
 }
 
 type ApiService struct {
@@ -64,7 +64,8 @@ func (a *ApiService) SetPriorityChannels(
 	ctx context.Context,
 	req *v1.SetPriorityChannelsRequest,
 ) (*v1.SetPriorityChannelsResponse, error) {
-	return &v1.SetPriorityChannelsResponse{}, nil
+
+	return nil, nil
 }
 
 func (a *ApiService) IsAdmin(

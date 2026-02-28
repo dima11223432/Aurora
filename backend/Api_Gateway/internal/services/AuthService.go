@@ -25,12 +25,17 @@ func NewAuthService(authClient ssov1.AuthServiceClient, authinterceptor AuthInte
 	}
 }
 
-func (a *AuthService) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) (int32, error) {
+func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) (int32, error) {
 	const op = "Api_Gateway.internal.services.AuthService.go"
+
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		return 400, fmt.Errorf("%s: %w", op, err)
+	}
 	resp, err := a.AuthClient.SetPriorityChannels(
 		ctx,
 		&ssov1.SetPriorityChannelsRequest{
-			UserId:            user_id,
+			UserId:            userID,
 			ChannelsUsernames: channels,
 		})
 	if err != nil {
