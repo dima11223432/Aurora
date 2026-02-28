@@ -367,4 +367,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/go,python,visualstudiocode,vim,react,macos,windows,archlinuxpackages,linux,c++
-config/*.env
+*.env
