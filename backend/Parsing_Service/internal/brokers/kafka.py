@@ -1,5 +1,4 @@
-from datetime import datetime
-from confluent_kafka import Producer, Consumer, TopicPartition, KafkaException
+from confluent_kafka import Producer, Consumer, TopicPartition
 from ..domains.domains import Telegram_Post
 from dotenv import load_dotenv
 import os
@@ -21,6 +20,15 @@ class KafkaController:
 
         try:
             self.producer = Producer({"bootstrap.servers": kafka_servers})
+
+            self.consumer = Consumer(
+                {
+                    "bootstrap.servers": kafka_servers,
+                    "group.id": "last-message-consumer",
+                    "auto.offset.reset": "latest",
+                    "enable.partition.eof": True,
+                }
+            )
 
             self.log.success("Kafka producer created successfully")
         except Exception as e:
@@ -45,4 +53,44 @@ class KafkaController:
         except Exception as e:
             self.log.error(f"Failed to send message to Kafka: {e}")
             self.log.exception("Kafka send error details:")
+            raise
+    def get_first_message(self, topic: str) -> dict:
+        result = {}
+    
+        try:
+            metadata = self.consumer.list_topics(topic)
+            
+            if topic not in metadata.topics:
+                self.log.warning(f"Topic {topic} not found")
+                return result
+            
+            for partition_id in metadata.topics[topic].partitions:
+                msg = None
+                try:
+                    tp = TopicPartition(topic, partition_id)
+                    self.consumer.assign([tp])
+                    
+                    low, high = self.consumer.get_watermark_offsets(tp)
+                    
+                    if high > 0: 
+                        self.consumer.seek(TopicPartition(topic, partition_id, low))
+                        msgs = self.consumer.consume(1, timeout=5.0)
+                        if msgs:
+                            msg = msgs[0]
+                        
+                        if msg and not msg.error():
+                            result[partition_id] = {
+                                'value': msg.value().decode('utf-8') if msg.value() else None,
+                                'offset': msg.offset()
+                            }
+                        
+                except Exception as e:
+                    self.log.error(f"Error in partition {partition_id}: {e}")
+                finally:
+                    self.consumer.unassign()
+            
+            return result
+        
+        except Exception as e:
+            self.log.error(f"Error: {e}")
             raise
