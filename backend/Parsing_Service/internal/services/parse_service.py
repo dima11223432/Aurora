@@ -101,7 +101,6 @@ class ParserService:
 
             self.kafka_controller.send_message(kafka_topic, telegram_post)
             self.log.success(f"Successfully sent post {message.id} to Kafka")
-
             return post_data
 
         except Exception as e:

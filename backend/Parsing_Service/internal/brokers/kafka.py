@@ -1,4 +1,5 @@
-from confluent_kafka import Producer
+from datetime import datetime
+from confluent_kafka import Producer, Consumer, TopicPartition, KafkaException
 from ..domains.domains import Telegram_Post
 from dotenv import load_dotenv
 import os
@@ -20,6 +21,7 @@ class KafkaController:
 
         try:
             self.producer = Producer({"bootstrap.servers": kafka_servers})
+
             self.log.success("Kafka producer created successfully")
         except Exception as e:
             self.log.error(f"Failed to create Kafka producer: {e}")
