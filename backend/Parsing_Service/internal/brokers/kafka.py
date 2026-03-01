@@ -20,6 +20,15 @@ class KafkaController:
 
         try:
             self.producer = Producer({"bootstrap.servers": kafka_servers})
+
+            self.consumer = Consumer(
+                {
+                    "bootstrap.servers": kafka_servers,
+                    "group.id": "last-message-consumer",
+                    "auto.offset.reset": "latest",
+                    "enable.partition.eof": True,
+                }
+            )
             self.log.success("Kafka producer created successfully")
         except Exception as e:
             self.log.error(f"Failed to create Kafka producer: {e}")
