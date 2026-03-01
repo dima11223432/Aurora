@@ -1,12 +1,14 @@
 package services
 
 import (
+	custom_errors "API_Service/internal/custom_errors"
 	"context"
 	"fmt"
-
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type AuthInterceptor interface {
@@ -30,6 +32,9 @@ func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string
 
 	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
 	if err != nil {
+		if status.Code(err) == codes.AlreadyExists {
+			return 400, fmt.Errorf("%s: %w", op, custom_errors.ErrChannelExists)
+		}
 		return 400, fmt.Errorf("%s: %w", op, err)
 	}
 	resp, err := a.AuthClient.SetPriorityChannels(
