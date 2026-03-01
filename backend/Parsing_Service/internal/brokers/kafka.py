@@ -65,6 +65,7 @@ class KafkaController:
                 return result
             
             for partition_id in metadata.topics[topic].partitions:
+                msg = None
                 try:
                     tp = TopicPartition(topic, partition_id)
                     self.consumer.assign([tp])
@@ -73,7 +74,9 @@ class KafkaController:
                     
                     if high > 0: 
                         self.consumer.seek(TopicPartition(topic, partition_id, low))
-                        msg = self.consumer.poll(5.0)
+                        msgs = self.consumer.consume(1, timeout=5.0)
+                        if msgs:
+                            msg = msgs[0]
                         
                         if msg and not msg.error():
                             result[partition_id] = {
