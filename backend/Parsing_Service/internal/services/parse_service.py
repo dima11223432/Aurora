@@ -74,7 +74,7 @@ class ParserService:
             message = messages[0]
             self.log.debug(f"Found message ID: {message.id}, date: {message.date}")
 
-            # Для текста в логах показываем только начало
+            # NOTE: в логах мы показываем только первые 100 символов
             text_preview = (
                 message.text[:100] + "..."
                 if message.text and len(message.text) > 100
@@ -85,7 +85,7 @@ class ParserService:
             post_data = {
                 "id": message.id,
                 "date": message.date.isoformat(),
-                "text": message.text,  # сохраняем полный текст
+                "text": message.text,
                 "channel": us_channel,
                 "channel_title": channel.title,
             }
