@@ -2,10 +2,6 @@ from telethon import TelegramClient
 from dotenv import load_dotenv
 import sys
 
-from telethon import TelegramClient
-from dotenv import load_dotenv
-import sys
-
 from ..domains.domains import Telegram_Post
 from ..brokers.kafka import KafkaController
 import asyncio
@@ -101,7 +97,6 @@ class ParserService:
 
             self.kafka_controller.send_message(kafka_topic, telegram_post)
             self.log.success(f"Successfully sent post {message.id} to Kafka")
-
             return post_data
 
         except Exception as e:
