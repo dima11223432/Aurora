@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,python,visualstudiocode,vim,react,macos,windows,archlinuxpackages,linux,c++
 
 ### ArchLinuxPackages ###
+*.session
 *.tar
 *.tar.*
 *.jar
