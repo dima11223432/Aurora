@@ -1,13 +1,10 @@
 package auth
 
 import (
-	"authService/internal/domain/models"
-	"authService/internal/lib/jwt"
-	"authService/internal/storage"
 	"context"
 	"errors"
-	"fmt"
 	"log/slog"
+	"recomendationService/internal/domain/models"
 	"time"
 )
 
@@ -41,6 +38,6 @@ func New(
 	}
 }
 
-func GetUserPriorityChanneld(ctx context.Context, userID int64) ([]string, error) {
+func GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	return nil, errors.New("Not implemented")
 }

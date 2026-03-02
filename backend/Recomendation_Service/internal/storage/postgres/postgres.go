@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"recomendationService/internal/domain/models"
 
 	_ "github.com/lib/pq"
 )
@@ -30,7 +31,7 @@ func New(storagePath string) (*Storage, error) {
 	}, nil
 }
 
-func GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]string, error) {
+func GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 
 	return nil, errors.New("Not implemented")
 }
