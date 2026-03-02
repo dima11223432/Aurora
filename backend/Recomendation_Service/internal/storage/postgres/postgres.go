@@ -31,7 +31,25 @@ func New(storagePath string) (*Storage, error) {
 	}, nil
 }
 
-func GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
+func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
+	const op = "internal.storage.postgres.GetPriorityChannelsByUserID"
 
-	return nil, errors.New("Not implemented")
+	q := `SELECT channel_username FROM channels WHERE user_id = $1`
+
+	var channels []models.PriorityChannel
+
+	query, err := s.db.QueryContext(ctx, q, userID)
+	if err != nil {
+		return nil, fmt.Errorf("%d: %w", op, err)
+	}
+
+	for query.Next() {
+		var priorityChannel models.PriorityChannel
+
+		if err := query.Scan(&priorityChannel.Channel); err != nil {
+			return nil, fmt.Errorf("%d: %w", op, err)
+		}
+		channels = append(channels, priorityChannel)
+	}
+	return channels, nil
 }
