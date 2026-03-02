@@ -1,8 +1,6 @@
 package sqlite
 
 import (
-	"authService/internal/domain/models"
-	"authService/internal/storage"
 	"context"
 	"database/sql"
 	"errors"
