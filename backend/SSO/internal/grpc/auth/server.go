@@ -67,8 +67,7 @@ func (s *serverAPI) SetPriorityChannels(
 	statusCode, err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 
 	if err != nil {
-		switch {
-		case errors.Is(err, storage.ErrChannelExists):
+		if errors.Is(err, storage.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")
 		}
 		return nil, err
