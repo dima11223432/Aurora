@@ -29,6 +29,6 @@ func Register(gRPC *grpc.Server, userDataProvider UserDataProvider) {
 	})
 }
 
-func GetUserPriorityChanneld(ctx context.Context) ([]models.PriorityChannel, error) {
+func GetUserPriorityChanneld(ctx context.Context, req *ssov1.GetUserPriotiryChannelsRequest) ([]models.PriorityChannel, error) {
 	return nil, errors.New("Not implemented")
 }
