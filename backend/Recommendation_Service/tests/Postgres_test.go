@@ -2,11 +2,10 @@ package suite
 
 import (
 	"context"
-	"recomendationService/internal/domain/models"
-	"recomendationService/tests/suite"
+	"recommendationService/internal/domain/models"
+	"recommendationService/tests/suite"
 	"testing"
 
-	_ "github.com/lib/pq"
 	"github.com/stretchr/testify/assert"
 )
 

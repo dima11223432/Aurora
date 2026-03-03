@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"recomendationService/internal/domain/models"
+	"recommendationService/internal/domain/models"
 
 	_ "github.com/lib/pq"
 )
