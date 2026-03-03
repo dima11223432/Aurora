@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"log/slog"
-	"recomendationService/internal/domain/models"
+	"recommendationService/internal/domain/models"
 	"time"
 )
 

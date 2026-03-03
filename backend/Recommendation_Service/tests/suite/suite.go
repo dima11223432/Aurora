@@ -1,8 +1,8 @@
 package suite
 
 import (
-	"recomendationService/internal/config"
-	postgresController "recomendationService/internal/storage/postgres"
+	"recommendationService/internal/config"
+	postgresController "recommendationService/internal/storage/postgres"
 	"testing"
 )
 

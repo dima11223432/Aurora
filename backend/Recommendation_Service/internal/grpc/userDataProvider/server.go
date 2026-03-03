@@ -3,9 +3,9 @@ package grpcauth
 import (
 	"context"
 	"errors"
-	"recomendationService/internal/domain/models"
+	"recommendationService/internal/domain/models"
 
-	ssov1 "recomendationService/api/gen/v1"
+	ssov1 "recommendationService/api/gen/v1"
 
 	"google.golang.org/grpc"
 )

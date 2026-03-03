@@ -1,10 +1,10 @@
 package app
 
 import (
-	grpcApp "authService/internal/app/grpc"
-	"authService/internal/services/auth"
-	"authService/internal/storage/postgres"
 	"log/slog"
+	grpcApp "recommendationService/internal/app/grpc"
+	"recommendationService/internal/services/auth"
+	"recommendationService/internal/storage/postgres"
 	"time"
 )
 
