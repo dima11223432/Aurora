@@ -3,7 +3,7 @@ package app
 import (
 	"log/slog"
 	grpcApp "recommendationService/internal/app/grpc"
-	"recommendationService/internal/services/auth"
+	userDataProvider "recommendationService/internal/services/user_data_provider"
 	"recommendationService/internal/storage/postgres"
 	"time"
 )
@@ -13,14 +13,13 @@ type App struct {
 }
 
 func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Duration) *App {
-	// TODO: implement
-	storage, err := sqlite.New(storagePath)
+	storage, err := postgres.New(storagePath)
 	if err != nil {
 		panic(err)
 	}
-	authService := auth.New(log, storage, storage, storage, tokenTTL)
+	userDataProviderService := userDataProvider.New(log, storage, tokenTTL)
 
-	grpcapp := grpcApp.New(log, authService, grpcPort)
+	grpcapp := grpcApp.New(log, userDataProviderService, grpcPort)
 	return &App{
 		GRPCapp: grpcapp,
 	}

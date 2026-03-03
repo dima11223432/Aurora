@@ -1,14 +1,14 @@
 package main
 
 import (
-	"authService/internal/app"
 	"os/signal"
+	"recommendationService/internal/app"
 	"syscall"
 
-	"authService/internal/config"
 	"fmt"
 	"log/slog"
 	"os"
+	"recommendationService/internal/config"
 )
 
 const (
