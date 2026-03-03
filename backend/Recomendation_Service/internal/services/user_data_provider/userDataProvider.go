@@ -15,7 +15,7 @@ type UserDataProvider struct {
 }
 
 type PriorityChannelsProvider interface {
-	GetPriorityChannelsByUserID(ctx context.Context, userID int64)
+	GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
 
 var (
