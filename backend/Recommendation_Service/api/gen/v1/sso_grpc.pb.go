@@ -19,18 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_IsAdmin_FullMethodName             = "/auth.v1.AuthService/IsAdmin"
-	AuthService_SetPriorityChannels_FullMethodName = "/auth.v1.AuthService/SetPriorityChannels"
-	AuthService_Login_FullMethodName               = "/auth.v1.AuthService/Login"
+	AuthService_GetUserPriotiryChannels_FullMethodName = "/auth.v1.AuthService/GetUserPriotiryChannels"
 )
 
 // AuthServiceClient is the client API for AuthService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServiceClient interface {
-	IsAdmin(ctx context.Context, in *IsAdminRequest, opts ...grpc.CallOption) (*IsAdminResponse, error)
-	SetPriorityChannels(ctx context.Context, in *SetPriorityChannelsRequest, opts ...grpc.CallOption) (*SetPriorityChannelsResponse, error)
-	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
+	GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error)
 }
 
 type authServiceClient struct {
@@ -41,30 +37,10 @@ func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
 	return &authServiceClient{cc}
 }
 
-func (c *authServiceClient) IsAdmin(ctx context.Context, in *IsAdminRequest, opts ...grpc.CallOption) (*IsAdminResponse, error) {
+func (c *authServiceClient) GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(IsAdminResponse)
-	err := c.cc.Invoke(ctx, AuthService_IsAdmin_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) SetPriorityChannels(ctx context.Context, in *SetPriorityChannelsRequest, opts ...grpc.CallOption) (*SetPriorityChannelsResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(SetPriorityChannelsResponse)
-	err := c.cc.Invoke(ctx, AuthService_SetPriorityChannels_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, AuthService_Login_FullMethodName, in, out, cOpts...)
+	out := new(GetUserPriotiryChannelsResponse)
+	err := c.cc.Invoke(ctx, AuthService_GetUserPriotiryChannels_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,9 +51,7 @@ func (c *authServiceClient) Login(ctx context.Context, in *LoginRequest, opts ..
 // All implementations should embed UnimplementedAuthServiceServer
 // for forward compatibility.
 type AuthServiceServer interface {
-	IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error)
-	SetPriorityChannels(context.Context, *SetPriorityChannelsRequest) (*SetPriorityChannelsResponse, error)
-	Login(context.Context, *LoginRequest) (*LoginResponse, error)
+	GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error)
 }
 
 // UnimplementedAuthServiceServer should be embedded to have
@@ -87,14 +61,8 @@ type AuthServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedAuthServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method IsAdmin not implemented")
-}
-func (UnimplementedAuthServiceServer) SetPriorityChannels(context.Context, *SetPriorityChannelsRequest) (*SetPriorityChannelsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method SetPriorityChannels not implemented")
-}
-func (UnimplementedAuthServiceServer) Login(context.Context, *LoginRequest) (*LoginResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method Login not implemented")
+func (UnimplementedAuthServiceServer) GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserPriotiryChannels not implemented")
 }
 func (UnimplementedAuthServiceServer) testEmbeddedByValue() {}
 
@@ -116,56 +84,20 @@ func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
 	s.RegisterService(&AuthService_ServiceDesc, srv)
 }
 
-func _AuthService_IsAdmin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IsAdminRequest)
+func _AuthService_GetUserPriotiryChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserPriotiryChannelsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).IsAdmin(ctx, in)
+		return srv.(AuthServiceServer).GetUserPriotiryChannels(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_IsAdmin_FullMethodName,
+		FullMethod: AuthService_GetUserPriotiryChannels_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).IsAdmin(ctx, req.(*IsAdminRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_SetPriorityChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetPriorityChannelsRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).SetPriorityChannels(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_SetPriorityChannels_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).SetPriorityChannels(ctx, req.(*SetPriorityChannelsRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _AuthService_Login_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LoginRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).Login(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_Login_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Login(ctx, req.(*LoginRequest))
+		return srv.(AuthServiceServer).GetUserPriotiryChannels(ctx, req.(*GetUserPriotiryChannelsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -178,16 +110,8 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "IsAdmin",
-			Handler:    _AuthService_IsAdmin_Handler,
-		},
-		{
-			MethodName: "SetPriorityChannels",
-			Handler:    _AuthService_SetPriorityChannels_Handler,
-		},
-		{
-			MethodName: "Login",
-			Handler:    _AuthService_Login_Handler,
+			MethodName: "GetUserPriotiryChannels",
+			Handler:    _AuthService_GetUserPriotiryChannels_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
