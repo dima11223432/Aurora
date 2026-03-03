@@ -19,99 +19,99 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AuthService_GetUserPriotiryChannels_FullMethodName = "/auth.v1.AuthService/GetUserPriotiryChannels"
+	RecommendationService_GetUserPriotiryChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriotiryChannels"
 )
 
-// AuthServiceClient is the client API for AuthService service.
+// RecommendationServiceClient is the client API for RecommendationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type AuthServiceClient interface {
+type RecommendationServiceClient interface {
 	GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error)
 }
 
-type authServiceClient struct {
+type recommendationServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewAuthServiceClient(cc grpc.ClientConnInterface) AuthServiceClient {
-	return &authServiceClient{cc}
+func NewRecommendationServiceClient(cc grpc.ClientConnInterface) RecommendationServiceClient {
+	return &recommendationServiceClient{cc}
 }
 
-func (c *authServiceClient) GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error) {
+func (c *recommendationServiceClient) GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetUserPriotiryChannelsResponse)
-	err := c.cc.Invoke(ctx, AuthService_GetUserPriotiryChannels_FullMethodName, in, out, cOpts...)
+	err := c.cc.Invoke(ctx, RecommendationService_GetUserPriotiryChannels_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// AuthServiceServer is the server API for AuthService service.
-// All implementations should embed UnimplementedAuthServiceServer
+// RecommendationServiceServer is the server API for RecommendationService service.
+// All implementations should embed UnimplementedRecommendationServiceServer
 // for forward compatibility.
-type AuthServiceServer interface {
+type RecommendationServiceServer interface {
 	GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error)
 }
 
-// UnimplementedAuthServiceServer should be embedded to have
+// UnimplementedRecommendationServiceServer should be embedded to have
 // forward compatible implementations.
 //
 // NOTE: this should be embedded by value instead of pointer to avoid a nil
 // pointer dereference when methods are called.
-type UnimplementedAuthServiceServer struct{}
+type UnimplementedRecommendationServiceServer struct{}
 
-func (UnimplementedAuthServiceServer) GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error) {
+func (UnimplementedRecommendationServiceServer) GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserPriotiryChannels not implemented")
 }
-func (UnimplementedAuthServiceServer) testEmbeddedByValue() {}
+func (UnimplementedRecommendationServiceServer) testEmbeddedByValue() {}
 
-// UnsafeAuthServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to AuthServiceServer will
+// UnsafeRecommendationServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to RecommendationServiceServer will
 // result in compilation errors.
-type UnsafeAuthServiceServer interface {
-	mustEmbedUnimplementedAuthServiceServer()
+type UnsafeRecommendationServiceServer interface {
+	mustEmbedUnimplementedRecommendationServiceServer()
 }
 
-func RegisterAuthServiceServer(s grpc.ServiceRegistrar, srv AuthServiceServer) {
-	// If the following call panics, it indicates UnimplementedAuthServiceServer was
+func RegisterRecommendationServiceServer(s grpc.ServiceRegistrar, srv RecommendationServiceServer) {
+	// If the following call panics, it indicates UnimplementedRecommendationServiceServer was
 	// embedded by pointer and is nil.  This will cause panics if an
 	// unimplemented method is ever invoked, so we test this at initialization
 	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
-	s.RegisterService(&AuthService_ServiceDesc, srv)
+	s.RegisterService(&RecommendationService_ServiceDesc, srv)
 }
 
-func _AuthService_GetUserPriotiryChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _RecommendationService_GetUserPriotiryChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserPriotiryChannelsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).GetUserPriotiryChannels(ctx, in)
+		return srv.(RecommendationServiceServer).GetUserPriotiryChannels(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_GetUserPriotiryChannels_FullMethodName,
+		FullMethod: RecommendationService_GetUserPriotiryChannels_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).GetUserPriotiryChannels(ctx, req.(*GetUserPriotiryChannelsRequest))
+		return srv.(RecommendationServiceServer).GetUserPriotiryChannels(ctx, req.(*GetUserPriotiryChannelsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
+// RecommendationService_ServiceDesc is the grpc.ServiceDesc for RecommendationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "auth.v1.AuthService",
-	HandlerType: (*AuthServiceServer)(nil),
+var RecommendationService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "recommendation.v1.RecommendationService",
+	HandlerType: (*RecommendationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "GetUserPriotiryChannels",
-			Handler:    _AuthService_GetUserPriotiryChannels_Handler,
+			Handler:    _RecommendationService_GetUserPriotiryChannels_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

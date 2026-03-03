@@ -113,13 +113,13 @@ var File_v1_sso_proto protoreflect.FileDescriptor
 
 const file_v1_sso_proto_rawDesc = "" +
 	"\n" +
-	"\fv1/sso.proto\x12\aauth.v1\"9\n" +
+	"\fv1/sso.proto\x12\x11recommendation.v1\"9\n" +
 	"\x1eGetUserPriotiryChannelsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"=\n" +
 	"\x1fGetUserPriotiryChannelsResponse\x12\x1a\n" +
-	"\bchannels\x18\x01 \x03(\tR\bchannels2{\n" +
-	"\vAuthService\x12l\n" +
-	"\x17GetUserPriotiryChannels\x12'.auth.v1.GetUserPriotiryChannelsRequest\x1a(.auth.v1.GetUserPriotiryChannelsResponseB\bZ\x06sso/v1b\x06proto3"
+	"\bchannels\x18\x01 \x03(\tR\bchannels2\x9a\x01\n" +
+	"\x15RecommendationService\x12\x80\x01\n" +
+	"\x17GetUserPriotiryChannels\x121.recommendation.v1.GetUserPriotiryChannelsRequest\x1a2.recommendation.v1.GetUserPriotiryChannelsResponseB\x13Z\x11recommendation/v1b\x06proto3"
 
 var (
 	file_v1_sso_proto_rawDescOnce sync.Once
@@ -135,12 +135,12 @@ func file_v1_sso_proto_rawDescGZIP() []byte {
 
 var file_v1_sso_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_v1_sso_proto_goTypes = []any{
-	(*GetUserPriotiryChannelsRequest)(nil),  // 0: auth.v1.GetUserPriotiryChannelsRequest
-	(*GetUserPriotiryChannelsResponse)(nil), // 1: auth.v1.GetUserPriotiryChannelsResponse
+	(*GetUserPriotiryChannelsRequest)(nil),  // 0: recommendation.v1.GetUserPriotiryChannelsRequest
+	(*GetUserPriotiryChannelsResponse)(nil), // 1: recommendation.v1.GetUserPriotiryChannelsResponse
 }
 var file_v1_sso_proto_depIdxs = []int32{
-	0, // 0: auth.v1.AuthService.GetUserPriotiryChannels:input_type -> auth.v1.GetUserPriotiryChannelsRequest
-	1, // 1: auth.v1.AuthService.GetUserPriotiryChannels:output_type -> auth.v1.GetUserPriotiryChannelsResponse
+	0, // 0: recommendation.v1.RecommendationService.GetUserPriotiryChannels:input_type -> recommendation.v1.GetUserPriotiryChannelsRequest
+	1, // 1: recommendation.v1.RecommendationService.GetUserPriotiryChannels:output_type -> recommendation.v1.GetUserPriotiryChannelsResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name

@@ -1,14 +1,19 @@
 package grpcApp
 
 import (
-	grpcauth "authService/internal/grpc/auth"
+	"context"
 	"fmt"
-	"log/slog"
-	"net"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
+	"log/slog"
+	"net"
+	"recommendationService/internal/domain/models"
+	grpcUserDataProvider "recommendationService/internal/grpc/userDataProvider"
 )
+
+type userDataProvider interface {
+	GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+}
 
 type App struct {
 	log        *slog.Logger
@@ -16,9 +21,9 @@ type App struct {
 	port       int
 }
 
-func New(log *slog.Logger, authService grpcauth.Auth, port int) *App {
+func New(log *slog.Logger, userDataProvider userDataProvider, port int) *App {
 	gRPCServer := grpc.NewServer()
-	grpcauth.Register(gRPCServer, authService)
+	grpcUserDataProvider.Register(gRPCServer, userDataProvider)
 	reflection.Register(gRPCServer)
 
 	return &App{
