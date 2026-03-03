@@ -46,6 +46,38 @@ class ParserService:
             self.log.error(f"Disconnect failed: {e}")
             self.log.exception("Disconnect error details:")
 
+    async def get_posts(self, quantityPosts, us_channel):
+
+        self.log.info(f"Fetching posts from channel: {us_channel}")
+
+        if not self.is_connect:
+            self.log.warning(
+                f"Not connected, attempting to connect before fetching from {us_channel}"
+            )
+            await self.connect()
+        try:
+            channel = await self.client.get_entity(us_channel)
+            messages = await self.client.get_messages(channel, limit=quantityPosts)
+
+            if not messages:
+                self.log.warning(f"No messages found in channel: {us_channel}")
+                return None
+
+            filteredMessages = []
+            for message in messages:
+                filteredMessages.append({
+                    "id": message.id,
+                    "date": message.date.isoformat(),
+                    "text": message.text,
+                    "channel": us_channel,
+                    "channel_title": channel.title,
+                })
+        
+        except Exception as e:
+            self.log.error(f"Error getting message from {us_channel}: {e}")
+            self.log.exception("Full error traceback:")
+            return None
+
     async def last_post(self, us_channel):
         self.log.info(f"Fetching last post from channel: {us_channel}")
 
