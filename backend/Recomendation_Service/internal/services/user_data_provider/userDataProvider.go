@@ -38,6 +38,6 @@ func New(
 	}
 }
 
-func GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
+func (u *UserDataProvider) GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	return nil, errors.New("Not implemented")
 }
