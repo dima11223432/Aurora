@@ -1,45 +1,70 @@
 package services
 
 import (
+	custom_errors "API_Service/internal/custom_errors"
 	"context"
-
-	ssov1 "github.com/dima11223432/protos/gen/go/sso"
+	"fmt"
+	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
+	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
+type AuthInterceptor interface {
+	SetAuthInterceptor() grpc.UnaryServerInterceptor
+	GetUserIdFromContext(ctx context.Context) (int64, error)
+}
 type AuthService struct {
-	AuthClient ssov1.AuthClient
+	AuthClient      ssov1.AuthServiceClient
+	AuthInterceptor AuthInterceptor
 }
 
-func NewAuthService(authClient ssov1.AuthClient) *AuthService {
+func NewAuthService(authClient ssov1.AuthServiceClient, authinterceptor AuthInterceptor) *AuthService {
 	return &AuthService{
-		AuthClient: authClient,
+		AuthClient:      authClient,
+		AuthInterceptor: authinterceptor,
 	}
 }
 
-func (a *AuthService) Register(
-	ctx context.Context,
-	email string,
-	password string,
-	is_admin bool,
-) (int64, error) {
-	resp, err := a.AuthClient.Register(ctx, &ssov1.RegisterRequest{Email: email, Password: password, IsAdmin: is_admin})
-	if err != nil {
-		return 0, err
-	}
+func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) (int32, error) {
+	const op = "Api_Gateway.internal.services.AuthService.go"
 
-	return resp.UserId, nil
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		if status.Code(err) == codes.AlreadyExists {
+			return 400, fmt.Errorf("%s: %w", op, custom_errors.ErrChannelExists)
+		}
+		return 400, fmt.Errorf("%s: %w", op, err)
+	}
+	resp, err := a.AuthClient.SetPriorityChannels(
+		ctx,
+		&ssov1.SetPriorityChannelsRequest{
+			UserId:            userID,
+			ChannelsUsernames: channels,
+		})
+	if err != nil {
+		return 400, fmt.Errorf("%s: %w", op, err)
+	}
+	return resp.Status, nil
+
 }
 
 func (a *AuthService) Login(
 	ctx context.Context,
-	email string,
-	password string,
-	appId int32,
+	telegram_id int64,
+	username string,
+	firstName string,
+	lastName string,
+	appId int64,
 ) (string, error) {
 	resp, err := a.AuthClient.Login(ctx, &ssov1.LoginRequest{
-		Email:    email,
-		Password: password,
-		AppId:    appId,
+		TelegramId: telegram_id,
+		Username:   username,
+		AppId:      appId,
+		FirstName:  firstName,
+		LastName:   lastName,
+		IsAdmin:    false,
 	})
 
 	if err != nil {
@@ -51,10 +76,10 @@ func (a *AuthService) Login(
 
 func (a *AuthService) IsAdmin(
 	ctx context.Context,
-	userId int64,
+	telegram_id int64,
 ) (bool, error) {
 	resp, err := a.AuthClient.IsAdmin(ctx, &ssov1.IsAdminRequest{
-		UserId: userId,
+		TelegramId: telegram_id,
 	})
 	if err != nil {
 		return false, err

@@ -15,6 +15,7 @@ import (
 	app "API_Service/internal/app"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -50,9 +51,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	c := cors.New(cors.Options{
+		AllowedOrigins:   cfg.Auth.Cors_urls,
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Content-Type", "Authorization"},
+		AllowCredentials: true,
+	})
 	go func() {
 		log.Info("HTTP gateway on :8081")
-		http.ListenAndServe(":8081", mux)
+		http.ListenAndServe(":8081", c.Handler(mux))
 	}()
 
 	sig := make(chan os.Signal, 1)
