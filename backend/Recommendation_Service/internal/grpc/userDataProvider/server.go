@@ -15,7 +15,7 @@ type UserDataProvider interface {
 }
 
 type serverAPI struct {
-	ssov1.UnimplementedAuthServiceServer
+	ssov1.UnimplementedRecommendationServiceServer
 	userDataProvider UserDataProvider
 }
 
@@ -24,7 +24,7 @@ const (
 )
 
 func Register(gRPC *grpc.Server, userDataProvider UserDataProvider) {
-	ssov1.RegisterAuthServiceServer(gRPC, &serverAPI{
+	ssov1.RegisterRecommendationServiceServer(gRPC, &serverAPI{
 		userDataProvider: userDataProvider,
 	})
 }
