@@ -17,7 +17,7 @@ import (
 type Auth interface {
 	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
-	SetPriorityChannels(ctx context.Context, channels []string) (int32, error)
+	SetPriorityChannels(ctx context.Context, channels []string) error
 }
 
 type ApiService struct {
@@ -65,7 +65,7 @@ func (a *ApiService) SetPriorityChannels(
 ) (*v1.SetPriorityChannelsResponse, error) {
 	channels := req.GetPriorityChannels()
 
-	statusCode, err := a.auth.SetPriorityChannels(ctx, channels)
+	err := a.auth.SetPriorityChannels(ctx, channels)
 	if err != nil {
 		if errors.Is(err, custom_errors.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")
@@ -73,9 +73,7 @@ func (a *ApiService) SetPriorityChannels(
 		return nil, status.Error(status.Code(err), err.Error())
 	}
 
-	return &v1.SetPriorityChannelsResponse{
-		Status: statusCode,
-	}, nil
+	return &v1.SetPriorityChannelsResponse{}, nil
 }
 
 func (a *ApiService) IsAdmin(
