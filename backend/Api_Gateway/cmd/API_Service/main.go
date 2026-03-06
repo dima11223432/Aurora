@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"API_Service/internal/config"
+	errorhandler "API_Service/internal/grpc/ErrorHandler"
 
 	v1 "API_Service/api/gen/v1"
 	app "API_Service/internal/app"
@@ -45,6 +46,7 @@ func main() {
 			}
 			return runtime.DefaultHeaderMatcher(key)
 		}),
+		runtime.WithErrorHandler(errorhandler.CallHanlder),
 	)
 	err := v1.RegisterApiServiceHandlerFromEndpoint(
 		ctx,

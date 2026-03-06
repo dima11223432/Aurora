@@ -64,7 +64,7 @@ func (a *App) Run() error {
 		return err
 	}
 
-	a.log.Info("gRPC server listening on %s", listener.Addr().String())
+	a.log.Info("gRPC server listening on ", slog.String("addr", listener.Addr().String()))
 
 	if err := a.gRPC.Serve(listener); err != nil {
 		a.log.Error("gRPC server stopped with error: %v", err)
