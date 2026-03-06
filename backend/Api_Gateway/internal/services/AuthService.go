@@ -31,7 +31,7 @@ func NewAuthService(log *slog.Logger, authClient ssov1.AuthServiceClient, authin
 	}
 }
 
-func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) (int32, error) {
+func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) error {
 	const op = "services.AuthService.SetPriorityChannels"
 
 	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
@@ -40,17 +40,17 @@ func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string
 			slog.String("op", op),
 			slog.Any("err", err),
 		)
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	resp, err := a.AuthClient.SetPriorityChannels(ctx, &ssov1.SetPriorityChannelsRequest{
+	_, err = a.AuthClient.SetPriorityChannels(ctx, &ssov1.SetPriorityChannelsRequest{
 		UserId:            userID,
 		ChannelsUsernames: channels,
 	})
 
 	if err != nil {
 		if status.Code(err) == codes.AlreadyExists {
-			return 400, custom_errors.ErrChannelExists
+			return custom_errors.ErrChannelExists
 		}
 
 		a.log.Error("failed to set priority channels",
@@ -59,9 +59,9 @@ func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string
 			slog.Any("err", err),
 		)
 
-		return 400, fmt.Errorf("%s: %w", op, err)
+		return fmt.Errorf("%s: %w", op, err)
 	}
-	return resp.Status, nil
+	return nil
 }
 
 func (a *AuthService) Login(
