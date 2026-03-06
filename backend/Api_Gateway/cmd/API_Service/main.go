@@ -17,7 +17,6 @@ import (
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/rs/cors"
-	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -31,9 +30,8 @@ const (
 func main() {
 
 	cfg := config.MustLoad()
-	log := logrus.New().WithField("service", "api")
-	log.Info(cfg)
-
+	log := setupLogger(cfg.Env)
+	log.Info("starting app", slog.String("env", cfg.Env))
 	app := app.New(log, cfg)
 
 	go app.GRPCApp.Run()
@@ -55,7 +53,7 @@ func main() {
 		[]grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())},
 	)
 	if err != nil {
-		log.Fatal(err)
+		log.Error("failed to register gateway", slog.String("error", err.Error()))
 	}
 
 	c := cors.New(cors.Options{
