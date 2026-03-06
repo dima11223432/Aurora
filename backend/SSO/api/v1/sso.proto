@@ -16,7 +16,6 @@ message SetPriorityChannelsRequest {
 }
 
 message SetPriorityChannelsResponse {
-  int32 status = 1;
 }
 
 message LoginRequest {
