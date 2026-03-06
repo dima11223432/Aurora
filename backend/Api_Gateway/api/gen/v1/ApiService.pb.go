@@ -68,7 +68,6 @@ func (x *SetPriorityChannelsRequest) GetPriorityChannels() []string {
 
 type SetPriorityChannelsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Status        int32                  `protobuf:"varint,1,opt,name=status,proto3" json:"status,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -101,13 +100,6 @@ func (x *SetPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
 // Deprecated: Use SetPriorityChannelsResponse.ProtoReflect.Descriptor instead.
 func (*SetPriorityChannelsResponse) Descriptor() ([]byte, []int) {
 	return file_v1_ApiService_proto_rawDescGZIP(), []int{1}
-}
-
-func (x *SetPriorityChannelsResponse) GetStatus() int32 {
-	if x != nil {
-		return x.Status
-	}
-	return 0
 }
 
 type LoginRequest struct {
@@ -332,9 +324,8 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\n" +
 	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\"I\n" +
 	"\x1aSetPriorityChannelsRequest\x12+\n" +
-	"\x11priority_channels\x18\x01 \x03(\tR\x10priorityChannels\"5\n" +
-	"\x1bSetPriorityChannelsResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\x05R\x06status\"\xb9\x01\n" +
+	"\x11priority_channels\x18\x01 \x03(\tR\x10priorityChannels\"\x1d\n" +
+	"\x1bSetPriorityChannelsResponse\"\xb9\x01\n" +
 	"\fLoginRequest\x12\x1f\n" +
 	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\x12\x1a\n" +
