@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"strconv"
 
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 
@@ -40,7 +41,7 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService)
 	reflection.Register(gRPCServer)
-	logrus.Infof("gRPC server initialized on port %d", port)
+	logger.Info("gRPC server initialized", slog.String("gRPC_Port", strconv.Itoa(port)))
 
 	return &App{
 		log:  logger,

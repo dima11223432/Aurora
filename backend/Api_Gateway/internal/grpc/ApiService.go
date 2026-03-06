@@ -54,12 +54,6 @@ func (a *ApiService) Login(
 		return nil, fmt.Errorf("fail to parse jwt")
 	}
 
-	logrus.WithFields(logrus.Fields{
-		"telegram_id": req.TelegramId,
-		"username":    req.GetUsername(),
-		"app_id":      req.AppId,
-	}).Info("user logged in successfully")
-
 	return &v1.LoginResponse{
 		Token: token,
 	}, nil
