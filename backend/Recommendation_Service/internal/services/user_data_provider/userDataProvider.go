@@ -3,6 +3,7 @@ package auth
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log/slog"
 	"recommendationService/internal/domain/models"
 	"time"
@@ -38,6 +39,13 @@ func New(
 	}
 }
 
-func (u *UserDataProvider) GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
-	return nil, errors.New("Not implemented")
+func (u *UserDataProvider) GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
+	const op = "internal.services.user_data_provider.userDataProvider.go.GetUserPriorityChannels"
+
+	channels, err := u.priorityChannelsProvider.GetPriorityChannelsByUserID(ctx, userID)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return channels, nil
 }

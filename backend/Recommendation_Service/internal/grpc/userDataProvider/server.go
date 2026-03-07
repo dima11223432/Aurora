@@ -2,18 +2,19 @@ package grpcauth
 
 import (
 	"context"
-	"errors"
+	"github.com/samber/lo"
 	"recommendationService/internal/domain/models"
 
 	ssov1 "recommendationService/api/gen/v1"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type UserDataProvider interface {
-	GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
-
 type serverAPI struct {
 	ssov1.UnimplementedRecommendationServiceServer
 	userDataProvider UserDataProvider
