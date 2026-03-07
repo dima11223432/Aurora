@@ -7,4 +7,3 @@ def AI_handler(context, details=""):
             return getattr(__import__(i), AI_list[i])(context, details)
         
 
-        
