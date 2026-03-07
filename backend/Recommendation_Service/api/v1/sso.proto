@@ -5,14 +5,14 @@ package recommendation.v1;
 option go_package = "recommendation/v1";
 
 service RecommendationService {
-  rpc GetUserPriotiryChannels(GetUserPriotiryChannelsRequest) returns (GetUserPriotiryChannelsResponse);
+  rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse);
 }
 
-message GetUserPriotiryChannelsRequest {
+message GetUserPriorityChannelsRequest {
   int64 user_id = 1;
 }
 
-message GetUserPriotiryChannelsResponse{
+message GetUserPriorityChannelsResponse{
   repeated string channels = 1;
 }
 

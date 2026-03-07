@@ -35,9 +35,9 @@ var (
 	_ = metadata.Join
 )
 
-func request_RecommendationService_GetUserPriotiryChannels_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RecommendationService_GetUserPriorityChannels_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetUserPriotiryChannelsRequest
+		protoReq GetUserPriorityChannelsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -46,19 +46,19 @@ func request_RecommendationService_GetUserPriotiryChannels_0(ctx context.Context
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.GetUserPriotiryChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetUserPriorityChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_RecommendationService_GetUserPriotiryChannels_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RecommendationService_GetUserPriorityChannels_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetUserPriotiryChannelsRequest
+		protoReq GetUserPriorityChannelsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.GetUserPriotiryChannels(ctx, &protoReq)
+	msg, err := server.GetUserPriorityChannels(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -68,25 +68,25 @@ func local_request_RecommendationService_GetUserPriotiryChannels_0(ctx context.C
 // Note that using this registration option will cause many gRPC library features to stop working. Consider using RegisterRecommendationServiceHandlerFromEndpoint instead.
 // GRPC interceptors will not work for this type of registration. To use interceptors, you must use the "runtime.WithMiddlewares" option in the "runtime.NewServeMux" call.
 func RegisterRecommendationServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux, server RecommendationServiceServer) error {
-	mux.Handle(http.MethodPost, pattern_RecommendationService_GetUserPriotiryChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetUserPriorityChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetUserPriotiryChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetUserPriotiryChannels"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetUserPriorityChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetUserPriorityChannels"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RecommendationService_GetUserPriotiryChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RecommendationService_GetUserPriorityChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_RecommendationService_GetUserPriotiryChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RecommendationService_GetUserPriorityChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -128,30 +128,30 @@ func RegisterRecommendationServiceHandler(ctx context.Context, mux *runtime.Serv
 // doesn't go through the normal gRPC flow (creating a gRPC client etc.) then it will be up to the passed in
 // "RecommendationServiceClient" to call the correct interceptors. This client ignores the HTTP middlewares.
 func RegisterRecommendationServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux, client RecommendationServiceClient) error {
-	mux.Handle(http.MethodPost, pattern_RecommendationService_GetUserPriotiryChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetUserPriorityChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetUserPriotiryChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetUserPriotiryChannels"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetUserPriorityChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetUserPriorityChannels"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RecommendationService_GetUserPriotiryChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RecommendationService_GetUserPriorityChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_RecommendationService_GetUserPriotiryChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RecommendationService_GetUserPriorityChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_RecommendationService_GetUserPriotiryChannels_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetUserPriotiryChannels"}, ""))
+	pattern_RecommendationService_GetUserPriorityChannels_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetUserPriorityChannels"}, ""))
 )
 
 var (
-	forward_RecommendationService_GetUserPriotiryChannels_0 = runtime.ForwardResponseMessage
+	forward_RecommendationService_GetUserPriorityChannels_0 = runtime.ForwardResponseMessage
 )
