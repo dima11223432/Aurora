@@ -3,9 +3,9 @@ package grpcauth
 import (
 	"context"
 	"github.com/samber/lo"
-	"recommendationService/internal/domain/models"
-
 	ssov1 "recommendationService/api/gen/v1"
+	"recommendationService/internal/domain/models"
+	grpcErr "recommendationService/internal/grpc"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -30,22 +30,23 @@ func Register(gRPC *grpc.Server, userDataProvider UserDataProvider) {
 	})
 }
 
-func (s *serverAPI) GetUserPriorityChanneld(ctx context.Context,req *ssov1.GetUserPriotiryChannelsRequest) (*ssov1.GetUserPriotiryChannelsResponse, error) {
+func (s *serverAPI) GetUserPriorityChanneld(ctx context.Context, req *ssov1.GetUserPriorityChannelsRequest) (*ssov1.GetUserPriorityChannelsResponse, error) {
 
 	const op = "internal.transport.grpc.serverAPI.GetUserPriorityChanneld"
 
-	if req.GetUserId() == 0 {
-		return nil, errors.New(op + ": user_id is empty")
+	if req.GetUserId() == emptyValue {
+		return nil, grpcErr.ErrUserIDEmpty
 	}
 
-	channels, err := s.userDataProvider.GetUserPriorityChanneld(ctx, req.GetUserId())
+	channels, err := s.userDataProvider.GetUserPriorityChannels(ctx, req.GetUserId())
 	if err != nil {
 		return nil, err
 	}
-
-	resp := &ssov1.GetUserPriotiryChannelsResponse{}
+	//NOTE: формировать gRPC ответ лучше сразу в конце
+	resp := &ssov1.GetUserPriorityChannelsResponse{}
 
 	for _, ch := range channels {
+		//FIX: тип данных в resp.Channels -> string, а не *ssov1.PriorityChannel
 		resp.Channels = append(resp.Channels, &ssov1.PriorityChannel{
 			ChannelId: ch.ChannelID,
 			Priority:  int32(ch.Priority),
