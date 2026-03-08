@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './styles/App.css'
+import './App.css'
 
 import HeroZone from './Herozone.jsx'
 
