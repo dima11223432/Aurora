@@ -1,4 +1,4 @@
-package sqlite
+package postgres
 
 import (
 	"authService/internal/domain/models"
@@ -8,7 +8,7 @@ import (
 	"errors"
 	"fmt"
 
-	_ "github.com/lib/pq"
+	pq "github.com/lib/pq"
 )
 
 type Storage struct {
@@ -30,6 +30,37 @@ func New(storagePath string) (*Storage, error) {
 	return &Storage{
 		db: db,
 	}, nil
+}
+
+func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
+	const op = "storage.postgres.SetPriorityChannels"
+
+	if len(channels) == 0 {
+		return errors.New("channels is empty")
+	}
+
+	query := `
+	INSERT INTO channels (user_id, channel_username) VALUES
+	`
+
+	args := make([]interface{}, 0, len(channels)*2)
+
+	for i, channel := range channels {
+		query += fmt.Sprintf("($%d, $%d)", i*2+1, i*2+2)
+		if i != len(channels)-1 {
+			query += ","
+		}
+		args = append(args, user_id, channel)
+	}
+	_, err := s.db.ExecContext(ctx, query, args...)
+	if err != nil {
+		if isDuplicateError(err) {
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+		}
+
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
 
 func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) {
@@ -55,6 +86,29 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	}
 
 	return userID, nil
+}
+
+func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, error) {
+	const op = "storage.postgres.GetUserById"
+
+	query := `
+	SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
+	FROM users 
+	WHERE user_id = $1
+	`
+
+	var user models.User
+	err := s.db.QueryRowContext(ctx, query, user_id).Scan(
+		&user.ID, &user.Telegram_id, &user.Username, &user.First_name, &user.Last_name, &user.Is_admin,
+	)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+
+			return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+		}
+		return models.User{}, fmt.Errorf("%s: %w", op, err)
+	}
+	return user, nil
 }
 
 func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) {
@@ -125,4 +179,11 @@ func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 		return models.App{}, fmt.Errorf("%s: %w", op, err)
 	}
 	return app, nil
+}
+func isDuplicateError(err error) bool {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) {
+		return pqErr.Code == "23505"
+	}
+	return false
 }

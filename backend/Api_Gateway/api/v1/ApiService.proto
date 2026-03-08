@@ -20,6 +20,19 @@ service ApiService {
       body:"*"
     };
   }
+  rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse) {
+    option (google.api.http) = {
+      post: "/v1/set_priority_channels"
+      body:"*"
+    };
+  }
+}
+
+message SetPriorityChannelsRequest {
+  repeated string priority_channels = 1;
+}
+
+message SetPriorityChannelsResponse {
 }
 
 
