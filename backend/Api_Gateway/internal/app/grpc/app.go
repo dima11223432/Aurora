@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net"
+	"os"
 	"strconv"
 
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
@@ -31,7 +32,10 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 			AuthInterceptor.SetAuthInterceptor(),
 		),
 	)
-	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	authConn, err := grpc.NewClient(
+		fmt.Sprintf("%s:%s", os.Getenv("AUTH_HOST"), os.Getenv("AUTH_PORT")),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 
 	if err != nil {
 		logrus.Fatalf("cant connect to authService: %v", err)

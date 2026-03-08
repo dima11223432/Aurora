@@ -3,12 +3,12 @@ version: "3.8"
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: self_improvement_db
+    container_name: aurora-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: self_improvement
+      POSTGRES_DB: aurora
     ports:
       - "5432:5432"
     volumes:
@@ -19,8 +19,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - aurora-network
 
-  # Redis Master
   redis-master:
     image: redis:7-alpine
     container_name: redis_master
@@ -42,8 +43,9 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - aurora-network
 
-  # Redis Replica
   redis-replica:
     image: redis:7-alpine
     container_name: redis_replica
@@ -67,14 +69,14 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - aurora-network
 
-  # Redis Sentinel (опционально, можешь убрать если не нужно)
   redis-sentinel-1:
     image: redis:7-alpine
     container_name: redis_sentinel_1
     restart: unless-stopped
-    command: >
-      redis-sentinel /usr/local/etc/redis/sentinel.conf
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
     depends_on:
       - redis-master
       - redis-replica
@@ -82,6 +84,8 @@ services:
       - "26379:26379"
     volumes:
       - ./redis-sentinel.conf:/usr/local/etc/redis/sentinel.conf
+    networks:
+      - aurora-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -91,6 +95,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - aurora-network
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
@@ -102,10 +108,96 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "kafka-topics --bootstrap-server localhost:9092 --list || exit 1",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    networks:
+      - aurora-network
+
+  sso:
+    build:
+      context: ./SSO
+      dockerfile: Dockerfile
+    container_name: aurora-sso
+    ports:
+      - "44044:44044"
+    volumes:
+      - ./SSO/config:/app/config
+      - ./SSO/migrations:/app/migrations
+    environment:
+      - ENV=local
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
+      - TOKEN_TTL=1h
+      - GRPC_PORT=44044
+      - GRPC_TIMEOUT=10h
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      - postgres
+    networks:
+      - aurora-network
+    command: >
+      sh -c "
+      echo 'Waiting for DB...' &&
+      until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done &&
+      echo 'Running migrations...' &&
+      ./migrator -db-dsn 'postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable' -migrations-path ./migrations -migrations-table schema_migrations up &&
+      echo 'Starting SSO...' &&
+      ./main --config ./config/local.yaml
+      "
+    healthcheck:
+      test:
+        ["CMD-SHELL", "pg_isready -h postgres -p 5432 -U postgres || exit 1"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api-gateway:
+    build:
+      context: ./Api_Gateway
+      dockerfile: Dockerfile
+    container_name: aurora-api-gateway
+    ports:
+      - "8081:8081"
+      - "44000:44000"
+    volumes:
+      - ./Api_Gateway/config:/app/config
+    environment:
+      - REDIS_HOST=redis-master
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=1111
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=aurora
+      - AUTH_HOST=host.docker.internal
+      - AUTH_PORT=44044
+    depends_on:
+      - postgres
+      - sso
+      - redis-master
+      - kafka
+    networks:
+      - aurora-network
+
+networks:
+  aurora-network:
+    driver: bridge
 
 volumes:
   postgres_data:

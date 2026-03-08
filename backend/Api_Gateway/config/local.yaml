@@ -18,7 +18,10 @@ redis:
   password: "1111"
   db: 0
   port: 6379
-
+# redis:
+#   host: "redis-master:6379"
+#   password: "1111"
+#   db: 0
 grpc:
   port: 44000
   timeout: 10h

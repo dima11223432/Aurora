@@ -19,8 +19,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - aurora-network
 
-  # Redis Master
   redis-master:
     image: redis:7-alpine
     container_name: redis_master
@@ -42,8 +43,9 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - aurora-network
 
-  # Redis Replica
   redis-replica:
     image: redis:7-alpine
     container_name: redis_replica
@@ -67,14 +69,14 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - aurora-network
 
-  # Redis Sentinel (опционально, можешь убрать если не нужно)
   redis-sentinel-1:
     image: redis:7-alpine
     container_name: redis_sentinel_1
     restart: unless-stopped
-    command: >
-      redis-sentinel /usr/local/etc/redis/sentinel.conf
+    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
     depends_on:
       - redis-master
       - redis-replica
@@ -82,6 +84,8 @@ services:
       - "26379:26379"
     volumes:
       - ./redis-sentinel.conf:/usr/local/etc/redis/sentinel.conf
+    networks:
+      - aurora-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -91,6 +95,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - aurora-network
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
@@ -102,10 +108,62 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "kafka-topics",
+          "--bootstrap-server",
+          "localhost:9092",
+          "--list",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aurora-network
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: aurora-api-gateway
+    ports:
+      - "8081:8081"
+      - "44000:44000"
+    volumes:
+      - ./config:/app/config
+    environment:
+      - REDIS_HOST=redis-master
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=1111
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=self_improvement
+      - KAFKA_HOST=kafka
+      - KAFKA_PORT=9092
+    command: ["./main", "--config", "/app/config/local.yaml"]
+    depends_on:
+      redis-master:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - aurora-network
+
+networks:
+  aurora-network:
+    driver: bridge
 
 volumes:
   postgres_data:
