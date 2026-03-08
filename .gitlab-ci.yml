@@ -18,7 +18,7 @@ build-frontend:
     - if: '$CI_COMMIT_BRANCH == "PROD"'
   script:
     - cd frontend
-    - docker build --no-cache -t frontend .
+    - docker build --no-cache -t aurora-frontend:latest -f Dockerfile.prod .
 
 deploy-staging:
   stage: deploy
