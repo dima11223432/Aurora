@@ -7,8 +7,9 @@ build-backend:
   rules:
     - if: '$CI_COMMIT_BRANCH == "PROD"'
   script:
-    - cd backend
+    - cd backend/Api_Gateway
     - docker build --no-cache -t aurora_api_gateway .
+    - cd ../SSO
     - docker build --no-cache -t aurora_sso .
 
 build-frontend:
