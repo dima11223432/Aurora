@@ -128,14 +128,14 @@ services:
 
   sso:
     build:
-      context: ./SSO
+      context: ./backend/SSO
       dockerfile: Dockerfile
     container_name: aurora-sso
     ports:
       - "44044:44044"
     volumes:
-      - ./SSO/config:/app/config
-      - ./SSO/migrations:/app/migrations
+      - ./backend/SSO/config:/app/config
+      - ./backend/SSO/migrations:/app/migrations
     environment:
       - ENV=local
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
@@ -168,14 +168,14 @@ services:
 
   api-gateway:
     build:
-      context: ./Api_Gateway
+      context: ./backend/Api_Gateway
       dockerfile: Dockerfile
     container_name: aurora-api-gateway
     ports:
       - "8081:8081"
       - "44000:44000"
     volumes:
-      - ./Api_Gateway/config:/app/config
+      - ./backend/Api_Gateway/config:/app/config
     environment:
       - REDIS_HOST=redis-master
       - REDIS_PORT=6379
@@ -194,7 +194,22 @@ services:
       - kafka
     networks:
       - aurora-network
-
+  frontend-prod:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_URL=http://api-gateway:8081
+        - VITE_SSO_URL=http://sso:44044
+    container_name: aurora-frontend-prod
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+      - sso
+    networks:
+      - aurora-network
+    restart: unless-stopped
 networks:
   aurora-network:
     driver: bridge
