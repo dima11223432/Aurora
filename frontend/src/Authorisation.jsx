@@ -7,7 +7,7 @@ export const Landing = () => {
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
   const widgetContainerRef = useRef(null);
-  const API_URL = "https://27dc-213-176-17-134.ngrok-free.app/v1/login";
+  const API_URL = "https://localhost:8081/v1/login";
   useEffect(() => {
     window.onTelegramAuth = async (user) => {
       console.log("Telegram auth success:", user);
