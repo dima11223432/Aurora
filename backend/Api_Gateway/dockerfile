@@ -8,6 +8,8 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
+COPY ./config ./config
+
 RUN go build -o main ./cmd/API_Service
 
 FROM alpine:latest
