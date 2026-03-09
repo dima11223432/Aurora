@@ -185,7 +185,7 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=postgres
       - DB_NAME=aurora
-      - AUTH_HOST=host.docker.internal
+      - AUTH_HOST=sso
       - AUTH_PORT=44044
     depends_on:
       - postgres
