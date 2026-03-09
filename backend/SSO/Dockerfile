@@ -8,8 +8,8 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-RUN go build -o main ./cmd/sso
-RUN go build -o migrator ./cmd/migrator
+RUN go build -o main ./SSO/cmd/sso
+RUN go build -o migrator ./SSO/cmd/migrator
 
 RUN chmod +x main migrator
 

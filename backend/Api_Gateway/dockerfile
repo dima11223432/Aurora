@@ -6,7 +6,6 @@ WORKDIR /app
 
 COPY go.mod go.sum ./
 RUN go mod download
-# Копируем исходный код
 COPY . .
 
 RUN go build -o main ./cmd/API_Service
@@ -25,4 +24,4 @@ USER appuser
 
 EXPOSE 8080
 
-CMD ["./main", "--config", "./config/local.yaml"]
+CMD ["./main", "--config", "./Api_Service/config/local.yaml"]
