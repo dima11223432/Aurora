@@ -133,9 +133,9 @@ services:
     container_name: aurora-sso
     ports:
       - "44044:44044"
-    volumes:
-      - ./backend/SSO/config:/app/config
-      - ./backend/SSO/migrations:/app/migrations
+    # volumes:
+    #   - ./backend/SSO/config:/app/config
+    #   - ./backend/SSO/migrations:/app/migrations
     environment:
       - ENV=local
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
@@ -174,8 +174,8 @@ services:
     ports:
       - "8081:8081"
       - "44000:44000"
-    volumes:
-      - ./backend/Api_Gateway/config:/app/config
+    # volumes:
+    #   - ./backend/Api_Gateway/config:/app/config
     environment:
       - REDIS_HOST=redis-master
       - REDIS_PORT=6379
