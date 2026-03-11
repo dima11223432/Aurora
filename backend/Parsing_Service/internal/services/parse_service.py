@@ -135,3 +135,34 @@ class ParserService:
             self.log.error(f"Error getting message from {us_channel}: {e}")
             self.log.exception("Full error traceback:")
             return None
+        
+    async monitoring(self, us_channel):
+        self.log.info(f"Monitoring posts from channel: {us_channel}")
+            
+        if not self.is_connect:
+            self.log.warning(
+                f"Not connected, attempting to connect before fetching from {us_channel}"
+            )
+            await self.connect()
+        
+        try:
+            channel = await self.client.get_entity(us_channel)
+
+            @self.client.on(element.NewMessage(chats = channel))
+            async def mon(element):
+                message = event.message
+
+               post_data = {
+                    "id": message.id,
+                    "date": message.date.isoformat(),
+                    "text": message.text,
+                    "channel": us_channel,
+                    "channel_title": channel.title,
+                }
+
+                #save here
+
+            await self.client.run_until_disconnected()
+
+        except as e:
+            self.log.error(f"Error in monitoring:{us_channel}: {e}")
