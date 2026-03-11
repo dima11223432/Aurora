@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-const Herozone = () => {
+function Herozone () {
     const [isLoading, setIsLoading] = useState(false);
       const [error, setError] = useState(null);
       const [telegramUser, setTelegramUser] = useState(null);
