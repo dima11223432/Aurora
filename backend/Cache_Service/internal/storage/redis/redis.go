@@ -41,18 +41,6 @@ func (r *RedisController) SetValue(ctx context.Context, key string, value interf
 	return r.redis.Set(ctx, key, data, r.DefaultTTl).Err()
 }
 
-func (r *RedisController) GetValue(ctx context.Context, key string) (interface{}, error) {
-	const op = "Cahce_Service.internal.storage.redis.GetValue"
-	data, err := r.redis.Get(ctx, key).Bytes()
-	if err != nil {
-		if errors.Is(err, redis.Nil) {
-			return nil, storage.ErrCacheMiss
-		}
-		return nil, fmt.Errorf("%s: %w", op, err)
-	}
-	return data, nil
-}
-
 func (r *RedisController) Ping(ctx context.Context) error {
 	return r.redis.Ping(ctx).Err()
 }
