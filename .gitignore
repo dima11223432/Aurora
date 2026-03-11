@@ -3,6 +3,7 @@
 
 ### ArchLinuxPackages ###
 *.session
+**/*.session
 *.tar
 *.tar.*
 *.jar

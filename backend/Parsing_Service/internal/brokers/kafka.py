@@ -97,4 +97,50 @@ class KafkaController:
         except Exception as e:
             self.log.error(f"Error: {e}")
             raise
-
+    def get_last_message(self, topic: str) -> dict:
+        result = {}
+        
+        try:
+            metadata = self.consumer.list_topics(topic)
+            
+            if topic not in metadata.topics:
+                self.log.warning(f"Topic {topic} not found")
+                return result
+            
+            for partition_id in metadata.topics[topic].partitions:
+                msg = None
+                try:
+                    tp = TopicPartition(topic, partition_id)
+                    self.consumer.assign([tp])
+                    low, high = self.consumer.get_watermark_offsets(tp)
+                    if high > 0:
+                        self.consumer.seek(TopicPartition(topic, partition_id, high-1))
+                        msgs = self.consumer.consume(1, timeout=5.0)
+                        if msgs:
+                            msg = msgs[0]
+                        if msg and not msg.error():
+                            value = msg.value().decode('utf-8') if msg.value() else None
+                            try:
+                                if value and value.strip().startswith(('{', '[')):
+                                    value = json.loads(value)
+                            except json.JSONDecodeError:
+                                pass
+                            
+                            result[partition_id] = {
+                                'value': value,
+                                'offset': msg.offset(),
+                                'key': msg.key().decode('utf-8') if msg.key() else None,
+                                'timestamp': msg.timestamp()
+                            }
+                            
+                        
+                except Exception as e:
+                    self.log.error(f"Error in partition {partition_id}: {e}")
+                finally:
+                    self.consumer.unassign()
+            
+            return result
+            
+        except Exception as e:
+            self.log.error(f" Error: {e}")
+            raise
