@@ -42,16 +42,13 @@ func (s *serverAPI) GetUserPriorityChanneld(ctx context.Context, req *ssov1.GetU
 	if err != nil {
 		return nil, err
 	}
-	//NOTE: формировать gRPC ответ лучше сразу в конце
-	resp := &ssov1.GetUserPriorityChannelsResponse{}
 
 	for _, ch := range channels {
-		//FIX: тип данных в resp.Channels -> string, а не *ssov1.PriorityChannel
-		resp.Channels = append(resp.Channels, &ssov1.PriorityChannel{
+		resp.Channels = append(resp.Channels, string{
 			ChannelId: ch.ChannelID,
 			Priority:  int32(ch.Priority),
 		})
 	}
-
+    resp := &ssov1.GetUserPriorityChannelsResponse{}
 	return resp, nil
 }
