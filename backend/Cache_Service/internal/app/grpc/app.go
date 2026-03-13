@@ -1,65 +1,56 @@
-package grpcApp
+package cacheApp
 
 import (
-	grpcauth "authService/internal/grpc/auth"
-	"fmt"
+	"context"
 	"log/slog"
-	"net"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
-type App struct {
-	log        *slog.Logger
-	gRPCServer *grpc.Server
-	port       int
+type Consumer interface {
+	StartWorkerPull(ctx context.Context) error
+	Consume(ctx context.Context) error
+	Close()
 }
 
-func New(log *slog.Logger, authService grpcauth.Auth, port int) *App {
-	gRPCServer := grpc.NewServer()
-	grpcauth.Register(gRPCServer, authService)
-	reflection.Register(gRPCServer)
+type App struct {
+	log      *slog.Logger
+	consumer Consumer
 
+	cancel context.CancelFunc
+}
+
+func New(log *slog.Logger, consumer Consumer) *App {
 	return &App{
-		log:        log,
-		gRPCServer: gRPCServer,
-		port:       port,
+		log:      log,
+		consumer: consumer,
 	}
 }
 
 func (a *App) MustRun() {
-	if err := a.Run(); err != nil {
+	ctx, cancel := context.WithCancel(context.Background())
+	a.cancel = cancel
+	if err := a.Run(ctx); err != nil {
 		panic(err)
 	}
 }
 
-func (a *App) Run() error {
-	const op = "grpcApp.Run"
-	log := a.log.With(
-		slog.String("op", op),
-		slog.Int("port", a.port),
-	)
+func (a *App) Run(ctx context.Context) error {
+	const op = "grpcApp"
 
-	log.Info("starting gRPC server")
+	a.log.With(slog.String("op", op))
 
-	l, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
-	if err != nil {
-		return fmt.Errorf("failed to listen:%s, %w", op, err)
-	}
-	log.Info("gRPC server listening", slog.String("addr", l.Addr().String()))
-
-	if err := a.gRPCServer.Serve(l); err != nil {
-		return fmt.Errorf("%s, %w", op, err)
-	}
+	go a.consumer.StartWorkerPull(ctx)
+	go a.consumer.Consume(ctx)
 	return nil
+
 }
 
 func (a *App) Stop() {
 	const op = "grpcApp"
 
-	a.log.With(slog.String("op", op),
-		slog.Int("port", a.port),
-	)
-	a.gRPCServer.GracefulStop()
+	a.log.With(slog.String("op", op))
+
+	if a.cancel != nil {
+		a.cancel()
+	}
+
 }

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"authService/internal/app"
-	"os/signal"
-	"syscall"
-
-	"authService/internal/config"
+	"CacheService/internal/app"
+	"CacheService/internal/brokers/kafka"
+	"CacheService/internal/config"
 	"fmt"
 	"log/slog"
 	"os"
+	"os/signal"
+	"syscall"
 )
 
 const (
@@ -25,13 +25,21 @@ func main() {
 
 	log.Info("starting app", slog.String("env", cfg.Env))
 
-	application := app.New(log, cfg.GRPC.Port, cfg.StoragePass, cfg.TokenTTL)
-	go application.GRPCapp.MustRun()
+	consumer := kafka.NewConsumer(
+		log,
+		[]string{"localhost:9092"},
+		"news_data",
+		"news_consumer_group",
+		10,
+	)
+
+	application := app.New(log, consumer)
+	go application.CacheServiceApp.MustRun()
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 	sign := <-stop
 	log.Info("stopping application", slog.String("Signal", sign.String()))
-	application.GRPCapp.Stop()
+	application.CacheServiceApp.Stop()
 	log.Info("application stoppped")
 
 }
