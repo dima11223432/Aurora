@@ -1,11 +1,7 @@
-package auth
+package analyseDataProvider
 
 import (
-	"authService/internal/domain/models"
-	"authService/internal/lib/jwt"
-	"authService/internal/storage"
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"time"
@@ -17,25 +13,27 @@ type AnasyledDataProvider interface {
 }
 
 type RedisService struct {
-	log *slog.Logger
-	AnasyledDataProvider
+	log      *slog.Logger
+	provider AnasyledDataProvider
 	TokenTTL time.Duration
 }
 
-func NewRedisService(log *slog.Logger, tokenTTL time.Duration) *RedisService {
+func NewRedisService(log *slog.Logger, analyseDataProvider AnasyledDataProvider, tokenTTL time.Duration) *RedisService {
 	return &RedisService{
 		log:      log,
 		TokenTTL: tokenTTL,
+		provider: analyseDataProvider,
 	}
 }
 
 func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, analysedData interface{}) error {
 	const op = "Cache_Service.internal.services.auth.SetAnalysedData"
 
-	err := r.AnasyledDataProvider.SetValue(ctx, dataTitle, analysedData, r.TokenTTL)
+	err := r.provider.SetValue(ctx, dataTitle, analysedData, r.TokenTTL)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
+	r.log.Info("SetAnalysedData", slog.String("dataTitle", dataTitle))
 	return nil
 
 }
