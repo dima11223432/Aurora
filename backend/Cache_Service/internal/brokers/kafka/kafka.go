@@ -2,12 +2,12 @@ package kafka
 
 import (
 	"CacheService/internal/domain/models"
-	"CacheService/internal/services/AnalyseDataProvider"
 	"context"
 	"encoding/json"
 	"fmt"
 	"log/slog"
 	"sync"
+	"time"
 
 	"github.com/segmentio/kafka-go"
 )
@@ -53,7 +53,7 @@ func (c *Consumer) process(ctx context.Context, msg kafka.Message) error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	err = c.analysedDataProvider.SetAnalysedData(ctx, "AnalysedData", analysedData)
+	err = c.analysedDataProvider.SetAnalysedData(ctx, fmt.Sprintf("AnalysedData:%d", time.Now().Unix()), analysedData)
 	if err != nil {
 		c.log.Error(op, slog.Any("error", err))
 		return fmt.Errorf("%s: %w", op, err)
@@ -91,8 +91,6 @@ func (c *Consumer) StartWorkerPull(ctx context.Context) error {
 						log.Error(op, slog.Any("error", err))
 						return
 					}
-					//TODO: we need to add new method to serialise this message and call redis method
-
 				}
 			}
 		}(i)

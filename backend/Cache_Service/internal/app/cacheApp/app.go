@@ -1,6 +1,10 @@
 package cacheApp
 
 import (
+	"CacheService/internal/brokers/kafka"
+	"CacheService/internal/config"
+	analyseDataProvider "CacheService/internal/services/AnalyseDataProvider"
+	"CacheService/internal/storage/redis"
 	"context"
 	"log/slog"
 )
@@ -18,7 +22,27 @@ type App struct {
 	cancel context.CancelFunc
 }
 
-func New(log *slog.Logger, consumer Consumer) *App {
+func New(log *slog.Logger, cfg *config.Config) *App {
+
+	redisCache := redis.NewRedisController(
+		cfg.RedisConfig.Host,
+		cfg.RedisConfig.Password,
+		cfg.RedisConfig.DB,
+		cfg.RedisConfig.Port,
+		cfg.TokenTTL,
+	)
+
+	analyseDataProvider := analyseDataProvider.NewRedisService(log, redisCache, cfg.TokenTTL)
+
+	consumer := kafka.NewConsumer(
+		log,
+		[]string{"localhost:9092"},
+		"news_data",
+		"news_consumer_group",
+		10,
+		analyseDataProvider,
+	)
+	log.Info("Consumer created")
 	return &App{
 		log:      log,
 		consumer: consumer,

@@ -1,7 +1,7 @@
 package redis
 
 import (
-	"authService/internal/storage"
+	"CacheService/internal/storage"
 	"context"
 	"encoding/json"
 	"errors"

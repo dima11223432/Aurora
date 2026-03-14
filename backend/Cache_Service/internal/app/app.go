@@ -1,7 +1,8 @@
 package app
 
 import (
-	"CacheService/internal/app/grpc"
+	"CacheService/internal/app/cacheApp"
+	"CacheService/internal/config"
 	"context"
 	"log/slog"
 )
@@ -22,9 +23,9 @@ type App struct {
 	CacheServiceApp CacheServiceApp
 }
 
-func New(log *slog.Logger, consumer Consumer) *App {
+func New(log *slog.Logger, cfg *config.Config) *App {
 
-	app := cacheApp.New(log, consumer)
+	app := cacheApp.New(log, cfg)
 	return &App{
 		CacheServiceApp: app,
 	}
