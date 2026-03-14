@@ -41,6 +41,6 @@ func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, an
 }
 
 // TODO: ревлизовать метод, вызывающий GetValue из AnasyledDataProvider
-func (r *RedisService) GetAnalyseData(ctx context.Context, dataTitle string) (interface{}, error) {
+func (r *RedisService) GetAnalysedData(ctx context.Context, dataTitle string) (interface{}, error) {
 	return nil, nil
 }
