@@ -1,28 +1,33 @@
 package app
 
 import (
-	grpcApp "authService/internal/app/grpc"
-	"authService/internal/services/auth"
-	"authService/internal/storage/postgres"
+	"CacheService/internal/app/cacheApp"
+	"CacheService/internal/config"
+	"context"
 	"log/slog"
-	"time"
 )
 
-type App struct {
-	GRPCapp *grpcApp.App
+type Consumer interface {
+	StartWorkerPull(ctx context.Context) error
+	Consume(ctx context.Context) error
+	Close()
 }
 
-func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Duration) *App {
-	// TODO: implement
-	storage, err := postgres.New(storagePath)
-	if err != nil {
-		panic(err)
-	}
-	authService := auth.New(log, storage, storage, storage, tokenTTL)
+type CacheServiceApp interface {
+	MustRun()
+	Run(ctx context.Context) error
+	Stop()
+}
 
-	grpcapp := grpcApp.New(log, authService, grpcPort)
+type App struct {
+	CacheServiceApp CacheServiceApp
+}
+
+func New(log *slog.Logger, cfg *config.Config) *App {
+
+	app := cacheApp.New(log, cfg)
 	return &App{
-		GRPCapp: grpcapp,
+		CacheServiceApp: app,
 	}
 
 }
