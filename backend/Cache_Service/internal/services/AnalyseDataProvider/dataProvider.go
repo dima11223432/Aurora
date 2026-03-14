@@ -1,11 +1,7 @@
-package auth
+package analyseDataProvider
 
 import (
-	"authService/internal/domain/models"
-	"authService/internal/lib/jwt"
-	"authService/internal/storage"
 	"context"
-	"errors"
 	"fmt"
 	"log/slog"
 	"time"

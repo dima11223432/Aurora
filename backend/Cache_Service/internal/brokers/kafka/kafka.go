@@ -1,6 +1,8 @@
 package kafka
 
 import (
+	"CacheService/internal/domain/models"
+	"CacheService/internal/services/AnalyseDataProvider"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,14 +12,19 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-type Consumer struct {
-	reader   *kafka.Reader
-	log      *slog.Logger
-	maxPulls int32
-	jobs     chan kafka.Message
+type AnalyseDataProvider interface {
+	SetAnalysedData(ctx context.Context, dataTitle string, data interface{}) error
 }
 
-func NewConsumer(log *slog.Logger, brokers []string, topic string, groupID string, maxPulls int32) *Consumer {
+type Consumer struct {
+	reader               *kafka.Reader
+	analysedDataProvider AnalyseDataProvider
+	log                  *slog.Logger
+	maxPulls             int32
+	jobs                 chan kafka.Message
+}
+
+func NewConsumer(log *slog.Logger, brokers []string, topic string, groupID string, maxPulls int32, analyseDataProvider AnalyseDataProvider) *Consumer {
 	return &Consumer{
 		reader: kafka.NewReader(kafka.ReaderConfig{
 			Brokers:        brokers,
@@ -28,10 +35,30 @@ func NewConsumer(log *slog.Logger, brokers []string, topic string, groupID strin
 			StartOffset:    kafka.FirstOffset,
 			CommitInterval: 0,
 		}),
-		log:      log,
-		maxPulls: maxPulls,
-		jobs:     make(chan kafka.Message, 10),
+		analysedDataProvider: analyseDataProvider,
+		log:                  log,
+		maxPulls:             maxPulls,
+		jobs:                 make(chan kafka.Message, 10),
 	}
+}
+
+func (c *Consumer) process(ctx context.Context, msg kafka.Message) error {
+	const op = "Cache_Service.internal.brokers.kafka.process"
+
+	var analysedData models.AnalysedData
+
+	err := json.Unmarshal(msg.Value, &analysedData)
+	if err != nil {
+		c.log.Error(op, slog.Any("error", err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	err = c.analysedDataProvider.SetAnalysedData(ctx, "AnalysedData", analysedData)
+	if err != nil {
+		c.log.Error(op, slog.Any("error", err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
 
 func (c *Consumer) StartWorkerPull(ctx context.Context) error {
@@ -57,6 +84,11 @@ func (c *Consumer) StartWorkerPull(ctx context.Context) error {
 				case msg, ok := <-c.jobs:
 					if !ok {
 						log.Error(op, slog.String("error", "Channel read error"))
+						return
+					}
+					err := c.process(ctx, msg)
+					if err != nil {
+						log.Error(op, slog.Any("error", err))
 						return
 					}
 					//TODO: we need to add new method to serialise this message and call redis method
