@@ -7,8 +7,11 @@ from StepAI import answer as st
 from YandexAI import answer as ya
 
 def AI_handler(context):
+    AI_answer = {}
     AI_list = {"ds", "nv", "st", "ya" }
     for i in AI_list:
-        print(f"{i} : {globals()[i](context)}")
+        AI_answer[i] = globals()[i](context).replace("\n", "")
+    return AI_answer
 
-AI_handler("Nvidia перестанет производить видеокарты")
+test = AI_handler("Nvidia перестанет производить видеокарты")
+print(test)
