@@ -1,0 +1,7 @@
+version: v1beta1
+name: buf.build/local/api-service
+
+build:
+  roots:
+    - api
+    - third-party/googleapis

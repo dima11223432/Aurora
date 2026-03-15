@@ -2,18 +2,19 @@ package grpcauth
 
 import (
 	"context"
-	"errors"
-	"recommendationService/internal/domain/models"
-
+	"github.com/samber/lo"
 	ssov1 "recommendationService/api/gen/v1"
+	"recommendationService/internal/domain/models"
+	// grpcErr "recommendationService/internal/grpc"
 
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type UserDataProvider interface {
-	GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
-
 type serverAPI struct {
 	ssov1.UnimplementedRecommendationServiceServer
 	userDataProvider UserDataProvider
@@ -29,6 +30,14 @@ func Register(gRPC *grpc.Server, userDataProvider UserDataProvider) {
 	})
 }
 
-func GetUserPriorityChanneld(ctx context.Context, req *ssov1.GetUserPriotiryChannelsRequest) ([]models.PriorityChannel, error) {
-	return nil, errors.New("Not implemented")
+func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *ssov1.GetUserPriorityChannelsRequest) (*ssov1.GetUserPriorityChannelsResponse, error) {
+	channels, err := s.userDataProvider.GetUserPriorityChannels(ctx, req.GetUserId())
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &ssov1.GetUserPriorityChannelsResponse{
+		Channels: lo.Map(channels, func(item models.PriorityChannel, _ int) string {
+			return item.Channel
+		}),
+	}, nil
 }
