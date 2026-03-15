@@ -1,9 +1,14 @@
-import globals
+#import globals
+import threading
 
-def AI_handler(context, details=""):
-    AI_list = {"DeepSeek.py": "DeepSeek", "LauraAI.py": "LauraAI"}
+from DeepSeek import answer as ds
+from NvidiaAI import answer as nv
+from StepAI import answer as st 
+from YandexAI import answer as ya
+
+def AI_handler(context):
+    AI_list = {"ds", "nv", "st", "ya" }
     for i in AI_list:
-        if globals.AI_model == AI_list[i]:
-            return getattr(__import__(i), AI_list[i])(context, details)
-        
+        print(f"{i} : {globals()[i](context)}")
 
+AI_handler("Nvidia перестанет производить видеокарты")

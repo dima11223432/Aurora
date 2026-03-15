@@ -21,15 +21,4 @@ def answer(text):
   )
 
   response = response.json()
-  response = response['choices'][0]['message']
-
-  messages = [
-    {"role": "user", "content": "How many r's are in the word 'strawberry'?"},
-    {
-      "role": "assistant",
-      "content": response.get('content'),
-      "reasoning_details": response.get('reasoning_details')  
-    },
-    {"role": "user", "content": "Are you sure? Think carefully."}
-  ]
   return response

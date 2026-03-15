@@ -11,9 +11,7 @@ def answer(text):
         prompt={
             "id": "fvtsebqq8cgcbjstnd50",
         },
-        input="some message",
+        input=text,
     )
 
     return response.output_text
-
-print(answer("Nvidia полностью прекращают производство видеокарт"))
