@@ -12,7 +12,7 @@ import (
 )
 
 type userDataProvider interface {
-	GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
 
 type App struct {

@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RecommendationService_GetUserPriotiryChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriotiryChannels"
+	RecommendationService_GetUserPriorityChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
 )
 
 // RecommendationServiceClient is the client API for RecommendationService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RecommendationServiceClient interface {
-	GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error)
+	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
 }
 
 type recommendationServiceClient struct {
@@ -37,10 +37,10 @@ func NewRecommendationServiceClient(cc grpc.ClientConnInterface) RecommendationS
 	return &recommendationServiceClient{cc}
 }
 
-func (c *recommendationServiceClient) GetUserPriotiryChannels(ctx context.Context, in *GetUserPriotiryChannelsRequest, opts ...grpc.CallOption) (*GetUserPriotiryChannelsResponse, error) {
+func (c *recommendationServiceClient) GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserPriotiryChannelsResponse)
-	err := c.cc.Invoke(ctx, RecommendationService_GetUserPriotiryChannels_FullMethodName, in, out, cOpts...)
+	out := new(GetUserPriorityChannelsResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetUserPriorityChannels_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *recommendationServiceClient) GetUserPriotiryChannels(ctx context.Contex
 // All implementations should embed UnimplementedRecommendationServiceServer
 // for forward compatibility.
 type RecommendationServiceServer interface {
-	GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error)
+	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
 }
 
 // UnimplementedRecommendationServiceServer should be embedded to have
@@ -61,8 +61,8 @@ type RecommendationServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedRecommendationServiceServer struct{}
 
-func (UnimplementedRecommendationServiceServer) GetUserPriotiryChannels(context.Context, *GetUserPriotiryChannelsRequest) (*GetUserPriotiryChannelsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetUserPriotiryChannels not implemented")
+func (UnimplementedRecommendationServiceServer) GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetUserPriorityChannels not implemented")
 }
 func (UnimplementedRecommendationServiceServer) testEmbeddedByValue() {}
 
@@ -84,20 +84,20 @@ func RegisterRecommendationServiceServer(s grpc.ServiceRegistrar, srv Recommenda
 	s.RegisterService(&RecommendationService_ServiceDesc, srv)
 }
 
-func _RecommendationService_GetUserPriotiryChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserPriotiryChannelsRequest)
+func _RecommendationService_GetUserPriorityChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserPriorityChannelsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RecommendationServiceServer).GetUserPriotiryChannels(ctx, in)
+		return srv.(RecommendationServiceServer).GetUserPriorityChannels(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RecommendationService_GetUserPriotiryChannels_FullMethodName,
+		FullMethod: RecommendationService_GetUserPriorityChannels_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RecommendationServiceServer).GetUserPriotiryChannels(ctx, req.(*GetUserPriotiryChannelsRequest))
+		return srv.(RecommendationServiceServer).GetUserPriorityChannels(ctx, req.(*GetUserPriorityChannelsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -110,8 +110,8 @@ var RecommendationService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*RecommendationServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetUserPriotiryChannels",
-			Handler:    _RecommendationService_GetUserPriotiryChannels_Handler,
+			MethodName: "GetUserPriorityChannels",
+			Handler:    _RecommendationService_GetUserPriorityChannels_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -21,27 +21,27 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetUserPriotiryChannelsRequest struct {
+type GetUserPriorityChannelsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserPriotiryChannelsRequest) Reset() {
-	*x = GetUserPriotiryChannelsRequest{}
+func (x *GetUserPriorityChannelsRequest) Reset() {
+	*x = GetUserPriorityChannelsRequest{}
 	mi := &file_v1_sso_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserPriotiryChannelsRequest) String() string {
+func (x *GetUserPriorityChannelsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserPriotiryChannelsRequest) ProtoMessage() {}
+func (*GetUserPriorityChannelsRequest) ProtoMessage() {}
 
-func (x *GetUserPriotiryChannelsRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_sso_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -53,39 +53,39 @@ func (x *GetUserPriotiryChannelsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserPriotiryChannelsRequest.ProtoReflect.Descriptor instead.
-func (*GetUserPriotiryChannelsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserPriorityChannelsRequest.ProtoReflect.Descriptor instead.
+func (*GetUserPriorityChannelsRequest) Descriptor() ([]byte, []int) {
 	return file_v1_sso_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetUserPriotiryChannelsRequest) GetUserId() int64 {
+func (x *GetUserPriorityChannelsRequest) GetUserId() int64 {
 	if x != nil {
 		return x.UserId
 	}
 	return 0
 }
 
-type GetUserPriotiryChannelsResponse struct {
+type GetUserPriorityChannelsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Channels      []string               `protobuf:"bytes,1,rep,name=channels,proto3" json:"channels,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserPriotiryChannelsResponse) Reset() {
-	*x = GetUserPriotiryChannelsResponse{}
+func (x *GetUserPriorityChannelsResponse) Reset() {
+	*x = GetUserPriorityChannelsResponse{}
 	mi := &file_v1_sso_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserPriotiryChannelsResponse) String() string {
+func (x *GetUserPriorityChannelsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserPriotiryChannelsResponse) ProtoMessage() {}
+func (*GetUserPriorityChannelsResponse) ProtoMessage() {}
 
-func (x *GetUserPriotiryChannelsResponse) ProtoReflect() protoreflect.Message {
+func (x *GetUserPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_v1_sso_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -97,12 +97,12 @@ func (x *GetUserPriotiryChannelsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserPriotiryChannelsResponse.ProtoReflect.Descriptor instead.
-func (*GetUserPriotiryChannelsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserPriorityChannelsResponse.ProtoReflect.Descriptor instead.
+func (*GetUserPriorityChannelsResponse) Descriptor() ([]byte, []int) {
 	return file_v1_sso_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetUserPriotiryChannelsResponse) GetChannels() []string {
+func (x *GetUserPriorityChannelsResponse) GetChannels() []string {
 	if x != nil {
 		return x.Channels
 	}
@@ -114,12 +114,12 @@ var File_v1_sso_proto protoreflect.FileDescriptor
 const file_v1_sso_proto_rawDesc = "" +
 	"\n" +
 	"\fv1/sso.proto\x12\x11recommendation.v1\"9\n" +
-	"\x1eGetUserPriotiryChannelsRequest\x12\x17\n" +
+	"\x1eGetUserPriorityChannelsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"=\n" +
-	"\x1fGetUserPriotiryChannelsResponse\x12\x1a\n" +
+	"\x1fGetUserPriorityChannelsResponse\x12\x1a\n" +
 	"\bchannels\x18\x01 \x03(\tR\bchannels2\x9a\x01\n" +
 	"\x15RecommendationService\x12\x80\x01\n" +
-	"\x17GetUserPriotiryChannels\x121.recommendation.v1.GetUserPriotiryChannelsRequest\x1a2.recommendation.v1.GetUserPriotiryChannelsResponseB\x13Z\x11recommendation/v1b\x06proto3"
+	"\x17GetUserPriorityChannels\x121.recommendation.v1.GetUserPriorityChannelsRequest\x1a2.recommendation.v1.GetUserPriorityChannelsResponseB\x13Z\x11recommendation/v1b\x06proto3"
 
 var (
 	file_v1_sso_proto_rawDescOnce sync.Once
@@ -135,12 +135,12 @@ func file_v1_sso_proto_rawDescGZIP() []byte {
 
 var file_v1_sso_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_v1_sso_proto_goTypes = []any{
-	(*GetUserPriotiryChannelsRequest)(nil),  // 0: recommendation.v1.GetUserPriotiryChannelsRequest
-	(*GetUserPriotiryChannelsResponse)(nil), // 1: recommendation.v1.GetUserPriotiryChannelsResponse
+	(*GetUserPriorityChannelsRequest)(nil),  // 0: recommendation.v1.GetUserPriorityChannelsRequest
+	(*GetUserPriorityChannelsResponse)(nil), // 1: recommendation.v1.GetUserPriorityChannelsResponse
 }
 var file_v1_sso_proto_depIdxs = []int32{
-	0, // 0: recommendation.v1.RecommendationService.GetUserPriotiryChannels:input_type -> recommendation.v1.GetUserPriotiryChannelsRequest
-	1, // 1: recommendation.v1.RecommendationService.GetUserPriotiryChannels:output_type -> recommendation.v1.GetUserPriotiryChannelsResponse
+	0, // 0: recommendation.v1.RecommendationService.GetUserPriorityChannels:input_type -> recommendation.v1.GetUserPriorityChannelsRequest
+	1, // 1: recommendation.v1.RecommendationService.GetUserPriorityChannels:output_type -> recommendation.v1.GetUserPriorityChannelsResponse
 	1, // [1:2] is the sub-list for method output_type
 	0, // [0:1] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
