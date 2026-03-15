@@ -40,5 +40,10 @@ func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, an
 
 func (r *RedisService) GetAnalysedData(ctx context.Context, dataTitle string) (interface{}, error) {
 	data, err := r.provider.GetValue(ctx, dataTitle)
-	r.log.Info("GetAnalysedData", slog.String("dataTitle", dataTitle)); return data, err
+	if err != nil {
+		r.log.Error("Failed to get analysedData", slog.Any("error", err))
+		return nil, err
+	}
+	r.log.Info("GetAnalysedData", slog.String("dataTitle", dataTitle))
+	return data, err
 }
