@@ -14,5 +14,3 @@ def answer(text):
         input=text,
     )
     return response.output_text
-
-print(answer("Nvidia сталкивается с массивным притоком инвесторов"))

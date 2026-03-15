@@ -16,11 +16,8 @@ def answer(text):
             "content": text
             }
         ],
-        "reasoning": {"enabled": True}
+        "reasoning": {"enabled": False}
     })
     )
     response = response.json()
-    response = response['choices'][0]['message']
     return response
-
-print(answer("Как думаешь большой ли потенциал у проекта DimaHub, по предоставлению видео Дим"))
