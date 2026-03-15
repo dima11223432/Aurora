@@ -10,7 +10,7 @@ def AI_handler(context):
     AI_answer = {}
     AI_list = {"ds", "nv", "st", "ya" }
     for i in AI_list:
-        AI_answer[i] = globals()[i](context).replace("\n", "")
+        AI_answer[i] = globals()[i](context).replace(" \n", "")
     return AI_answer
 
 test = AI_handler("Nvidia перестанет производить видеокарты")
