@@ -1,4 +1,4 @@
-package main
+package redis
 
 import (
 	"context"
@@ -48,6 +48,10 @@ func (r *RedisController) GetAll(ctx context.Context, pattern string) (interface
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	values, err := r.redis.MGet(ctx, keys...).Result()
+	if err != nil {
+		return nil, err
+	}
+	log.Println(values)
 	return values, nil
 }
 
