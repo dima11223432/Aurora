@@ -8,8 +8,9 @@ type Stock struct {
 }
 
 type AnalysedData struct {
-	Stocks   []Stock   `json:"stocks"`
-	PostText string    `json:"post_text"`
-	PostURI  string    `json:"post_uri"`
-	Date     time.Time `json:"date"`
+	Stocks          []Stock   `json:"stocks"`
+	PostText        string    `json:"post_text"`
+	PostURI         string    `json:"post_uri"`
+	ChannelUsername string    `json:"channel_username"`
+	Date            time.Time `json:"date"`
 }
