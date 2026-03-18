@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"errors"
+	"encoding/json"
 	"fmt"
-	"log"
-	"recommendationService/internal/storage"
+	"recommendationService/internal/domain/models"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -28,27 +28,54 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
 	}
 }
 
-func (r *RedisController) GetValue(ctx context.Context, key string) (interface{}, error) {
-	const op = "Cahce_Service.internal.storage.redis.GetValue"
-	data, err := r.redis.Get(ctx, key).Bytes()
+func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string) ([]models.Post, error) {
+	const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannelsAndDate"
+
+	tmpKey := "post:" + uuid.NewString()
+	defer r.redis.Del(ctx, tmpKey)
+
+	postKeys := make([]string, 0, len(channels))
+	for _, channel := range channels {
+		postKeys = append(postKeys, "post:channel:"+channel)
+	}
+
+	_, err := r.redis.ZUnionStore(ctx, tmpKey, &redis.ZStore{Keys: postKeys}).Result()
 	if err != nil {
-		if errors.Is(err, redis.Nil) {
-			return nil, storage.ErrCacheMiss
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	ids, err := r.redis.ZRevRangeByScore(ctx, tmpKey, &redis.ZRangeBy{
+		Min:   "-inf",
+		Max:   "+inf",
+		Count: 10,
+	}).Result()
+	if err != nil {
+		return []models.Post{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	keys := make([]string, len(ids))
+	for i, id := range ids {
+		keys[i] = "post:" + id
+	}
+
+	vals, err := r.redis.MGet(ctx, keys...).Result()
+	if err != nil {
+		return []models.Post{}, fmt.Errorf("%s: %w", op, err)
+	}
+	posts := make([]models.Post, 0, len(vals))
+
+	for _, val := range vals {
+		if val == nil {
+			continue
 		}
-		return nil, fmt.Errorf("%s: %w", op, err)
+		var post models.Post
+		err := json.Unmarshal([]byte(val.(string)), &post)
+		if err != nil {
+			continue
+		}
+		posts = append(posts, post)
 	}
-	return data, nil
-}
-
-func (r *RedisController) GetAll(ctx context.Context, pattern string) (interface{}, error) {
-	const op = "Cache_Service.internal.storage.redis.GetAll"
-
-	keys, _, err := r.redis.Scan(ctx, 0, pattern, 10).Result()
-	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
-	}
-	values, err := r.redis.MGet(ctx, keys...).Result()
-	return values, nil
+	return posts, nil
 }
 
 func (r *RedisController) Ping(ctx context.Context) error {
