@@ -141,3 +141,73 @@ class KafkaController:
         except Exception as e:
             self.log.error(f" Error: {e}")
             raise
+    
+    def send_batch_messages(self, messages: dict) -> dict:
+        if not messages:
+            return {
+                "success": True,
+                "total": 0,
+                "successful": 0,
+                "failed": 0,
+                "failed_details": []
+            }
+        
+        results = {
+            "success": True,
+            "total": len(messages),
+            "successful": 0,
+            "failed": 0,
+            "failed_details": []
+        }
+        
+        for topic, message in messages.items():
+            try:
+                if not topic or not isinstance(topic, str):
+                    error_msg = f"Invalid topic name: {topic}"
+                    self.log.error(error_msg)
+                    results["failed"] += 1
+                    results["success"] = False
+                    results["failed_details"].append({
+                        "topic": str(topic),
+                        "message": str(message)[:100], 
+                        "error": error_msg
+                    })
+                    continue
+                
+                converted_message = message.to_dict() if hasattr(message, 'to_dict') else message
+                json_message = json.dumps(converted_message, ensure_ascii=False)
+                self.producer.produce(topic, json_message.encode("utf-8"))
+                
+                results["successful"] += 1
+                self.log.debug(f"Successfully queued message for topic: {topic}")
+                
+            except Exception as e:
+                error_msg = f"Failed to send message to topic {topic}: {str(e)}"
+                self.log.error(error_msg)
+                self.log.exception("Detailed error:")
+                
+                results["failed"] += 1
+                results["success"] = False
+                results["failed_details"].append({
+                    "topic": topic,
+                    "message": str(message)[:100] if message else None,
+                    "error": str(e)
+                })
+        
+
+        if results["successful"] > 0:
+            try:
+                self.log.debug("Flushing producer for batch messages")
+                self.producer.flush()
+                self.log.success(f"Batch send completed. Success: {results['successful']}, Failed: {results['failed']}")
+            except Exception as e:
+                error_msg = f"Error during flush: {str(e)}"
+                self.log.error(error_msg)
+                results["success"] = False
+                results["failed_details"].append({
+                    "topic": "flush_error",
+                    "message": None,
+                    "error": error_msg
+                })
+        
+        return results
