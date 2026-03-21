@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 from pathlib import Path
 
+from internal.storage.main import ChannelStorage
+
 from ..domains.domains import Telegram_Post
 from ..brokers.kafka import KafkaController
 from ..services.parse_service import ParserService
@@ -15,13 +17,14 @@ load_dotenv(env_path)
 
 class App:
 
-    def __init__(self, logger, config: Config):
+    def __init__(self, logger, config: Config, storage: ChannelStorage):
         self.log = logger
         self.parser_service = None
         self.api_id = config.API_ID
         self.api_hash = config.API_HASH
         self.phone_number = config.PHONE_NUMBER
         self.kafka_topic = config.KAFKA_TOPIC
+        self.storage = storage
 
     async def initialize(self):
         self.parser_service = ParserService(
@@ -35,10 +38,11 @@ class App:
 
         await self.parser_service.connect()
 
-    async def run_last_post(self, channel: str = ""):
-        self.log.info(f"Scanning last post for channel: {channel}")
-        await self.parser_service.last_post(channel)
+    async def run_monitoring(self):
+        self.log.info(f"run monitoring")
+        channels = list(self.storage.get_all_channels())
+        await self.parser_service.monitoring(channels)
 
     async def run(self):
         await self.initialize()
-        await self.run_last_post("Kafka_Channel1")
+        await self.run_monitoring()
