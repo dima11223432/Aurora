@@ -5,10 +5,10 @@ from os import getenv
 from dotenv import load_dotenv, find_dotenv
 
 
-from DeepSeek import answer as ds
-from GemmaAI import answer as ge
-from StepAI import answer as st 
-from YandexAI import answer as ya
+from AI_API.DeepSeek import answer as ds
+from AI_API.GemmaAI import answer as ge
+from AI_API.StepAI import answer as st 
+from AI_API.YandexAI import answer as ya
 
 #from AnaliticKafka import getMessage
 
