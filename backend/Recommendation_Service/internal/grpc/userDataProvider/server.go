@@ -2,6 +2,7 @@ package grpcauth
 
 import (
 	"context"
+	"log"
 	ssov1 "recommendationService/api/gen/v1"
 	"recommendationService/internal/domain/models"
 
@@ -33,9 +34,10 @@ const (
 	emptyValue = 0
 )
 
-func Register(gRPC *grpc.Server, userDataProvider UserDataProvider) {
+func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, newsNewsDataProvider NewsDataProvider) {
 	ssov1.RegisterRecommendationServiceServer(gRPC, &serverAPI{
 		userDataProvider: userDataProvider,
+		newsDataProvider: newsNewsDataProvider,
 	})
 }
 
@@ -55,6 +57,7 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRec
 	const op = "Recommendation_Service.internal.grpc.UserDataProvider.server.GetRecommendatedPosts"
 	posts, err := s.newsDataProvider.GetRecommendatedPosts(ctx, req.GetUserId())
 	if err != nil {
+		log.Fatal(err)
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 	protoPosts := make([]*ssov1.Post, 0)
