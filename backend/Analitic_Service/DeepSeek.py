@@ -1,15 +1,15 @@
 import openai
 
-def answer(text):
+def answer(text, token=""):
     client = openai.OpenAI(
-        api_key="AQVNzIgdXoTMFtNJ8gd2Z0mmyqV_WoPhr2J5cZ_t",
+        api_key=token,
         base_url="https://ai.api.cloud.yandex.net/v1",
         project="b1go6g3j8jc9kqomrhn5"
     )
 
     response = client.responses.create(
         prompt={
-            "id": "fvtsebqq8cgcbjstnd50",
+            "id": "fvt8pb2mhnrihds7rfve",
         },
         input=text,
     )
