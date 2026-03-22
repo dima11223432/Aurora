@@ -17,12 +17,13 @@ type UserDataProvider interface {
 }
 
 type NewsDataProvider interface {
-	GetPostsByChannels(ctx context.Context, channels []string) ([]models.Post, error)
+	GetRecommendatedPosts(ctx context.Context, userID int64) ([]models.Post, error)
 }
 
 type serverAPI struct {
 	ssov1.UnimplementedRecommendationServiceServer
 	userDataProvider UserDataProvider
+	newsDataProvider NewsDataProvider
 }
 
 const (
@@ -45,4 +46,8 @@ func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *ssov1.GetU
 			return item.Channel
 		}),
 	}, nil
+}
+
+func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRecommendatedPostsRequest) (*ssov1.GetRecommendatedPostsResponse, error) {
+	return nil, nil
 }
