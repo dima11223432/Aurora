@@ -9,7 +9,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/google/uuid"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -28,40 +27,6 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
 		}),
 		DefaultTTl: ttl,
 	}
-}
-
-func (r *RedisController) SetCard(ctx context.Context, value models.AnalysedData) error {
-	const op = "Cache_Service.internal.storage.redis.SetCard"
-	id := uuid.NewString()
-	timestamp := value.Date.Unix()
-	pipeline := r.redis.TxPipeline()
-
-	data, err := json.Marshal(value)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-
-	err = pipeline.Set(ctx, "post:"+id, data, r.DefaultTTl).Err()
-
-	if err != nil {
-		return err
-	}
-
-	pipeline.ZAdd(ctx, "cards", redis.Z{
-		Score:  float64(timestamp),
-		Member: id,
-	})
-
-	pipeline.ZAdd(ctx, "post:channel:"+value.ChannelUsername, redis.Z{
-		Score:  float64(timestamp),
-		Member: id,
-	})
-
-	_, err = pipeline.Exec(ctx)
-	if err != nil {
-		return err
-	}
-	return nil
 }
 
 func (r *RedisController) SetValue(ctx context.Context, key string, value interface{}, ttl ...time.Duration) error {
