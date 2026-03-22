@@ -17,7 +17,7 @@ func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Durat
 	if err != nil {
 		panic(err)
 	}
-	userDataProviderService := userDataProvider.New(log, storage, tokenTTL)
+	userDataProviderService := userDataProvider.New(log, storage, storage, tokenTTL)
 
 	grpcapp := grpcApp.New(log, userDataProviderService, grpcPort)
 	return &App{
