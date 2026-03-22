@@ -6,6 +6,8 @@ from GemmaAI import answer as ge
 from StepAI import answer as st 
 from YandexAI import answer as ya
 
+#from AnaliticKafka import getMessage
+
 def AI_handler(context):
     AI_answer = {"ds": {}, "ge": {}, "st": {}, "ya":{}}
     AI_list = {"ds", "ge", "st", "ya" }
