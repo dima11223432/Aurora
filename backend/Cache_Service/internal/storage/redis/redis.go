@@ -1,7 +1,6 @@
 package redis
 
 import (
-	"CacheService/internal/domain/models"
 	"CacheService/internal/storage"
 	"context"
 	"encoding/json"

@@ -1,7 +1,6 @@
 package analyseDataProvider
 
 import (
-	"CacheService/internal/domain/models"
 	"context"
 	"fmt"
 	"log/slog"
