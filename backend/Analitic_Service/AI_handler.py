@@ -13,7 +13,7 @@ from YandexAI import answer as ya
 #from AnaliticKafka import getMessage
 
 def AI_handler(context):
-    load_dotenv("API_Keys.env")
+    load_dotenv("config/API_Keys.env")
     AI_answer = {"ds": {}, "ge": {}, "st": {}, "ya":{}}
     AI_list = {"ds", "ge", "st", "ya" }
     for i in AI_list:
@@ -26,5 +26,5 @@ def AI_handler(context):
             AI_answer[i]["answer"] = 0
     return AI_answer
 
-test = AI_handler("Apple продаёт все заводы.")
+test = AI_handler("Китай начал полномасштабную военную операцию связанную со вторжением в Тайвань")
 print(test)
