@@ -15,6 +15,11 @@ import (
 type UserDataProvider interface {
 	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
+
+type NewsDataProvider interface {
+	GetPostsByChannels(ctx context.Context, channels []string) ([]models.Post, error)
+}
+
 type serverAPI struct {
 	ssov1.UnimplementedRecommendationServiceServer
 	userDataProvider UserDataProvider
