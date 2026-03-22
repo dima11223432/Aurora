@@ -49,5 +49,24 @@ func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *ssov1.GetU
 }
 
 func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRecommendatedPostsRequest) (*ssov1.GetRecommendatedPostsResponse, error) {
-	return nil, nil
+	const op = "Recommendation_Service.internal.grpc.UserDataProvider.server.GetRecommendatedPosts"
+	posts, err := s.newsDataProvider.GetRecommendatedPosts(ctx, req.GetUserId())
+	if err != nil{
+	    return nil, err
+	}
+	protoPosts := make([]*ssov1.Post, 0)
+
+	for _, post := range posts{
+	    stoks := post.Stocks
+	    protoPosts = append(protoPosts, &ssov1.Post{
+	        Stocks: stoks,
+	        PostText: post.PostText,
+	        PostUri: post.PostURI,
+	        ChannelUsername: post.ChannelUsername,
+	        Date: timestamppb.New(post, Date),
+	    })
+	}
+	return &ssov1.GetRecommendatedPostsResponse{
+	    Posts: protoPosts,
+	}, nil
 }
