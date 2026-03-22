@@ -45,9 +45,8 @@ func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []str
 	}
 
 	ids, err := r.redis.ZRevRangeByScore(ctx, tmpKey, &redis.ZRangeBy{
-		Min:   "-inf",
-		Max:   "+inf",
-		Count: 10,
+		Min: "-inf",
+		Max: "+inf",
 	}).Result()
 	if err != nil {
 		return []models.Post{}, fmt.Errorf("%s: %w", op, err)

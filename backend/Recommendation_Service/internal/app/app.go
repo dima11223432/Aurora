@@ -20,7 +20,7 @@ func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Durat
 		"1111",
 		0,
 		1,
-		time.Hour,
+		tokenTTL,
 	)
 	if err != nil {
 		panic(err)
