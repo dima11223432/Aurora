@@ -56,7 +56,7 @@ func (u *UserDataProvider) GetUserPriorityChannels(ctx context.Context, userID i
 	return channels, nil
 }
 
-func (u *UserDataProvider) GetUserPriorityNews(ctx context.Context, userID int64) ([]models.Post, error) {
+func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int64) ([]models.Post, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetUserPriorityNews"
 
 	channels, err := u.GetUserPriorityChannels(ctx, userID)
