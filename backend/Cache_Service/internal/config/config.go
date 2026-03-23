@@ -14,6 +14,7 @@ type Config struct {
 	TokenTTL    time.Duration `yaml:"token_ttl" env-required:"true"`
 	GRPC        GRPCConfig    `yaml:"grpc"`
 	RedisConfig RedisConfig   `yaml:"redis"`
+	KafkaConfig KafkaConfig   `yaml:"kafka"`
 }
 
 type GRPCConfig struct {
@@ -26,6 +27,13 @@ type RedisConfig struct {
 	Password string `yaml:"password"`
 	DB       int    `yaml:"db"`
 	Port     int    `yaml:"port"`
+}
+
+type KafkaConfig struct {
+	Host          string `yaml:"host"`
+	Topic         string `yaml:"topic"`
+	ConsumerGroup string `yaml:"consumer_group"`
+	MaxPulls      int    `yaml:"max_pulls"`
 }
 
 func MustLoad() *Config {

@@ -13,7 +13,7 @@ import (
 )
 
 type AnalyseDataProvider interface {
-	SetAnalysedData(ctx context.Context, dataTitle string, data interface{}) error
+	SetAnalysedData(ctx context.Context, dataTitle string, data models.AnalysedData) error
 }
 
 type Consumer struct {
