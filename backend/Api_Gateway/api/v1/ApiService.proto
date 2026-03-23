@@ -26,6 +26,18 @@ service ApiService {
       body:"*"
     };
   }
+  rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_recommendated_posts"
+      body:"*"
+    };
+  }
+}
+
+message GetRecommendatedPostsRequest {
+}
+message GetRecommendatedPostsResponse {
+  repeated Post posts = 1;
 }
 
 message SetPriorityChannelsRequest {
@@ -33,7 +45,6 @@ message SetPriorityChannelsRequest {
 }
 
 message SetPriorityChannelsResponse {
-  int32 status = 1;
 }
 
 
@@ -56,4 +67,18 @@ message IsAdminRequest {
 
 message IsAdminResponse {
   bool is_admin = 1;
+}
+
+message Post {
+  repeated Stock stocks = 1;
+  string post_text = 2;
+  string post_uri = 3;
+  string channel_username = 4;
+  string reasoning = 5;
+  google.protobuf.Timestamp date = 6;
+}
+
+message Stock {
+  string stock_name = 1;
+  string side = 2;
 }

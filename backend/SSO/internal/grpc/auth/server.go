@@ -17,7 +17,7 @@ import (
 type Auth interface {
 	Login(ctx context.Context, user models.User, appId int) (token string, err error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
-	SetPriorityChannels(ctx context.Context, user_id int64, channels []string) (int32, error)
+	SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error
 }
 
 type serverAPI struct {
@@ -64,18 +64,15 @@ func (s *serverAPI) SetPriorityChannels(
 	req *ssov1.SetPriorityChannelsRequest) (
 	*ssov1.SetPriorityChannelsResponse, error) {
 
-	statusCode, err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
+	err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 
 	if err != nil {
-		switch {
-		case errors.Is(err, storage.ErrChannelExists):
+		if errors.Is(err, storage.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")
 		}
 		return nil, err
 	}
-	return &ssov1.SetPriorityChannelsResponse{
-		Status: statusCode,
-	}, nil
+	return &ssov1.SetPriorityChannelsResponse{}, nil
 
 }
 
