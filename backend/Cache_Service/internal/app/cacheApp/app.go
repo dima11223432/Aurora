@@ -36,10 +36,10 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 
 	consumer := kafka.NewConsumer(
 		log,
-		[]string{"localhost:9092"},
-		"news_data",
-		"news_consumer_group",
-		10,
+		[]string{cfg.KafkaConfig.Host},
+		cfg.KafkaConfig.Topic,
+		cfg.KafkaConfig.ConsumerGroup,
+		int32(cfg.KafkaConfig.MaxPulls),
 		analyseDataProvider,
 	)
 	log.Info("Consumer created")
