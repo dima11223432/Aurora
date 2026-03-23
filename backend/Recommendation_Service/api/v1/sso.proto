@@ -31,7 +31,8 @@ message Post {
   string post_text = 2;
   string post_uri = 3;
   string channel_username = 4;
-  google.protobuf.Timestamp date = 5;
+  string reasoning = 5;
+  google.protobuf.Timestamp date = 6;
 }
 
 message Stock {
