@@ -18,6 +18,6 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 	}
 }
 
-func (r *RecommendationService) GetUserPriorityChannels(ctx context.Context) (*models.Post, error) {
+func (r *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]models.Post, error) {
 	return nil, nil
 }
