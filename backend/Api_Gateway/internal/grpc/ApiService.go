@@ -20,14 +20,20 @@ type Auth interface {
 	SetPriorityChannels(ctx context.Context, channels []string) error
 }
 
-type ApiService struct {
-	v1.UnimplementedApiServiceServer
-	auth Auth
+type RecommendatinService interface {
+	GetRecommendatedPosts(ctx context.Context) ([]models.Post, error)
 }
 
-func RegisterGrpcServer(gRPC *grpc.Server, auth Auth) {
+type ApiService struct {
+	v1.UnimplementedApiServiceServer
+	recommendatinService RecommendatinService
+	auth                 Auth
+}
+
+func RegisterGrpcServer(gRPC *grpc.Server, auth Auth, recommendationService RecommendatinService) {
 	v1.RegisterApiServiceServer(gRPC, &ApiService{
-		auth: auth,
+		auth:                 auth,
+		recommendatinService: recommendationService,
 	})
 }
 
