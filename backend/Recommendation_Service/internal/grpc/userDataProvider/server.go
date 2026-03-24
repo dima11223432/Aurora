@@ -76,6 +76,7 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRec
 			PostText:        post.PostText,
 			PostUri:         post.PostURI,
 			ChannelUsername: post.ChannelUsername,
+			Reasoning:       post.Reasoning,
 			Date:            timestamppb.New(post.Date),
 		})
 	}

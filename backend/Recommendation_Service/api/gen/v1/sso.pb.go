@@ -204,7 +204,8 @@ type Post struct {
 	PostText        string                 `protobuf:"bytes,2,opt,name=post_text,json=postText,proto3" json:"post_text,omitempty"`
 	PostUri         string                 `protobuf:"bytes,3,opt,name=post_uri,json=postUri,proto3" json:"post_uri,omitempty"`
 	ChannelUsername string                 `protobuf:"bytes,4,opt,name=channel_username,json=channelUsername,proto3" json:"channel_username,omitempty"`
-	Date            *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=date,proto3" json:"date,omitempty"`
+	Reasoning       string                 `protobuf:"bytes,5,opt,name=reasoning,proto3" json:"reasoning,omitempty"`
+	Date            *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=date,proto3" json:"date,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -263,6 +264,13 @@ func (x *Post) GetPostUri() string {
 func (x *Post) GetChannelUsername() string {
 	if x != nil {
 		return x.ChannelUsername
+	}
+	return ""
+}
+
+func (x *Post) GetReasoning() string {
+	if x != nil {
+		return x.Reasoning
 	}
 	return ""
 }
@@ -338,13 +346,14 @@ const file_v1_sso_proto_rawDesc = "" +
 	"\x1eGetUserPriorityChannelsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"=\n" +
 	"\x1fGetUserPriorityChannelsResponse\x12\x1a\n" +
-	"\bchannels\x18\x01 \x03(\tR\bchannels\"\xcb\x01\n" +
+	"\bchannels\x18\x01 \x03(\tR\bchannels\"\xe9\x01\n" +
 	"\x04Post\x120\n" +
 	"\x06stocks\x18\x01 \x03(\v2\x18.recommendation.v1.StockR\x06stocks\x12\x1b\n" +
 	"\tpost_text\x18\x02 \x01(\tR\bpostText\x12\x19\n" +
 	"\bpost_uri\x18\x03 \x01(\tR\apostUri\x12)\n" +
-	"\x10channel_username\x18\x04 \x01(\tR\x0fchannelUsername\x12.\n" +
-	"\x04date\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x04date\":\n" +
+	"\x10channel_username\x18\x04 \x01(\tR\x0fchannelUsername\x12\x1c\n" +
+	"\treasoning\x18\x05 \x01(\tR\treasoning\x12.\n" +
+	"\x04date\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\x04date\":\n" +
 	"\x05Stock\x12\x1d\n" +
 	"\n" +
 	"stock_name\x18\x01 \x01(\tR\tstockName\x12\x12\n" +
