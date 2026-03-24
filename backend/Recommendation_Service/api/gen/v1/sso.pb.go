@@ -417,10 +417,7 @@ const file_v1_sso_proto_rawDesc = "" +
 	"\x1eGetUserPriorityChannelsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\"=\n" +
 	"\x1fGetUserPriorityChannelsResponse\x12\x1a\n" +
-	"\bchannels\x18\x01 \x03(\tR\bchannels\".\n" +
-	"\x06Cursor\x12\x14\n" +
-	"\x05score\x18\x01 \x01(\x03R\x05score\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id\"\xe9\x01\n" +
+	"\bchannels\x18\x01 \x03(\tR\bchannels\"\xe9\x01\n" +
 	"\x04Post\x120\n" +
 	"\x06stocks\x18\x01 \x03(\v2\x18.recommendation.v1.StockR\x06stocks\x12\x1b\n" +
 	"\tpost_text\x18\x02 \x01(\tR\bpostText\x12\x19\n" +
