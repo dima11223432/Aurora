@@ -1,7 +1,7 @@
 env: "local"
 
 storage_pass: "postgres://postgres:pass@localhost:5432/users?sslmode=disable"
-token_ttl: 1h
+token_ttl: 720h
 
 grpc:
   port: 44044
@@ -12,3 +12,9 @@ redis:
   password: "1111"
   db: 0
   port: 6379
+
+kafka:
+  host: "localhost:9092"
+  topic: "news_data"
+  consumer_group: "news_consumer_group"
+  max_pulls: 10

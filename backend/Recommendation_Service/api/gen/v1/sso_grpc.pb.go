@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	RecommendationService_GetUserPriorityChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
+	RecommendationService_GetRecommendatedPosts_FullMethodName   = "/recommendation.v1.RecommendationService/GetRecommendatedPosts"
 )
 
 // RecommendationServiceClient is the client API for RecommendationService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type RecommendationServiceClient interface {
 	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
+	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
 }
 
 type recommendationServiceClient struct {
@@ -47,11 +49,22 @@ func (c *recommendationServiceClient) GetUserPriorityChannels(ctx context.Contex
 	return out, nil
 }
 
+func (c *recommendationServiceClient) GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRecommendatedPostsResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetRecommendatedPosts_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RecommendationServiceServer is the server API for RecommendationService service.
 // All implementations should embed UnimplementedRecommendationServiceServer
 // for forward compatibility.
 type RecommendationServiceServer interface {
 	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
+	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
 }
 
 // UnimplementedRecommendationServiceServer should be embedded to have
@@ -63,6 +76,9 @@ type UnimplementedRecommendationServiceServer struct{}
 
 func (UnimplementedRecommendationServiceServer) GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetUserPriorityChannels not implemented")
+}
+func (UnimplementedRecommendationServiceServer) GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetRecommendatedPosts not implemented")
 }
 func (UnimplementedRecommendationServiceServer) testEmbeddedByValue() {}
 
@@ -102,6 +118,24 @@ func _RecommendationService_GetUserPriorityChannels_Handler(srv interface{}, ctx
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecommendationService_GetRecommendatedPosts_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecommendatedPostsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).GetRecommendatedPosts(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_GetRecommendatedPosts_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).GetRecommendatedPosts(ctx, req.(*GetRecommendatedPostsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RecommendationService_ServiceDesc is the grpc.ServiceDesc for RecommendationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -112,6 +146,10 @@ var RecommendationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserPriorityChannels",
 			Handler:    _RecommendationService_GetUserPriorityChannels_Handler,
+		},
+		{
+			MethodName: "GetRecommendatedPosts",
+			Handler:    _RecommendationService_GetRecommendatedPosts_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
