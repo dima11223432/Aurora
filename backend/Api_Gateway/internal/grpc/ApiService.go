@@ -4,6 +4,7 @@ import (
 	v1 "API_Service/api/gen/v1"
 
 	custom_errors "API_Service/internal/custom_errors"
+	"API_Service/internal/domains/models"
 	"context"
 	"errors"
 	"fmt"
@@ -102,9 +103,9 @@ func (a *ApiService) GetRecommendatedPosts(
 	req *v1.GetRecommendatedPostsRequest,
 ) (*v1.GetRecommendatedPostsResponse, error) {
 	const op = "backend/Api_Gateway/internal/grpc/ApiService.go"
-	posts, err := a.recommendationService.GetRecommendatedPosts(ctx)
+	posts, err := a.recommendatinService.GetRecommendatedPosts(ctx)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "failed to get posts: %v", err) 
+		return nil, status.Errorf(codes.Internal, "failed to get posts: %v", err)
 	}
 	var postList []*v1.Post
 	for _, post := range posts {
@@ -112,16 +113,17 @@ func (a *ApiService) GetRecommendatedPosts(
 		for _, stock := range post.Stocks {
 			stocks = append(stocks, &v1.Stock{
 				StockName: stock.StockName,
-				Side: stock.Side,})
+				Side:      stock.Side})
 		}
-		postList = append(postList, &v1.post{
-			Stocks: stocks,
-			PostText: post.PostText,
-			PostUri: post.PostURI,
+		postList = append(postList, &v1.Post{
+			Stocks:          stocks,
+			PostText:        post.PostText,
+			PostUri:         post.PostURI,
 			ChannelUsername: post.ChannelUsername,
-			Reasoning: "",
-			Date: timestamppb.New(post.Date),
+			Reasoning:       "",
+			Date:            timestamppb.New(post.Date),
 		})
 	}
-	return &v1.GetRecommendatedPostsResponse{ Posts: postList, }, nil
+	return &v1.GetRecommendatedPostsResponse{Posts: postList}, nil
 }
+
