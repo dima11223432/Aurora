@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 	"log/slog"
 	"recommendationService/internal/domain/models"
 	"time"
@@ -21,7 +22,7 @@ type PriorityChannelsProvider interface {
 }
 
 type PriorityNewsProvider interface {
-	GetPostsByChannels(ctx context.Context, channels []string) ([]models.Post, error)
+	GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error)
 }
 
 var (
@@ -73,7 +74,8 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 		channelNames = append(channelNames, ch.Channel)
 	}
 
-	posts, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames)
+	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, nil, 10)
+	log.Print(nextCursor)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
