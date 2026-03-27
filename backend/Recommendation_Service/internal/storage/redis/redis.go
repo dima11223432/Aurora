@@ -28,34 +28,32 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
 }
 
 func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error) {
-	const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannelsAndDate"
+	const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannels"
+	tmpKey := fmt.Sprintf("tmp:feed:%d", userID)
 
-	tmpKey := fmt.Sprintf(
-		"tmp:feed:%d:%d",
-		userID,
-		time.Now().UnixNano(),
-	)
-
-	if err := r.initilizeNewZUnion(ctx, tmpKey, channels); err != nil {
-		return nil, nil, fmt.Errorf("%s: %w", op, err)
+	if exists, _ := r.redis.Exists(ctx, tmpKey).Result(); exists == 0 {
+		if err := r.initilizeNewZUnion(ctx, tmpKey, channels); err != nil {
+			return nil, nil, fmt.Errorf("%s: %w", op, err)
+		}
 	}
 
 	maxScore := "+inf"
-	if cursor != nil {
-		maxScore = fmt.Sprintf("(%f", cursor.Score)
+	if cursor != nil && cursor.Score != 0 {
+		maxScore = fmt.Sprintf("(%.0f", cursor.Score)
 	}
 
-	zPosts, err := r.getSortedPosts(ctx, tmpKey, maxScore, limit)
+	zPosts, err := r.getSortedPosts(ctx, tmpKey, maxScore, 0, limit)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s: %w", op, err)
 	}
+
 	if len(zPosts) == 0 {
 		return []models.Post{}, nil, nil
 	}
 
-	postKeys := preparePostKeys(zPosts, cursor)
-	if len(postKeys) == 0 {
-		return []models.Post{}, nil, nil
+	postKeys := make([]string, len(zPosts))
+	for i, zp := range zPosts {
+		postKeys[i] = "post:" + zp.Member.(string)
 	}
 
 	vals, err := r.redis.MGet(ctx, postKeys...).Result()
@@ -64,9 +62,11 @@ func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []str
 	}
 
 	posts := unmarshalToPosts(vals)
-	nextCursor, err := configureNewCursor(zPosts)
-	if err != nil {
-		return nil, nil, fmt.Errorf("%s: %w", op, err)
+
+	lastZ := zPosts[len(zPosts)-1]
+	nextCursor := &models.Cursor{
+		Score: lastZ.Score,
+		ID:    lastZ.Member.(string),
 	}
 
 	return posts, nextCursor, nil
@@ -98,14 +98,19 @@ func (r *RedisController) initilizeNewZUnion(ctx context.Context, tmpKey string,
 	for _, ch := range channels {
 		channelKeys = append(channelKeys, fmt.Sprintf("post:channel:%s", ch))
 	}
+
 	if err := r.redis.ZUnionStore(
 		ctx,
 		tmpKey,
-		&redis.ZStore{Keys: channelKeys},
+		&redis.ZStore{
+			Keys:      channelKeys,
+			Aggregate: "MAX",
+		},
 	).Err(); err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
-	r.redis.Expire(ctx, tmpKey, 5*time.Second)
+
+	r.redis.Expire(ctx, tmpKey, 60*time.Second)
 	return nil
 }
 
@@ -139,14 +144,15 @@ func preparePostKeys(zPosts []redis.Z, cursor *models.Cursor) []string {
 	return postKeys
 }
 
-func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, maxScore string, count int64) ([]redis.Z, error) {
+func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, maxScore string, offset int64, count int64) ([]redis.Z, error) {
 	posts, err := r.redis.ZRevRangeByScoreWithScores(
 		ctx,
 		tmpKey,
 		&redis.ZRangeBy{
-			Min:   "-inf",
-			Max:   maxScore,
-			Count: count,
+			Min:    "-inf",
+			Max:    maxScore,
+			Offset: offset,
+			Count:  count,
 		},
 	).Result()
 	if err != nil {
