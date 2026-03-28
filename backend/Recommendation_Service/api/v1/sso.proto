@@ -12,10 +12,12 @@ service RecommendationService {
 
 message GetRecommendatedPostsRequest{
   int64 user_id = 1;
+  Cursor cursor = 2;
 }
 
 message GetRecommendatedPostsResponse{
   repeated Post posts = 1;
+  Cursor next_cursor = 2;
 }
 
 message GetUserPriorityChannelsRequest {
@@ -24,6 +26,11 @@ message GetUserPriorityChannelsRequest {
 
 message GetUserPriorityChannelsResponse{
   repeated string channels = 1;
+}
+
+message Cursor{
+  int64 score = 1;
+  string id = 2;
 }
 
 message Post {

@@ -12,5 +12,6 @@ type Post struct {
 	PostText        string    `json:"post_text"`
 	PostURI         string    `json:"post_uri"`
 	ChannelUsername string    `json:"channel_username"`
+	Reasoning       string    `json:"reasoning"`
 	Date            time.Time `json:"date"`
 }

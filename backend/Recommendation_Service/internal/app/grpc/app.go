@@ -16,7 +16,7 @@ type userDataProvider interface {
 }
 
 type NewsDataProvider interface {
-	GetRecommendatedPosts(ctx context.Context, userID int64) ([]models.Post, error)
+	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
 
 type App struct {
