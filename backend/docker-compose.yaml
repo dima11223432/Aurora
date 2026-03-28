@@ -1,5 +1,16 @@
 version: "3.8"
 
+networks:
+  app_net:
+    driver: bridge
+  kafka-net:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_master_data:
+  redis_replica_data:
+
 services:
   postgres:
     image: postgres:15-alpine
@@ -19,8 +30,9 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - app_net
 
-  # Redis Master
   redis-master:
     image: redis:7-alpine
     container_name: redis_master
@@ -42,8 +54,9 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - app_net
 
-  # Redis Replica
   redis-replica:
     image: redis:7-alpine
     container_name: redis_replica
@@ -67,8 +80,9 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+    networks:
+      - app_net
 
-  # Redis Sentinel (опционально, можешь убрать если не нужно)
   redis-sentinel-1:
     image: redis:7-alpine
     container_name: redis_sentinel_1
@@ -82,6 +96,8 @@ services:
       - "26379:26379"
     volumes:
       - ./redis-sentinel.conf:/usr/local/etc/redis/sentinel.conf
+    networks:
+      - app_net
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -91,6 +107,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - kafka-net
 
   kafka:
     image: confluentinc/cp-kafka:7.4.0
@@ -102,12 +120,8 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-
-volumes:
-  postgres_data:
-  redis_master_data:
-  redis_replica_data:
+    networks:
+      - kafka-net
