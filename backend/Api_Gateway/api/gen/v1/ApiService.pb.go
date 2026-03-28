@@ -25,6 +25,7 @@ const (
 
 type GetRecommendatedPostsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
+	Cursor        *Cursor                `protobuf:"bytes,1,opt,name=cursor,proto3" json:"cursor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -59,9 +60,17 @@ func (*GetRecommendatedPostsRequest) Descriptor() ([]byte, []int) {
 	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
 }
 
+func (x *GetRecommendatedPostsRequest) GetCursor() *Cursor {
+	if x != nil {
+		return x.Cursor
+	}
+	return nil
+}
+
 type GetRecommendatedPostsResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Posts         []*Post                `protobuf:"bytes,1,rep,name=posts,proto3" json:"posts,omitempty"`
+	NextCursor    *Cursor                `protobuf:"bytes,2,opt,name=next_cursor,json=nextCursor,proto3" json:"next_cursor,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -99,6 +108,13 @@ func (*GetRecommendatedPostsResponse) Descriptor() ([]byte, []int) {
 func (x *GetRecommendatedPostsResponse) GetPosts() []*Post {
 	if x != nil {
 		return x.Posts
+	}
+	return nil
+}
+
+func (x *GetRecommendatedPostsResponse) GetNextCursor() *Cursor {
+	if x != nil {
+		return x.NextCursor
 	}
 	return nil
 }
@@ -535,14 +551,69 @@ func (x *Stock) GetSide() string {
 	return ""
 }
 
+type Cursor struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Score         int64                  `protobuf:"varint,1,opt,name=score,proto3" json:"score,omitempty"`
+	Id            string                 `protobuf:"bytes,2,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Cursor) Reset() {
+	*x = Cursor{}
+	mi := &file_v1_ApiService_proto_msgTypes[10]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Cursor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Cursor) ProtoMessage() {}
+
+func (x *Cursor) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[10]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Cursor.ProtoReflect.Descriptor instead.
+func (*Cursor) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{10}
+}
+
+func (x *Cursor) GetScore() int64 {
+	if x != nil {
+		return x.Score
+	}
+	return 0
+}
+
+func (x *Cursor) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 var File_v1_ApiService_proto protoreflect.FileDescriptor
 
 const file_v1_ApiService_proto_rawDesc = "" +
 	"\n" +
-	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1e\n" +
-	"\x1cGetRecommendatedPostsRequest\"C\n" +
+	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"F\n" +
+	"\x1cGetRecommendatedPostsRequest\x12&\n" +
+	"\x06cursor\x18\x01 \x01(\v2\x0e.api.v1.CursorR\x06cursor\"t\n" +
 	"\x1dGetRecommendatedPostsResponse\x12\"\n" +
-	"\x05posts\x18\x01 \x03(\v2\f.api.v1.PostR\x05posts\"I\n" +
+	"\x05posts\x18\x01 \x03(\v2\f.api.v1.PostR\x05posts\x12/\n" +
+	"\vnext_cursor\x18\x02 \x01(\v2\x0e.api.v1.CursorR\n" +
+	"nextCursor\"I\n" +
 	"\x1aSetPriorityChannelsRequest\x12+\n" +
 	"\x11priority_channels\x18\x01 \x03(\tR\x10priorityChannels\"\x1d\n" +
 	"\x1bSetPriorityChannelsResponse\"\xb9\x01\n" +
@@ -572,7 +643,10 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\x05Stock\x12\x1d\n" +
 	"\n" +
 	"stock_name\x18\x01 \x01(\tR\tstockName\x12\x12\n" +
-	"\x04side\x18\x02 \x01(\tR\x04side2\xc3\x03\n" +
+	"\x04side\x18\x02 \x01(\tR\x04side\".\n" +
+	"\x06Cursor\x12\x14\n" +
+	"\x05score\x18\x01 \x01(\x03R\x05score\x12\x0e\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id2\xc3\x03\n" +
 	"\n" +
 	"ApiService\x12J\n" +
 	"\x05Login\x12\x14.api.v1.LoginRequest\x1a\x15.api.v1.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12S\n" +
@@ -592,7 +666,7 @@ func file_v1_ApiService_proto_rawDescGZIP() []byte {
 	return file_v1_ApiService_proto_rawDescData
 }
 
-var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_v1_ApiService_proto_goTypes = []any{
 	(*GetRecommendatedPostsRequest)(nil),  // 0: api.v1.GetRecommendatedPostsRequest
 	(*GetRecommendatedPostsResponse)(nil), // 1: api.v1.GetRecommendatedPostsResponse
@@ -604,25 +678,28 @@ var file_v1_ApiService_proto_goTypes = []any{
 	(*IsAdminResponse)(nil),               // 7: api.v1.IsAdminResponse
 	(*Post)(nil),                          // 8: api.v1.Post
 	(*Stock)(nil),                         // 9: api.v1.Stock
-	(*timestamppb.Timestamp)(nil),         // 10: google.protobuf.Timestamp
+	(*Cursor)(nil),                        // 10: api.v1.Cursor
+	(*timestamppb.Timestamp)(nil),         // 11: google.protobuf.Timestamp
 }
 var file_v1_ApiService_proto_depIdxs = []int32{
-	8,  // 0: api.v1.GetRecommendatedPostsResponse.posts:type_name -> api.v1.Post
-	9,  // 1: api.v1.Post.stocks:type_name -> api.v1.Stock
-	10, // 2: api.v1.Post.date:type_name -> google.protobuf.Timestamp
-	4,  // 3: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
-	6,  // 4: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
-	2,  // 5: api.v1.ApiService.SetPriorityChannels:input_type -> api.v1.SetPriorityChannelsRequest
-	0,  // 6: api.v1.ApiService.GetRecommendatedPosts:input_type -> api.v1.GetRecommendatedPostsRequest
-	5,  // 7: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
-	7,  // 8: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
-	3,  // 9: api.v1.ApiService.SetPriorityChannels:output_type -> api.v1.SetPriorityChannelsResponse
-	1,  // 10: api.v1.ApiService.GetRecommendatedPosts:output_type -> api.v1.GetRecommendatedPostsResponse
-	7,  // [7:11] is the sub-list for method output_type
-	3,  // [3:7] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	10, // 0: api.v1.GetRecommendatedPostsRequest.cursor:type_name -> api.v1.Cursor
+	8,  // 1: api.v1.GetRecommendatedPostsResponse.posts:type_name -> api.v1.Post
+	10, // 2: api.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> api.v1.Cursor
+	9,  // 3: api.v1.Post.stocks:type_name -> api.v1.Stock
+	11, // 4: api.v1.Post.date:type_name -> google.protobuf.Timestamp
+	4,  // 5: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
+	6,  // 6: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
+	2,  // 7: api.v1.ApiService.SetPriorityChannels:input_type -> api.v1.SetPriorityChannelsRequest
+	0,  // 8: api.v1.ApiService.GetRecommendatedPosts:input_type -> api.v1.GetRecommendatedPostsRequest
+	5,  // 9: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
+	7,  // 10: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
+	3,  // 11: api.v1.ApiService.SetPriorityChannels:output_type -> api.v1.SetPriorityChannelsResponse
+	1,  // 12: api.v1.ApiService.GetRecommendatedPosts:output_type -> api.v1.GetRecommendatedPostsResponse
+	9,  // [9:13] is the sub-list for method output_type
+	5,  // [5:9] is the sub-list for method input_type
+	5,  // [5:5] is the sub-list for extension type_name
+	5,  // [5:5] is the sub-list for extension extendee
+	0,  // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_v1_ApiService_proto_init() }
@@ -636,7 +713,7 @@ func file_v1_ApiService_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_ApiService_proto_rawDesc), len(file_v1_ApiService_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   10,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

@@ -174,8 +174,25 @@
         }
       }
     },
+    "v1Cursor": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "string",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
     "v1GetRecommendatedPostsRequest": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "$ref": "#/definitions/v1Cursor"
+        }
+      }
     },
     "v1GetRecommendatedPostsResponse": {
       "type": "object",
@@ -186,6 +203,9 @@
             "type": "object",
             "$ref": "#/definitions/v1Post"
           }
+        },
+        "nextCursor": {
+          "$ref": "#/definitions/v1Cursor"
         }
       }
     },
