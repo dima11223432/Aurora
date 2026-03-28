@@ -14,7 +14,7 @@ type App struct {
 
 func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Duration) *App {
 	// TODO: implement
-	storage, err := postgres.New(storagePath)
+	storage, err := sqlite.New(storagePath)
 	if err != nil {
 		panic(err)
 	}

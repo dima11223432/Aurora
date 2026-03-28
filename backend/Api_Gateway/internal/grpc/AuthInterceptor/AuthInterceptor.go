@@ -15,10 +15,6 @@ import (
 
 type CtxUserIdKey struct{}
 
-type AuthInterceptor struct {
-	AuthConfig AuthConfig
-}
-
 type Claims struct {
 	ID int64 `json:"id"`
 	jwt.RegisteredClaims
@@ -29,13 +25,7 @@ type AuthConfig struct {
 	PublicRoutes []string
 }
 
-func NewAuthInterceptor(authConfig AuthConfig) *AuthInterceptor {
-	return &AuthInterceptor{
-		AuthConfig: authConfig,
-	}
-}
-
-func (a *AuthInterceptor) parseToken(tokenStr, secret string) (*Claims, error) {
+func ParseToken(tokenStr, secret string) (*Claims, error) {
 	parser := jwt.NewParser(jwt.WithoutClaimsValidation())
 
 	token, err := parser.ParseWithClaims(
@@ -58,9 +48,9 @@ func (a *AuthInterceptor) parseToken(tokenStr, secret string) (*Claims, error) {
 	return claims, nil
 }
 
-func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
+func AuthInterceptor(authConfig AuthConfig) grpc.UnaryServerInterceptor {
 	publicMethods := make(map[string]bool)
-	for _, method := range a.AuthConfig.PublicRoutes {
+	for _, method := range authConfig.PublicRoutes {
 		publicMethods[method] = true
 	}
 	return func(
@@ -86,7 +76,7 @@ func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
 
 		tokenStr := strings.TrimPrefix(authHeader[0], "Bearer ")
 
-		claims, err := a.parseToken(tokenStr, a.AuthConfig.JwtSecret)
+		claims, err := ParseToken(tokenStr, authConfig.JwtSecret)
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, "can't parse jwt token")
 		}
@@ -97,7 +87,7 @@ func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
-func (a *AuthInterceptor) GetUserIdFromContext(ctx context.Context) (int64, error) {
+func GetUserIdFromContext(ctx context.Context) (int64, error) {
 	userID, ok := ctx.Value(CtxUserIdKey{}).(int64)
 	if !ok {
 		return 0, errors.New("user id not found in context")

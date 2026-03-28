@@ -26,7 +26,6 @@ type UserSaver interface {
 type UserProvider interface {
 	User(ctx context.Context, telegram_id int64) (models.User, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
-	SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error
 }
 
 type AppProvider interface {
@@ -109,17 +108,6 @@ func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, 
 		slog.Int64("telegram_id", dbUser.Telegram_id),
 	)
 	return token, nil
-}
-
-func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
-	const op = "auth.SetPriorityChannels"
-
-	err := a.userProvider.SetPriorityChannels(ctx, user_id, channels)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	return nil
-
 }
 
 func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, error) {

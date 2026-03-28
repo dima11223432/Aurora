@@ -5,12 +5,10 @@ import (
 	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"API_Service/internal/services"
 	"fmt"
-	"log/slog"
+	"log"
 	"net"
-	"strconv"
 
-	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
-
+	ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -18,28 +16,31 @@ import (
 )
 
 type App struct {
-	log  *slog.Logger
+	log  *logrus.Entry
 	gRPC *grpc.Server
 	port int
 }
 
-func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string) *App {
+func New(api grpcAuth.API, port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string) *App {
 	gRPCServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
-			AuthInterceptor.SetAuthInterceptor(),
+			authinterceptor.AuthInterceptor(authinterceptor.AuthConfig{
+				JwtSecret:    jwtSecret,
+				PublicRoutes: publicRoutes,
+			}),
 		),
 	)
 	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
-		logrus.Fatalf("cant connect to authService: %v", err)
+		log.Fatalf("cant connect to authService: %v", err)
 	}
-	authClient := ssov1.NewAuthServiceClient(authConn)
-	authService := services.NewAuthService(logger, authClient, AuthInterceptor)
+	authClient := ssov1.NewAuthClient(authConn)
+	authService := services.NewAuthService(authClient)
 
-	grpcAuth.RegisterGrpcServer(gRPCServer, authService)
+	grpcAuth.RegisterGrpcServer(gRPCServer, api, authService)
 	reflection.Register(gRPCServer)
-	logger.Info("gRPC server initialized", slog.String("gRPC_Port", strconv.Itoa(port)))
+	logger.Infof("gRPC server initialized on port %d", port)
 
 	return &App{
 		log:  logger,
@@ -49,23 +50,23 @@ func New(port int, logger *logrus.Entry, jwtSecret string, publicRoutes []string
 }
 
 func (a *App) MustRun() {
-	a.log.Info("Starting gRPC server on port %d...", a.port)
+	a.log.Infof("Starting gRPC server on port %d...", a.port)
 	if err := a.Run(); err != nil {
-		a.log.Error("gRPC server failed to start: %v", err)
+		a.log.Fatalf("gRPC server failed to start: %v", err)
 	}
 }
 
 func (a *App) Run() error {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
-		a.log.Error("Failed to listen on port %d: %v", a.port, err)
+		a.log.Errorf("Failed to listen on port %d: %v", a.port, err)
 		return err
 	}
 
-	a.log.Info("gRPC server listening on ", slog.String("addr", listener.Addr().String()))
+	a.log.Infof("gRPC server listening on %s", listener.Addr().String())
 
 	if err := a.gRPC.Serve(listener); err != nil {
-		a.log.Error("gRPC server stopped with error: %v", err)
+		a.log.Errorf("gRPC server stopped with error: %v", err)
 		return err
 	}
 

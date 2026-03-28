@@ -21,7 +21,6 @@ type Config struct {
 type Auth struct {
 	JwtSecret     string   `yaml:"jwt_secret" env-required:"true"`
 	PublicMethods []string `yaml:"public_methods" env-required:"true"`
-	Cors_urls     []string `yaml:"cors_urls" env-required:"true"`
 }
 
 type GRPCConfig struct {

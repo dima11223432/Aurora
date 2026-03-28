@@ -1,50 +1,48 @@
 package services
 
 import (
-	custom_errors "API_Service/internal/custom_errors"
 	"context"
-	"fmt"
-	"log/slog"
 
-	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
-	ssov1 "github.com/dima11223432/Aurora_SSO_Protos"
+	ssov1 "github.com/dima11223432/protos/gen/go/sso"
 )
 
-type AuthInterceptor interface {
-	SetAuthInterceptor() grpc.UnaryServerInterceptor
-	GetUserIdFromContext(ctx context.Context) (int64, error)
-}
 type AuthService struct {
-	AuthClient ssov1.AuthServiceClient
+	AuthClient ssov1.AuthClient
 }
 
-func NewAuthService(authClient ssov1.AuthServiceClient) *AuthService {
+func NewAuthService(authClient ssov1.AuthClient) *AuthService {
 	return &AuthService{
-		log:             log,
-		AuthClient:      authClient,
-		AuthInterceptor: authinterceptor,
+		AuthClient: authClient,
 	}
+}
+
+func (a *AuthService) Register(
+	ctx context.Context,
+	email string,
+	password string,
+	is_admin bool,
+) (int64, error) {
+	resp, err := a.AuthClient.Register(ctx, &ssov1.RegisterRequest{Email: email, Password: password, IsAdmin: is_admin})
+	if err != nil {
+		return 0, err
+	}
+
+	return resp.UserId, nil
 }
 
 func (a *AuthService) Login(
 	ctx context.Context,
-	telegram_id int64,
-	username string,
-	firstName string,
-	lastName string,
-	appId int64,
+	email string,
+	password string,
+	appId int32,
 ) (string, error) {
 	resp, err := a.AuthClient.Login(ctx, &ssov1.LoginRequest{
-		TelegramId: telegram_id,
-		Username:   username,
-		AppId:      appId,
-		FirstName:  firstName,
-		LastName:   lastName,
-		IsAdmin:    false,
+		Email:    email,
+		Password: password,
+		AppId:    appId,
 	})
 
 	if err != nil {
-		a.log.Error("failed to login user", slog.String("error", err.Error()))
 		return "", err
 	}
 
@@ -53,13 +51,12 @@ func (a *AuthService) Login(
 
 func (a *AuthService) IsAdmin(
 	ctx context.Context,
-	telegram_id int64,
+	userId int64,
 ) (bool, error) {
 	resp, err := a.AuthClient.IsAdmin(ctx, &ssov1.IsAdminRequest{
-		TelegramId: telegram_id,
+		UserId: userId,
 	})
 	if err != nil {
-		a.log.Error("failed to check admin status", slog.String("error", err.Error()))
 		return false, err
 	}
 
