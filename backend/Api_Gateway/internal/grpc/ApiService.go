@@ -23,7 +23,7 @@ type Auth interface {
 }
 
 type RecommendatinService interface {
-	GetRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error)
+	GetUserRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error)
 }
 
 type ApiService struct {

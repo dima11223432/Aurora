@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+	recv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -32,14 +33,16 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 		),
 	)
 	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
-
 	if err != nil {
-		logrus.Fatalf("cant connect to authService: %v", err)
+		logger.Error("cant connect to authService: %v", err)
 	}
 	authClient := ssov1.NewAuthServiceClient(authConn)
 	authService := services.NewAuthService(logger, authClient, AuthInterceptor)
 
-	grpcAuth.RegisterGrpcServer(gRPCServer, authService)
+	grpcAuth.RegisterGrpcServer(
+		gRPCServer,
+		authService,
+	)
 	reflection.Register(gRPCServer)
 	logger.Info("gRPC server initialized", slog.String("gRPC_Port", strconv.Itoa(port)))
 

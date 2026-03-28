@@ -3,6 +3,7 @@ package services
 import (
 	"API_Service/internal/domains/models"
 	"context"
+	"fmt"
 
 	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 )
@@ -18,6 +19,7 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 	}
 }
 
-func (r *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]models.Post, error) {
-	return nil, nil
+func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error) {
+	const op = "services.RecommendationService.GetUserRecommendatedPosts"
+	return nil, nil, nil
 }
