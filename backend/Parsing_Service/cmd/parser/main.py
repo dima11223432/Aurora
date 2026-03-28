@@ -1,5 +1,6 @@
-from Parsing_Service.internal.app.app import App
-from ...internal.config.config import Config
+from internal.app.app import App
+from internal.config.config import Config
+from internal.storage.main import ChannelStorage
 from loguru import logger
 import sys
 import asyncio
@@ -37,6 +38,7 @@ def setup_logger():
 if __name__ == "__main__":
     cfg = Config()
     cfg.load_config()
+    channel_storage = ChannelStorage(cfg)
     setup_logger()
-    app = App(logger, cfg)
+    app = App(logger, cfg, channel_storage)
     asyncio.run(app.run())
