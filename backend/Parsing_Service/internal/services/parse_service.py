@@ -81,64 +81,6 @@ class ParserService:
             self.log.exception("Full error traceback:")
             return None
 
-    async def last_post(self, us_channel):
-        self.log.info(f"Fetching last post from channel: {us_channel}")
-
-        if not self.is_connect:
-            self.log.warning(
-                f"Not connected, attempting to connect before fetching from {us_channel}"
-            )
-            await self.connect()
-
-        try:
-            self.log.debug(f"Getting entity for channel: {us_channel}")
-            channel = await self.client.get_entity(us_channel)
-            self.log.debug(f"Found channel: {channel.title} (ID: {channel.id})")
-
-            self.log.debug("Fetching messages")
-            messages = await self.client.get_messages(channel, limit=1)
-
-            if not messages:
-                self.log.warning(f"No messages found in channel: {us_channel}")
-                return None
-
-            message = messages[0]
-            self.log.debug(f"Found message ID: {message.id}, date: {message.date}")
-
-            # NOTE: в логах мы показываем только первые 100 символов
-            text_preview = (
-                message.text[:100] + "..."
-                if message.text and len(message.text) > 100
-                else message.text
-            )
-            self.log.debug(f"Message preview: {text_preview}")
-
-            post_data = {
-                "id": message.id,
-                "date": message.date.isoformat(),
-                "text": message.text,
-                "channel": us_channel,
-                "channel_title": channel.title,
-            }
-
-            self.log.info(
-                f"Processing post from {channel.title}: ID={message.id}, Date={message.date}"
-            )
-
-            telegram_post = Telegram_Post(**post_data)
-
-            kafka_topic = str(os.getenv("KAFKA_TOPIC"))
-            self.log.info(f"Sending message to Kafka topic: {kafka_topic}")
-
-            self.kafka_controller.send_message(kafka_topic, telegram_post)
-            self.log.success(f"Successfully sent post {message.id} to Kafka")
-            return post_data
-
-        except Exception as e:
-            self.log.error(f"Error getting message from {us_channel}: {e}")
-            self.log.exception("Full error traceback:")
-            return None
-
     async def monitoring(self, us_channel):
         self.log.info(f"Monitoring posts from channel: {us_channel}")
 
@@ -165,19 +107,13 @@ class ParserService:
                 post = Telegram_Post(
                     id=event.id,
                     date=event.date.isoformat(),
-                    text=text,
-                    channel=getattr(chat, "username", None),
-                    channel_title=getattr(chat, "title", None),
-                    link=link,
+                    post_text=text,
+                    channelUsername=getattr(chat, "username", None),
+                    post_uri=link,
                 )
 
-                self.log.info(f"EVENT: chat_id={event.chat_id}, post={post.to_dict()}")
                 self.kafka_controller.send_message(os.getenv("KAFKA_TOPIC"), post)
-                self.log.success(
-                    f"Successfully sent post {event.id} to {os.getenv('KAFKA_TOPIC')}"
-                )
 
-            self.log.info("Starting listening loop")
             await self.client.run_until_disconnected()
 
         except Exception as e:
