@@ -13,4 +13,5 @@ type AnalysedData struct {
 	PostURI         string    `json:"post_uri"`
 	ChannelUsername string    `json:"channel_username"`
 	Date            time.Time `json:"date"`
+	Reasoning       string    `json:"reasoning"`
 }

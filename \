@@ -1,0 +1,89 @@
+package redis
+
+import (
+	"context"
+	"encoding/json"
+	"fmt"
+	"recommendationService/internal/domain/models"
+	"time"
+
+	// "github.com/google/uuid"
+	"github.com/redis/go-redis/v9"
+)
+
+type RedisController struct {
+	redis      *redis.Client
+	DefaultTTl time.Duration
+}
+
+func NewRedisController(addr string, password string, db int, protocol int, ttl time.Duration) *RedisController {
+	return &RedisController{
+		redis: redis.NewClient(&redis.Options{
+			Addr:     addr,
+			Password: password,
+			DB:       db,
+			Protocol: protocol,
+		}),
+		DefaultTTl: ttl,
+	}
+}
+
+func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
+	const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannelsAndDate"
+
+	tmpKey := fmt.Sprintf("tmp:feed:%d:%d", userID, time.Now().UnixNano())
+
+	keys := make([]string, 0, len(channels))
+	for _, ch := range channels {
+		keys = append(keys, fmt.Sprintf("post:channel:%s", ch))
+	}
+
+	if err := r.redis.ZUnionStore(ctx, tmpKey, &redis.ZStore{Keys: keys}).Err(); err != nil {
+		return nil, nil, err
+	}
+	r.redis.Expire(ctx, tmpKey, 5*time.Second)
+
+	tmpMax := "+inf"
+	if cursor != nil {
+		tmpMax = fmt.Sprintf("(%f", cursor.Score)
+	}
+
+	ids, err := r.redis.ZRevRangeByScoreWithScores(ctx, tmpKey, &redis.ZRangeBy{
+		Min:   "-inf",
+		Max:   tmpMax,
+		Count: 10,
+	}).Result()
+	if err != nil {
+		return nil, nil, fmt.Errorf("%s: %w", op, err)
+	}
+	if len(ids) == 0 {
+		return []models.Post{}, nil, nil
+	}
+
+	postKeys := make([]string, 0, len(ids))
+	for _, id := range ids {
+		postKeys = append(postKeys, "post:"+id))
+	}
+
+	lastScore := posts[len(posts)-1].Score
+	lastID := posts[len(posts)-1].Member.(string)
+	nextCursor := &models.Cursor{
+		Score: lastScore,
+		ID:    lastID,
+	}
+
+	var deserialisedPosts []models.Post
+	for _, post := range posts {
+		var p models.Post
+		if err := json.Unmarshal([]byte(post.Member.(string)), &p); err != nil {
+			return nil, nil, fmt.Errorf("%s: %w", op, err)
+		}
+		deserialisedPosts = append(deserialisedPosts, p)
+	}
+
+	return deserialisedPosts, nextCursor, nil
+}
+
+func (r *RedisController) Ping(ctx context.Context) error {
+	return r.redis.Ping(ctx).Err()
+}
