@@ -7,7 +7,7 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log/slog"
 	"net"
-	apiv1 "recommendationService/api/gen/v1"
+	// apiv1 "recommendationService/api/gen/v1"
 	"recommendationService/internal/domain/models"
 	grpcUserDataProvider "recommendationService/internal/grpc/userDataProvider"
 )

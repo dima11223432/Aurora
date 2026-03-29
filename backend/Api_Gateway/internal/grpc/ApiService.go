@@ -23,7 +23,7 @@ type Auth interface {
 }
 
 type RecommendatinService interface {
-	GetUserRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error)
+	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
 
 type ApiService struct {
@@ -103,7 +103,11 @@ func (a *ApiService) GetRecommendatedPosts(
 	req *v1.GetRecommendatedPostsRequest,
 ) (*v1.GetRecommendatedPostsResponse, error) {
 	const op = "backend/Api_Gateway/internal/grpc/ApiService.go"
-	posts, nextCursor, err := a.recommendatinService.GetUserRecommendatedPosts(ctx)
+	cursor := &models.Cursor{
+		Score: float64(req.GetCursor().Score),
+		ID:    req.GetCursor().Id,
+	}
+	posts, nextCursor, err := a.recommendatinService.GetUserRecommendatedPosts(ctx, cursor)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get posts: %v", err)
 	}

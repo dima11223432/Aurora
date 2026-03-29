@@ -3,8 +3,9 @@ package services
 import (
 	"API_Service/internal/domains/models"
 	"context"
+	"fmt"
 
-	v1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+	// v1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 )
 
@@ -13,9 +14,10 @@ type RecommendationService struct {
 	authinterceptor      AuthInterceptor
 }
 
-func NewRecommendationService(recommendationClient rsv1.RecommendationServiceClient) *RecommendationService {
+func NewRecommendationService(recommendationClient rsv1.RecommendationServiceClient, authinterceptor AuthInterceptor) *RecommendationService {
 	return &RecommendationService{
 		RecommendationClient: recommendationClient,
+		authinterceptor:      authinterceptor,
 	}
 }
 
