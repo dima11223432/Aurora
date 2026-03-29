@@ -25,6 +25,8 @@ github.com/dima11223432/Aurora_SSO_Protos v0.0.6 h1:NtGmrYiKVmRvm98xuCOR15sHTT3B
 github.com/dima11223432/Aurora_SSO_Protos v0.0.6/go.mod h1:NIOyf+nkr+Vtrx4xQOJ9F74rO1BKyOHB0XhlYR6hoNs=
 github.com/dima11223432/recommendationService_protos v0.0.5 h1:fQGrAlXFVl3bczpCl6+GRE6pB80bLrEUci+IzRf5feY=
 github.com/dima11223432/recommendationService_protos v0.0.5/go.mod h1:xn7Z88deJNrBIBc6h8zRYeR0t+Jkzv99+BdmnxlxzOU=
+github.com/dima11223432/recommendationService_protos v0.0.6 h1:xR+mDcsEMLP29Q7lOIM0/to6rjLZozu4gfzHtnv2d0E=
+github.com/dima11223432/recommendationService_protos v0.0.6/go.mod h1:xn7Z88deJNrBIBc6h8zRYeR0t+Jkzv99+BdmnxlxzOU=
 github.com/distribution/reference v0.6.0 h1:0IXCQ5g4/QMHHkarYzh5l+u8T3t73zM5QvfrDyIgxBk=
 github.com/distribution/reference v0.6.0/go.mod h1:BbU0aIcezP1/5jX/8MP0YiH4SdvB5Y4f/wlDRiLyi3E=
 github.com/docker/docker v28.3.3+incompatible h1:Dypm25kh4rmk49v1eiVbsAtpAsYURjYkaKubwuBdxEI=
