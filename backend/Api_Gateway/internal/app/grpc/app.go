@@ -10,7 +10,7 @@ import (
 	"strconv"
 
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
-	recv1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+	recv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
