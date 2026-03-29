@@ -3,7 +3,6 @@ package services
 import (
 	"API_Service/internal/domains/models"
 	"context"
-	"fmt"
 
 	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 )
