@@ -4,6 +4,8 @@ import "google/api/annotations.proto";
 
 package api.v1;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "api/v1/ApiService";
 
 service ApiService {
@@ -34,11 +36,16 @@ service ApiService {
   }
 }
 
-message GetRecommendatedPostsRequest {
+
+message GetRecommendatedPostsRequest{
+  Cursor cursor = 1;
 }
-message GetRecommendatedPostsResponse {
+
+message GetRecommendatedPostsResponse{
   repeated Post posts = 1;
+  Cursor next_cursor = 2;
 }
+
 
 message SetPriorityChannelsRequest {
   repeated string priority_channels = 1;
@@ -81,4 +88,8 @@ message Post {
 message Stock {
   string stock_name = 1;
   string side = 2;
+}
+message Cursor{
+  int64 score = 1;
+  string id = 2;
 }
