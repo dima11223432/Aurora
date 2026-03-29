@@ -33,9 +33,8 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 		),
 	)
 	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
-
 	if err != nil {
-		logrus.Fatalf("cant connect to authService: %v", err)
+		logger.Error("cant connect to authService: %v", err)
 	}
 	authClient := ssov1.NewAuthServiceClient(authConn)
 	authService := services.NewAuthService(logger, authClient, AuthInterceptor)

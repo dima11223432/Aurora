@@ -21,7 +21,7 @@ type PriorityChannelsProvider interface {
 }
 
 type PriorityNewsProvider interface {
-	GetPostsByChannels(ctx context.Context, channels []string) ([]models.Post, error)
+	GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error)
 }
 
 var (
@@ -56,16 +56,16 @@ func (u *UserDataProvider) GetUserPriorityChannels(ctx context.Context, userID i
 	return channels, nil
 }
 
-func (u *UserDataProvider) GetUserPriorityNews(ctx context.Context, userID int64) ([]models.Post, error) {
+func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetUserPriorityNews"
 
 	channels, err := u.GetUserPriorityChannels(ctx, userID)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, nil, fmt.Errorf("%s: %w", op, err)
 	}
 
 	if len(channels) == 0 {
-		return []models.Post{}, nil
+		return []models.Post{}, nil, nil
 	}
 
 	channelNames := make([]string, 0, len(channels))
@@ -73,10 +73,10 @@ func (u *UserDataProvider) GetUserPriorityNews(ctx context.Context, userID int64
 		channelNames = append(channelNames, ch.Channel)
 	}
 
-	posts, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames)
+	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 1)
 	if err != nil {
-		return nil, fmt.Errorf("%s: %w", op, err)
+		return nil, nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return posts, nil
+	return posts, nextCursor, nil
 }

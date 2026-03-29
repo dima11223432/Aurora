@@ -1,14 +1,13 @@
 package main
 
 import (
-	"os/signal"
-	"recommendationService/internal/app"
-	"syscall"
-
+	"CacheService/internal/app"
+	"CacheService/internal/config"
 	"fmt"
 	"log/slog"
 	"os"
-	"recommendationService/internal/config"
+	"os/signal"
+	"syscall"
 )
 
 const (
@@ -26,12 +25,12 @@ func main() {
 	log.Info("starting app", slog.String("env", cfg.Env))
 
 	application := app.New(log, cfg)
-	go application.GRPCapp.MustRun()
+	go application.CacheServiceApp.MustRun()
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)
 	sign := <-stop
 	log.Info("stopping application", slog.String("Signal", sign.String()))
-	application.GRPCapp.Stop()
+	application.CacheServiceApp.Stop()
 	log.Info("application stoppped")
 
 }

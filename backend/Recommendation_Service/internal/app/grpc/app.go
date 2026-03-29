@@ -16,15 +16,19 @@ type userDataProvider interface {
 	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
 
+type NewsDataProvider interface {
+	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
+}
+
 type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
 	port       int
 }
 
-func New(log *slog.Logger, userDataProvider userDataProvider, port int) *App {
+func New(log *slog.Logger, userDataProvider userDataProvider, newsDataProvider NewsDataProvider, port int) *App {
 	gRPCServer := grpc.NewServer()
-	grpcUserDataProvider.Register(gRPCServer, userDataProvider)
+	grpcUserDataProvider.Register(gRPCServer, userDataProvider, newsDataProvider)
 	reflection.Register(gRPCServer)
 
 	return &App{
