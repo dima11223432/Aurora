@@ -18,7 +18,7 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 	}
 }
 
-func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error) {
+func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	const op = "services.RecommendationService.GetUserRecommendatedPosts"
 	return nil, nil, nil
 }
