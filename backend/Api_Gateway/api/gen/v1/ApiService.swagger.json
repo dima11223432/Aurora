@@ -16,6 +16,38 @@
     "application/json"
   ],
   "paths": {
+    "/v1/get_recommendated_posts": {
+      "post": {
+        "operationId": "ApiService_GetRecommendatedPosts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetRecommendatedPostsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetRecommendatedPostsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/is_admin": {
       "post": {
         "operationId": "ApiService_IsAdmin",
@@ -79,6 +111,38 @@
           "ApiService"
         ]
       }
+    },
+    "/v1/set_priority_channels": {
+      "post": {
+        "operationId": "ApiService_SetPriorityChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1SetPriorityChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1SetPriorityChannelsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
     }
   },
   "definitions": {
@@ -107,6 +171,41 @@
             "type": "object",
             "$ref": "#/definitions/protobufAny"
           }
+        }
+      }
+    },
+    "v1Cursor": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "string",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "v1GetRecommendatedPostsRequest": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "$ref": "#/definitions/v1Cursor"
+        }
+      }
+    },
+    "v1GetRecommendatedPostsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
+        },
+        "nextCursor": {
+          "$ref": "#/definitions/v1Cursor"
         }
       }
     },
@@ -156,6 +255,59 @@
       "type": "object",
       "properties": {
         "token": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Post": {
+      "type": "object",
+      "properties": {
+        "stocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Stock"
+          }
+        },
+        "postText": {
+          "type": "string"
+        },
+        "postUri": {
+          "type": "string"
+        },
+        "channelUsername": {
+          "type": "string"
+        },
+        "reasoning": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "v1SetPriorityChannelsRequest": {
+      "type": "object",
+      "properties": {
+        "priorityChannels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1SetPriorityChannelsResponse": {
+      "type": "object"
+    },
+    "v1Stock": {
+      "type": "object",
+      "properties": {
+        "stockName": {
+          "type": "string"
+        },
+        "side": {
           "type": "string"
         }
       }

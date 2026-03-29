@@ -1,0 +1,25 @@
+package services
+
+import (
+	"API_Service/internal/domains/models"
+	"context"
+	"fmt"
+
+	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
+)
+
+type RecommendationService struct {
+	RecommendationClient rsv1.RecommendationServiceClient
+	authinterceptor      AuthInterceptor
+}
+
+func NewRecommendationService(recommendationClient rsv1.RecommendationServiceClient) *RecommendationService {
+	return &RecommendationService{
+		RecommendationClient: recommendationClient,
+	}
+}
+
+func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error) {
+	const op = "services.RecommendationService.GetUserRecommendatedPosts"
+	return nil, nil, nil
+}

@@ -2,241 +2,68 @@ package grpc
 
 import (
 	v1 "API_Service/api/gen/v1"
-	"API_Service/internal/domains/models"
-	services "API_Service/internal/services"
-	"context"
-	"fmt"
 
-	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
+	custom_errors "API_Service/internal/custom_errors"
+	"API_Service/internal/domains/models"
+	"context"
+	"errors"
+	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-type API interface {
-	CreateGroup(ctx context.Context, name string) (int64, error)
-	DeleteGroup(ctx context.Context, groupID int64) error
-	UpdateGroup(ctx context.Context, groupID int64, newGroupName string) error
-	GetAllGroups(ctx context.Context) ([]models.Group, error)
-	CreateContact(ctx context.Context, email string, groupID int64) (int64, error)
-	UpdateContact(ctx context.Context, contactID int64, newEmail string) error
-	GetAllContactsByGroupID(ctx context.Context, groupID int64) ([]models.Contact, error)
-	DeleteContact(ctx context.Context, contactID int64) error
-	CreateNotification(ctx context.Context, title, text string, groupID int64) (int64, error)
-	SendNotification(ctx context.Context, notificationID int64) (string, error)
+type Auth interface {
+	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
+	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
+	SetPriorityChannels(ctx context.Context, channels []string) error
+}
+
+type RecommendatinService interface {
+	GetUserRecommendatedPosts(ctx context.Context) ([]models.Post, *models.Cursor, error)
 }
 
 type ApiService struct {
 	v1.UnimplementedApiServiceServer
-	api  API
-	auth *services.AuthService
+	recommendatinService RecommendatinService
+	auth                 Auth
 }
 
-func RegisterGrpcServer(gRPC *grpc.Server, api API, auth *services.AuthService) {
+func RegisterGrpcServer(gRPC *grpc.Server, auth Auth, recommendationService RecommendatinService) {
 	v1.RegisterApiServiceServer(gRPC, &ApiService{
-		auth: auth,
-		api:  api,
+		auth:                 auth,
+		recommendatinService: recommendationService,
 	})
-}
-
-func (a *ApiService) Register(
-	ctx context.Context,
-	req *v1.RegisterRequest,
-) (*v1.RegisterResponse, error) {
-	userId, err := a.auth.Register(ctx, req.GetEmail(), req.GetPassword(), req.GetIsAdmin())
-
-	if err != nil {
-		return &v1.RegisterResponse{}, err
-	}
-
-	return &v1.RegisterResponse{
-		UserId: userId,
-	}, nil
-
 }
 
 func (a *ApiService) Login(
 	ctx context.Context,
 	req *v1.LoginRequest,
 ) (*v1.LoginResponse, error) {
-	token, err := a.auth.Login(ctx, req.Email, req.Password, req.AppId)
+
+	token, err := a.auth.Login(
+		ctx,
+		req.GetTelegramId(),
+		req.GetUsername(),
+		req.GetFirstName(),
+		req.GetLastName(),
+		req.AppId,
+	)
+	if err != nil {
+		logrus.WithError(err).Error("login failed")
+		return nil, err
+	}
 
 	if err != nil {
-		return &v1.LoginResponse{}, err
+		logrus.WithError(err).Error("failed to parse jwt user id from context")
+		return nil, fmt.Errorf("fail to parse jwt")
 	}
+
 	return &v1.LoginResponse{
 		Token: token,
-	}, nil
-
-}
-
-func (a *ApiService) IsAdmin(
-	ctx context.Context,
-	req *v1.IsAdminRequest,
-) (*v1.IsAdminResponse, error) {
-	isAdmin, err := a.auth.IsAdmin(ctx, req.UserId)
-	if err != nil {
-		return &v1.IsAdminResponse{}, err
-	}
-
-	return &v1.IsAdminResponse{
-		IsAdmin: isAdmin,
-	}, nil
-}
-
-func (a *ApiService) UpdateGroup(
-	ctx context.Context,
-	req *v1.UpdateGroupRequest,
-) (*v1.UpdateGroupResponse, error) {
-	if req.Id <= 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "id must be > 0")
-	}
-
-	err := a.api.UpdateGroup(ctx, req.Id, req.Name)
-	if err != nil {
-		return nil, err
-	}
-	return &v1.UpdateGroupResponse{
-		Success: true,
-	}, nil
-}
-
-func (a *ApiService) DeleteGroup(
-	ctx context.Context,
-	req *v1.DeleteGroupRequest,
-) (*v1.DeleteGroupResponse, error) {
-
-	if req.Id <= 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "id must be > 0")
-	}
-
-	err := a.api.DeleteGroup(ctx, req.Id)
-	if err != nil {
-		return &v1.DeleteGroupResponse{
-			Success: false,
-		}, status.Errorf(codes.Internal, "fail to delete group")
-	}
-
-	return &v1.DeleteGroupResponse{
-		Success: true,
-	}, nil
-}
-
-func (a *ApiService) CreateGroup(
-	ctx context.Context,
-	req *v1.CreateGroupRequest,
-) (*v1.CreateGroupResponse, error) {
-
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, fmt.Errorf("it is no JWT in metadata")
-	}
-
-	fmt.Println("Metadata", md)
-
-	auth := md.Get("authorization")
-	fmt.Println("auth", auth)
-
-	id, err := a.api.CreateGroup(ctx, req.Name)
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.CreateGroupResponse{
-		Id:   id,
-		Name: req.Name,
-	}, nil
-}
-
-func (a *ApiService) DeleteContact(
-	ctx context.Context,
-	req *v1.DeleteContactRequest,
-) (*v1.DeleteContactResponse, error) {
-	err := a.api.DeleteContact(ctx, req.Id)
-	if err != nil {
-		return nil, err
-	}
-	return &v1.DeleteContactResponse{
-		Success: true,
-	}, nil
-}
-
-func (a *ApiService) GetAllContactsByGroupID(
-	ctx context.Context,
-	req *v1.GetAllContactsByGroupIDRequest,
-) (*v1.GetAllContactsByGroupIDResponse, error) {
-	contacts, err := a.api.GetAllContactsByGroupID(ctx, req.GroupId)
-	if err != nil {
-		return nil, err
-	}
-	pbContact := make([]*v1.Contact, 0, len(contacts))
-
-	for _, contact := range contacts {
-		pbContact = append(pbContact, &v1.Contact{
-			Id:    contact.ID,
-			Email: contact.Email,
-		})
-	}
-	return &v1.GetAllContactsByGroupIDResponse{
-		Contacts: pbContact,
-	}, nil
-}
-
-func (a *ApiService) UpdateContact(ctx context.Context, req *v1.UpdateContactRequest) (*v1.UpdateContactResponse, error) {
-	err := a.api.UpdateContact(ctx, req.Id, req.Email)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.UpdateContactResponse{
-		Success: true,
-	}, nil
-}
-
-func (a *ApiService) CreateContact(ctx context.Context, req *v1.CreateContactRequest) (*v1.CreateContactResponse, error) {
-	id, err := a.api.CreateContact(ctx, req.Email, req.GroupId)
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.CreateContactResponse{
-		Id: id,
-	}, nil
-}
-
-func (a *ApiService) CreateNotification(ctx context.Context, req *v1.CreateNotificationRequest) (*v1.CreateNotificationResponse, error) {
-	id, err := a.api.CreateNotification(ctx, req.Title, req.Text, req.GroupId)
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.CreateNotificationResponse{
-		Id:    id,
-		Title: req.Title,
-		Text:  req.Text,
-	}, nil
-}
-
-func (a *ApiService) SendNotification(ctx context.Context, req *v1.SendNotificationRequest) (*v1.SendNotificationResponse, error) {
-
-	userId, uerr := authinterceptor.GetUserIdFromContext(ctx)
-	if uerr != nil {
-		return nil, status.Errorf(codes.Internal, "fail to get user id")
-	}
-	logrus.Info("UserId = ", userId)
-	EventId, err := a.api.SendNotification(ctx, req.NotificationId)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &v1.SendNotificationResponse{
-		EventId: EventId,
-		Status:  "ok",
 	}, nil
 }
 
@@ -246,17 +73,62 @@ func (a *ApiService) SetPriorityChannels(
 ) (*v1.SetPriorityChannelsResponse, error) {
 	channels := req.GetPriorityChannels()
 
-	if len(channels) == 0 {
-		return nil, fmt.Errorf("priority channels list cannot be empty")
-	}
-
-	status, err := a.auth.SetPriorityChannels(ctx, channels)
+	err := a.auth.SetPriorityChannels(ctx, channels)
 	if err != nil {
-		logrus.WithError(err).Error("failed to set priority channels in auth service")
-		return nil, err
+		if errors.Is(err, custom_errors.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(status.Code(err), err.Error())
 	}
 
-	return &v1.SetPriorityChannelsResponse{
-		Status: status,
+	return &v1.SetPriorityChannelsResponse{}, nil
+}
+
+func (a *ApiService) IsAdmin(
+	ctx context.Context,
+	req *v1.IsAdminRequest,
+) (*v1.IsAdminResponse, error) {
+	isAdmin, err := a.auth.IsAdmin(ctx, req.TelegramId)
+	if err != nil {
+		return &v1.IsAdminResponse{}, err
+	}
+
+	return &v1.IsAdminResponse{
+		IsAdmin: isAdmin,
+	}, nil
+}
+
+func (a *ApiService) GetRecommendatedPosts(
+	ctx context.Context,
+	req *v1.GetRecommendatedPostsRequest,
+) (*v1.GetRecommendatedPostsResponse, error) {
+	const op = "backend/Api_Gateway/internal/grpc/ApiService.go"
+	//TODO: добавить nextCursor
+	posts, _, err := a.recommendatinService.GetRecommendatedPosts(ctx)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to get posts: %v", err)
+	}
+	var postList []*v1.Post
+	for _, post := range posts {
+		var stocks []*v1.Stock
+		for _, stock := range post.Stocks {
+			stocks = append(stocks, &v1.Stock{
+				StockName: stock.StockName,
+				Side:      stock.Side})
+		}
+		postList = append(postList, &v1.Post{
+			Stocks:          stocks,
+			PostText:        post.PostText,
+			PostUri:         post.PostURI,
+			ChannelUsername: post.ChannelUsername,
+			Reasoning:       "",
+			Date:            timestamppb.New(post.Date),
+		})
+	}
+	return &v1.GetRecommendatedPostsResponse{
+		Posts:      postList,
+		NextCursor: &v1.Cursor{
+			//TODO: добавить сюда значения от nextCursor
+		},
 	}, nil
 }
