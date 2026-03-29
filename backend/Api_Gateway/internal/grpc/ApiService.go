@@ -104,7 +104,7 @@ func (a *ApiService) GetRecommendatedPosts(
 ) (*v1.GetRecommendatedPostsResponse, error) {
 	const op = "backend/Api_Gateway/internal/grpc/ApiService.go"
 	//TODO: добавить nextCursor
-	posts, _, err := a.recommendatinService.GetUserRecommendatedPosts(ctx)
+	posts, nextCursor, err := a.recommendatinService.GetRecommendatedPosts(ctx)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get posts: %v", err)
 	}
@@ -128,7 +128,8 @@ func (a *ApiService) GetRecommendatedPosts(
 	return &v1.GetRecommendatedPostsResponse{
 		Posts:      postList,
 		NextCursor: &v1.Cursor{
-			//TODO: добавить сюда значения от nextCursor
+			Score: nextCursor.Score
+			ID: nextCursor.ID
 		},
 	}, nil
 }
