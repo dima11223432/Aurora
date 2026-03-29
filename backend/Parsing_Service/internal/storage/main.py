@@ -1,10 +1,16 @@
 import psycopg2
 
+from internal.config.config import Config
+
 
 class ChannelStorage:
-    def __init__(self, dbname, user, password, host="localhost", port=5432):
+    def __init__(self, cfg: Config):
         self.conn = psycopg2.connect(
-            dbname=dbname, user=user, password=password, host=host, port=port
+            dbname=cfg.DB_NAME,
+            user=cfg.DB_USER,
+            password=cfg.DB_PASSWORD,
+            host=cfg.DB_HOST,
+            port=cfg.DB_PORT,
         )
         self.conn.autocommit = False
 
@@ -31,7 +37,7 @@ class ChannelStorage:
         cur.execute("SELECT id, username FROM channels ORDER BY id")
         rows = cur.fetchall()
         cur.close()
-        return rows
+        return [r[1] for r in rows]
 
     def delete_channel(self, username):
         username = username.lstrip("@")

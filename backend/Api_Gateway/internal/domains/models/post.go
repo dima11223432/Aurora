@@ -7,11 +7,10 @@ type Stock struct {
 	Side      string `json:"side"`
 }
 
-type AnalysedData struct {
+type Post struct {
 	Stocks          []Stock   `json:"stocks"`
 	PostText        string    `json:"post_text"`
 	PostURI         string    `json:"post_uri"`
 	ChannelUsername string    `json:"channel_username"`
 	Date            time.Time `json:"date"`
-	Reasoning       string    `json:"reasoning"`
 }

@@ -12,10 +12,12 @@ service RecommendationService {
 
 message GetRecommendatedPostsRequest{
   int64 user_id = 1;
+  Cursor cursor = 2;
 }
 
 message GetRecommendatedPostsResponse{
   repeated Post posts = 1;
+  Cursor next_cursor = 2;
 }
 
 message GetUserPriorityChannelsRequest {
@@ -26,12 +28,18 @@ message GetUserPriorityChannelsResponse{
   repeated string channels = 1;
 }
 
+message Cursor{
+  int64 score = 1;
+  string id = 2;
+}
+
 message Post {
   repeated Stock stocks = 1;
   string post_text = 2;
   string post_uri = 3;
   string channel_username = 4;
-  google.protobuf.Timestamp date = 5;
+  string reasoning = 5;
+  google.protobuf.Timestamp date = 6;
 }
 
 message Stock {

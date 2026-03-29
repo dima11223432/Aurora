@@ -1,6 +1,7 @@
 package analyseDataProvider
 
 import (
+	"CacheService/internal/domain/models"
 	"context"
 	"fmt"
 	"log/slog"
@@ -10,6 +11,7 @@ import (
 type AnasyledDataProvider interface {
 	SetValue(ctx context.Context, key string, value interface{}, ttl ...time.Duration) error
 	GetValue(ctx context.Context, key string) (interface{}, error)
+	SetCard(ctx context.Context, value models.AnalysedData) error
 }
 
 type RedisService struct {
@@ -26,10 +28,10 @@ func NewRedisService(log *slog.Logger, analyseDataProvider AnasyledDataProvider,
 	}
 }
 
-func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, analysedData interface{}) error {
+func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, analysedData models.AnalysedData) error {
 	const op = "Cache_Service.internal.services.auth.SetAnalysedData"
 
-	err := r.provider.SetValue(ctx, dataTitle, analysedData, r.TokenTTL)
+	err := r.provider.SetCard(ctx, analysedData)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -38,7 +40,12 @@ func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, an
 
 }
 
-// TODO: ревлизовать метод, вызывающий GetValue из AnasyledDataProvider
 func (r *RedisService) GetAnalysedData(ctx context.Context, dataTitle string) (interface{}, error) {
-	return nil, nil
+	data, err := r.provider.GetValue(ctx, dataTitle)
+	if err != nil {
+		r.log.Error("Failed to get analysedData", slog.Any("error", err))
+		return nil, err
+	}
+	r.log.Info("GetAnalysedData", slog.String("dataTitle", dataTitle))
+	return data, err
 }
