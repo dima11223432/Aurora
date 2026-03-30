@@ -27,15 +27,27 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s, %w", op, err)
 	}
+	var newCursor *rsv1.Cursor
+	if cursor != nil {
+		newCursor = &rsv1.Cursor{
+			Score: int64(cursor.Score),
+			Id:    cursor.ID,
+		}
+	}
 	res, err := r.RecommendationClient.GetRecommendatedPosts(
 		ctx,
 		&rsv1.GetRecommendatedPostsRequest{
 			UserId: userID,
-			Cursor: &rsv1.Cursor{
-				Score: int64(cursor.Score),
-				Id:    cursor.ID,
-			}},
+			Cursor: newCursor,
+		},
 	)
+	var nextCursor *models.Cursor
+	if res.NextCursor != nil {
+		nextCursor = &models.Cursor{
+			Score: float64(res.NextCursor.Score),
+			ID:    res.NextCursor.Id,
+		}
+	}
 
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s, %w", op, err)
@@ -57,9 +69,6 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 			Date:            post.Date.AsTime(),
 		})
 	}
-	return posts, &models.Cursor{
-		Score: float64(res.NextCursor.Score),
-		ID:    res.NextCursor.Id,
-	}, nil
+	return posts, nextCursor, nil
 
 }

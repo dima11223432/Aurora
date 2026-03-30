@@ -103,14 +103,27 @@ func (a *ApiService) GetRecommendatedPosts(
 	req *v1.GetRecommendatedPostsRequest,
 ) (*v1.GetRecommendatedPostsResponse, error) {
 	const op = "backend/Api_Gateway/internal/grpc/ApiService.go"
-	cursor := &models.Cursor{
-		Score: float64(req.GetCursor().Score),
-		ID:    req.GetCursor().Id,
+	var cursor *models.Cursor
+	if req.GetCursor() != nil {
+
+		cursor = &models.Cursor{
+			Score: float64(req.GetCursor().Score),
+			ID:    req.GetCursor().Id,
+		}
 	}
 	posts, nextCursor, err := a.recommendatinService.GetUserRecommendatedPosts(ctx, cursor)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to get posts: %v", err)
 	}
+
+	var NextCursor *v1.Cursor
+	if nextCursor != nil {
+		NextCursor = &v1.Cursor{
+			Score: int64(nextCursor.Score),
+			Id:    nextCursor.ID,
+		}
+	}
+
 	var postList []*v1.Post
 	for _, post := range posts {
 		var stocks []*v1.Stock
@@ -129,10 +142,7 @@ func (a *ApiService) GetRecommendatedPosts(
 		})
 	}
 	return &v1.GetRecommendatedPostsResponse{
-		Posts: postList,
-		NextCursor: &v1.Cursor{
-			Score: int64(nextCursor.Score),
-			Id:    nextCursor.ID,
-		},
+		Posts:      postList,
+		NextCursor: NextCursor,
 	}, nil
 }
