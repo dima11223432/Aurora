@@ -111,14 +111,14 @@ func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, 
 	return token, nil
 }
 
-func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) (int32, error) {
+func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
 	const op = "auth.SetPriorityChannels"
 
 	err := a.userProvider.SetPriorityChannels(ctx, user_id, channels)
 	if err != nil {
-		return 400, fmt.Errorf("%s: %w", op, err)
+		return fmt.Errorf("%s: %w", op, err)
 	}
-	return 200, nil
+	return nil
 
 }
 
