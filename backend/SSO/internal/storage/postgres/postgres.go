@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"strings"
 
 	pq "github.com/lib/pq"
 )
@@ -52,8 +53,10 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 		}
 		args = append(args, user_id, channel)
 	}
+	query += " ON CONFLICT (user_id, channel_username) DO NOTHING"
 	_, err := s.db.ExecContext(ctx, query, args...)
 	if err != nil {
+		fmt.Println(err.Error())
 		if isDuplicateError(err) {
 			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
@@ -205,5 +208,5 @@ func isDuplicateError(err error) bool {
 	if errors.As(err, &pqErr) {
 		return pqErr.Code == "23505"
 	}
-	return false
+	return strings.Contains(err.Error(), "duplicate key value")
 }
