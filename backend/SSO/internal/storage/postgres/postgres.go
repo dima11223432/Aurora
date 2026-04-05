@@ -63,6 +63,26 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 	return nil
 }
 
+func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, channels []string) error {
+	const op = "storage.postgres.DeletePriorityChannels"
+
+	if len(channels) == 0 {
+		return nil
+	}
+
+	query := `
+	DELETE FROM channels 
+	WHERE user_id = $1 AND channel_username = ANY($2);
+	`
+
+	_, err := s.db.ExecContext(ctx, query, userID, pq.Array(channels))
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	return nil
+}
+
 func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "storage.postgres.SaveUser"
 
