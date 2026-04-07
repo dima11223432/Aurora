@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"time"
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
@@ -30,6 +31,25 @@ func NewAuthService(log *slog.Logger, authClient ssov1.AuthServiceClient, authin
 		AuthClient:      authClient,
 		AuthInterceptor: authinterceptor,
 	}
+}
+
+func (a *AuthService) DeletePriorityChannels(ctx context.Context, channels []string) error {
+	const op = "ApiService.internal.services.AuthService.DeletePriorityChannels"
+
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		a.log.Error("invalid user id in context", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	_, err = a.AuthClient.DeletePriorityChannels(ctx, &ssov1.DeletePriorityChannelsRequest{
+		UserId:            userID,
+		ChannelsUsernames: channels,
+	})
+	if err != nil {
+		a.log.Error("failed to delete user priority channels", slog.String("op", op), slog.Any("err", err))
+	}
+	return nil
 }
 
 func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) error {
