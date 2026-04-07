@@ -20,6 +20,7 @@ type Auth interface {
 	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 	SetPriorityChannels(ctx context.Context, channels []string) error
+	DeletePriorityChannels(ctx context.Context, channels []string) error
 }
 
 type RecommendatinService interface {
@@ -65,6 +66,18 @@ func (a *ApiService) Login(
 	return &v1.LoginResponse{
 		Token: token,
 	}, nil
+}
+
+func (a *ApiService) DeletePriorityChannels(
+	ctx context.Context,
+	req *v1.DeletePriorityChannelRequest,
+) (*v1.DeletePriorityChannelResponse, error) {
+	err := a.auth.DeletePriorityChannels(ctx, req.GetChannels())
+	if err != nil {
+		status.Error(codes.Internal, err.Error())
+		return nil, err
+	}
+	return nil, nil
 }
 
 func (a *ApiService) SetPriorityChannels(

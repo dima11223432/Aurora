@@ -16,6 +16,38 @@
     "application/json"
   ],
   "paths": {
+    "/v1/delete_priority_channels": {
+      "post": {
+        "operationId": "ApiService_DeletePriorityChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeletePriorityChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DeletePriorityChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/get_recommendated_posts": {
       "post": {
         "operationId": "ApiService_GetRecommendatedPosts",
@@ -185,6 +217,20 @@
           "type": "string"
         }
       }
+    },
+    "v1DeletePriorityChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1DeletePriorityChannelResponse": {
+      "type": "object"
     },
     "v1GetRecommendatedPostsRequest": {
       "type": "object",
