@@ -20,7 +20,7 @@ redis:
   port: 6379
 
 grpc:
-  port: 44000
+  port: 44043
   timeout: 10h
 
 grpc-gateway:

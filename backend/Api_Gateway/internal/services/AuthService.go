@@ -8,7 +8,7 @@ import (
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
-	recv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
+	// recv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -30,6 +30,25 @@ func NewAuthService(log *slog.Logger, authClient ssov1.AuthServiceClient, authin
 		AuthClient:      authClient,
 		AuthInterceptor: authinterceptor,
 	}
+}
+
+func (a *AuthService) DeletePriorityChannels(ctx context.Context, channels []string) error {
+	const op = "ApiService.internal.services.AuthService.DeletePriorityChannels"
+
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		a.log.Error("invalid user id in context", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	_, err = a.AuthClient.DeletePriorityChannels(ctx, &ssov1.DeletePriorityChannelsRequest{
+		UserId:            userID,
+		ChannelsUsernames: channels,
+	})
+	if err != nil {
+		a.log.Error("failed to delete user priority channels", slog.String("op", op), slog.Any("err", err))
+	}
+	return nil
 }
 
 func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) error {

@@ -27,6 +27,7 @@ type UserProvider interface {
 	User(ctx context.Context, telegram_id int64) (models.User, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 	SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error
+	DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error
 }
 
 type AppProvider interface {
@@ -120,6 +121,16 @@ func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels 
 	}
 	return nil
 
+}
+
+func (a *Auth) DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error {
+	const op = "auth.DeletePriorityChannels"
+
+	err := a.userProvider.DeletePriorityChannels(ctx, user_id, channels)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
 
 func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, error) {
