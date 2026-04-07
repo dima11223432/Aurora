@@ -5,7 +5,6 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"time"
 
 	// ssov1 "github.com/dima11223432/protos/gen/go/sso"
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"

@@ -19,10 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ApiService_Login_FullMethodName                 = "/api.v1.ApiService/Login"
-	ApiService_IsAdmin_FullMethodName               = "/api.v1.ApiService/IsAdmin"
-	ApiService_SetPriorityChannels_FullMethodName   = "/api.v1.ApiService/SetPriorityChannels"
-	ApiService_GetRecommendatedPosts_FullMethodName = "/api.v1.ApiService/GetRecommendatedPosts"
+	ApiService_Login_FullMethodName                  = "/api.v1.ApiService/Login"
+	ApiService_IsAdmin_FullMethodName                = "/api.v1.ApiService/IsAdmin"
+	ApiService_SetPriorityChannels_FullMethodName    = "/api.v1.ApiService/SetPriorityChannels"
+	ApiService_GetRecommendatedPosts_FullMethodName  = "/api.v1.ApiService/GetRecommendatedPosts"
+	ApiService_DeletePriorityChannels_FullMethodName = "/api.v1.ApiService/DeletePriorityChannels"
 )
 
 // ApiServiceClient is the client API for ApiService service.
@@ -33,6 +34,7 @@ type ApiServiceClient interface {
 	IsAdmin(ctx context.Context, in *IsAdminRequest, opts ...grpc.CallOption) (*IsAdminResponse, error)
 	SetPriorityChannels(ctx context.Context, in *SetPriorityChannelsRequest, opts ...grpc.CallOption) (*SetPriorityChannelsResponse, error)
 	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
+	DeletePriorityChannels(ctx context.Context, in *DeletePriorityChannelRequest, opts ...grpc.CallOption) (*DeletePriorityChannelResponse, error)
 }
 
 type apiServiceClient struct {
@@ -83,6 +85,16 @@ func (c *apiServiceClient) GetRecommendatedPosts(ctx context.Context, in *GetRec
 	return out, nil
 }
 
+func (c *apiServiceClient) DeletePriorityChannels(ctx context.Context, in *DeletePriorityChannelRequest, opts ...grpc.CallOption) (*DeletePriorityChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeletePriorityChannelResponse)
+	err := c.cc.Invoke(ctx, ApiService_DeletePriorityChannels_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServiceServer is the server API for ApiService service.
 // All implementations should embed UnimplementedApiServiceServer
 // for forward compatibility.
@@ -91,6 +103,7 @@ type ApiServiceServer interface {
 	IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error)
 	SetPriorityChannels(context.Context, *SetPriorityChannelsRequest) (*SetPriorityChannelsResponse, error)
 	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
+	DeletePriorityChannels(context.Context, *DeletePriorityChannelRequest) (*DeletePriorityChannelResponse, error)
 }
 
 // UnimplementedApiServiceServer should be embedded to have
@@ -111,6 +124,9 @@ func (UnimplementedApiServiceServer) SetPriorityChannels(context.Context, *SetPr
 }
 func (UnimplementedApiServiceServer) GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRecommendatedPosts not implemented")
+}
+func (UnimplementedApiServiceServer) DeletePriorityChannels(context.Context, *DeletePriorityChannelRequest) (*DeletePriorityChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePriorityChannels not implemented")
 }
 func (UnimplementedApiServiceServer) testEmbeddedByValue() {}
 
@@ -204,6 +220,24 @@ func _ApiService_GetRecommendatedPosts_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApiService_DeletePriorityChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePriorityChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).DeletePriorityChannels(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_DeletePriorityChannels_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).DeletePriorityChannels(ctx, req.(*DeletePriorityChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ApiService_ServiceDesc is the grpc.ServiceDesc for ApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -226,6 +260,10 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRecommendatedPosts",
 			Handler:    _ApiService_GetRecommendatedPosts_Handler,
+		},
+		{
+			MethodName: "DeletePriorityChannels",
+			Handler:    _ApiService_DeletePriorityChannels_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -34,8 +34,21 @@ service ApiService {
       body:"*"
     };
   }
+  rpc DeletePriorityChannels(DeletePriorityChannelRequest) returns (DeletePriorityChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_priority_channels"
+      body:"*"
+    };
+  }
 }
 
+
+message DeletePriorityChannelRequest{
+  repeated string channels = 1;
+}
+
+message DeletePriorityChannelResponse{
+}
 
 message GetRecommendatedPostsRequest{
   Cursor cursor = 1;
