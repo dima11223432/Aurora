@@ -46,9 +46,31 @@ func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64)
 		var priorityChannel models.PriorityChannel
 
 		if err := query.Scan(&priorityChannel.Channel); err != nil {
-			return nil, fmt.Errorf("%d: %w", op, err)
+			return nil, fmt.Errorf("%s: %w", op, err)
 		}
 		channels = append(channels, priorityChannel)
 	}
 	return channels, nil
+}
+
+func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
+	const op = "internal.storage.postgres.GetAllParsingChannels"
+
+	q := `SELECT username FROM channels`
+
+	channels := make([]string, 0)
+	query, err := s.db.QueryContext(ctx, q)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	for query.Next() {
+		var channel string
+		if err := query.Scan(&channel); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		channels = append(channels, channel)
+	}
+	return channels, nil
+
 }
