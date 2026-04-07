@@ -10,14 +10,20 @@ import (
 )
 
 type Storage struct {
-	db *sql.DB
+	db       *sql.DB
+	parserDB *sql.DB
 }
 
 // New creates a new instance of the Storage
-func New(storagePath string) (*Storage, error) {
+func New(storagePath string, parsingServicePath string) (*Storage, error) {
 	const op = "internal.storage.postgres.new"
 
 	db, err := sql.Open("postgres", storagePath)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	parserDB, err := sql.Open("postgres", parsingServicePath)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
@@ -26,7 +32,8 @@ func New(storagePath string) (*Storage, error) {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	return &Storage{
-		db: db,
+		db:       db,
+		parserDB: parserDB,
 	}, nil
 }
 
@@ -59,7 +66,7 @@ func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
 	q := `SELECT username FROM channels`
 
 	channels := make([]string, 0)
-	query, err := s.db.QueryContext(ctx, q)
+	query, err := s.parserDB.QueryContext(ctx, q)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}

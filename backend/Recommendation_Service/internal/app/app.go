@@ -15,7 +15,7 @@ type App struct {
 }
 
 func New(log *slog.Logger, cfg *config.Config) *App {
-	storage, err := postgres.New(cfg.StoragePass)
+	storage, err := postgres.New(cfg.StoragePass, cfg.ParsingServiceStoragePass)
 	redis := redis.NewRedisController(
 		cfg.Redis.Host,
 		cfg.Redis.Password,
