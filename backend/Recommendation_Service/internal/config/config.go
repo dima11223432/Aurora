@@ -9,11 +9,12 @@ import (
 )
 
 type Config struct {
-	Env         string        `yaml:"env" env-default:"local"`
-	StoragePass string        `yaml:"storage_pass" env-required:"true"`
-	TokenTTL    time.Duration `yaml:"token_ttl" env-required:"true"`
-	GRPC        GRPCConfig    `yaml:"grpc"`
-	Redis       RedisConfig   `yaml:"redis"`
+	Env                       string        `yaml:"env" env-default:"local"`
+	StoragePass               string        `yaml:"storage_pass" env-required:"true"`
+	ParsingServiceStoragePass string        `yaml:"parsing_service_pass" env-required:"true"`
+	TokenTTL                  time.Duration `yaml:"token_ttl" env-required:"true"`
+	GRPC                      GRPCConfig    `yaml:"grpc"`
+	Redis                     RedisConfig   `yaml:"redis"`
 }
 
 type GRPCConfig struct {

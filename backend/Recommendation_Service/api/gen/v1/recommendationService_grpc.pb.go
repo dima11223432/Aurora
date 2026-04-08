@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	RecommendationService_GetUserPriorityChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
 	RecommendationService_GetRecommendatedPosts_FullMethodName   = "/recommendation.v1.RecommendationService/GetRecommendatedPosts"
+	RecommendationService_GetAllParsingChannels_FullMethodName   = "/recommendation.v1.RecommendationService/GetAllParsingChannels"
 )
 
 // RecommendationServiceClient is the client API for RecommendationService service.
@@ -29,6 +30,7 @@ const (
 type RecommendationServiceClient interface {
 	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
 	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
+	GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error)
 }
 
 type recommendationServiceClient struct {
@@ -59,12 +61,23 @@ func (c *recommendationServiceClient) GetRecommendatedPosts(ctx context.Context,
 	return out, nil
 }
 
+func (c *recommendationServiceClient) GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllParsingChannelsResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetAllParsingChannels_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RecommendationServiceServer is the server API for RecommendationService service.
 // All implementations should embed UnimplementedRecommendationServiceServer
 // for forward compatibility.
 type RecommendationServiceServer interface {
 	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
 	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
+	GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error)
 }
 
 // UnimplementedRecommendationServiceServer should be embedded to have
@@ -79,6 +92,9 @@ func (UnimplementedRecommendationServiceServer) GetUserPriorityChannels(context.
 }
 func (UnimplementedRecommendationServiceServer) GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRecommendatedPosts not implemented")
+}
+func (UnimplementedRecommendationServiceServer) GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllParsingChannels not implemented")
 }
 func (UnimplementedRecommendationServiceServer) testEmbeddedByValue() {}
 
@@ -136,6 +152,24 @@ func _RecommendationService_GetRecommendatedPosts_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecommendationService_GetAllParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllParsingChannelsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).GetAllParsingChannels(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_GetAllParsingChannels_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).GetAllParsingChannels(ctx, req.(*GetAllParsingChannelsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RecommendationService_ServiceDesc is the grpc.ServiceDesc for RecommendationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -150,6 +184,10 @@ var RecommendationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRecommendatedPosts",
 			Handler:    _RecommendationService_GetRecommendatedPosts_Handler,
+		},
+		{
+			MethodName: "GetAllParsingChannels",
+			Handler:    _RecommendationService_GetAllParsingChannels_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

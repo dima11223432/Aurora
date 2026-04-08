@@ -8,6 +8,14 @@ import "google/protobuf/timestamp.proto";
 service RecommendationService {
   rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse);
   rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse);
+  rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse);
+}
+
+message GetAllParsingChannelsRequest {
+}
+
+message GetAllParsingChannelsResponse {
+  repeated string channels = 1;
 }
 
 message GetRecommendatedPostsRequest{

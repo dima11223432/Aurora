@@ -15,7 +15,7 @@ type App struct {
 }
 
 func New(log *slog.Logger, cfg *config.Config) *App {
-	storage, err := postgres.New(cfg.StoragePass)
+	storage, err := postgres.New(cfg.StoragePass, cfg.ParsingServiceStoragePass)
 	redis := redis.NewRedisController(
 		cfg.Redis.Host,
 		cfg.Redis.Password,
@@ -28,9 +28,9 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 		panic(err)
 	}
 	userDataProviderService := userDataProvider.New(log,
-		storage, redis, cfg.TokenTTL)
+		storage, storage, redis, cfg.TokenTTL)
 
-	grpcapp := grpcApp.New(log, userDataProviderService, userDataProviderService, cfg.GRPC.Port)
+	grpcapp := grpcApp.New(log, userDataProviderService, userDataProviderService, userDataProviderService, cfg.GRPC.Port)
 	return &App{
 		GRPCapp: grpcapp,
 	}
