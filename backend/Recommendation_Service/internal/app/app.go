@@ -28,9 +28,9 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 		panic(err)
 	}
 	userDataProviderService := userDataProvider.New(log,
-		storage, redis, cfg.TokenTTL)
+		storage, storage, redis, cfg.TokenTTL)
 
-	grpcapp := grpcApp.New(log, userDataProviderService, userDataProviderService, cfg.GRPC.Port)
+	grpcapp := grpcApp.New(log, userDataProviderService, userDataProviderService, userDataProviderService, cfg.GRPC.Port)
 	return &App{
 		GRPCapp: grpcapp,
 	}

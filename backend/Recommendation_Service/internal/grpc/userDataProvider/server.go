@@ -2,7 +2,7 @@ package grpcauth
 
 import (
 	"context"
-	ssov1 "recommendationService/api/gen/v1"
+	recv1 "recommendationService/api/gen/v1"
 	"recommendationService/internal/domain/models"
 
 	"github.com/samber/lo"
@@ -19,40 +19,46 @@ type UserDataProvider interface {
 	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
 
+type ParsingChannelsProvider interface {
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
+}
+
 type NewsDataProvider interface {
 	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
 
 type serverAPI struct {
-	ssov1.UnimplementedRecommendationServiceServer
-	userDataProvider UserDataProvider
-	newsDataProvider NewsDataProvider
+	recv1.UnimplementedRecommendationServiceServer
+	userDataProvider        UserDataProvider
+	parsingChannelsProvider ParsingChannelsProvider
+	newsDataProvider        NewsDataProvider
 }
 
 const (
 	emptyValue = 0
 )
 
-func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, newsNewsDataProvider NewsDataProvider) {
-	ssov1.RegisterRecommendationServiceServer(gRPC, &serverAPI{
-		userDataProvider: userDataProvider,
-		newsDataProvider: newsNewsDataProvider,
+func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsNewsDataProvider NewsDataProvider) {
+	recv1.RegisterRecommendationServiceServer(gRPC, &serverAPI{
+		userDataProvider:        userDataProvider,
+		parsingChannelsProvider: parsingChannelsProvider,
+		newsDataProvider:        newsNewsDataProvider,
 	})
 }
 
-func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *ssov1.GetUserPriorityChannelsRequest) (*ssov1.GetUserPriorityChannelsResponse, error) {
+func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *recv1.GetUserPriorityChannelsRequest) (*recv1.GetUserPriorityChannelsResponse, error) {
 	channels, err := s.userDataProvider.GetUserPriorityChannels(ctx, req.GetUserId())
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error")
 	}
-	return &ssov1.GetUserPriorityChannelsResponse{
+	return &recv1.GetUserPriorityChannelsResponse{
 		Channels: lo.Map(channels, func(item models.PriorityChannel, _ int) string {
 			return item.Channel
 		}),
 	}, nil
 }
 
-func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRecommendatedPostsRequest) (*ssov1.GetRecommendatedPostsResponse, error) {
+func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRecommendatedPostsRequest) (*recv1.GetRecommendatedPostsResponse, error) {
 	const op = "Recommendation_Service.internal.grpc.UserDataProvider.server.GetRecommendatedPosts"
 
 	var cursor *models.Cursor
@@ -70,18 +76,18 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRec
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get recommended posts")
 	}
-	protoPosts := make([]*ssov1.Post, 0)
+	protoPosts := make([]*recv1.Post, 0)
 
 	for _, post := range posts {
 		stoks := post.Stocks
-		protoStocks := make([]*ssov1.Stock, 0)
+		protoStocks := make([]*recv1.Stock, 0)
 		for _, stock := range stoks {
-			protoStocks = append(protoStocks, &ssov1.Stock{
+			protoStocks = append(protoStocks, &recv1.Stock{
 				StockName: stock.StockName,
 				Side:      stock.Side,
 			})
 		}
-		protoPosts = append(protoPosts, &ssov1.Post{
+		protoPosts = append(protoPosts, &recv1.Post{
 			Stocks:          protoStocks,
 			PostText:        post.PostText,
 			PostUri:         post.PostURI,
@@ -90,11 +96,21 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *ssov1.GetRec
 			Date:            timestamppb.New(post.Date),
 		})
 	}
-	return &ssov1.GetRecommendatedPostsResponse{
+	return &recv1.GetRecommendatedPostsResponse{
 		Posts: protoPosts,
-		NextCursor: &ssov1.Cursor{
+		NextCursor: &recv1.Cursor{
 			Score: int64(nextCursor.Score),
 			Id:    nextCursor.ID,
 		},
+	}, nil
+}
+
+func (s *serverAPI) GetAllParsingChannels(ctx context.Context, req *recv1.GetAllParsingChannelsRequest) (*recv1.GetAllParsingChannelsResponse, error) {
+	channels, err := s.parsingChannelsProvider.GetAllParsingChannels(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &recv1.GetAllParsingChannelsResponse{
+		Channels: channels,
 	}, nil
 }

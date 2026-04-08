@@ -12,6 +12,10 @@ import (
 	grpcUserDataProvider "recommendationService/internal/grpc/userDataProvider"
 )
 
+type ParsingChannelsProvider interface {
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
+}
+
 type userDataProvider interface {
 	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
@@ -26,9 +30,9 @@ type App struct {
 	port       int
 }
 
-func New(log *slog.Logger, userDataProvider userDataProvider, newsDataProvider NewsDataProvider, port int) *App {
+func New(log *slog.Logger, userDataProvider userDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsDataProvider NewsDataProvider, port int) *App {
 	gRPCServer := grpc.NewServer()
-	grpcUserDataProvider.Register(gRPCServer, userDataProvider, newsDataProvider)
+	grpcUserDataProvider.Register(gRPCServer, userDataProvider, parsingChannelsProvider, newsDataProvider)
 	reflection.Register(gRPCServer)
 
 	return &App{

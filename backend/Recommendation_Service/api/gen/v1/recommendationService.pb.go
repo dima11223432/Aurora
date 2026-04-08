@@ -22,6 +22,86 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type GetAllParsingChannelsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllParsingChannelsRequest) Reset() {
+	*x = GetAllParsingChannelsRequest{}
+	mi := &file_v1_recommendationService_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllParsingChannelsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllParsingChannelsRequest) ProtoMessage() {}
+
+func (x *GetAllParsingChannelsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_recommendationService_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllParsingChannelsRequest.ProtoReflect.Descriptor instead.
+func (*GetAllParsingChannelsRequest) Descriptor() ([]byte, []int) {
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{0}
+}
+
+type GetAllParsingChannelsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Channels      []string               `protobuf:"bytes,1,rep,name=channels,proto3" json:"channels,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllParsingChannelsResponse) Reset() {
+	*x = GetAllParsingChannelsResponse{}
+	mi := &file_v1_recommendationService_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllParsingChannelsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllParsingChannelsResponse) ProtoMessage() {}
+
+func (x *GetAllParsingChannelsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_recommendationService_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllParsingChannelsResponse.ProtoReflect.Descriptor instead.
+func (*GetAllParsingChannelsResponse) Descriptor() ([]byte, []int) {
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetAllParsingChannelsResponse) GetChannels() []string {
+	if x != nil {
+		return x.Channels
+	}
+	return nil
+}
+
 type GetRecommendatedPostsRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UserId        int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
@@ -32,7 +112,7 @@ type GetRecommendatedPostsRequest struct {
 
 func (x *GetRecommendatedPostsRequest) Reset() {
 	*x = GetRecommendatedPostsRequest{}
-	mi := &file_v1_recommendationService_proto_msgTypes[0]
+	mi := &file_v1_recommendationService_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +124,7 @@ func (x *GetRecommendatedPostsRequest) String() string {
 func (*GetRecommendatedPostsRequest) ProtoMessage() {}
 
 func (x *GetRecommendatedPostsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[0]
+	mi := &file_v1_recommendationService_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,7 +137,7 @@ func (x *GetRecommendatedPostsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRecommendatedPostsRequest.ProtoReflect.Descriptor instead.
 func (*GetRecommendatedPostsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{0}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetRecommendatedPostsRequest) GetUserId() int64 {
@@ -84,7 +164,7 @@ type GetRecommendatedPostsResponse struct {
 
 func (x *GetRecommendatedPostsResponse) Reset() {
 	*x = GetRecommendatedPostsResponse{}
-	mi := &file_v1_recommendationService_proto_msgTypes[1]
+	mi := &file_v1_recommendationService_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -96,7 +176,7 @@ func (x *GetRecommendatedPostsResponse) String() string {
 func (*GetRecommendatedPostsResponse) ProtoMessage() {}
 
 func (x *GetRecommendatedPostsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[1]
+	mi := &file_v1_recommendationService_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -109,7 +189,7 @@ func (x *GetRecommendatedPostsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRecommendatedPostsResponse.ProtoReflect.Descriptor instead.
 func (*GetRecommendatedPostsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{1}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *GetRecommendatedPostsResponse) GetPosts() []*Post {
@@ -135,7 +215,7 @@ type GetUserPriorityChannelsRequest struct {
 
 func (x *GetUserPriorityChannelsRequest) Reset() {
 	*x = GetUserPriorityChannelsRequest{}
-	mi := &file_v1_recommendationService_proto_msgTypes[2]
+	mi := &file_v1_recommendationService_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -147,7 +227,7 @@ func (x *GetUserPriorityChannelsRequest) String() string {
 func (*GetUserPriorityChannelsRequest) ProtoMessage() {}
 
 func (x *GetUserPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[2]
+	mi := &file_v1_recommendationService_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -160,7 +240,7 @@ func (x *GetUserPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPriorityChannelsRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPriorityChannelsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{2}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *GetUserPriorityChannelsRequest) GetUserId() int64 {
@@ -179,7 +259,7 @@ type GetUserPriorityChannelsResponse struct {
 
 func (x *GetUserPriorityChannelsResponse) Reset() {
 	*x = GetUserPriorityChannelsResponse{}
-	mi := &file_v1_recommendationService_proto_msgTypes[3]
+	mi := &file_v1_recommendationService_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -191,7 +271,7 @@ func (x *GetUserPriorityChannelsResponse) String() string {
 func (*GetUserPriorityChannelsResponse) ProtoMessage() {}
 
 func (x *GetUserPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[3]
+	mi := &file_v1_recommendationService_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -204,7 +284,7 @@ func (x *GetUserPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPriorityChannelsResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPriorityChannelsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{3}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *GetUserPriorityChannelsResponse) GetChannels() []string {
@@ -224,7 +304,7 @@ type Cursor struct {
 
 func (x *Cursor) Reset() {
 	*x = Cursor{}
-	mi := &file_v1_recommendationService_proto_msgTypes[4]
+	mi := &file_v1_recommendationService_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -236,7 +316,7 @@ func (x *Cursor) String() string {
 func (*Cursor) ProtoMessage() {}
 
 func (x *Cursor) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[4]
+	mi := &file_v1_recommendationService_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -249,7 +329,7 @@ func (x *Cursor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cursor.ProtoReflect.Descriptor instead.
 func (*Cursor) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{4}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *Cursor) GetScore() int64 {
@@ -280,7 +360,7 @@ type Post struct {
 
 func (x *Post) Reset() {
 	*x = Post{}
-	mi := &file_v1_recommendationService_proto_msgTypes[5]
+	mi := &file_v1_recommendationService_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -292,7 +372,7 @@ func (x *Post) String() string {
 func (*Post) ProtoMessage() {}
 
 func (x *Post) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[5]
+	mi := &file_v1_recommendationService_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -305,7 +385,7 @@ func (x *Post) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Post.ProtoReflect.Descriptor instead.
 func (*Post) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{5}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *Post) GetStocks() []*Stock {
@@ -360,7 +440,7 @@ type Stock struct {
 
 func (x *Stock) Reset() {
 	*x = Stock{}
-	mi := &file_v1_recommendationService_proto_msgTypes[6]
+	mi := &file_v1_recommendationService_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -372,7 +452,7 @@ func (x *Stock) String() string {
 func (*Stock) ProtoMessage() {}
 
 func (x *Stock) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_recommendationService_proto_msgTypes[6]
+	mi := &file_v1_recommendationService_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -385,7 +465,7 @@ func (x *Stock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Stock.ProtoReflect.Descriptor instead.
 func (*Stock) Descriptor() ([]byte, []int) {
-	return file_v1_recommendationService_proto_rawDescGZIP(), []int{6}
+	return file_v1_recommendationService_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *Stock) GetStockName() string {
@@ -406,7 +486,10 @@ var File_v1_recommendationService_proto protoreflect.FileDescriptor
 
 const file_v1_recommendationService_proto_rawDesc = "" +
 	"\n" +
-	"\x1ev1/recommendationService.proto\x12\x11recommendation.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"j\n" +
+	"\x1ev1/recommendationService.proto\x12\x11recommendation.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x1e\n" +
+	"\x1cGetAllParsingChannelsRequest\";\n" +
+	"\x1dGetAllParsingChannelsResponse\x12\x1a\n" +
+	"\bchannels\x18\x01 \x03(\tR\bchannels\"j\n" +
 	"\x1cGetRecommendatedPostsRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\x03R\x06userId\x121\n" +
 	"\x06cursor\x18\x02 \x01(\v2\x19.recommendation.v1.CursorR\x06cursor\"\x8a\x01\n" +
@@ -431,10 +514,11 @@ const file_v1_recommendationService_proto_rawDesc = "" +
 	"\x05Stock\x12\x1d\n" +
 	"\n" +
 	"stock_name\x18\x01 \x01(\tR\tstockName\x12\x12\n" +
-	"\x04side\x18\x02 \x01(\tR\x04side2\x96\x02\n" +
+	"\x04side\x18\x02 \x01(\tR\x04side2\x92\x03\n" +
 	"\x15RecommendationService\x12\x80\x01\n" +
 	"\x17GetUserPriorityChannels\x121.recommendation.v1.GetUserPriorityChannelsRequest\x1a2.recommendation.v1.GetUserPriorityChannelsResponse\x12z\n" +
-	"\x15GetRecommendatedPosts\x12/.recommendation.v1.GetRecommendatedPostsRequest\x1a0.recommendation.v1.GetRecommendatedPostsResponseB\x13Z\x11recommendation/v1b\x06proto3"
+	"\x15GetRecommendatedPosts\x12/.recommendation.v1.GetRecommendatedPostsRequest\x1a0.recommendation.v1.GetRecommendatedPostsResponse\x12z\n" +
+	"\x15GetAllParsingChannels\x12/.recommendation.v1.GetAllParsingChannelsRequest\x1a0.recommendation.v1.GetAllParsingChannelsResponseB\x13Z\x11recommendation/v1b\x06proto3"
 
 var (
 	file_v1_recommendationService_proto_rawDescOnce sync.Once
@@ -448,29 +532,33 @@ func file_v1_recommendationService_proto_rawDescGZIP() []byte {
 	return file_v1_recommendationService_proto_rawDescData
 }
 
-var file_v1_recommendationService_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
+var file_v1_recommendationService_proto_msgTypes = make([]protoimpl.MessageInfo, 9)
 var file_v1_recommendationService_proto_goTypes = []any{
-	(*GetRecommendatedPostsRequest)(nil),    // 0: recommendation.v1.GetRecommendatedPostsRequest
-	(*GetRecommendatedPostsResponse)(nil),   // 1: recommendation.v1.GetRecommendatedPostsResponse
-	(*GetUserPriorityChannelsRequest)(nil),  // 2: recommendation.v1.GetUserPriorityChannelsRequest
-	(*GetUserPriorityChannelsResponse)(nil), // 3: recommendation.v1.GetUserPriorityChannelsResponse
-	(*Cursor)(nil),                          // 4: recommendation.v1.Cursor
-	(*Post)(nil),                            // 5: recommendation.v1.Post
-	(*Stock)(nil),                           // 6: recommendation.v1.Stock
-	(*timestamppb.Timestamp)(nil),           // 7: google.protobuf.Timestamp
+	(*GetAllParsingChannelsRequest)(nil),    // 0: recommendation.v1.GetAllParsingChannelsRequest
+	(*GetAllParsingChannelsResponse)(nil),   // 1: recommendation.v1.GetAllParsingChannelsResponse
+	(*GetRecommendatedPostsRequest)(nil),    // 2: recommendation.v1.GetRecommendatedPostsRequest
+	(*GetRecommendatedPostsResponse)(nil),   // 3: recommendation.v1.GetRecommendatedPostsResponse
+	(*GetUserPriorityChannelsRequest)(nil),  // 4: recommendation.v1.GetUserPriorityChannelsRequest
+	(*GetUserPriorityChannelsResponse)(nil), // 5: recommendation.v1.GetUserPriorityChannelsResponse
+	(*Cursor)(nil),                          // 6: recommendation.v1.Cursor
+	(*Post)(nil),                            // 7: recommendation.v1.Post
+	(*Stock)(nil),                           // 8: recommendation.v1.Stock
+	(*timestamppb.Timestamp)(nil),           // 9: google.protobuf.Timestamp
 }
 var file_v1_recommendationService_proto_depIdxs = []int32{
-	4, // 0: recommendation.v1.GetRecommendatedPostsRequest.cursor:type_name -> recommendation.v1.Cursor
-	5, // 1: recommendation.v1.GetRecommendatedPostsResponse.posts:type_name -> recommendation.v1.Post
-	4, // 2: recommendation.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> recommendation.v1.Cursor
-	6, // 3: recommendation.v1.Post.stocks:type_name -> recommendation.v1.Stock
-	7, // 4: recommendation.v1.Post.date:type_name -> google.protobuf.Timestamp
-	2, // 5: recommendation.v1.RecommendationService.GetUserPriorityChannels:input_type -> recommendation.v1.GetUserPriorityChannelsRequest
-	0, // 6: recommendation.v1.RecommendationService.GetRecommendatedPosts:input_type -> recommendation.v1.GetRecommendatedPostsRequest
-	3, // 7: recommendation.v1.RecommendationService.GetUserPriorityChannels:output_type -> recommendation.v1.GetUserPriorityChannelsResponse
-	1, // 8: recommendation.v1.RecommendationService.GetRecommendatedPosts:output_type -> recommendation.v1.GetRecommendatedPostsResponse
-	7, // [7:9] is the sub-list for method output_type
-	5, // [5:7] is the sub-list for method input_type
+	6, // 0: recommendation.v1.GetRecommendatedPostsRequest.cursor:type_name -> recommendation.v1.Cursor
+	7, // 1: recommendation.v1.GetRecommendatedPostsResponse.posts:type_name -> recommendation.v1.Post
+	6, // 2: recommendation.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> recommendation.v1.Cursor
+	8, // 3: recommendation.v1.Post.stocks:type_name -> recommendation.v1.Stock
+	9, // 4: recommendation.v1.Post.date:type_name -> google.protobuf.Timestamp
+	4, // 5: recommendation.v1.RecommendationService.GetUserPriorityChannels:input_type -> recommendation.v1.GetUserPriorityChannelsRequest
+	2, // 6: recommendation.v1.RecommendationService.GetRecommendatedPosts:input_type -> recommendation.v1.GetRecommendatedPostsRequest
+	0, // 7: recommendation.v1.RecommendationService.GetAllParsingChannels:input_type -> recommendation.v1.GetAllParsingChannelsRequest
+	5, // 8: recommendation.v1.RecommendationService.GetUserPriorityChannels:output_type -> recommendation.v1.GetUserPriorityChannelsResponse
+	3, // 9: recommendation.v1.RecommendationService.GetRecommendatedPosts:output_type -> recommendation.v1.GetRecommendatedPostsResponse
+	1, // 10: recommendation.v1.RecommendationService.GetAllParsingChannels:output_type -> recommendation.v1.GetAllParsingChannelsResponse
+	8, // [8:11] is the sub-list for method output_type
+	5, // [5:8] is the sub-list for method input_type
 	5, // [5:5] is the sub-list for extension type_name
 	5, // [5:5] is the sub-list for extension extendee
 	0, // [0:5] is the sub-list for field type_name
@@ -487,7 +575,7 @@ func file_v1_recommendationService_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_recommendationService_proto_rawDesc), len(file_v1_recommendationService_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   7,
+			NumMessages:   9,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
