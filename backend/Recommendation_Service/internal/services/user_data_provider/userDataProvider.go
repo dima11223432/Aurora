@@ -12,12 +12,17 @@ import (
 type UserDataProvider struct {
 	log                      *slog.Logger
 	priorityChannelsProvider PriorityChannelsProvider
+	parsingChannelsProvider  ParsingChannelsProvider
 	priorityNewsProvider     PriorityNewsProvider
 	TokenTTL                 time.Duration
 }
 
 type PriorityChannelsProvider interface {
 	GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+}
+
+type ParsingChannelsProvider interface {
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
 }
 
 type PriorityNewsProvider interface {
@@ -34,6 +39,7 @@ var (
 func New(
 	log *slog.Logger,
 	priorityChannelsProvider PriorityChannelsProvider,
+	parsingChannelsProvider ParsingChannelsProvider,
 	priorityNewsProvider PriorityNewsProvider,
 	tokenTTL time.Duration,
 ) *UserDataProvider {
@@ -41,6 +47,7 @@ func New(
 		log:                      log,
 		priorityChannelsProvider: priorityChannelsProvider,
 		priorityNewsProvider:     priorityNewsProvider,
+		parsingChannelsProvider:  parsingChannelsProvider,
 		TokenTTL:                 tokenTTL,
 	}
 }
@@ -79,4 +86,17 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 	}
 
 	return posts, nextCursor, nil
+}
+
+func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string, error) {
+	const op = "internal.services.user_data_provider.userDataProvider.go.GetAllParsingChannels"
+	channels, err := u.parsingChannelsProvider.GetAllParsingChannels(ctx)
+	if err != nil {
+		u.log.Error("failed to get all parsing channels",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	return channels, nil
 }
