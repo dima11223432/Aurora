@@ -40,8 +40,20 @@ service ApiService {
       body:"*"
     };
   }
+  rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_all_parsing_channels"
+      body:"*"
+    };
+  }
 }
 
+message GetAllParsingChannelsRequest {
+}
+
+message GetAllParsingChannelsResponse {
+  repeated string channels = 1;
+}
 
 message DeletePriorityChannelRequest{
   repeated string channels = 1;

@@ -48,6 +48,38 @@
         ]
       }
     },
+    "/v1/get_all_parsing_channels": {
+      "post": {
+        "operationId": "ApiService_GetAllParsingChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllParsingChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetAllParsingChannelsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/get_recommendated_posts": {
       "post": {
         "operationId": "ApiService_GetRecommendatedPosts",
@@ -231,6 +263,20 @@
     },
     "v1DeletePriorityChannelResponse": {
       "type": "object"
+    },
+    "v1GetAllParsingChannelsRequest": {
+      "type": "object"
+    },
+    "v1GetAllParsingChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "v1GetRecommendatedPostsRequest": {
       "type": "object",

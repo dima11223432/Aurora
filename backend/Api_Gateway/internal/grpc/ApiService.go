@@ -7,7 +7,6 @@ import (
 	"API_Service/internal/domains/models"
 	"context"
 	"errors"
-	"fmt"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -25,6 +24,7 @@ type Auth interface {
 
 type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
+	// GetAllParsingChannels(ctx context.Context) ([]string, error)
 }
 
 type ApiService struct {
@@ -56,11 +56,6 @@ func (a *ApiService) Login(
 	if err != nil {
 		logrus.WithError(err).Error("login failed")
 		return nil, err
-	}
-
-	if err != nil {
-		logrus.WithError(err).Error("failed to parse jwt user id from context")
-		return nil, fmt.Errorf("fail to parse jwt")
 	}
 
 	return &v1.LoginResponse{
