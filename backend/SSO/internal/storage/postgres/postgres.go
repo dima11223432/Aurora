@@ -13,23 +13,23 @@ import (
 )
 
 type Storage struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 // New creates a new instance of the Storage
 func New(storagePath string) (*Storage, error) {
 	const op = "internal.storage.postgres.new"
 
-	db, err := sql.Open("postgres", storagePath)
+	DB, err := sql.Open("postgres", storagePath)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	if err := db.Ping(); err != nil {
+	if err := DB.Ping(); err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	return &Storage{
-		db: db,
+		DB: DB,
 	}, nil
 }
 
@@ -54,7 +54,7 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 		args = append(args, user_id, channel)
 	}
 	query += " ON CONFLICT (user_id, channel_username) DO NOTHING"
-	_, err := s.db.ExecContext(ctx, query, args...)
+	_, err := s.DB.ExecContext(ctx, query, args...)
 	if err != nil {
 		fmt.Println(err.Error())
 		if isDuplicateError(err) {
@@ -78,7 +78,7 @@ func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, chan
 	WHERE user_id = $1 AND channel_username = ANY($2);
 	`
 
-	_, err := s.db.ExecContext(ctx, query, userID, pq.Array(channels))
+	_, err := s.DB.ExecContext(ctx, query, userID, pq.Array(channels))
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -96,7 +96,7 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	`
 	var userID int64
 
-	err := s.db.QueryRowContext(ctx, query,
+	err := s.DB.QueryRowContext(ctx, query,
 		user.Telegram_id,
 		user.Username,
 		user.First_name,
@@ -121,7 +121,7 @@ func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, 
 	`
 
 	var user models.User
-	err := s.db.QueryRowContext(ctx, query, user_id).Scan(
+	err := s.DB.QueryRowContext(ctx, query, user_id).Scan(
 		&user.ID, &user.Telegram_id, &user.Username, &user.First_name, &user.Last_name, &user.Is_admin,
 	)
 	if err != nil {
@@ -144,7 +144,7 @@ func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, err
 	`
 
 	var user models.User
-	err := s.db.QueryRowContext(ctx, query, telegram_id).Scan(
+	err := s.DB.QueryRowContext(ctx, query, telegram_id).Scan(
 		&user.ID,
 		&user.Telegram_id,
 		&user.Username,
@@ -173,7 +173,7 @@ func (s *Storage) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) 
 
 	var isAdmin bool
 
-	err := s.db.QueryRowContext(ctx, query, telegram_id).Scan(&isAdmin)
+	err := s.DB.QueryRowContext(ctx, query, telegram_id).Scan(&isAdmin)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return false, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
@@ -194,7 +194,7 @@ func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 
 	var app models.App
 
-	err := s.db.QueryRowContext(ctx, query, appID).Scan(&app.ID, &app.Name, &app.Secret)
+	err := s.DB.QueryRowContext(ctx, query, appID).Scan(&app.ID, &app.Name, &app.Secret)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return models.App{}, fmt.Errorf("%s: %w", op, storage.ErrAppNotFound)
