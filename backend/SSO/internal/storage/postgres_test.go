@@ -2,6 +2,7 @@ package storage_test
 
 import (
 	"authService/internal/domain/models"
+	"authService/internal/storage"
 	"authService/internal/storage/postgres"
 	"context"
 	"testing"
@@ -71,4 +72,16 @@ func TestStorage_SaveUser_and_User_empty(t *testing.T) {
 	gottedUser, err := s.User(ctx, user.Telegram_id)
 	assert.Error(t, err)
 	assert.NotEqual(t, gottedUser, user)
+}
+
+func TestApp(t *testing.T) {
+	s, teardown := setupStorage(t)
+	defer teardown()
+
+	ctx := context.Background()
+	s.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
+
+	app, err := s.App(ctx, 1)
+	assert.NoError(t, err)
+	assert.Equal(t, app, models.App{ID: 1, Name: "test", Secret: "secret"})
 }
