@@ -11,6 +11,10 @@ import (
 	"time"
 )
 
+var (
+	emptyValue = 0
+)
+
 type Auth struct {
 	log          *slog.Logger
 	userSaver    UserSaver
@@ -59,6 +63,11 @@ func New(
 
 func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, error) {
 	const op = "auth.Login"
+
+	err := checkUserData(user)
+	if err != nil {
+		return "", fmt.Errorf("%s: %w", op, err)
+	}
 
 	log := a.log.With(
 		slog.String("op", op),
@@ -189,4 +198,11 @@ func (a *Auth) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) {
 
 	log.Info("checked if user is admin", slog.Bool("is_admin", isAdmin))
 	return isAdmin, nil
+}
+
+func checkUserData(user models.User) error {
+	if user.Telegram_id == int64(emptyValue) || user.First_name == "" || user.Last_name == "" || user.Username == "" {
+		return storage.ErrEmptyUserValues
+	}
+	return nil
 }
