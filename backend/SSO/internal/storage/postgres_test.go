@@ -47,3 +47,28 @@ func TestStorage_SaveUser_and_User(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, gottedUser, user)
 }
+
+func TestStorage_SaveUser_and_User_empty(t *testing.T) {
+
+	s, teardown := setupStorage(t)
+	defer teardown()
+
+	ctx := context.Background()
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "any bullshit",
+		Last_name:   "",
+		Username:    "",
+		Is_admin:    false,
+	}
+
+	id, err := s.SaveUser(ctx, user)
+	user.ID = id
+
+	assert.Error(t, err)
+	assert.Zero(t, id)
+
+	gottedUser, err := s.User(ctx, user.Telegram_id)
+	assert.Error(t, err)
+	assert.NotEqual(t, gottedUser, user)
+}

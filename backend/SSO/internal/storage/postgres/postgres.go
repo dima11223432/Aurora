@@ -12,6 +12,10 @@ import (
 	pq "github.com/lib/pq"
 )
 
+var (
+	emptyValue = 0
+)
+
 type Storage struct {
 	DB *sql.DB
 }
@@ -89,6 +93,11 @@ func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, chan
 func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "storage.postgres.SaveUser"
 
+	err := checkUserData(user)
+	if err != nil {
+		return 0, err
+	}
+
 	query := `
 	INSERT INTO users (telegram_id, username, first_name, last_name, is_admin) 
 	VALUES ($1, $2, $3, $4, $5) 
@@ -96,7 +105,7 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	`
 	var userID int64
 
-	err := s.DB.QueryRowContext(ctx, query,
+	err = s.DB.QueryRowContext(ctx, query,
 		user.Telegram_id,
 		user.Username,
 		user.First_name,
@@ -209,4 +218,11 @@ func isDuplicateError(err error) bool {
 		return pqErr.Code == "23505"
 	}
 	return strings.Contains(err.Error(), "duplicate key value")
+}
+
+func checkUserData(user models.User) error {
+	if user.Telegram_id == int64(emptyValue) || user.First_name == "" || user.Last_name == "" || user.Username == "" {
+		return storage.ErrEmptyUserValues
+	}
+	return nil
 }
