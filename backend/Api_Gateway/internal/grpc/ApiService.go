@@ -25,6 +25,7 @@ type Auth interface {
 
 type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
 }
 
 type ApiService struct {
@@ -157,5 +158,19 @@ func (a *ApiService) GetRecommendatedPosts(
 	return &v1.GetRecommendatedPostsResponse{
 		Posts:      postList,
 		NextCursor: NextCursor,
+	}, nil
+}
+
+func (a *ApiService) GetAllParsingChannels(
+	ctx context.Context,
+	_ *v1.GetAllParsingChannelsRequest,
+) (*v1.GetAllParsingChannelsResponse, error) {
+	channels, err := a.recommendatinService.GetAllParsingChannels(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get parsing channels")
+	}
+
+	return &v1.GetAllParsingChannelsResponse{
+		Channels: channels,
 	}, nil
 }
