@@ -67,11 +67,37 @@ func TestStorage_SaveUser_and_User_empty(t *testing.T) {
 	user.ID = id
 
 	assert.Error(t, err)
+
+	assert.ErrorIs(t, err, storage.ErrEmptyUserValues)
 	assert.Zero(t, id)
 
 	gottedUser, err := s.User(ctx, user.Telegram_id)
 	assert.Error(t, err)
+	assert.ErrorIs(t, err, storage.ErrUserNotFound)
 	assert.NotEqual(t, gottedUser, user)
+}
+
+func Test_storage_get_user_by_id(t *testing.T) {
+	s, teardown := setupStorage(t)
+	defer teardown()
+
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+
+	ctx := context.Background()
+	id, err := s.SaveUser(ctx, user)
+	assert.NoError(t, err)
+	assert.NotZero(t, id)
+	user.ID = id
+
+	gottedUser, err := s.GetUserById(ctx, user.ID)
+	assert.NoError(t, err)
+	assert.Equal(t, gottedUser, user)
 }
 
 func TestApp(t *testing.T) {
@@ -84,4 +110,81 @@ func TestApp(t *testing.T) {
 	app, err := s.App(ctx, 1)
 	assert.NoError(t, err)
 	assert.Equal(t, app, models.App{ID: 1, Name: "test", Secret: "secret"})
+
+	app, err = s.App(ctx, 2)
+	assert.Error(t, err)
+	assert.ErrorIs(t, err, storage.ErrAppNotFound)
+	assert.Equal(t, app, models.App{})
+}
+
+func TestSetPriorityChannels(t *testing.T) {
+	s, teardown := setupStorage(t)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	defer teardown()
+
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	id, err := s.SaveUser(ctx, user)
+	assert.NoError(t, err)
+	assert.NotZero(t, id)
+	user.ID = id
+
+	err = s.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
+	assert.NoError(t, err)
+}
+
+func TestSetPriorityChannelsEmptyChannels(t *testing.T) {
+	s, teardown := setupStorage(t)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	defer teardown()
+
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	id, err := s.SaveUser(ctx, user)
+	assert.NoError(t, err)
+	assert.NotZero(t, id)
+	user.ID = id
+
+	err = s.SetPriorityChannels(ctx, user.ID, []string{})
+	assert.Error(t, err)
+	assert.ErrorIs(t, err, storage.ErrChannelsEmpty)
+}
+
+func TestDeletePriorityChannels(t *testing.T) {
+	s, teardown := setupStorage(t)
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	defer teardown()
+
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	id, err := s.SaveUser(ctx, user)
+	assert.NoError(t, err)
+	assert.NotZero(t, id)
+	user.ID = id
+
+	err = s.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
+	assert.NoError(t, err)
+	err = s.DeletePriorityChannels(ctx, user.ID, []string{"channel1"})
+	assert.NoError(t, err)
 }

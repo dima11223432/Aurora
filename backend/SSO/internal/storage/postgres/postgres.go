@@ -41,7 +41,7 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 	const op = "storage.postgres.SetPriorityChannels"
 
 	if len(channels) == 0 {
-		return errors.New("channels is empty")
+		return fmt.Errorf("%s: %w", op, storage.ErrChannelsEmpty)
 	}
 
 	query := `
@@ -95,7 +95,7 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 
 	err := checkUserData(user)
 	if err != nil {
-		return 0, err
+		return 0, fmt.Errorf("%s: %w", op, err)
 	}
 
 	query := `
