@@ -5,29 +5,36 @@ import (
 	"authService/internal/storage"
 	"authService/internal/storage/postgres"
 	"context"
+	"log"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
+	"github.com/stretchr/testify/suite"
 )
 
-func setupStorage(t *testing.T) (*postgres.Storage, func()) {
+type PostgresTestSuite struct {
+	suite.Suite
+	storage *postgres.Storage
+}
+
+func (p *PostgresTestSuite) SetupTest() {
 
 	s, err := postgres.New("postgres://postgres:pass@localhost:5432/test_auth?sslmode=disable")
-	require.NoError(t, err)
-
-	teardown := func() {
-		s.DB.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
-		s.DB.Close()
+	if err != nil {
+		log.Fatal(err)
 	}
-	return s, teardown
+	p.storage = s
+
+	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
 
 }
 
-func TestStorage_SaveUser_and_User(t *testing.T) {
+func (p *PostgresTestSuite) TearDownTest() {
 
-	s, teardown := setupStorage(t)
-	defer teardown()
+	p.storage.DB.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
+	p.storage.DB.Close()
+}
+
+func (p *PostgresTestSuite) TestStorage_SaveUser_and_User() {
 
 	ctx := context.Background()
 	user := models.User{
@@ -38,21 +45,18 @@ func TestStorage_SaveUser_and_User(t *testing.T) {
 		Is_admin:    false,
 	}
 
-	id, err := s.SaveUser(ctx, user)
+	id, err := p.storage.SaveUser(ctx, user)
 	user.ID = id
 
-	assert.NoError(t, err)
-	assert.NotZero(t, id)
+	p.NoError(err)
+	p.NotZero(id)
 
-	gottedUser, err := s.User(ctx, user.Telegram_id)
-	assert.NoError(t, err)
-	assert.Equal(t, gottedUser, user)
+	gottedUser, err := p.storage.User(ctx, user.Telegram_id)
+	p.NoError(err)
+	p.Equal(gottedUser, user)
 }
 
-func TestStorage_SaveUser_and_User_empty(t *testing.T) {
-
-	s, teardown := setupStorage(t)
-	defer teardown()
+func (p *PostgresTestSuite) TestStorage_SaveUser_and_User_empty() {
 
 	ctx := context.Background()
 	user := models.User{
@@ -63,23 +67,21 @@ func TestStorage_SaveUser_and_User_empty(t *testing.T) {
 		Is_admin:    false,
 	}
 
-	id, err := s.SaveUser(ctx, user)
+	id, err := p.storage.SaveUser(ctx, user)
 	user.ID = id
 
-	assert.Error(t, err)
+	p.Error(err)
 
-	assert.ErrorIs(t, err, storage.ErrEmptyUserValues)
-	assert.Zero(t, id)
+	p.ErrorIs(err, storage.ErrEmptyUserValues)
+	p.Zero(id)
 
-	gottedUser, err := s.User(ctx, user.Telegram_id)
-	assert.Error(t, err)
-	assert.ErrorIs(t, err, storage.ErrUserNotFound)
-	assert.NotEqual(t, gottedUser, user)
+	gottedUser, err := p.storage.User(ctx, user.Telegram_id)
+	p.Error(err)
+	p.ErrorIs(err, storage.ErrUserNotFound)
+	p.NotEqual(gottedUser, user)
 }
 
-func Test_storage_get_user_by_id(t *testing.T) {
-	s, teardown := setupStorage(t)
-	defer teardown()
+func (p *PostgresTestSuite) Test_storage_get_user_by_id() {
 
 	user := models.User{
 		Telegram_id: 123456789,
@@ -90,39 +92,34 @@ func Test_storage_get_user_by_id(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	id, err := s.SaveUser(ctx, user)
-	assert.NoError(t, err)
-	assert.NotZero(t, id)
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+	p.NotZero(id)
 	user.ID = id
 
-	gottedUser, err := s.GetUserById(ctx, user.ID)
-	assert.NoError(t, err)
-	assert.Equal(t, gottedUser, user)
+	gottedUser, err := p.storage.GetUserById(ctx, user.ID)
+	p.NoError(err)
+	p.Equal(gottedUser, user)
 }
 
-func TestApp(t *testing.T) {
-	s, teardown := setupStorage(t)
-	defer teardown()
+func (p *PostgresTestSuite) TestApp() {
 
 	ctx := context.Background()
-	s.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
+	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
 
-	app, err := s.App(ctx, 1)
-	assert.NoError(t, err)
-	assert.Equal(t, app, models.App{ID: 1, Name: "test", Secret: "secret"})
+	app, err := p.storage.App(ctx, 1)
+	p.NoError(err)
+	p.Equal(app, models.App{ID: 1, Name: "test", Secret: "secret"})
 
-	app, err = s.App(ctx, 2)
-	assert.Error(t, err)
-	assert.ErrorIs(t, err, storage.ErrAppNotFound)
-	assert.Equal(t, app, models.App{})
+	app, err = p.storage.App(ctx, 2)
+	p.Error(err)
+	p.ErrorIs(err, storage.ErrAppNotFound)
+	p.Equal(app, models.App{})
 }
 
-func TestSetPriorityChannels(t *testing.T) {
-	s, teardown := setupStorage(t)
-
+func (p *PostgresTestSuite) TestSetPriorityChannels() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	defer teardown()
 
 	user := models.User{
 		Telegram_id: 123456789,
@@ -131,21 +128,19 @@ func TestSetPriorityChannels(t *testing.T) {
 		Username:    "dimadmitriev",
 		Is_admin:    false,
 	}
-	id, err := s.SaveUser(ctx, user)
-	assert.NoError(t, err)
-	assert.NotZero(t, id)
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+	p.NotZero(id)
 	user.ID = id
 
-	err = s.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
-	assert.NoError(t, err)
+	err = p.storage.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
+	p.NoError(err)
 }
 
-func TestSetPriorityChannelsEmptyChannels(t *testing.T) {
-	s, teardown := setupStorage(t)
+func (p *PostgresTestSuite) TestSetPriorityChannelsEmptyChannels() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	defer teardown()
 
 	user := models.User{
 		Telegram_id: 123456789,
@@ -154,22 +149,20 @@ func TestSetPriorityChannelsEmptyChannels(t *testing.T) {
 		Username:    "dimadmitriev",
 		Is_admin:    false,
 	}
-	id, err := s.SaveUser(ctx, user)
-	assert.NoError(t, err)
-	assert.NotZero(t, id)
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+	p.NotZero(id)
 	user.ID = id
 
-	err = s.SetPriorityChannels(ctx, user.ID, []string{})
-	assert.Error(t, err)
-	assert.ErrorIs(t, err, storage.ErrChannelsEmpty)
+	err = p.storage.SetPriorityChannels(ctx, user.ID, []string{})
+	p.Error(err)
+	p.ErrorIs(err, storage.ErrChannelsEmpty)
 }
 
-func TestDeletePriorityChannels(t *testing.T) {
-	s, teardown := setupStorage(t)
+func (p *PostgresTestSuite) TestDeletePriorityChannels() {
 
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
-	defer teardown()
 
 	user := models.User{
 		Telegram_id: 123456789,
@@ -178,13 +171,17 @@ func TestDeletePriorityChannels(t *testing.T) {
 		Username:    "dimadmitriev",
 		Is_admin:    false,
 	}
-	id, err := s.SaveUser(ctx, user)
-	assert.NoError(t, err)
-	assert.NotZero(t, id)
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+	p.NotZero(id)
 	user.ID = id
 
-	err = s.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
-	assert.NoError(t, err)
-	err = s.DeletePriorityChannels(ctx, user.ID, []string{"channel1"})
-	assert.NoError(t, err)
+	err = p.storage.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
+	p.NoError(err)
+	err = p.storage.DeletePriorityChannels(ctx, user.ID, []string{"channel1"})
+	p.NoError(err)
+}
+
+func TestPostgresTestSuite(t *testing.T) {
+	suite.Run(t, new(PostgresTestSuite))
 }
