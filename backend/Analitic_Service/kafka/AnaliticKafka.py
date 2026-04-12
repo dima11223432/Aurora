@@ -1,7 +1,4 @@
-import json
-from kafka import KafkaConsumer
 from confluent_kafka import Producer, Consumer, TopicPartition
-from ..domains.domains import Telegram_Post
 from dotenv import load_dotenv
 import os
 import json
