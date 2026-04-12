@@ -20,18 +20,16 @@ stages:          # List of stages for jobs, and their order of execution
   - test
   - build
 
-build-job:       # This job runs in the build stage, which runs first.
+build-backend:
   stage: build
   script:
-    - cd backend/SSO
-    - go build ./cmd/sso/main.go
+    - cd backend/Api_Gateway
+    - docker build --no-cache -t aurora_api_gateway .
+    - cd ../SSO
+    - docker build --no-cache -t aurora_sso .
 
-test-job:   # This job runs in the test stage.
-  stage: test    # It only starts when the job in the build stage completes successfully.
+build-frontend:
+  stage: build
   script:
-    - cd backend/SSO
-    - go test -v -coverprofile=coverage.out -coverpkg=./internal/... ./...
-  artifacts:
-    untracked: false
-    when: on_failure
-    expire_in: 30 days
+    - cd frontend
+    - docker build --no-cache -t aurora-frontend:latest -f Dockerfile.prod .
