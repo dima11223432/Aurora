@@ -87,10 +87,6 @@ export default function Analytics() {
           </div>
         </div>
 
-        <script
-          type="text/javascript"
-          src="https://s3.tradingview.com/tv.js"
-        ></script>
         <div id="tradingview_widget"></div>
         <div
           id="tradingview_widget"
