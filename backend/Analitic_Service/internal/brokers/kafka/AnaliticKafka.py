@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import json
 import traceback
+from typing import Any
 
 env_path = os.path.join(os.path.dirname(__file__), "config/config.env")
 load_dotenv(env_path)
@@ -35,7 +36,7 @@ class KafkaController:
             self.log.exception("Kafka producer creation error details:")
             raise
 
-    def send_message(self, topic: str, message: Telegram_Post) -> None:
+    def send_message(self, topic: str, message: Any) -> None:
         self.log.info(f"Preparing to send message to Kafka topic: {topic}")
         try:
             converted_message = message.to_dict()
