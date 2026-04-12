@@ -17,6 +17,8 @@ import (
 type Auth interface {
 	Login(ctx context.Context, user models.User, appId int) (token string, err error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
+	SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error
+	DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error
 }
 
 type serverAPI struct {
@@ -56,6 +58,33 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 		Token: token,
 	}, nil
 
+}
+
+func (s *serverAPI) SetPriorityChannels(
+	ctx context.Context,
+	req *ssov1.SetPriorityChannelsRequest) (
+	*ssov1.SetPriorityChannelsResponse, error) {
+
+	err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
+
+	if err != nil {
+		if errors.Is(err, storage.ErrChannelNotFound) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, err
+	}
+	return &ssov1.SetPriorityChannelsResponse{}, nil
+
+}
+
+func (s *serverAPI) DeletePriorityChannels(ctx context.Context, req *ssov1.DeletePriorityChannelsRequest) (*ssov1.DeletePriorityChannelsResponse, error) {
+	err := s.auth.DeletePriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
+	if err != nil {
+		if errors.Is(err, storage.ErrChannelNotFound) {
+			return nil, err
+		}
+	}
+	return &ssov1.DeletePriorityChannelsResponse{}, nil
 }
 
 func (s *serverAPI) IsAdmin(ctx context.Context, req *ssov1.IsAdminRequest) (*ssov1.IsAdminResponse, error) {
