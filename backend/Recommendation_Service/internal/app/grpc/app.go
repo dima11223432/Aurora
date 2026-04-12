@@ -7,12 +7,21 @@ import (
 	"google.golang.org/grpc/reflection"
 	"log/slog"
 	"net"
+	// apiv1 "recommendationService/api/gen/v1"
 	"recommendationService/internal/domain/models"
 	grpcUserDataProvider "recommendationService/internal/grpc/userDataProvider"
 )
 
+type ParsingChannelsProvider interface {
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
+}
+
 type userDataProvider interface {
-	GetUserPriorityChanneld(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
+}
+
+type NewsDataProvider interface {
+	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
 
 type App struct {
@@ -21,9 +30,9 @@ type App struct {
 	port       int
 }
 
-func New(log *slog.Logger, userDataProvider userDataProvider, port int) *App {
+func New(log *slog.Logger, userDataProvider userDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsDataProvider NewsDataProvider, port int) *App {
 	gRPCServer := grpc.NewServer()
-	grpcUserDataProvider.Register(gRPCServer, userDataProvider)
+	grpcUserDataProvider.Register(gRPCServer, userDataProvider, parsingChannelsProvider, newsDataProvider)
 	reflection.Register(gRPCServer)
 
 	return &App{

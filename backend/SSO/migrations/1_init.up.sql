@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS channels (
         REFERENCES users(user_id)
         ON DELETE CASCADE,
 
-    CONSTRAINT uq_channels_username UNIQUE (channel_username)
+    CONSTRAINT uq_channels_user_username
+        UNIQUE (user_id, channel_username)
 );
 
 CREATE TABLE IF NOT EXISTS apps (

@@ -9,15 +9,24 @@ import (
 )
 
 type Config struct {
-	Env         string        `yaml:"env" env-default:"local"`
-	StoragePass string        `yaml:"storage_pass" env-required:"true"`
-	TokenTTL    time.Duration `yaml:"token_ttl" env-required:"true"`
-	GRPC        GRPCConfig    `yaml:"grpc"`
+	Env                       string        `yaml:"env" env-default:"local"`
+	StoragePass               string        `yaml:"storage_pass" env-required:"true"`
+	ParsingServiceStoragePass string        `yaml:"parsing_service_pass" env-required:"true"`
+	TokenTTL                  time.Duration `yaml:"token_ttl" env-required:"true"`
+	GRPC                      GRPCConfig    `yaml:"grpc"`
+	Redis                     RedisConfig   `yaml:"redis"`
 }
 
 type GRPCConfig struct {
 	Port    int           `yaml:"port"`
 	TimeOut time.Duration `yaml:"timeout"`
+}
+
+type RedisConfig struct {
+	Host     string `yaml:"host"`
+	Password string `yaml:"password"`
+	DB       int    `yaml:"db"`
+	Port     int    `yaml:"port"`
 }
 
 func MustLoad() *Config {

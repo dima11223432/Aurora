@@ -1,16 +1,16 @@
 class Telegram_Post:
-    def __init__(self, id, date, text, channel, channel_title):
+    def __init__(self, id, date, post_text, channelUsername, post_uri):
         self.id = id
         self.date = date
-        self.text = text
-        self.channel = channel
-        self.channel_title = channel_title
+        self.post_text = post_text
+        self.channelUsername = channelUsername
+        self.post_uri = post_uri
 
     def to_dict(self):
         return {
             "id": self.id,
             "date": self.date,
-            "text": self.text,
-            "channel": self.channel,
-            "channel_title": self.channel_title,
+            "post_text": self.post_text,
+            "channel_username": self.channelUsername,
+            "post_uri": self.post_uri,
         }

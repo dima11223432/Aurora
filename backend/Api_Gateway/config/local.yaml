@@ -23,7 +23,7 @@ redis:
 #   password: "1111"
 #   db: 0
 grpc:
-  port: 44000
+  port: 44043
   timeout: 10h
 
 grpc-gateway:

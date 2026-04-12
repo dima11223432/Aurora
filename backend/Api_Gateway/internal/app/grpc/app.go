@@ -5,12 +5,14 @@ import (
 	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"API_Service/internal/services"
 	"fmt"
+	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"log/slog"
 	"net"
 	"os"
 	"strconv"
 
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
+	recv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 
 	"github.com/sirupsen/logrus"
 	"google.golang.org/grpc"
@@ -43,9 +45,18 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 	authClient := ssov1.NewAuthServiceClient(authConn)
 	authService := services.NewAuthService(logger, authClient, AuthInterceptor)
 
-	grpcAuth.RegisterGrpcServer(gRPCServer, authService)
+	recsConn, err := grpc.NewClient(":44000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	if err != nil {
+		logger.Error("cant connect to recommendationService: %v", err)
+	}
+	recsClient := recv1.NewRecommendationServiceClient(recsConn)
+	recommendationService := services.NewRecommendationService(recsClient, AuthInterceptor)
+
+	grpcAuth.RegisterGrpcServer(gRPCServer, authService, recommendationService)
 	reflection.Register(gRPCServer)
 	logger.Info("gRPC server initialized", slog.String("gRPC_Port", strconv.Itoa(port)))
+
+	grpc_prometheus.Register(gRPCServer)
 
 	return &App{
 		log:  logger,

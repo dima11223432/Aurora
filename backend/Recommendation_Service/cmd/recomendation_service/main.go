@@ -25,7 +25,7 @@ func main() {
 
 	log.Info("starting app", slog.String("env", cfg.Env))
 
-	application := app.New(log, cfg.GRPC.Port, cfg.StoragePass, cfg.TokenTTL)
+	application := app.New(log, cfg)
 	go application.GRPCapp.MustRun()
 	stop := make(chan os.Signal, 1)
 	signal.Notify(stop, syscall.SIGTERM, syscall.SIGINT)

@@ -16,6 +16,102 @@
     "application/json"
   ],
   "paths": {
+    "/v1/delete_priority_channels": {
+      "post": {
+        "operationId": "ApiService_DeletePriorityChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeletePriorityChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DeletePriorityChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_all_parsing_channels": {
+      "post": {
+        "operationId": "ApiService_GetAllParsingChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllParsingChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetAllParsingChannelsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_recommendated_posts": {
+      "post": {
+        "operationId": "ApiService_GetRecommendatedPosts",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetRecommendatedPostsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1GetRecommendatedPostsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/is_admin": {
       "post": {
         "operationId": "ApiService_IsAdmin",
@@ -142,6 +238,69 @@
         }
       }
     },
+    "v1Cursor": {
+      "type": "object",
+      "properties": {
+        "score": {
+          "type": "string",
+          "format": "int64"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DeletePriorityChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1DeletePriorityChannelResponse": {
+      "type": "object"
+    },
+    "v1GetAllParsingChannelsRequest": {
+      "type": "object"
+    },
+    "v1GetAllParsingChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1GetRecommendatedPostsRequest": {
+      "type": "object",
+      "properties": {
+        "cursor": {
+          "$ref": "#/definitions/v1Cursor"
+        }
+      }
+    },
+    "v1GetRecommendatedPostsResponse": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Post"
+          }
+        },
+        "nextCursor": {
+          "$ref": "#/definitions/v1Cursor"
+        }
+      }
+    },
     "v1IsAdminRequest": {
       "type": "object",
       "properties": {
@@ -192,6 +351,34 @@
         }
       }
     },
+    "v1Post": {
+      "type": "object",
+      "properties": {
+        "stocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Stock"
+          }
+        },
+        "postText": {
+          "type": "string"
+        },
+        "postUri": {
+          "type": "string"
+        },
+        "channelUsername": {
+          "type": "string"
+        },
+        "reasoning": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "v1SetPriorityChannelsRequest": {
       "type": "object",
       "properties": {
@@ -205,6 +392,17 @@
     },
     "v1SetPriorityChannelsResponse": {
       "type": "object"
+    },
+    "v1Stock": {
+      "type": "object",
+      "properties": {
+        "stockName": {
+          "type": "string"
+        },
+        "side": {
+          "type": "string"
+        }
+      }
     }
   }
 }
