@@ -13,7 +13,9 @@ from internal.services.handlers.AI_handler import AI_handler
 def redact_value(value: str) -> str:
     if not isinstance(value, str):
         return value
-    value = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", value)
+    value = re.sub(
+        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", value
+    )
     value = re.sub(r"\d{6,}", "[REDACTED_DIGITS]", value)
     value = re.sub(r"[A-Fa-f0-9]{20,}", "[REDACTED_KEY]", value)
     return value
@@ -36,7 +38,9 @@ class App:
         self._consumer_thread = None
         self._stop_event = threading.Event()
 
-    def _start_kafka_consumer(self, kafka_controller: KafkaController, topic: str, result_topic: str):
+    def _start_kafka_consumer(
+        self, kafka_controller: KafkaController, topic: str, result_topic: str
+    ):
         consumer = kafka_controller.consumer
         try:
             consumer.subscribe([topic])
@@ -53,17 +57,23 @@ class App:
                     raw = msg.value().decode("utf-8") if msg.value() else ""
                     try:
                         payload = json.loads(raw)
+                        print(payload)
                     except Exception:
                         payload = raw
                     if isinstance(payload, dict):
-                        context_text = payload.get("text") or payload.get("message") or json.dumps(payload, ensure_ascii=False)
+                        context_text = (
+                            payload.get("text")
+                            or payload.get("message")
+                            or json.dumps(payload, ensure_ascii=False)
+                        )
                     else:
                         context_text = str(payload)
                     self.logger.info(f"Received message from {topic}: {context_text}")
                     result = AI_handler(context_text)
                     result = redact_recursive(result)
-                    send_payload = {"original_offset": msg.offset(), "result": result}
-                    kafka_controller.send_batch_messages({result_topic: send_payload})
+                    self.logger.info(f"Received AI result: {result}")
+                    # send_payload = {"original_offset": msg.offset(), "result": result}
+                    # kafka_controller.send_batch_messages({result_topic: send_payload})
                     self.logger.info(f"Sent AI result to {result_topic}")
 
                 except Exception as e:
@@ -80,7 +90,7 @@ class App:
 
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
-        result_topic = os.getenv("KAFKA_RESULT_TOPIC", f"{topic}_ai_results")
+        result_topic = os.getenv("KAFKA_RESULT_TOPIC", f"{topic}")
 
         try:
             kafka_controller = KafkaController(self.logger)
