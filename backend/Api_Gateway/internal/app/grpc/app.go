@@ -5,6 +5,7 @@ import (
 	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"API_Service/internal/services"
 	"fmt"
+	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"log/slog"
 	"net"
 	"strconv"
@@ -50,6 +51,8 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService, recommendationService)
 	reflection.Register(gRPCServer)
 	logger.Info("gRPC server initialized", slog.String("gRPC_Port", strconv.Itoa(port)))
+
+	grpc_prometheus.Register(gRPCServer)
 
 	return &App{
 		log:  logger,

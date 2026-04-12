@@ -3,6 +3,7 @@ package storage
 import "errors"
 
 var (
+	ErrEmptyUserValues = errors.New("user values cannot be empty")
 	ErrUserExists      = errors.New("user already exists")
 	ErrUserNotFound    = errors.New("user not found")
 	ErrAppNotFound     = errors.New("app not found")
