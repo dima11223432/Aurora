@@ -7,76 +7,58 @@ function Herozone () {
       const widgetContainerRef = useRef(null);
       const API_URL = "https://27dc-213-176-17-134.ngrok-free.app/v1/login";
     
-      useEffect(() => {
-        window.onTelegramAuth = async (user) => {
-          console.log("Telegram auth success:", user);
-          setIsLoading(true);
-    
-          try {
-            fetch(API_URL, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                telegram_id: user.id,
-                username: user.username || "",
-                first_name: user.first_name || "",
-                last_name: user.last_name || "",
-                is_admin: false,
-                app_id: 1,
-              }),
-            })
-              .then((res) => res.json())
-              .then((data) => {
-                alert("JWT Token:" + data.token);
-                localStorage.setItem("jwt", data.token);
-              })
-              .catch(console.error);
-          } catch (err) {
-            console.error("Login API error:", err);
-            setError("Ошибка авторизации на сервере");
-          } finally {
-            setIsLoading(false);
-          }
-        };
-    
-        const script = document.createElement("script");
-        script.src = "https://telegram.org/js/telegram-widget.js?22";
-        script.setAttribute("data-telegram-login", "AuroraFinances_bot");
-        script.setAttribute("data-size", "large");
-        script.setAttribute("data-onauth", "onTelegramAuth(user)");
-        script.setAttribute("data-request-access", "write");
-        script.async = true;
-    
-        script.onload = () => {
-          console.log("Telegram widget loaded successfully");
+    useEffect(() => {
+      const tg = window.Telegram?.WebApp;
+  
+      if (!tg) {
+        console.error("Telegram WebApp SDK не загружен");
+        setError("Откройте приложение через Telegram");
+        setIsLoading(false);
+        return;
+      }
+
+      tg.ready();
+      tg.expand();
+      
+      const user = tg.initDataUnsafe?.user;
+      
+      if (!user || !user.id) {
+        console.error("Данные пользователя не найдены");
+        setError("Не удалось получить данные пользователя");
+        setIsLoading(false);
+        return;
+      }
+
+      console.log("Telegram user data:", user);
+      setIsLoading(true);
+
+      fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          telegram_id: user.id,
+          username: user.username || "",
+          first_name: user.first_name || "",
+          last_name: user.last_name || "",
+          is_admin: false,
+          app_id: 1,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("JWT Token получен");
+          localStorage.setItem("jwt", data.token);
+        })
+        .catch((err) => {
+          console.error("Login API error:", err);
+          setError("Ошибка авторизации на сервере");
+        })
+        .finally(() => {
           setIsLoading(false);
-        };
-    
-        script.onerror = () => {
-          console.error("Failed to load Telegram widget");
-          setError("Не удалось загрузить виджет Telegram");
-          setIsLoading(false);
-        };
-    
-        if (widgetContainerRef.current) {
-          widgetContainerRef.current.innerHTML = "";
-          widgetContainerRef.current.appendChild(script);
-        }
-    
-        const savedUser = localStorage.getItem("telegramUser");
-        if (savedUser) {
-          setTelegramUser(JSON.parse(savedUser));
-        }
-    
-        return () => {
-          if (widgetContainerRef.current) {
-            widgetContainerRef.current.innerHTML = "";
-          }
-          delete window.onTelegramAuth;
-        };
-      }, []);
+        });
+    }, []); 
     
       const handleLogout = () => {
         localStorage.removeItem("telegramUser");
