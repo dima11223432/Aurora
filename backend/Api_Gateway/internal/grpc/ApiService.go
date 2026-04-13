@@ -145,7 +145,7 @@ func (a *ApiService) GetRecommendatedPosts(
 			PostText:        post.PostText,
 			PostUri:         post.PostURI,
 			ChannelUsername: post.ChannelUsername,
-			Reasoning:       "",
+			Reasoning:       post.Reasoning,
 			Date:            timestamppb.New(post.Date),
 		})
 	}

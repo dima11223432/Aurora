@@ -65,6 +65,7 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 			Stocks:          stocks,
 			PostText:        post.PostText,
 			PostURI:         post.PostUri,
+			Reasoning:       post.Reasoning,
 			ChannelUsername: post.ChannelUsername,
 			Date:            post.Date.AsTime(),
 		})

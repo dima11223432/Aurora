@@ -72,8 +72,33 @@ class App:
                     result = AI_handler(context_text)
                     result = redact_recursive(result)
                     self.logger.info(f"Received AI result: {result}")
+                    ai_data = result.get("ds", {})
+                    ai_answer = ai_data.get("answer", "")
+                    reasoning = ai_data.get("reason", "No specific reasoning provided")
+
+                    try:
+                        parts = ai_answer.split("-")
+                        stock_ticker = parts[0].strip()
+                        signal_value = parts[1].strip()
+                    except (IndexError, AttributeError):
+                        stock_ticker = "UNKNOWN"
+                        signal_value = "0"
+
+                    side = "buy" if signal_value == "100" else "sell"
+
+                    send_payload = {
+                        "stocks": [{"stock_name": stock_ticker, "side": side}],
+                        "post_text": payload.get("post_text"),
+                        "post_uri": payload.get("post_uri"),
+                        "channel_username": payload.get("channel_username"),
+                        "date": payload.get("date"),
+                        "reasoning": reasoning,
+                    }
+
+                    final_json = json.dumps(send_payload, ensure_ascii=False)
+                    self.logger.info(f"Final payload: {final_json}")
                     # send_payload = {"original_offset": msg.offset(), "result": result}
-                    # kafka_controller.send_batch_messages({result_topic: send_payload})
+                    kafka_controller.send_batch_messages({result_topic: send_payload})
                     self.logger.info(f"Sent AI result to {result_topic}")
 
                 except Exception as e:
@@ -90,7 +115,7 @@ class App:
 
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
-        result_topic = os.getenv("KAFKA_RESULT_TOPIC", f"{topic}")
+        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "news_data")
 
         try:
             kafka_controller = KafkaController(self.logger)
