@@ -21,6 +21,12 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 	}
 }
 
+func (r *RecommendationService) GetAllParsingChannels(
+	ctx context.Context,
+) ([]string, error) {
+	return nil, nil
+}
+
 func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetUserPriorityPosts"
 	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
