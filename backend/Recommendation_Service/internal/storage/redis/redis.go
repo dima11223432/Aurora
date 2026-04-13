@@ -2,9 +2,12 @@ package redis
 
 import (
 	"context"
+	"crypto/md5"
 	"encoding/json"
 	"fmt"
 	"recommendationService/internal/domain/models"
+	"sort"
+	"strings"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -29,7 +32,8 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
 
 func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error) {
 	const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannels"
-	tmpKey := fmt.Sprintf("tmp:feed:%d", userID)
+	hash := getChannelsHash(channels)
+	tmpKey := fmt.Sprintf("tmp:feed:%d:%s", userID, hash)
 
 	if exists, _ := r.redis.Exists(ctx, tmpKey).Result(); exists == 0 {
 		if err := r.initilizeNewZUnion(ctx, tmpKey, channels); err != nil {
@@ -159,6 +163,12 @@ func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, max
 		return nil, err
 	}
 	return posts, nil
+}
+
+func getChannelsHash(channels []string) string {
+	sort.Strings(channels)
+	data := strings.Join(channels, ",")
+	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
 }
 
 func (r *RedisController) Ping(ctx context.Context) error {
