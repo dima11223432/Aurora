@@ -17,8 +17,9 @@ from ..AI_API.YandexAI import answer as ya
 def AI_handler(context):
     env_path = Path(__file__).parent / "config" / "API_Keys.env"
     load_dotenv(env_path)
-    AI_answer = {"ds": {}, "ge": {}, "st": {}, "ya": {}}
-    AI_list = {"ds", "ge", "st", "ya"}
+    AI_answer = {"ds": {}}
+    AI_list = {"ds"}
+
     for i in AI_list:
         try:
             token = getenv(i.upper())
@@ -28,4 +29,3 @@ def AI_handler(context):
         except:
             AI_answer[i]["answer"] = 0
     return AI_answer
-
