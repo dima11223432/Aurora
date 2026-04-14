@@ -17,6 +17,8 @@ class Config:
         self.DB_PASSWORD = None
         self.DB_HOST = None
         self.DB_PORT = None
+        self.PROXY_URL = None
+        self.PROXY_PORT = None
 
     def load_config(self):
         self.API_ID = os.getenv("API_ID", 0)
@@ -28,3 +30,5 @@ class Config:
         self.DB_PASSWORD = os.getenv("DB_PASSWORD", "")
         self.DB_HOST = os.getenv("DB_HOST", "")
         self.DB_PORT = os.getenv("DB_PORT", "")
+        self.PROXY_URL = os.getenv("PROXY_URL", "")
+        self.PROXY_PORT = os.getenv("PROXY_PORT", "")
