@@ -23,7 +23,9 @@ class ParserService:
         self.proxy = (socks.SOCKS5, cfg.PROXY_URL, int(cfg.PROXY_PORT))
 
         try:
-            self.client = TelegramClient("pars_session", self.api_id, self.api_hash)
+            self.client = TelegramClient(
+                "pars_session", self.api_id, self.api_hash, proxy=self.proxy
+            )
 
             self.log.success("TelegramClient created successfully")
         except Exception as e:
