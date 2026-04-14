@@ -370,3 +370,4 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/go,python,visualstudiocode,vim,react,macos,windows,archlinuxpackages,linux,c++
 *.env
+backend/vpn.json

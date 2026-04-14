@@ -118,3 +118,5 @@ message Cursor{
   int64 score = 1;
   string id = 2;
 }
+
+
