@@ -24,7 +24,16 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 func (r *RecommendationService) GetAllParsingChannels(
 	ctx context.Context,
 ) ([]string, error) {
-	return nil, nil
+	const op = "Api_Service.internal.services.RecommendationService.GetAllParsingChannels"
+
+	parsingChannels, err := r.RecommendationClient.GetAllParsingChannels(
+		ctx,
+		&rsv1.GetAllParsingChannelsRequest{},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s, %w", op, err)
+	}
+	return parsingChannels.Channels, nil
 }
 
 func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
