@@ -46,7 +46,7 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 		logger.Error("cant connect to recommendationService: %v", err)
 	}
 	recsClient := recv1.NewRecommendationServiceClient(recsConn)
-	recommendationService := services.NewRecommendationService(recsClient, AuthInterceptor)
+	recommendationService := services.NewRecommendationService(recsClient, logger, AuthInterceptor)
 
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService, recommendationService)
 	reflection.Register(gRPCServer)
