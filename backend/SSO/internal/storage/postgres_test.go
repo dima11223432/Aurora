@@ -182,6 +182,39 @@ func (p *PostgresTestSuite) TestDeletePriorityChannels() {
 	p.NoError(err)
 }
 
+
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
+}
+
+
+func (p *PostgresTestSuite) TestStorage_IsAdmin() {
+	ctx := context.Background()
+
+	admin := models.User{
+		Telegram_id: 1,
+		First_name:  "A",
+		Last_name:   "A",
+		Username:    "admin",
+		Is_admin:    true,
+	}
+
+	user := models.User{
+		Telegram_id: 2,
+		First_name:  "B",
+		Last_name:   "B",
+		Username:    "user",
+		Is_admin:    false,
+	}
+
+	_, _ = p.storage.SaveUser(ctx, admin)
+	_, _ = p.storage.SaveUser(ctx, user)
+
+	isAdmin, err := p.storage.IsAdmin(ctx, 1)
+	p.NoError(err)
+	p.True(isAdmin)
+
+	isAdmin, err = p.storage.IsAdmin(ctx, 2)
+	p.NoError(err)
+	p.False(isAdmin)
 }
