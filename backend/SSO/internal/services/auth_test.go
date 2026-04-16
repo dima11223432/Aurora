@@ -103,6 +103,24 @@ func (s *AuthTestSuite) TestSetPriorityChannels() {
 	s.NoError(err)
 }
 
+func (s *AuthTestSuite) TestDeletePriorityChannels() {
+	user := models.User{
+
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	token, err := s.service.Login(context.Background(), user, 1)
+	s.NoError(err)
+	s.NotEmpty(token)
+	err = s.service.SetPriorityChannels(context.Background(), 1, []string{"channel1", "channel2"})
+	s.NoError(err)
+	err = s.service.DeletePriorityChannels(context.Background(), 1, []string{"channel1", "channel2"})
+	s.NoError(err)
+}
+
 func TestAuthSuite(t *testing.T) {
 	suite.Run(t, new(AuthTestSuite))
 }
