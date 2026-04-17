@@ -24,12 +24,6 @@ func (p *PostgresTestSuite) SetupTest() {
 
 }
 
-func (p *PostgresTestSuite) TearDownTest() {
-
-	p.storage.db.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
-	p.storage.db.Close()
-}
-
 func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	ctx := context.Background()
 
@@ -38,6 +32,14 @@ func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	p.NotEmpty(channels)
 }
 
+func (p *PostgresTestSuite) TestGetPriorityChannelsByUserID() {
+	userID := int64(1)
+	ctx := context.Background()
+	channels, err := p.storage.GetPriorityChannelsByUserID(ctx, userID)
+
+	p.NoError(err)
+	p.NotEmpty(channels)
+}
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
 }
