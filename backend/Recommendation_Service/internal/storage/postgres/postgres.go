@@ -46,7 +46,7 @@ func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64)
 
 	query, err := s.db.QueryContext(ctx, q, userID)
 	if err != nil {
-		return nil, fmt.Errorf("%d: %w", op, err)
+		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
 	for query.Next() {
