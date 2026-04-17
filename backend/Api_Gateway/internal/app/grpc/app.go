@@ -41,12 +41,12 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 	authClient := ssov1.NewAuthServiceClient(authConn)
 	authService := services.NewAuthService(logger, authClient, AuthInterceptor)
 
-	recsConn, err := grpc.NewClient(":44000", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	recsConn, err := grpc.NewClient(":44040", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Error("cant connect to recommendationService: %v", err)
 	}
 	recsClient := recv1.NewRecommendationServiceClient(recsConn)
-	recommendationService := services.NewRecommendationService(recsClient, AuthInterceptor)
+	recommendationService := services.NewRecommendationService(recsClient, logger, AuthInterceptor)
 
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService, recommendationService)
 	reflection.Register(gRPCServer)

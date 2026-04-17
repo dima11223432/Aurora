@@ -4,6 +4,7 @@ import (
 	"API_Service/internal/domains/models"
 	"context"
 	"fmt"
+	"log/slog"
 
 	// v1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
@@ -11,14 +12,32 @@ import (
 
 type RecommendationService struct {
 	RecommendationClient rsv1.RecommendationServiceClient
+	log                  *slog.Logger
 	authinterceptor      AuthInterceptor
 }
 
-func NewRecommendationService(recommendationClient rsv1.RecommendationServiceClient, authinterceptor AuthInterceptor) *RecommendationService {
+func NewRecommendationService(recommendationClient rsv1.RecommendationServiceClient, log *slog.Logger, authinterceptor AuthInterceptor) *RecommendationService {
 	return &RecommendationService{
 		RecommendationClient: recommendationClient,
+		log:                  log,
 		authinterceptor:      authinterceptor,
 	}
+}
+
+func (r *RecommendationService) GetAllParsingChannels(
+	ctx context.Context,
+) ([]string, error) {
+	const op = "Api_Service.internal.services.RecommendationService.GetAllParsingChannels"
+
+	parsingChannels, err := r.RecommendationClient.GetAllParsingChannels(
+		ctx,
+		&rsv1.GetAllParsingChannelsRequest{},
+	)
+	if err != nil {
+		r.log.Error("failed to get all parsing channels", slog.String("op", op), slog.Any("err", err))
+		return nil, fmt.Errorf("%s, %w", op, err)
+	}
+	return parsingChannels.Channels, nil
 }
 
 func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
@@ -65,6 +84,7 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 			Stocks:          stocks,
 			PostText:        post.PostText,
 			PostURI:         post.PostUri,
+			Reasoning:       post.Reasoning,
 			ChannelUsername: post.ChannelUsername,
 			Date:            post.Date.AsTime(),
 		})

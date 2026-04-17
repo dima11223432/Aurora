@@ -3,23 +3,30 @@ from telethon.errors import UserNotParticipantError
 from telethon.tl.functions.channels import GetFullChannelRequest, JoinChannelRequest
 from dotenv import load_dotenv
 import sys
+
+from internal.config.config import Config
 from ..domains.domains import Telegram_Post
 from ..brokers.kafka import KafkaController
 import asyncio
+import socks
 import os
 
 
 class ParserService:
-    def __init__(self, logger, api_id, api_hash, phone_number):
+    def __init__(self, logger, cfg: Config):
         self.log = logger
         self.kafka_controller = KafkaController(logger)
-        self.phone_number = phone_number
+        self.phone_number = cfg.PHONE_NUMBER
         self.is_connect = False
-        self.api_id = api_id
-        self.api_hash = api_hash
+        self.api_id = cfg.API_ID
+        self.api_hash = cfg.API_HASH
+        self.proxy = (socks.SOCKS5, cfg.PROXY_URL, int(cfg.PROXY_PORT))
 
         try:
-            self.client = TelegramClient("pars_session", api_id, api_hash)
+            self.client = TelegramClient(
+                "pars_session", self.api_id, self.api_hash, proxy=self.proxy
+            )
+
             self.log.success("TelegramClient created successfully")
         except Exception as e:
             self.log.error(f"Failed to create TelegramClient: {e}")

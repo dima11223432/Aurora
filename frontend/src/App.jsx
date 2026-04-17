@@ -1,16 +1,18 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './styles/App.css'
-
-import HeroZone from './Herozone.jsx'
+import "./index.css";
+import Analytics from "./Analytics";
+import Herozone from "./Herozone";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HeroZone />} />
+        <Route path="/" element={<Herozone />} />
+        <Route path="/analytics" element={<Analytics />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;
