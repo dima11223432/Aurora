@@ -11,11 +11,6 @@ type userDataProviderMock struct {
 	mock.Mock
 }
 
-func (u *userDataProviderMock) GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
-	args := u.Called(ctx, userID)
-	return args.Get(0).([]models.PriorityChannel), args.Error(1)
-}
-
 func (u *userDataProviderMock) GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	args := u.Called(ctx, userID)
 	return args.Get(0).([]models.PriorityChannel), args.Error(1)
