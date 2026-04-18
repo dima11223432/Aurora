@@ -46,6 +46,14 @@ func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, parsingChann
 	})
 }
 
+func NewServerAPI(userDataProvider UserDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsDataProvider NewsDataProvider) *serverAPI {
+	return &serverAPI{
+		userDataProvider:        userDataProvider,
+		parsingChannelsProvider: parsingChannelsProvider,
+		newsDataProvider:        newsDataProvider,
+	}
+}
+
 func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *recv1.GetUserPriorityChannelsRequest) (*recv1.GetUserPriorityChannelsResponse, error) {
 	channels, err := s.userDataProvider.GetUserPriorityChannels(ctx, req.GetUserId())
 	if err != nil {
