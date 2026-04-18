@@ -7,6 +7,8 @@ export default function RecommendationFeed() {
     score: 0,
     id: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
   useEffect(() => {
     const login = async () => {
       try {
@@ -27,30 +29,52 @@ export default function RecommendationFeed() {
 
     login();
   }, []);
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const token = localStorage.getItem("token");
+  const fetchPosts = async () => {
+    if (isLoading || !hasMore) {
+      return;
+    }
+    setIsLoading(true);
+    try {
+      const token = localStorage.getItem("token");
 
-        const response = await axios.post(
-          "http://localhost:8081/v1/get_recommendated_posts",
-          { cursor },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+      const response = await axios.post(
+        "http://localhost:8081/v1/get_recommendated_posts",
+        { cursor },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        },
+      );
 
-        setRecommendedPosts((prev) => [...prev, ...response.data.posts]);
-        setCursor(response.data.nextCursor);
-        console.log(response.data);
-      } catch (e) {
-        console.error(e);
+      setRecommendedPosts((prev) => [...prev, ...response.data.posts]);
+      setCursor(response.data.nextCursor);
+      if (response.data.nextCursor == null) {
+        setHasMore(false);
       }
-    };
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
     fetchPosts();
   }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const bottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.offsetHeight - 100;
+      if (bottom) {
+        fetchPosts(0);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [cursor]);
   return (
     <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6">
       {recommendatedPosts.map((post, index) => (
