@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./index.css";
 import Analytics from "./Analytics";
 import Herozone from "./Herozone";
+import RecommendationFeed from "./RecommendationFeed";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Herozone />} />
         <Route path="/analytics" element={<Analytics />} />
+        <Route path="/feed" element={<RecommendationFeed />} />
       </Routes>
     </BrowserRouter>
   );
