@@ -3,6 +3,7 @@ import axios from "axios";
 import RecommendationCard from "./RecommendationCard";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cursor, setCursor] = useState({
     score: 0,
     id: "",
@@ -22,6 +23,7 @@ export default function RecommendationFeed() {
         });
 
         localStorage.setItem("token", res.data.token);
+        setIsLoggedIn(true);
       } catch (e) {
         console.error("Login error:", e);
       }
@@ -30,10 +32,10 @@ export default function RecommendationFeed() {
     login();
   }, []);
   const fetchPosts = async () => {
-    if (isLoading || !hasMore) {
-      return;
-    }
+    if (isLoading || !hasMore) return;
+
     setIsLoading(true);
+
     try {
       const token = localStorage.getItem("token");
 
@@ -49,17 +51,21 @@ export default function RecommendationFeed() {
 
       setRecommendedPosts((prev) => [...prev, ...response.data.posts]);
       setCursor(response.data.nextCursor);
-      if (response.data.nextCursor == null) {
+      if (response.data.nextCursor === null) {
         setHasMore(false);
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPosts();
-  }, []);
+    if (isLoggedIn) {
+      fetchPosts();
+    }
+  }, [isLoggedIn]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -67,14 +73,14 @@ export default function RecommendationFeed() {
         window.innerHeight + window.scrollY >=
         document.documentElement.offsetHeight - 100;
       if (bottom) {
-        fetchPosts(0);
+        fetchPosts();
       }
     };
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [cursor]);
+  }, [cursor, isLoading, hasMore, isLoggedIn]);
   return (
     <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6">
       {recommendatedPosts.map((post, index) => (
