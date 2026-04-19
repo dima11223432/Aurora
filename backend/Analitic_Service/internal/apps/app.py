@@ -83,7 +83,7 @@ class App:
                     except (IndexError, AttributeError):
                         stock_ticker = "UNKNOWN"
                         signal_value = "0"
-
+                        continue
                     side = "buy" if signal_value == "100" else "sell"
 
                     send_payload = {
