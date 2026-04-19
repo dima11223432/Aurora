@@ -1,19 +1,21 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Herozone() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
   const widgetContainerRef = useRef(null);
-  const API_URL = "https://27dc-213-176-17-134.ngrok-free.app/v1/login";
+
+  const navigate = useNavigate();
+  const API_URL = "https://localhost:8081/v1/login";
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
-
     if (!tg) {
-      console.error("Telegram WebApp SDK не загружен");
-      setError("Откройте приложение через Telegram");
-      setIsLoading(false);
+      setTimeout(() => {
+        setError("не удалось загруить данные из telegram");
+      }, 0);
       return;
     }
 
@@ -24,13 +26,18 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
-      setError("Не удалось получить данные пользователя");
-      setIsLoading(false);
+      setTimeout(() => {
+        setError("Не удалось получить данные пользователя");
+
+        setIsLoading(false);
+      }, 0);
       return;
     }
 
     console.log("Telegram user data:", user);
-    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(true);
+    }, 0);
 
     fetch(API_URL, {
       method: "POST",
@@ -39,9 +46,9 @@ function Herozone() {
       },
       body: JSON.stringify({
         telegram_id: user.id,
-        username: user.username || "",
-        first_name: user.first_name || "",
-        last_name: user.last_name || "",
+        username: user.username || " ",
+        first_name: user.first_name || " ",
+        last_name: user.last_name || " ",
         is_admin: false,
         app_id: 1,
       }),
@@ -59,25 +66,6 @@ function Herozone() {
         setIsLoading(false);
       });
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("telegramUser");
-    setTelegramUser(null);
-
-    if (widgetContainerRef.current) {
-      widgetContainerRef.current.innerHTML = "";
-
-      const newScript = document.createElement("script");
-      newScript.src = "https://telegram.org/js/telegram-widget.js?22";
-      newScript.setAttribute("data-telegram-login", "AuroraFinances_bot");
-      newScript.setAttribute("data-size", "large");
-      newScript.setAttribute("data-onauth", "onTelegramAuth(user)");
-      newScript.setAttribute("data-request-access", "write");
-      newScript.async = true;
-
-      widgetContainerRef.current.appendChild(newScript);
-    }
-  };
 
   const items = [
     {
@@ -136,6 +124,14 @@ function Herozone() {
               </div>
             </div>
           ))}
+        </div>
+        <div>
+          <button
+            onClick={() => navigate("/feed")}
+            className="w-full flex justify-center items-center gap-2 bg-[#0fd2f5] text-[#0A0F1F] font-bold text-lg py-4 px-8 rounded-full shadow-lg shadow-[#0fd2f5]/20 hover:bg-white hover:shadow-[#0fd2f5]/40 active:scale-95 transition-all duration-300 transform"
+          >
+            Начать
+          </button>
         </div>
       </div>
     </div>
