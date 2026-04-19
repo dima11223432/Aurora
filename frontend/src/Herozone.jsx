@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Herozone() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
   const widgetContainerRef = useRef(null);
-  const API_URL =
-    "https://4094-2001-41d0-ab02-00-4-0-19.ngrok-free.app/v1/login";
+
+  const navigate = useNavigate();
+  const API_URL = "https://localhost:8081/v1/login";
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
@@ -33,12 +35,11 @@ function Herozone() {
     }
 
     console.log("Telegram user data:", user);
-    alert(user.last_name);
     setTimeout(() => {
       setIsLoading(true);
     }, 0);
 
-    fetch("", {
+    fetch(API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -56,7 +57,6 @@ function Herozone() {
       .then((data) => {
         console.log("JWT Token получен");
         localStorage.setItem("jwt", data.token);
-        alert(data.token);
       })
       .catch((err) => {
         console.error("Login API error:", err);
@@ -124,6 +124,14 @@ function Herozone() {
               </div>
             </div>
           ))}
+        </div>
+        <div>
+          <button
+            onClick={() => navigate("/feed")}
+            className="w-full flex justify-center items-center gap-2 bg-[#0fd2f5] text-[#0A0F1F] font-bold text-lg py-4 px-8 rounded-full shadow-lg shadow-[#0fd2f5]/20 hover:bg-white hover:shadow-[#0fd2f5]/40 active:scale-95 transition-all duration-300 transform"
+          >
+            Начать
+          </button>
         </div>
       </div>
     </div>
