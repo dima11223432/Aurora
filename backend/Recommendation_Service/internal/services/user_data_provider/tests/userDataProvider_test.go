@@ -44,7 +44,7 @@ func (u *userDataProviderSuite) TestGetRecommendatedPosts() {
 	userID := int64(1)
 	u.mock.On("GetPriorityChannelsByUserID", ctx, userID).
 		Return([]models.PriorityChannel{{Channel: "Kafka_Channel1"}}, nil)
-	u.mock.On("GetPostsByChannels", ctx, []string{"Kafka_Channel1"}, userID, mock.Anything, int64(5)).
+	u.mock.On("GetPostsByChannels", ctx, []string{"Kafka_Channel1"}, userID, mock.Anything, int64(4)).
 		Return([]models.Post{}, (*models.Cursor)(nil), nil)
 	posts, cursor, err := u.service.GetRecommendatedPosts(ctx, userID, nil)
 	u.NoError(err)
