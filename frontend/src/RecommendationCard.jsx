@@ -10,16 +10,29 @@ export default function RecommendationCard({
   return (
     <div>
       <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6 shadow-xl w-full max-w-2xl">
-        <h2 className="text-xl font-bold mb-4 flex items-center gap-1.5 group">
-          <span className="bg-gradient-to-br from-[#facc15] to-[#ffe082] bg-clip-text text-transparent">
-            AI
-          </span>
+        <div className="flex justify-between">
+          <h2 className="text-xl font-bold mb-4 flex items-center gap-1.5 group">
+            <span className="bg-gradient-to-br from-[#facc15] to-[#ffe082] bg-clip-text text-transparent">
+              AI
+            </span>
 
-          <Sparkles
-            className="text-[#facc15] size-4 relative -top-0.5 opacity-90 transition-opacity group-hover:opacity-100"
-            strokeWidth={2.5}
-          />
-        </h2>
+            <Sparkles
+              className="text-[#facc15] size-4 relative -top-0.5 opacity-90 transition-opacity group-hover:opacity-100"
+              strokeWidth={2.5}
+            />
+          </h2>
+          <div className="flex justify-end">
+            <p className="text-stone-400">
+              {new Date(date).toLocaleDateString("ru-RU", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
+            </p>
+          </div>
+        </div>
         <div className="flex flex-wrap gap-2 mb-4">
           {stocks?.map((stock, index) => (
             <span
@@ -39,6 +52,11 @@ export default function RecommendationCard({
         <p className="text-slate-400 leading-relaxed">
           {reasoning || "Текст обоснования отсутствует..."}
         </p>
+        <div className="flex justify-end">
+          <a className="text-cyan-500" href={postUri}>
+            Оригинальный пост
+          </a>
+        </div>
       </div>
     </div>
   );
