@@ -5,16 +5,15 @@ import (
 	"API_Service/internal/cache"
 	"API_Service/internal/config"
 	"context"
+	"log/slog"
 	"time"
-
-	"github.com/sirupsen/logrus"
 )
 
 type App struct {
 	GRPCApp *grpcApp.App
 }
 
-func New(log *logrus.Entry, cfg *config.Config) *App {
+func New(log *slog.Logger, cfg *config.Config) *App {
 	redisCache := cache.NewRedisCache(
 		cfg.RedisConfig.Host,
 		cfg.RedisConfig.Password,

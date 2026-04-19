@@ -4,6 +4,8 @@ import "google/api/annotations.proto";
 
 package api.v1;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "api/v1/ApiService";
 
 service ApiService {
@@ -20,6 +22,61 @@ service ApiService {
       body:"*"
     };
   }
+  rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse) {
+    option (google.api.http) = {
+      post: "/v1/set_priority_channels"
+      body:"*"
+    };
+  }
+  rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_recommendated_posts"
+      body:"*"
+    };
+  }
+  rpc DeletePriorityChannels(DeletePriorityChannelRequest) returns (DeletePriorityChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_priority_channels"
+      body:"*"
+    };
+  }
+  rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_all_parsing_channels"
+      body:"*"
+    };
+  }
+}
+
+message GetAllParsingChannelsRequest {
+}
+
+message GetAllParsingChannelsResponse {
+  repeated string channels = 1;
+}
+
+message DeletePriorityChannelRequest{
+  repeated string channels = 1;
+}
+
+message DeletePriorityChannelResponse{
+}
+
+message GetRecommendatedPostsRequest{
+  Cursor cursor = 1;
+}
+
+message GetRecommendatedPostsResponse{
+  repeated Post posts = 1;
+  Cursor next_cursor = 2;
+}
+
+
+message SetPriorityChannelsRequest {
+  repeated string priority_channels = 1;
+}
+
+message SetPriorityChannelsResponse {
 }
 
 
@@ -43,3 +100,23 @@ message IsAdminRequest {
 message IsAdminResponse {
   bool is_admin = 1;
 }
+
+message Post {
+  repeated Stock stocks = 1;
+  string post_text = 2;
+  string post_uri = 3;
+  string channel_username = 4;
+  string reasoning = 5;
+  google.protobuf.Timestamp date = 6;
+}
+
+message Stock {
+  string stock_name = 1;
+  string side = 2;
+}
+message Cursor{
+  int64 score = 1;
+  string id = 2;
+}
+
+
