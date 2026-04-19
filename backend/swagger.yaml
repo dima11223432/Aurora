@@ -1,0 +1,245 @@
+openapi: 3.0.3
+info:
+  title: ApiService
+  description: API для работы с приоритетными каналами и рекомендациями постов.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8081
+    description: Локальный сервер gRPC-Gateway
+
+paths:
+  /v1/login:
+    post:
+      summary: Авторизация пользователя
+      operationId: Login
+      tags:
+        - ApiService
+      requestBody
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+
+  /v1/is_admin:
+    post:
+      summary: Проверка прав администратора
+      operationId: IsAdmin
+      tags:
+        - ApiService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/IsAdminRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/IsAdminResponse"
+
+  /v1/set_priority_channels:
+    post:
+      summary: Установка приоритетных каналов
+      operationId: SetPriorityChannels
+      tags:
+        - ApiService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SetPriorityChannelsRequest"
+      responses:
+        "200":
+          description: Успешно установлено
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /v1/get_recommendated_posts:
+    post:
+      summary: Получение рекомендованных постов
+      operationId: GetRecommendatedPosts
+      tags:
+        - ApiService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetRecommendatedPostsRequest"
+      responses:
+        "200":
+          description: Список постов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetRecommendatedPostsResponse"
+
+  /v1/delete_priority_channels:
+    post:
+      summary: Удаление каналов из приоритетных
+      operationId: DeletePriorityChannels
+      tags:
+        - ApiService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/DeletePriorityChannelRequest"
+      responses:
+        "200":
+          description: Успешно удалено
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /v1/get_all_parsing_channels:
+    post:
+      summary: Получение всех каналов для парсинга
+      operationId: GetAllParsingChannels
+      tags:
+        - ApiService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Список каналов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GetAllParsingChannelsResponse"
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        telegram_id:
+          type: string
+          format: int64
+        username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        is_admin:
+          type: boolean
+        app_id:
+          type: string
+          format: int64
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    IsAdminRequest:
+      type: object
+      properties:
+        telegram_id:
+          type: string
+          format: int64
+
+    IsAdminResponse:
+      type: object
+      properties:
+        is_admin:
+          type: boolean
+
+    SetPriorityChannelsRequest:
+      type: object
+      properties:
+        priority_channels:
+          type: array
+          items:
+            type: string
+
+    DeletePriorityChannelRequest:
+      type: object
+      properties:
+        channels:
+          type: array
+          items:
+            type: string
+
+    GetRecommendatedPostsRequest:
+      type: object
+      properties:
+        cursor:
+          $ref: "#/components/schemas/Cursor"
+
+    GetRecommendatedPostsResponse:
+      type: object
+      properties:
+        posts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Post"
+        next_cursor:
+          $ref: "#/components/schemas/Cursor"
+
+    GetAllParsingChannelsResponse:
+      type: object
+      properties:
+        channels:
+          type: array
+          items:
+            type: string
+
+    Post:
+      type: object
+      properties:
+        stocks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Stock"
+        post_text:
+          type: string
+        post_uri:
+          type: string
+        channel_username:
+          type: string
+        reasoning:
+          type: string
+        date:
+          type: string
+          format: date-time
+          description: "Google Protobuf Timestamp (RFC3339)"
+
+    Stock:
+      type: object
+      properties:
+        stock_name:
+          type: string
+        side:
+          type: string
+
+    Cursor:
+      type: object
+      properties:
+        score:
+          type: string
+          format: int64
+        id:
+          type: string

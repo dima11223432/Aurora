@@ -9,10 +9,11 @@ import (
 )
 
 type Config struct {
-	Env         string        `yaml:"env" env-default:"local"`
-	StoragePass string        `yaml:"storage_pass" env-required:"true"`
-	TokenTTL    time.Duration `yaml:"token_ttl" env-required:"true"`
-	GRPC        GRPCConfig    `yaml:"grpc"`
+	Env             string        `yaml:"env" env-default:"local"`
+	StoragePass     string        `yaml:"storage_pass" env-required:"true"`
+	TestPostgresDNS string        `yaml:"test_postgres_dns" env-required:"true"`
+	TokenTTL        time.Duration `yaml:"token_ttl" env-required:"true"`
+	GRPC            GRPCConfig    `yaml:"grpc"`
 }
 
 type GRPCConfig struct {
