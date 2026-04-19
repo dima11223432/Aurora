@@ -5,15 +5,15 @@ function Herozone() {
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
   const widgetContainerRef = useRef(null);
-  const API_URL = "https://27dc-213-176-17-134.ngrok-free.app/v1/login";
+  const API_URL =
+    "https://4094-2001-41d0-ab02-00-4-0-19.ngrok-free.app/v1/login";
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
-
     if (!tg) {
-      console.error("Telegram WebApp SDK не загружен");
-      setError("Откройте приложение через Telegram");
-      setIsLoading(false);
+      setTimeout(() => {
+        setError("не удалось загруить данные из telegram");
+      }, 0);
       return;
     }
 
@@ -24,24 +24,30 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
-      setError("Не удалось получить данные пользователя");
-      setIsLoading(false);
+      setTimeout(() => {
+        setError("Не удалось получить данные пользователя");
+
+        setIsLoading(false);
+      }, 0);
       return;
     }
 
     console.log("Telegram user data:", user);
-    setIsLoading(true);
+    alert(user.last_name);
+    setTimeout(() => {
+      setIsLoading(true);
+    }, 0);
 
-    fetch(API_URL, {
+    fetch("", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
         telegram_id: user.id,
-        username: user.username || "",
-        first_name: user.first_name || "",
-        last_name: user.last_name || "",
+        username: user.username || " ",
+        first_name: user.first_name || " ",
+        last_name: user.last_name || " ",
         is_admin: false,
         app_id: 1,
       }),
@@ -50,6 +56,7 @@ function Herozone() {
       .then((data) => {
         console.log("JWT Token получен");
         localStorage.setItem("jwt", data.token);
+        alert(data.token);
       })
       .catch((err) => {
         console.error("Login API error:", err);
@@ -59,25 +66,6 @@ function Herozone() {
         setIsLoading(false);
       });
   }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("telegramUser");
-    setTelegramUser(null);
-
-    if (widgetContainerRef.current) {
-      widgetContainerRef.current.innerHTML = "";
-
-      const newScript = document.createElement("script");
-      newScript.src = "https://telegram.org/js/telegram-widget.js?22";
-      newScript.setAttribute("data-telegram-login", "AuroraFinances_bot");
-      newScript.setAttribute("data-size", "large");
-      newScript.setAttribute("data-onauth", "onTelegramAuth(user)");
-      newScript.setAttribute("data-request-access", "write");
-      newScript.async = true;
-
-      widgetContainerRef.current.appendChild(newScript);
-    }
-  };
 
   const items = [
     {
