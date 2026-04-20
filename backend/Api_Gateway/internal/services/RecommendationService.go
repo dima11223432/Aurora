@@ -40,6 +40,34 @@ func (r *RecommendationService) GetAllParsingChannels(
 	return parsingChannels.Channels, nil
 }
 
+func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string) error {
+	if channel == "" {
+		r.log.Error("channelUsername is empty")
+		return fmt.Errorf("channel is empty")
+	}
+	const op = "Api_Service.internal.services.RecommendationService.AddNewParsingChannel"
+	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{ChannelUsername: channel})
+	if err != nil {
+		r.log.Error("failed to add new parsing channel", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s, %w", op, err)
+	}
+	return nil
+}
+
+func (r *RecommendationService) DeleteParsingChannel(ctx context.Context, channel string) error {
+	if channel == "" {
+		r.log.Error("channelUsername is empty")
+		return fmt.Errorf("channel is empty")
+	}
+	const op = "Api_Service.internal.services.RecommendationService.DeleteParsingChannel"
+	_, err := r.RecommendationClient.DeleteParsingChannel(ctx, &rsv1.DeleteParsingChannelRequest{ChannelUsername: channel})
+	if err != nil {
+		r.log.Error("failed to delete parsing channel", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s, %w", op, err)
+	}
+	return nil
+}
+
 func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetUserPriorityPosts"
 	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
