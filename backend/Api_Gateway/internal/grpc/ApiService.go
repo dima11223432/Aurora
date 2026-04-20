@@ -2,7 +2,6 @@ package grpc
 
 import (
 	v1 "API_Service/api/gen/v1"
-	"log"
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
@@ -45,8 +44,6 @@ func (a *ApiService) Login(
 	ctx context.Context,
 	req *v1.LoginRequest,
 ) (*v1.LoginResponse, error) {
-
-	log.Println(req)
 
 	token, err := a.auth.Login(
 		ctx,

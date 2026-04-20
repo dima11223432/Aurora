@@ -81,3 +81,14 @@ func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
 	return channels, nil
 
 }
+
+func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
+	const op = "internal.storage.postgres.AddNewParsingChannel"
+
+	q := `INSERT INTO channels (username) VALUES ($1)`
+	_, err := s.parserDB.ExecContext(ctx, q, channel)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
