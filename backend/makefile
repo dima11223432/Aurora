@@ -196,6 +196,24 @@ docker-rebuild:
 	docker-compose up -d --build
 
 # ===== Тестирование =====
+SERVICES :=  Recommendation_Service SSO
+
+test-all:
+	@echo "Running tests for all services with internal coverage..."
+	@for service in $(SERVICES); do \
+		if [ -f "$$service/go.mod" ]; then \
+			echo "------------------------------------------"; \
+			echo "Testing service: $$service"; \
+			cd $$service && \
+			go test -v -gcflags="-N -l" -coverprofile=coverage.out -coverpkg=./internal/... ./... && \
+			echo "Coverage report created: $$service/coverage.out" && \
+			echo -n "Total coverage for $$service: " && \
+			go tool cover -func=coverage.out | grep total | awk '{print $$3}' && \
+			cd ..; \
+		fi \
+	done
+	@echo "------------------------------------------"
+	@echo "All tests finished!"
 test:
 	@echo "$(GREEN)Запуск тестов...$(NC)"
 	go test ./... -v

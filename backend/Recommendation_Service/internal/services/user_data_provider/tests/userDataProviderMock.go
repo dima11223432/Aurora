@@ -16,6 +16,16 @@ func (u *userDataProviderMock) GetPriorityChannelsByUserID(ctx context.Context, 
 	return args.Get(0).([]models.PriorityChannel), args.Error(1)
 }
 
+func (u *userDataProviderMock) AddNewParsingChannel(ctx context.Context, channel string) error {
+	args := u.Called(ctx, channel)
+	return args.Error(0)
+}
+
+func (u *userDataProviderMock) DeleteParsingChannel(ctx context.Context, channel string) error {
+	args := u.Called(ctx, channel)
+	return args.Error(0)
+}
+
 func (u *userDataProviderMock) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error) {
 	args := u.Called(ctx, channels, userID, cursor, limit)
 	return args.Get(0).([]models.Post), args.Get(1).(*models.Cursor), args.Error(2)
