@@ -17,6 +17,7 @@ import (
 type AuthInterceptor interface {
 	SetAuthInterceptor() grpc.UnaryServerInterceptor
 	GetUserIdFromContext(ctx context.Context) (int64, error)
+	GetIsAdminFromContext(ctx context.Context) (bool, error)
 }
 type AuthService struct {
 	log             *slog.Logger
@@ -122,4 +123,13 @@ func (a *AuthService) IsAdmin(
 	}
 
 	return resp.IsAdmin, nil
+}
+
+func (a *AuthService) IsAdminByContext(ctx context.Context) (bool, error) {
+	isAdmin, err := a.AuthInterceptor.GetIsAdminFromContext(ctx)
+	if err != nil {
+		a.log.Error("failed to check admin status", slog.String("error", err.Error()))
+		return false, err
+	}
+	return isAdmin, nil
 }

@@ -5,6 +5,7 @@ import (
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
+	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"context"
 	"errors"
 
@@ -175,6 +176,8 @@ func (a *ApiService) AddNewParsingChannel(
 	ctx context.Context,
 	req *v1.AddNewParsingChannelRequest,
 ) (*v1.AddNewParsingChannelResponse, error) {
+	userID, err := a.authinterceptor.Ge
+	// if a.IsAdmin(ctx,&v1.IsAdminRequest{})
 	err := a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get post")
