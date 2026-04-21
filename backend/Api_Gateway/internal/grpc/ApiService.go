@@ -5,7 +5,6 @@ import (
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
-	authinterceptor "API_Service/internal/grpc/AuthInterceptor"
 	"context"
 	"errors"
 
@@ -21,6 +20,7 @@ type Auth interface {
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 	SetPriorityChannels(ctx context.Context, channels []string) error
 	DeletePriorityChannels(ctx context.Context, channels []string) error
+	IsAdminByContext(ctx context.Context) (bool, error)
 }
 
 type RecommendatinService interface {
@@ -176,9 +176,14 @@ func (a *ApiService) AddNewParsingChannel(
 	ctx context.Context,
 	req *v1.AddNewParsingChannelRequest,
 ) (*v1.AddNewParsingChannelResponse, error) {
-	userID, err := a.authinterceptor.Ge
-	// if a.IsAdmin(ctx,&v1.IsAdminRequest{})
-	err := a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get post")
 	}
