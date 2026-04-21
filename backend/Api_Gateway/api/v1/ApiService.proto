@@ -46,6 +46,34 @@ service ApiService {
       body:"*"
     };
   }
+  rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/add_new_parsing_channel"
+      body:"*"
+    };
+  }
+  rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_parsing_channel"
+      body:"*"
+    };
+  }
+}
+
+message AddNewParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message AddNewParsingChannelResponse {
+  
+}
+
+message DeleteParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message DeleteParsingChannelResponse {
+  
 }
 
 message GetAllParsingChannelsRequest {

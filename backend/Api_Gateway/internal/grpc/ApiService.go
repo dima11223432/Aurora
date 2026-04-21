@@ -2,7 +2,6 @@ package grpc
 
 import (
 	v1 "API_Service/api/gen/v1"
-	"log"
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
@@ -21,11 +20,14 @@ type Auth interface {
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 	SetPriorityChannels(ctx context.Context, channels []string) error
 	DeletePriorityChannels(ctx context.Context, channels []string) error
+	IsAdminByContext(ctx context.Context) (bool, error)
 }
 
 type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	DeleteParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string) error
 }
 
 type ApiService struct {
@@ -45,8 +47,6 @@ func (a *ApiService) Login(
 	ctx context.Context,
 	req *v1.LoginRequest,
 ) (*v1.LoginResponse, error) {
-
-	log.Println(req)
 
 	token, err := a.auth.Login(
 		ctx,
@@ -170,4 +170,41 @@ func (a *ApiService) GetAllParsingChannels(
 	return &v1.GetAllParsingChannelsResponse{
 		Channels: channels,
 	}, nil
+}
+
+func (a *ApiService) AddNewParsingChannel(
+	ctx context.Context,
+	req *v1.AddNewParsingChannelRequest,
+) (*v1.AddNewParsingChannelResponse, error) {
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get post")
+	}
+	return &v1.AddNewParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) DeleteParsingChannel(
+	ctx context.Context,
+	req *v1.DeleteParsingChannelRequest,
+) (*v1.DeleteParsingChannelResponse, error) {
+
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendatinService.DeleteParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get post")
+	}
+	return &v1.DeleteParsingChannelResponse{}, nil
 }

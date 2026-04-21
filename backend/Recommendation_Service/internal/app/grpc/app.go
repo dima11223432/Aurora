@@ -14,6 +14,8 @@ import (
 
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	AddNewParsingChannel(ctx context.Context, channel string) error
+	DeleteParsingChannel(ctx context.Context, channel string) error
 }
 
 type userDataProvider interface {

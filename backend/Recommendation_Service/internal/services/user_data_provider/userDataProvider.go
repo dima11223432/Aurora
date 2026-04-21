@@ -23,6 +23,8 @@ type PriorityChannelsProvider interface {
 
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	AddNewParsingChannel(ctx context.Context, channel string) error
+	DeleteParsingChannel(ctx context.Context, channel string) error
 }
 
 type PriorityNewsProvider interface {
@@ -99,4 +101,30 @@ func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string,
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	return channels, nil
+}
+
+func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel string) error {
+	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewParsingChannel"
+	err := u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel)
+	if err != nil {
+		u.log.Error("failed to add new parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
+func (u *UserDataProvider) DeleteParsingChannel(ctx context.Context, channel string) error {
+	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteParsingChannel"
+	err := u.parsingChannelsProvider.DeleteParsingChannel(ctx, channel)
+	if err != nil {
+		u.log.Error("failed to delete parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
