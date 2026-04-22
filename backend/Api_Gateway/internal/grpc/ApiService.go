@@ -5,6 +5,7 @@ import (
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
+	errs "API_Service/internal/errors"
 	"context"
 	"errors"
 
@@ -185,7 +186,10 @@ func (a *ApiService) AddNewParsingChannel(
 	}
 	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "failed to get post")
+		if errors.Is(err, errs.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
 	}
 	return &v1.AddNewParsingChannelResponse{}, nil
 }

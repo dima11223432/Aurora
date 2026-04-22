@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"recommendationService/internal/domain/models"
+	"recommendationService/internal/storage"
 	"time"
 )
 
@@ -107,6 +108,14 @@ func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel str
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewParsingChannel"
 	err := u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel)
 	if err != nil {
+		if errors.Is(err, storage.ErrChannelExists) {
+			u.log.Error("parsing channel already exists",
+				slog.String("op", op),
+				slog.String("channel", channel),
+				slog.Any("err", err),
+			)
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+		}
 		u.log.Error("failed to add new parsing channel",
 			slog.String("op", op),
 			slog.Any("err", err),
