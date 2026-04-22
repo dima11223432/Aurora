@@ -2,12 +2,15 @@ package services
 
 import (
 	"API_Service/internal/domains/models"
+	errs "API_Service/internal/errors"
 	"context"
 	"fmt"
 	"log/slog"
 
 	// v1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type RecommendationService struct {
@@ -48,6 +51,12 @@ func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channe
 	const op = "Api_Service.internal.services.RecommendationService.AddNewParsingChannel"
 	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{ChannelUsername: channel})
 	if err != nil {
+		st, ok := status.FromError(err)
+
+		if ok && st.Code() == codes.AlreadyExists {
+			return fmt.Errorf("%s, %w", op, errs.ErrChannelExists)
+		}
+
 		r.log.Error("failed to add new parsing channel", slog.String("op", op), slog.Any("err", err))
 		return fmt.Errorf("%s, %w", op, err)
 	}
