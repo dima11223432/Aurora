@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"log/slog"
 
-	// v1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 	rsv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
