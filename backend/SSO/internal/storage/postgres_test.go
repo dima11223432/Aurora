@@ -218,3 +218,15 @@ func (p *PostgresTestSuite) TestStorage_IsAdmin() {
 	p.NoError(err)
 	p.False(isAdmin)
 }
+
+func (p *PostgresTestSuite) TestDeleteParsingChannel() {
+
+	ctx := context.Background()
+	channelName := "test_channel"
+
+	err := p.storage.AddNewParsingChannel(ctx, channelName)
+	p.NoError(err)
+
+	err = p.storage.DeleteParsingChannel(ctx, channelName)
+	p.NoError(err)
+}
