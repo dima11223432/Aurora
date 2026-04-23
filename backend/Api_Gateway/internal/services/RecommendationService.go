@@ -128,3 +128,27 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 	return posts, nextCursor, nil
 
 }
+
+func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]string, error) {
+	const op = "Api_Service.internal.services.RecommendationService.GetUserPriorityChannels"
+
+	userID, err := s.authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("%s, %w", op, err)
+	}
+
+	res, err := s.RecommendationClient.GetUserPriorityChannels(
+		ctx,
+		&rsv1.GetUserPriorityChannelsRequest{
+			UserId: userID,
+		},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s, %w", op, err)
+	}
+	channels := make([]string, 0, len(res.Channels))
+	for _, channel := range res.GetChannels() {
+		channels = append(channels, channel)
+	}
+	return channels, nil
+}
