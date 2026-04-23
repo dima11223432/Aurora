@@ -34,6 +34,11 @@ service ApiService {
       body:"*"
     };
   }
+  rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_user_priority_channels"
+    };
+  }
   rpc DeletePriorityChannels(DeletePriorityChannelRequest) returns (DeletePriorityChannelResponse) {
     option (google.api.http) = {
       post: "/v1/delete_priority_channels"
@@ -77,6 +82,14 @@ message DeleteParsingChannelResponse {
 }
 
 message GetAllParsingChannelsRequest {
+}
+
+message GetUserPriorityChannelsRequest {
+  
+}
+
+message GetUserPriorityChannelsResponse {
+  repeated string channels = 1;
 }
 
 message GetAllParsingChannelsResponse {
