@@ -81,8 +81,6 @@ export default function Analytics() {
           <p className="text-yellow-400 text-lg">Точность</p>
           <p className="text-4xl font-bold text-cyan-400 self-end">86,2%</p>
         </div>
-        {/* <div id="tradingview_widget"></div> */}
-        {/* <div id="tradingview_widget" ref={containerRef}></div> */}
         <AdvancedChart
           widgetProps={{
             theme: "dark",
@@ -93,7 +91,7 @@ export default function Analytics() {
             locale: "ru",
             enable_publishing: false,
             hide_side_toolbar: true,
-            allow_symbol_change: true, // Это разрешает поиск
+            allow_symbol_change: true,
             save_image: false,
             container_id: "tradingview_12345",
           }}
