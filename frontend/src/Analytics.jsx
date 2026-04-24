@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import RecommendationFeed from "./RecommendationFeed";
 
 export default function Analytics() {
   const containerRef = useRef(null);
@@ -79,43 +80,14 @@ export default function Analytics() {
       <main className="container mx-auto px-4 py-6 pb-32">
         <div className="grid grid-cols-2 gap-4 mb-6">
           <div className="bg-grey backdrop-blur-sm rounded-xl p-4 border border-cyan-500 h-32 flex flex-col justify-between">
-            <p className="text-yellow-400 text-lg">Капитал</p>
-            <p className="text-4xl font-bold text-cyan-400 self-end">$12,999</p>
-          </div>
-          <div className="bg-grey backdrop-blur-sm rounded-xl p-4 border border-cyan-500 h-32 flex flex-col justify-between">
             <p className="text-yellow-400 text-lg">Точность</p>
             <p className="text-4xl font-bold text-cyan-400 self-end">86,2%</p>
           </div>
         </div>
 
         <div id="tradingview_widget"></div>
-        <div
-          id="tradingview_widget"
-          ref={containerRef}
-          style={{ width: "100%", height: "500px" }}
-        ></div>
-
-        <div className="bg-grey backdrop-blur-sm rounded-xl p-5 border border-cyan-500 mb-6">
-          <h2 className="text-yellow-400 text-2xl font-bold mb-2">
-            Рекомендация ИИ
-          </h2>
-          <div className="mb-3 flex items-center">
-            <span className="bg-green-500/20 text-xl font-bold text-green-400 font-bold px-6 py-2 rounded-full">
-              BUY
-            </span>
-            <span className="text-xl text-gray-300 ml-3 font-extrabold">
-              Акция - YNDX
-            </span>
-          </div>
-          <p className="text-gray-300 text-sm leading-relaxed">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur.
-          </p>
-        </div>
+        <div id="tradingview_widget" ref={containerRef}></div>
+        <RecommendationFeed />
       </main>
 
       <div className="fixed bottom-0 left-0 right-0 z-50">
@@ -124,4 +96,3 @@ export default function Analytics() {
     </div>
   );
 }
-
