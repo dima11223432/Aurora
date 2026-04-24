@@ -2,8 +2,10 @@ package grpcauth
 
 import (
 	"context"
+	"errors"
 	recv1 "recommendationService/api/gen/v1"
 	"recommendationService/internal/domain/models"
+	"recommendationService/internal/storage"
 
 	"github.com/samber/lo"
 
@@ -132,6 +134,9 @@ func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewP
 	}
 	err := s.parsingChannelsProvider.AddNewParsingChannel(ctx, channelUsername)
 	if err != nil {
+		if errors.Is(err, storage.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 	return &recv1.AddNewParsingChannelResponse{}, nil

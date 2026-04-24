@@ -176,6 +176,28 @@
         ]
       }
     },
+    "/v1/get_user_priority_channels": {
+      "get": {
+        "operationId": "ApiService_GetUserPriorityChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetUserPriorityChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/is_admin": {
       "post": {
         "operationId": "ApiService_IsAdmin",
@@ -384,6 +406,17 @@
         },
         "nextCursor": {
           "$ref": "#/definitions/v1Cursor"
+        }
+      }
+    },
+    "v1GetUserPriorityChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

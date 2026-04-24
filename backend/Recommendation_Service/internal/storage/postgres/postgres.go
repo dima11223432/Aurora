@@ -3,10 +3,12 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"recommendationService/internal/domain/models"
+	"recommendationService/internal/storage"
 
-	_ "github.com/lib/pq"
+	pq "github.com/lib/pq"
 )
 
 type Storage struct {
@@ -88,6 +90,12 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) erro
 	q := `INSERT INTO channels (username) VALUES ($1)`
 	_, err := s.parserDB.ExecContext(ctx, q, channel)
 	if err != nil {
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) {
+			if pqErr.Code == "23505" {
+				return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+			}
+		}
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil

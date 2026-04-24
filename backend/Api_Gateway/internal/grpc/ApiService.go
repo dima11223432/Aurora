@@ -5,6 +5,7 @@ import (
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
+	errs "API_Service/internal/errors"
 	"context"
 	"errors"
 
@@ -28,6 +29,7 @@ type RecommendatinService interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	DeleteParsingChannel(ctx context.Context, channel string) error
 	AddNewParsingChannel(ctx context.Context, channel string) error
+	GetUserPriorityChannels(ctx context.Context) ([]string, error)
 }
 
 type ApiService struct {
@@ -185,7 +187,10 @@ func (a *ApiService) AddNewParsingChannel(
 	}
 	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
 	if err != nil {
-		return nil, status.Error(codes.Internal, "failed to get post")
+		if errors.Is(err, errs.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
 	}
 	return &v1.AddNewParsingChannelResponse{}, nil
 }
@@ -207,4 +212,18 @@ func (a *ApiService) DeleteParsingChannel(
 		return nil, status.Error(codes.Internal, "failed to get post")
 	}
 	return &v1.DeleteParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) GetUserPriorityChannels(
+	ctx context.Context,
+	_ *v1.GetUserPriorityChannelsRequest,
+) (*v1.GetUserPriorityChannelsResponse, error) {
+
+	channels, err := a.recommendatinService.GetUserPriorityChannels(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get priority channels")
+	}
+	return &v1.GetUserPriorityChannelsResponse{
+		Channels: channels,
+	}, nil
 }
