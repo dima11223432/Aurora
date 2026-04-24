@@ -82,10 +82,16 @@ run-sso:
 run-gateway:
 	@echo "$(GREEN)Запуск API Gateway...$(NC)"
 	cd Api_Gateway && go run ./cmd/API_Service/main.go --config=./config/local.yaml
+run-recommendationService:
+	@echo "$(GREEN)Запуск recommendationService...$(NC)"
+	cd Recommendation_Service && go run ./cmd/recomendation_service/main.go --config=./config/local.yaml
+run-cacheService:
+	@echo "$(GREEN)Запуск cacheService...$(NC)"
+	cd Cache_Service && go run ./cmd/cacheService/main.go --config=./config/local.yaml
 
 run-all:
 	@echo "$(GREEN)Запуск всех сервисов...$(NC)"
-	@make -j 2 run-sso run-gateway
+	@make -j 4 run-sso run-cacheService run-recommendationService run-gateway
 
 # ===== Миграции SSO =====
 migrate-sso:
@@ -196,6 +202,24 @@ docker-rebuild:
 	docker-compose up -d --build
 
 # ===== Тестирование =====
+SERVICES :=  Recommendation_Service SSO
+
+test-all:
+	@echo "Running tests for all services with internal coverage..."
+	@for service in $(SERVICES); do \
+		if [ -f "$$service/go.mod" ]; then \
+			echo "------------------------------------------"; \
+			echo "Testing service: $$service"; \
+			cd $$service && \
+			go test -v -gcflags="-N -l" -coverprofile=coverage.out -coverpkg=./internal/... ./... && \
+			echo "Coverage report created: $$service/coverage.out" && \
+			echo -n "Total coverage for $$service: " && \
+			go tool cover -func=coverage.out | grep total | awk '{print $$3}' && \
+			cd ..; \
+		fi \
+	done
+	@echo "------------------------------------------"
+	@echo "All tests finished!"
 test:
 	@echo "$(GREEN)Запуск тестов...$(NC)"
 	go test ./... -v

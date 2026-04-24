@@ -21,6 +21,182 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type DeletePriorityChannelsRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	UserId            int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ChannelsUsernames []string               `protobuf:"bytes,2,rep,name=channels_usernames,json=channelsUsernames,proto3" json:"channels_usernames,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *DeletePriorityChannelsRequest) Reset() {
+	*x = DeletePriorityChannelsRequest{}
+	mi := &file_v1_sso_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePriorityChannelsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePriorityChannelsRequest) ProtoMessage() {}
+
+func (x *DeletePriorityChannelsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_sso_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePriorityChannelsRequest.ProtoReflect.Descriptor instead.
+func (*DeletePriorityChannelsRequest) Descriptor() ([]byte, []int) {
+	return file_v1_sso_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *DeletePriorityChannelsRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *DeletePriorityChannelsRequest) GetChannelsUsernames() []string {
+	if x != nil {
+		return x.ChannelsUsernames
+	}
+	return nil
+}
+
+type DeletePriorityChannelsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePriorityChannelsResponse) Reset() {
+	*x = DeletePriorityChannelsResponse{}
+	mi := &file_v1_sso_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePriorityChannelsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePriorityChannelsResponse) ProtoMessage() {}
+
+func (x *DeletePriorityChannelsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_sso_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePriorityChannelsResponse.ProtoReflect.Descriptor instead.
+func (*DeletePriorityChannelsResponse) Descriptor() ([]byte, []int) {
+	return file_v1_sso_proto_rawDescGZIP(), []int{1}
+}
+
+type SetPriorityChannelsRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	UserId            int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ChannelsUsernames []string               `protobuf:"bytes,2,rep,name=channels_usernames,json=channelsUsernames,proto3" json:"channels_usernames,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *SetPriorityChannelsRequest) Reset() {
+	*x = SetPriorityChannelsRequest{}
+	mi := &file_v1_sso_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetPriorityChannelsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetPriorityChannelsRequest) ProtoMessage() {}
+
+func (x *SetPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_sso_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetPriorityChannelsRequest.ProtoReflect.Descriptor instead.
+func (*SetPriorityChannelsRequest) Descriptor() ([]byte, []int) {
+	return file_v1_sso_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *SetPriorityChannelsRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
+}
+
+func (x *SetPriorityChannelsRequest) GetChannelsUsernames() []string {
+	if x != nil {
+		return x.ChannelsUsernames
+	}
+	return nil
+}
+
+type SetPriorityChannelsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *SetPriorityChannelsResponse) Reset() {
+	*x = SetPriorityChannelsResponse{}
+	mi := &file_v1_sso_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SetPriorityChannelsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SetPriorityChannelsResponse) ProtoMessage() {}
+
+func (x *SetPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_sso_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SetPriorityChannelsResponse.ProtoReflect.Descriptor instead.
+func (*SetPriorityChannelsResponse) Descriptor() ([]byte, []int) {
+	return file_v1_sso_proto_rawDescGZIP(), []int{3}
+}
+
 type LoginRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	TelegramId    int64                  `protobuf:"varint,1,opt,name=telegram_id,json=telegramId,proto3" json:"telegram_id,omitempty"`
@@ -35,7 +211,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_v1_sso_proto_msgTypes[0]
+	mi := &file_v1_sso_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -47,7 +223,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_sso_proto_msgTypes[0]
+	mi := &file_v1_sso_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,7 +236,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_v1_sso_proto_rawDescGZIP(), []int{0}
+	return file_v1_sso_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *LoginRequest) GetTelegramId() int64 {
@@ -114,7 +290,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_v1_sso_proto_msgTypes[1]
+	mi := &file_v1_sso_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -126,7 +302,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_sso_proto_msgTypes[1]
+	mi := &file_v1_sso_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -139,7 +315,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_v1_sso_proto_rawDescGZIP(), []int{1}
+	return file_v1_sso_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *LoginResponse) GetToken() string {
@@ -158,7 +334,7 @@ type IsAdminRequest struct {
 
 func (x *IsAdminRequest) Reset() {
 	*x = IsAdminRequest{}
-	mi := &file_v1_sso_proto_msgTypes[2]
+	mi := &file_v1_sso_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -170,7 +346,7 @@ func (x *IsAdminRequest) String() string {
 func (*IsAdminRequest) ProtoMessage() {}
 
 func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_sso_proto_msgTypes[2]
+	mi := &file_v1_sso_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -183,7 +359,7 @@ func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminRequest.ProtoReflect.Descriptor instead.
 func (*IsAdminRequest) Descriptor() ([]byte, []int) {
-	return file_v1_sso_proto_rawDescGZIP(), []int{2}
+	return file_v1_sso_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *IsAdminRequest) GetTelegramId() int64 {
@@ -202,7 +378,7 @@ type IsAdminResponse struct {
 
 func (x *IsAdminResponse) Reset() {
 	*x = IsAdminResponse{}
-	mi := &file_v1_sso_proto_msgTypes[3]
+	mi := &file_v1_sso_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -214,7 +390,7 @@ func (x *IsAdminResponse) String() string {
 func (*IsAdminResponse) ProtoMessage() {}
 
 func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_sso_proto_msgTypes[3]
+	mi := &file_v1_sso_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -227,7 +403,7 @@ func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminResponse.ProtoReflect.Descriptor instead.
 func (*IsAdminResponse) Descriptor() ([]byte, []int) {
-	return file_v1_sso_proto_rawDescGZIP(), []int{3}
+	return file_v1_sso_proto_rawDescGZIP(), []int{7}
 }
 
 func (x *IsAdminResponse) GetIsAdmin() bool {
@@ -241,7 +417,15 @@ var File_v1_sso_proto protoreflect.FileDescriptor
 
 const file_v1_sso_proto_rawDesc = "" +
 	"\n" +
-	"\fv1/sso.proto\x12\aauth.v1\"\xb9\x01\n" +
+	"\fv1/sso.proto\x12\aauth.v1\"g\n" +
+	"\x1dDeletePriorityChannelsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12-\n" +
+	"\x12channels_usernames\x18\x02 \x03(\tR\x11channelsUsernames\" \n" +
+	"\x1eDeletePriorityChannelsResponse\"d\n" +
+	"\x1aSetPriorityChannelsRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12-\n" +
+	"\x12channels_usernames\x18\x02 \x03(\tR\x11channelsUsernames\"\x1d\n" +
+	"\x1bSetPriorityChannelsResponse\"\xb9\x01\n" +
 	"\fLoginRequest\x12\x1f\n" +
 	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\x12\x1a\n" +
@@ -257,9 +441,11 @@ const file_v1_sso_proto_rawDesc = "" +
 	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\",\n" +
 	"\x0fIsAdminResponse\x12\x19\n" +
-	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\x83\x01\n" +
+	"\bis_admin\x18\x01 \x01(\bR\aisAdmin2\xd0\x02\n" +
 	"\vAuthService\x12<\n" +
-	"\aIsAdmin\x12\x17.auth.v1.IsAdminRequest\x1a\x18.auth.v1.IsAdminResponse\x126\n" +
+	"\aIsAdmin\x12\x17.auth.v1.IsAdminRequest\x1a\x18.auth.v1.IsAdminResponse\x12`\n" +
+	"\x13SetPriorityChannels\x12#.auth.v1.SetPriorityChannelsRequest\x1a$.auth.v1.SetPriorityChannelsResponse\x12i\n" +
+	"\x16DeletePriorityChannels\x12&.auth.v1.DeletePriorityChannelsRequest\x1a'.auth.v1.DeletePriorityChannelsResponse\x126\n" +
 	"\x05Login\x12\x15.auth.v1.LoginRequest\x1a\x16.auth.v1.LoginResponseB\bZ\x06sso/v1b\x06proto3"
 
 var (
@@ -274,20 +460,28 @@ func file_v1_sso_proto_rawDescGZIP() []byte {
 	return file_v1_sso_proto_rawDescData
 }
 
-var file_v1_sso_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
+var file_v1_sso_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
 var file_v1_sso_proto_goTypes = []any{
-	(*LoginRequest)(nil),    // 0: auth.v1.LoginRequest
-	(*LoginResponse)(nil),   // 1: auth.v1.LoginResponse
-	(*IsAdminRequest)(nil),  // 2: auth.v1.IsAdminRequest
-	(*IsAdminResponse)(nil), // 3: auth.v1.IsAdminResponse
+	(*DeletePriorityChannelsRequest)(nil),  // 0: auth.v1.DeletePriorityChannelsRequest
+	(*DeletePriorityChannelsResponse)(nil), // 1: auth.v1.DeletePriorityChannelsResponse
+	(*SetPriorityChannelsRequest)(nil),     // 2: auth.v1.SetPriorityChannelsRequest
+	(*SetPriorityChannelsResponse)(nil),    // 3: auth.v1.SetPriorityChannelsResponse
+	(*LoginRequest)(nil),                   // 4: auth.v1.LoginRequest
+	(*LoginResponse)(nil),                  // 5: auth.v1.LoginResponse
+	(*IsAdminRequest)(nil),                 // 6: auth.v1.IsAdminRequest
+	(*IsAdminResponse)(nil),                // 7: auth.v1.IsAdminResponse
 }
 var file_v1_sso_proto_depIdxs = []int32{
-	2, // 0: auth.v1.AuthService.IsAdmin:input_type -> auth.v1.IsAdminRequest
-	0, // 1: auth.v1.AuthService.Login:input_type -> auth.v1.LoginRequest
-	3, // 2: auth.v1.AuthService.IsAdmin:output_type -> auth.v1.IsAdminResponse
-	1, // 3: auth.v1.AuthService.Login:output_type -> auth.v1.LoginResponse
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	6, // 0: auth.v1.AuthService.IsAdmin:input_type -> auth.v1.IsAdminRequest
+	2, // 1: auth.v1.AuthService.SetPriorityChannels:input_type -> auth.v1.SetPriorityChannelsRequest
+	0, // 2: auth.v1.AuthService.DeletePriorityChannels:input_type -> auth.v1.DeletePriorityChannelsRequest
+	4, // 3: auth.v1.AuthService.Login:input_type -> auth.v1.LoginRequest
+	7, // 4: auth.v1.AuthService.IsAdmin:output_type -> auth.v1.IsAdminResponse
+	3, // 5: auth.v1.AuthService.SetPriorityChannels:output_type -> auth.v1.SetPriorityChannelsResponse
+	1, // 6: auth.v1.AuthService.DeletePriorityChannels:output_type -> auth.v1.DeletePriorityChannelsResponse
+	5, // 7: auth.v1.AuthService.Login:output_type -> auth.v1.LoginResponse
+	4, // [4:8] is the sub-list for method output_type
+	0, // [0:4] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -304,7 +498,7 @@ func file_v1_sso_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_sso_proto_rawDesc), len(file_v1_sso_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   4,
+			NumMessages:   8,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

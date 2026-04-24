@@ -2,6 +2,8 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=go,python,visualstudiocode,vim,react,macos,windows,archlinuxpackages,linux,c++
 
 ### ArchLinuxPackages ###
+*.session
+**/*.session
 *.tar
 *.tar.*
 *.jar
@@ -13,8 +15,8 @@
 *.log.*
 *.sig
 
+
 pkg/
-backend/src/
 
 ### C++ ###
 # Prerequisites
@@ -237,6 +239,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+.session
 .env
 .venv
 env/
@@ -367,5 +370,6 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/go,python,visualstudiocode,vim,react,macos,windows,archlinuxpackages,linux,c++
 backend/Analitic_Service/internal/services/handlers/config/API_Keys.env
+backend/Parsing_Service/config/config.env
 backend/vpn.json
-backend/vpn.json
+backend/Parsing_Service/pars_session.session

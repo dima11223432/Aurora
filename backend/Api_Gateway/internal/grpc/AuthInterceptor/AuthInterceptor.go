@@ -14,9 +14,15 @@ import (
 )
 
 type CtxUserIdKey struct{}
+type CtxIsAdminKey struct{}
+
+type AuthInterceptor struct {
+	AuthConfig AuthConfig
+}
 
 type Claims struct {
-	ID int64 `json:"id"`
+	ID      int64 `json:"id"`
+	IsAdmin bool  `json:"is_admin"`
 	jwt.RegisteredClaims
 }
 
@@ -25,7 +31,13 @@ type AuthConfig struct {
 	PublicRoutes []string
 }
 
-func ParseToken(tokenStr, secret string) (*Claims, error) {
+func NewAuthInterceptor(authConfig AuthConfig) *AuthInterceptor {
+	return &AuthInterceptor{
+		AuthConfig: authConfig,
+	}
+}
+
+func (a *AuthInterceptor) parseToken(tokenStr, secret string) (*Claims, error) {
 	parser := jwt.NewParser(jwt.WithoutClaimsValidation())
 
 	token, err := parser.ParseWithClaims(
@@ -48,9 +60,9 @@ func ParseToken(tokenStr, secret string) (*Claims, error) {
 	return claims, nil
 }
 
-func AuthInterceptor(authConfig AuthConfig) grpc.UnaryServerInterceptor {
+func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
 	publicMethods := make(map[string]bool)
-	for _, method := range authConfig.PublicRoutes {
+	for _, method := range a.AuthConfig.PublicRoutes {
 		publicMethods[method] = true
 	}
 	return func(
@@ -76,21 +88,30 @@ func AuthInterceptor(authConfig AuthConfig) grpc.UnaryServerInterceptor {
 
 		tokenStr := strings.TrimPrefix(authHeader[0], "Bearer ")
 
-		claims, err := ParseToken(tokenStr, authConfig.JwtSecret)
+		claims, err := a.parseToken(tokenStr, a.AuthConfig.JwtSecret)
 		if err != nil {
 			return nil, status.Error(codes.Unauthenticated, "can't parse jwt token")
 		}
 
 		ctx = context.WithValue(ctx, CtxUserIdKey{}, claims.ID)
+		ctx = context.WithValue(ctx, CtxIsAdminKey{}, claims.IsAdmin)
 
 		return handler(ctx, req)
 	}
 }
 
-func GetUserIdFromContext(ctx context.Context) (int64, error) {
+func (a *AuthInterceptor) GetUserIdFromContext(ctx context.Context) (int64, error) {
 	userID, ok := ctx.Value(CtxUserIdKey{}).(int64)
 	if !ok {
 		return 0, errors.New("user id not found in context")
 	}
 	return userID, nil
+}
+
+func (a *AuthInterceptor) GetIsAdminFromContext(ctx context.Context) (bool, error) {
+	isAdmin, ok := ctx.Value(CtxIsAdminKey{}).(bool)
+	if !ok {
+		return false, errors.New("is admin not found in context")
+	}
+	return isAdmin, nil
 }
