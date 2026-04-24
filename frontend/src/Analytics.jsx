@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import RecommendationFeed from "./RecommendationFeed";
+import { AdvancedChart } from "react-tradingview-embed";
 
 export default function Analytics() {
   const containerRef = useRef(null);
@@ -40,7 +41,7 @@ export default function Analytics() {
                 <img
                   src="/Aurora-logo.png"
                   alt="Aurora Logo"
-                  className="w-12 h-12 object-contain"
+                  className="w-18 h-18 object-contain"
                 />
                 <span
                   className="text-2xl font-bold bg-clip-text text-transparent pt-6 block"
@@ -49,9 +50,7 @@ export default function Analytics() {
                       "linear-gradient(to right, #36DEF4, #208390)",
                     WebkitBackgroundClip: "text",
                   }}
-                >
-                  urora
-                </span>
+                ></span>
               </div>
             </div>
 
@@ -78,15 +77,27 @@ export default function Analytics() {
       </header>
 
       <main className="container mx-auto px-4 py-6 pb-32">
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-grey backdrop-blur-sm rounded-xl p-4 border border-cyan-500 h-32 flex flex-col justify-between">
-            <p className="text-yellow-400 text-lg">Точность</p>
-            <p className="text-4xl font-bold text-cyan-400 self-end">86,2%</p>
-          </div>
+        <div className="bg-grey backdrop-blur-sm rounded-xl p-4 border border-cyan-500 h-32 flex flex-col justify-between">
+          <p className="text-yellow-400 text-lg">Точность</p>
+          <p className="text-4xl font-bold text-cyan-400 self-end">86,2%</p>
         </div>
-
-        <div id="tradingview_widget"></div>
-        <div id="tradingview_widget" ref={containerRef}></div>
+        {/* <div id="tradingview_widget"></div> */}
+        {/* <div id="tradingview_widget" ref={containerRef}></div> */}
+        <AdvancedChart
+          widgetProps={{
+            theme: "dark",
+            symbol: "BINANCE:BTCUSDT",
+            interval: "D",
+            timezone: "Etc/UTC",
+            style: "1",
+            locale: "ru",
+            enable_publishing: false,
+            hide_side_toolbar: true,
+            allow_symbol_change: true, // Это разрешает поиск
+            save_image: false,
+            container_id: "tradingview_12345",
+          }}
+        />
         <RecommendationFeed />
       </main>
 
