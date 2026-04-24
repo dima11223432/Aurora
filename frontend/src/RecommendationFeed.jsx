@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import RecommendationCard from "./RecommendationCard";
+import Footer from "./Footer";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -82,7 +83,9 @@ export default function RecommendationFeed() {
     };
   }, [cursor, isLoading, hasMore, isLoggedIn]);
   return (
-    <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6">
+    // {/* <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6"> */}
+
+    <div className="bg-gray-900 backdrop-blur-sm flex flex-col gap-6 p-4 sm:p-6 flex items-center justify-center">
       {recommendatedPosts.map((post, index) => (
         <RecommendationCard key={index} {...post} />
       ))}
