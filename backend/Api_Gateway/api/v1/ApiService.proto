@@ -4,85 +4,11 @@ import "google/api/annotations.proto";
 
 package api.v1;
 
+import "google/protobuf/timestamp.proto";
+
 option go_package = "api/v1/ApiService";
 
 service ApiService {
-
-  rpc CreateGroup(CreateGroupRequest) returns (CreateGroupResponse) {
-    option (google.api.http) = {
-      post: "/v1/groups"
-      body: "*"
-    };
-  }
-
-  rpc DeleteGroup(DeleteGroupRequest) returns (DeleteGroupResponse) {
-    option (google.api.http) = {
-      post: "/v1/groups/delete"
-      body: "*"
-    };
-  }
-
-  rpc UpdateGroup(UpdateGroupRequest) returns (UpdateGroupResponse) {
-    option (google.api.http) = {
-      post: "/v1/groups/update"
-      body: "*"
-    };
-  }
-
-  rpc CreateContact(CreateContactRequest) returns (CreateContactResponse) {
-    option (google.api.http) = {
-      post: "/v1/contacts"
-      body: "*"
-    };
-  }
-
-  rpc GetAllContactsByGroupID(GetAllContactsByGroupIDRequest) returns (GetAllContactsByGroupIDResponse) {
-    option (google.api.http) = {
-      get: "/v1/contacts/{group_id}"
-    };
-  }
-
-  rpc UpdateContact(UpdateContactRequest) returns (UpdateContactResponse) {
-    option (google.api.http) = {
-        patch:"/v1/contacts/{id}"
-        body: "*"
-    };
-  }
-
-  rpc DeleteContact(DeleteContactRequest) returns (DeleteContactResponse) {
-    option (google.api.http) = {
-        delete:"/v1/contacts/{id}"
-    };
-  }
-
-  rpc CreateNotification(CreateNotificationRequest) returns (CreateNotificationResponse) {
-    option (google.api.http) = {
-      post: "/v1/notifications"
-      body: "*"
-    };
-  }
-
-  rpc UpdateNotification(UpdateNotificationRequest) returns (UpdateNotificationResponse) {
-    option (google.api.http) = {
-      post: "/v1/notifications/update"
-      body: "*"
-    };
-  }
-
-  rpc SendNotification(SendNotificationRequest) returns (SendNotificationResponse) {
-    option (google.api.http) = {
-      post: "/v1/notifications/send"
-      body: "*"
-    };
-  }
-
-  rpc Register(RegisterRequest) returns (RegisterResponse) {
-    option (google.api.http) = {
-      post: "/v1/register"
-      body: "*"
-    };
-  }
-
   rpc Login(LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/v1/login"
@@ -93,145 +19,145 @@ service ApiService {
   rpc IsAdmin(IsAdminRequest) returns (IsAdminResponse) {
     option (google.api.http) = {
       post: "/v1/is_admin"
-      body: "*"
+      body:"*"
+    };
+  }
+  rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse) {
+    option (google.api.http) = {
+      post: "/v1/set_priority_channels"
+      body:"*"
+    };
+  }
+  rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_recommendated_posts"
+      body:"*"
+    };
+  }
+  rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_user_priority_channels"
+    };
+  }
+  rpc DeletePriorityChannels(DeletePriorityChannelRequest) returns (DeletePriorityChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_priority_channels"
+      body:"*"
+    };
+  }
+  rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse) {
+    option (google.api.http) = {
+      post: "/v1/get_all_parsing_channels"
+      body:"*"
+    };
+  }
+  rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/add_new_parsing_channel"
+      body:"*"
+    };
+  }
+  rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_parsing_channel"
+      body:"*"
     };
   }
 }
 
-message Contact{
-  int64 id = 1;
-  string email = 2;
+message AddNewParsingChannelRequest {
+  string channel_username = 1;
 }
 
-message Group{
-  int64 id = 1;
-  string name = 2;
-  repeated Contact contacts = 3;
+message AddNewParsingChannelResponse {
+  
 }
 
-message DeleteGroupRequest {
-  int64 id = 1;
+message DeleteParsingChannelRequest {
+  string channel_username = 1;
 }
 
-message DeleteGroupResponse {
-  bool success = 1;
+message DeleteParsingChannelResponse {
+  
 }
 
-message UpdateGroupRequest {
-  int64 id = 1;
-  string name = 2;
+message GetAllParsingChannelsRequest {
 }
 
-message UpdateGroupResponse {
-  bool success = 1;
+message GetUserPriorityChannelsRequest {
+  
 }
 
-message GetAllContactsByGroupIDRequest{
-  int64 group_id =1;
+message GetUserPriorityChannelsResponse {
+  repeated string channels = 1;
 }
 
-message GetAllContactsByGroupIDResponse{
-  repeated Contact contacts = 1;
+message GetAllParsingChannelsResponse {
+  repeated string channels = 1;
 }
 
-message DeleteContactRequest {
-  int64 id = 1;
+message DeletePriorityChannelRequest{
+  repeated string channels = 1;
 }
 
-message DeleteContactResponse {
-  bool success = 1;
+message DeletePriorityChannelResponse{
 }
 
-message UpdateContactRequest {
-  int64 id = 1;
-  string email = 2;
+message GetRecommendatedPostsRequest{
+  Cursor cursor = 1;
 }
 
-message UpdateContactResponse {
-  bool success = 1;
+message GetRecommendatedPostsResponse{
+  repeated Post posts = 1;
+  Cursor next_cursor = 2;
 }
 
-message UpdateNotificationRequest {
-  int64 id = 1;
-  string title = 2;
-  string text = 3;
+
+message SetPriorityChannelsRequest {
+  repeated string priority_channels = 1;
 }
 
-message UpdateNotificationResponse {
-  bool success = 1;
+message SetPriorityChannelsResponse {
 }
 
- message SendNotificationRequest{
-   int64 notification_id = 1;
-   int64 group_id = 2;
- }
 
-message SendNotificationResponse{
-  string event_id = 1;
-  string status = 2;
+message LoginRequest {
+  int64 telegram_id = 1;
+  string username = 2;
+  string first_name = 3;
+  string last_name = 4;
+  bool is_admin = 5;
+  int64 app_id = 6;
 }
 
-message CreateGroupRequest {
-  string name = 1;
-}
-
-message CreateGroupResponse {
-  int64 id = 1;
-  string Name = 2;
-}
-
-message GetAllGroupsRequest {
-  int64 user_id = 1;
-}
- message GetAllGroupsResponse {
-  repeated Group groups = 1;
-}
-
-message CreateContactRequest {
-  string email = 1;
-  int64 group_id = 2;
-}
-
-message CreateContactResponse {
-  int64 id = 1;
-}
-
-message CreateNotificationRequest {
-  string title = 1;
-  string text = 2;
-  int64 group_id = 3;
-}
-
-message CreateNotificationResponse {
-  int64 id = 1;
-  string title = 2;
-  string text = 3;
-}
-
-message RegisterRequest{
-  string email = 1;
-  string password = 2;
-  bool is_admin = 3;
-}
-
-message RegisterResponse{
-  int64 user_id = 1;
-}
-
-message LoginRequest{
-  string email = 1;
-  string password = 2;
-  int32 app_id = 3;
-}
-
-message LoginResponse{
+message LoginResponse {
   string token = 1;
 }
 
-message IsAdminRequest{
-  int64 user_id = 1;
+message IsAdminRequest {
+  int64 telegram_id = 1;
 }
 
-message IsAdminResponse{
+message IsAdminResponse {
   bool is_admin = 1;
 }
+
+message Post {
+  repeated Stock stocks = 1;
+  string post_text = 2;
+  string post_uri = 3;
+  string channel_username = 4;
+  string reasoning = 5;
+  google.protobuf.Timestamp date = 6;
+}
+
+message Stock {
+  string stock_name = 1;
+  string side = 2;
+}
+message Cursor{
+  int64 score = 1;
+  string id = 2;
+}
+
+

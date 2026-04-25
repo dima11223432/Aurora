@@ -4,6 +4,8 @@ storage_pass: "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable"
 
 auth:
   jwt_secret: "test-secret"
+  cors_urls:
+    - "*"
   public_methods:
     - "/api.v1.ApiService/Register"
     - "/api.v1.ApiService/Login"
@@ -18,7 +20,7 @@ redis:
   port: 6379
 
 grpc:
-  port: 44000
+  port: 44043
   timeout: 10h
 
 grpc-gateway:
