@@ -20,6 +20,7 @@ class App:
     def __init__(self, logger, config: Config, storage: ChannelStorage):
         self.log = logger
         self.parser_service = None
+        self.config = config
         self.api_id = config.API_ID
         self.api_hash = config.API_HASH
         self.phone_number = config.PHONE_NUMBER
@@ -27,12 +28,7 @@ class App:
         self.storage = storage
 
     async def initialize(self):
-        self.parser_service = ParserService(
-            self.log,
-            self.api_id,
-            self.api_hash,
-            self.phone_number,
-        )
+        self.parser_service = ParserService(self.log, self.config)
         self.log.debug("ParserService initialized")
         self.log.debug("Connectiong to telegram...")
 
@@ -41,7 +37,7 @@ class App:
     async def run_monitoring(self):
         self.log.info(f"run monitoring")
         channels = list(self.storage.get_all_channels())
-        await self.parser_service.monitoring(channels)
+        await self.parser_service.start_monitoring(channels)
 
     async def run(self):
         await self.initialize()

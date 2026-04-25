@@ -3,10 +3,12 @@ package postgres
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"recommendationService/internal/domain/models"
+	"recommendationService/internal/storage"
 
-	_ "github.com/lib/pq"
+	pq "github.com/lib/pq"
 )
 
 type Storage struct {
@@ -46,7 +48,7 @@ func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64)
 
 	query, err := s.db.QueryContext(ctx, q, userID)
 	if err != nil {
-		return nil, fmt.Errorf("%d: %w", op, err)
+		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
 	for query.Next() {
@@ -80,4 +82,32 @@ func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
 	}
 	return channels, nil
 
+}
+
+func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
+	const op = "internal.storage.postgres.AddNewParsingChannel"
+
+	q := `INSERT INTO channels (username) VALUES ($1)`
+	_, err := s.parserDB.ExecContext(ctx, q, channel)
+	if err != nil {
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) {
+			if pqErr.Code == "23505" {
+				return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+			}
+		}
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
+func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) error {
+	const op = "internal.storage.postgres.DeleteParsingChannel"
+
+	q := `DELETE FROM channels WHERE username = $1`
+	_, err := s.parserDB.ExecContext(ctx, q, channel)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }

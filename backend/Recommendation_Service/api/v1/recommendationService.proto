@@ -9,6 +9,22 @@ service RecommendationService {
   rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse);
   rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse);
   rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse);
+  rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse);
+  rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse);
+}
+
+message DeleteParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message DeleteParsingChannelResponse {
+}
+
+message AddNewParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message AddNewParsingChannelResponse {
 }
 
 message GetAllParsingChannelsRequest {

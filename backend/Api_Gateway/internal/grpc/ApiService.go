@@ -5,6 +5,7 @@ import (
 
 	custom_errors "API_Service/internal/custom_errors"
 	"API_Service/internal/domains/models"
+	errs "API_Service/internal/errors"
 	"context"
 	"errors"
 
@@ -20,11 +21,15 @@ type Auth interface {
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 	SetPriorityChannels(ctx context.Context, channels []string) error
 	DeletePriorityChannels(ctx context.Context, channels []string) error
+	IsAdminByContext(ctx context.Context) (bool, error)
 }
 
 type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
-	// GetAllParsingChannels(ctx context.Context) ([]string, error)
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	DeleteParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string) error
+	GetUserPriorityChannels(ctx context.Context) ([]string, error)
 }
 
 type ApiService struct {
@@ -145,12 +150,80 @@ func (a *ApiService) GetRecommendatedPosts(
 			PostText:        post.PostText,
 			PostUri:         post.PostURI,
 			ChannelUsername: post.ChannelUsername,
-			Reasoning:       "",
+			Reasoning:       post.Reasoning,
 			Date:            timestamppb.New(post.Date),
 		})
 	}
 	return &v1.GetRecommendatedPostsResponse{
 		Posts:      postList,
 		NextCursor: NextCursor,
+	}, nil
+}
+
+func (a *ApiService) GetAllParsingChannels(
+	ctx context.Context,
+	_ *v1.GetAllParsingChannelsRequest,
+) (*v1.GetAllParsingChannelsResponse, error) {
+	channels, err := a.recommendatinService.GetAllParsingChannels(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get parsing channels")
+	}
+
+	return &v1.GetAllParsingChannelsResponse{
+		Channels: channels,
+	}, nil
+}
+
+func (a *ApiService) AddNewParsingChannel(
+	ctx context.Context,
+	req *v1.AddNewParsingChannelRequest,
+) (*v1.AddNewParsingChannelResponse, error) {
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		if errors.Is(err, errs.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &v1.AddNewParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) DeleteParsingChannel(
+	ctx context.Context,
+	req *v1.DeleteParsingChannelRequest,
+) (*v1.DeleteParsingChannelResponse, error) {
+
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendatinService.DeleteParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get post")
+	}
+	return &v1.DeleteParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) GetUserPriorityChannels(
+	ctx context.Context,
+	_ *v1.GetUserPriorityChannelsRequest,
+) (*v1.GetUserPriorityChannelsResponse, error) {
+
+	channels, err := a.recommendatinService.GetUserPriorityChannels(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get priority channels")
+	}
+	return &v1.GetUserPriorityChannelsResponse{
+		Channels: channels,
 	}, nil
 }

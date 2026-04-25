@@ -16,6 +16,70 @@
     "application/json"
   ],
   "paths": {
+    "/v1/add_new_parsing_channel": {
+      "post": {
+        "operationId": "ApiService_AddNewParsingChannel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddNewParsingChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AddNewParsingChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/delete_parsing_channel": {
+      "post": {
+        "operationId": "ApiService_DeleteParsingChannel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteParsingChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DeleteParsingChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/delete_priority_channels": {
       "post": {
         "operationId": "ApiService_DeletePriorityChannels",
@@ -107,6 +171,28 @@
             }
           }
         ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_user_priority_channels": {
+      "get": {
+        "operationId": "ApiService_GetUserPriorityChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetUserPriorityChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "ApiService"
         ]
@@ -238,6 +324,17 @@
         }
       }
     },
+    "v1AddNewParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        }
+      }
+    },
+    "v1AddNewParsingChannelResponse": {
+      "type": "object"
+    },
     "v1Cursor": {
       "type": "object",
       "properties": {
@@ -249,6 +346,17 @@
           "type": "string"
         }
       }
+    },
+    "v1DeleteParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DeleteParsingChannelResponse": {
+      "type": "object"
     },
     "v1DeletePriorityChannelRequest": {
       "type": "object",
@@ -298,6 +406,17 @@
         },
         "nextCursor": {
           "$ref": "#/definitions/v1Cursor"
+        }
+      }
+    },
+    "v1GetUserPriorityChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
