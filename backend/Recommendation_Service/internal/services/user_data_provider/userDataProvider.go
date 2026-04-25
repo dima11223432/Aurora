@@ -23,6 +23,7 @@ type PriorityChannelsProvider interface {
 
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	DeleteParsingChannel(ctx context.Context, channel string) error
 }
 
 type PriorityNewsProvider interface {
@@ -99,4 +100,12 @@ func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string,
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	return channels, nil
+}
+
+func (u *userDataProviderSuite) TestDeleteParsingChannel() {
+	ctx := context.Background()
+	channel := "test_channel"
+	u.mock.On("DeleteParsingChannel", ctx, channel).Return(nil)
+	err := u.service.DeleteParsingChannel(ctx, channel)
+	u.NoError(err)
 }
