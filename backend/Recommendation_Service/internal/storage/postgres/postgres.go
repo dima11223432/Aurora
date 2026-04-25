@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"recommendationService/internal/domain/models"
 	"recommendationService/internal/storage"
 
@@ -121,6 +122,7 @@ func (s *Storage) GetParsingChannelsByCategory(ctx context.Context, category str
         WHERE ci.category = $1`
 	query, err := s.parserDB.QueryContext(ctx, q, category)
 	if err != nil {
+		log.Println("DEHUIBHWEYUDGWIUYTEG")
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 	channelsUsernames := make([]string, 0)
@@ -137,7 +139,7 @@ func (s *Storage) GetParsingChannelsByCategory(ctx context.Context, category str
 func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllCategories"
 
-	q := `SELECT * FROM channel_categories`
+	q := `SELECT name FROM channel_categories`
 	query, err := s.parserDB.QueryContext(ctx, q)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
