@@ -6,6 +6,7 @@ export default function AdminPanel() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedChannel, setAddedChannel] = useState("");
   const [deletedChannel, setDeletedChannel] = useState("");
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const login = async () => {
@@ -35,13 +36,19 @@ export default function AdminPanel() {
     const fetchParsingChannels = async () => {
       try {
         const token = localStorage.getItem("token");
-        const resp = await axios.post(
-          "http://localhost:8081/v1/get_all_parsing_channels",
-          {},
+        const resp = await axios.get(
+          "http://localhost:8081/v1/get_all_parsing_channels_with_categories",
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
-        setParsingChannels(resp.data.channels || []);
+        const formatted = Object.entries(resp.data.channels).map(
+          ([cat, data]) => ({
+            category: cat,
+            usernames: data.usernames || [],
+          }),
+        );
+
+        setParsingChannels(formatted);
       } catch (e) {
         console.error("Fetch error:", e);
       }
@@ -90,18 +97,29 @@ export default function AdminPanel() {
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {parsingChannels.length > 0 ? (
-                parsingChannels.map((channel, index) => (
+                parsingChannels.map((item) => (
                   <div
-                    key={index}
-                    className="bg-white/5 border border-[#0fd2f5]/20 rounded-xl px-4 py-3 text-white flex items-center gap-2 hover:border-[#0fd2f5]/40 transition-colors"
+                    key={item.category}
+                    className="bg-white/5 p-4 rounded-2xl border border-white/10"
                   >
-                    <span className="text-[#0fd2f5]">@</span>
-                    {channel}
+                    <p className="text-[#0fd2f5] font-bold text-sm mb-2 uppercase">
+                      {item.category}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {item.usernames.map((user) => (
+                        <span
+                          key={user}
+                          className="bg-[#0fd2f5]/10 text-white text-xs px-3 py-1 rounded-full border border-[#0fd2f5]/20"
+                        >
+                          @{user}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 ))
               ) : (
-                <p className="text-[#95bec7] italic opacity-60">
-                  Загрузка каналов...
+                <p className="text-gray-500 text-sm italic">
+                  Каналы не найдены...
                 </p>
               )}
             </div>
@@ -146,11 +164,17 @@ export default function AdminPanel() {
                 <option value="" className="bg-[#0F1A2F]">
                   -- Выберите канал --
                 </option>
-                {parsingChannels.map((channel, index) => (
-                  <option key={index} value={channel} className="bg-[#0F1A2F]">
-                    {channel}
-                  </option>
-                ))}
+                {parsingChannels
+                  .flatMap((item) => item.usernames)
+                  .map((username, index) => (
+                    <option
+                      key={index}
+                      value={username}
+                      className="bg-[#0F1A2F]"
+                    >
+                      {username} {/* Теперь тут строка, а не объект! */}
+                    </option>
+                  ))}
               </select>
               <button
                 onClick={() => DeleteParsingChannel()}
