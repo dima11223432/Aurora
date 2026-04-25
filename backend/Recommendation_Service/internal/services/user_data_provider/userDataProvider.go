@@ -26,6 +26,8 @@ type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	AddNewParsingChannel(ctx context.Context, channel string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
+	GetAllCategories(ctx context.Context) ([]string, error)
+	GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
 }
 
 type PriorityNewsProvider interface {
@@ -136,4 +138,57 @@ func (u *UserDataProvider) DeleteParsingChannel(ctx context.Context, channel str
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
+}
+
+func (u *UserDataProvider) GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
+	const op = "internal.services.user_data_provider.userDataProvider.go.GetParsingChannelsWithCategories"
+
+	categoriesWithChannels := make(map[string][]string, 0)
+
+	categories, err := u.parsingChannelsProvider.GetAllCategories(ctx)
+	if err != nil {
+		u.log.Error("failed to get parsing channels with categories",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	for _, category := range categories {
+		channels, err := u.parsingChannelsProvider.GetParsingChannelsByCategory(ctx, category)
+		if err != nil {
+			u.log.Error("failed to get parsing channels with categories",
+				slog.String("op", op),
+				slog.Any("err", err),
+			)
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		categoriesWithChannels[category] = channels
+	}
+	return categoriesWithChannels, nil
+}
+
+func (u *UserDataProvider) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
+	const op = "internal.services.user_data_provider.userDataProvider.go.GetParsingChannelsByCategory"
+	channels, err := u.parsingChannelsProvider.GetParsingChannelsByCategory(ctx, category)
+	if err != nil {
+		u.log.Error("failed to get parsing channels by category",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	return channels, nil
+}
+
+func (u *UserDataProvider) GetAllCategories(ctx context.Context) ([]string, error) {
+	const op = "internal.services.user_data_provider.userDataProvider.go.GetAllCategories"
+	categories, err := u.parsingChannelsProvider.GetAllCategories(ctx)
+	if err != nil {
+		u.log.Error("failed to get all categories",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	return categories, nil
 }
