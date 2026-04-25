@@ -9,6 +9,8 @@ import (
 
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type AuthServerTestSuite struct {
@@ -54,6 +56,34 @@ func (s *AuthServerTestSuite) TestDeletePriorityChannels_Failure() {
 
 	s.Error(err)
 	s.authMock.AssertExpectations(s.T())
+}
+
+func (s *AuthServerTestSuite) TestLogin_ValidationAppIDRequired() {
+	req := &ssov1.LoginRequest{
+		TelegramId: 123456789,
+		AppId:      0,
+	}
+
+	resp, err := s.server.Login(context.Background(), req)
+
+	s.Nil(resp)
+	s.Error(err)
+	s.Equal(codes.InvalidArgument, status.Code(err))
+	s.Equal("app_id is required", status.Convert(err).Message())
+}
+
+func (s *AuthServerTestSuite) TestLogin_ValidationTelegramIDInvalid() {
+	req := &ssov1.LoginRequest{
+		TelegramId: 0,
+		AppId:      1,
+	}
+
+	resp, err := s.server.Login(context.Background(), req)
+
+	s.Nil(resp)
+	s.Error(err)
+	s.Equal(codes.InvalidArgument, status.Code(err))
+	s.Equal("telegram_id is invalid", status.Convert(err).Message())
 }
 
 func TestAuthServer(t *testing.T) {
