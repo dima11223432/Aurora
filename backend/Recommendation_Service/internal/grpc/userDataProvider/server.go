@@ -23,7 +23,7 @@ type UserDataProvider interface {
 
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
-	AddNewParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
 	GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 	GetAllCategories(ctx context.Context) ([]string, error)
@@ -131,10 +131,11 @@ func (s *serverAPI) GetAllParsingChannels(ctx context.Context, req *recv1.GetAll
 
 func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewParsingChannelRequest) (*recv1.AddNewParsingChannelResponse, error) {
 	channelUsername := req.GetChannelUsername()
+	channelCategory := req.GetCategory()
 	if channelUsername == "" {
 		return nil, status.Error(codes.InvalidArgument, "channel username is empty")
 	}
-	err := s.parsingChannelsProvider.AddNewParsingChannel(ctx, channelUsername)
+	err := s.parsingChannelsProvider.AddNewParsingChannel(ctx, channelUsername, channelCategory)
 	if err != nil {
 		if errors.Is(err, storage.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")

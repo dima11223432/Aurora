@@ -42,13 +42,16 @@ func (r *RecommendationService) GetAllParsingChannels(
 	return parsingChannels.Channels, nil
 }
 
-func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string) error {
+func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
 		return fmt.Errorf("channel is empty")
 	}
 	const op = "Api_Service.internal.services.RecommendationService.AddNewParsingChannel"
-	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{ChannelUsername: channel})
+	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{
+		ChannelUsername: channel,
+		Category:        category,
+	})
 	if err != nil {
 		st, ok := status.FromError(err)
 

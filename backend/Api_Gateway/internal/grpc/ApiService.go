@@ -28,7 +28,7 @@ type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	DeleteParsingChannel(ctx context.Context, channel string) error
-	AddNewParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
 	GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
@@ -186,7 +186,7 @@ func (a *ApiService) AddNewParsingChannel(
 	if !isAdmin {
 		return nil, status.Error(codes.PermissionDenied, "permission denied")
 	}
-	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
+	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername, req.Category)
 	if err != nil {
 		if errors.Is(err, errs.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")

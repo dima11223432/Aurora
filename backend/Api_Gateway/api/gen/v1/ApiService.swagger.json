@@ -112,6 +112,28 @@
         ]
       }
     },
+    "/v1/get_all_categories": {
+      "get": {
+        "operationId": "ApiService_GetAllCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/get_all_parsing_channels": {
       "post": {
         "operationId": "ApiService_GetAllParsingChannels",
@@ -351,6 +373,9 @@
       "properties": {
         "channelUsername": {
           "type": "string"
+        },
+        "category": {
+          "type": "string"
         }
       }
     },
@@ -404,6 +429,17 @@
     },
     "v1DeletePriorityChannelResponse": {
       "type": "object"
+    },
+    "v1GetAllCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "v1GetAllParsingChannelsRequest": {
       "type": "object"
