@@ -111,3 +111,22 @@ func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) erro
 	}
 	return nil
 }
+
+func (s *Storage) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
+	const op = "internal.storage.postgres.GetParsingChannelsByCategory"
+
+	q := `SELECT username FROM channels_info WHERE category = $1`
+	query, err := s.parserDB.QueryContext(ctx, q, category)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	filteredChannels := make([]string, 0)
+	for query.Next() {
+		var channel string
+		if err := query.Scan(&channel); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		filteredChannels = append(filteredChannels, channel)
+	}
+	return filteredChannels, nil
+}
