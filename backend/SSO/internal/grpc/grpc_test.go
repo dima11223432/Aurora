@@ -2,6 +2,7 @@ package grpcauth_test
 
 import (
 	ssov1 "authService/api/gen/v1"
+	"authService/internal/domain/models"
 	"authService/internal/grpc/auth"
 	"authService/internal/storage"
 	"context"
@@ -84,6 +85,35 @@ func (s *AuthServerTestSuite) TestLogin_ValidationTelegramIDInvalid() {
 	s.Error(err)
 	s.Equal(codes.InvalidArgument, status.Code(err))
 	s.Equal("telegram_id is invalid", status.Convert(err).Message())
+}
+
+func (s *AuthServerTestSuite) TestLogin_Success_MapsFieldsAndToken() {
+	req := &ssov1.LoginRequest{
+		TelegramId: 123456789,
+		Username:   "john_doe",
+		FirstName:  "John",
+		LastName:   "Doe",
+		AppId:      int64(7),
+	}
+
+	s.authMock.On(
+		"Login",
+		mock.Anything,
+		mock.MatchedBy(func(user models.User) bool {
+			return user.Telegram_id == req.GetTelegramId() &&
+				user.Username == req.GetUsername() &&
+				user.First_name == req.GetFirstName() &&
+				user.Last_name == req.GetLastName()
+		}),
+		int(req.GetAppId()),
+	).Return("jwt-token", nil).Once()
+
+	resp, err := s.server.Login(context.Background(), req)
+
+	s.NoError(err)
+	s.NotNil(resp)
+	s.Equal("jwt-token", resp.GetToken())
+	s.authMock.AssertExpectations(s.T())
 }
 
 func TestAuthServer(t *testing.T) {
