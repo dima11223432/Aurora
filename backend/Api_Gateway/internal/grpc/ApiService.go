@@ -30,6 +30,7 @@ type RecommendatinService interface {
 	DeleteParsingChannel(ctx context.Context, channel string) error
 	AddNewParsingChannel(ctx context.Context, channel string) error
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
+	GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
 
 type ApiService struct {
@@ -225,5 +226,31 @@ func (a *ApiService) GetUserPriorityChannels(
 	}
 	return &v1.GetUserPriorityChannelsResponse{
 		Channels: channels,
+	}, nil
+}
+
+func (a *ApiService) GetAllParsingChannelsWithCategories(
+	ctx context.Context,
+	_ *v1.GetAllParsingChannelsWithCategoriesRequest,
+) (*v1.GetAllParsingChannelsWithCategoriesResponse, error) {
+
+	channelsWithCategories, err := a.recommendatinService.GetAllParsingChannelsWithCategories(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get channels with categories")
+	}
+
+	protoChannels := make(map[string]*v1.ChannelList, 0)
+	for category, channels := range channelsWithCategories {
+		protoChannels[category] = &v1.ChannelList{
+			Usernames: channels,
+		}
+	}
+
+	for category, channels := range channelsWithCategories {
+		channelsWithCategories[category] = channels
+	}
+
+	return &v1.GetAllParsingChannelsWithCategoriesResponse{
+		Channels: protoChannels,
 	}, nil
 }

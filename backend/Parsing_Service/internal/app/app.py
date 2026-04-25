@@ -37,7 +37,7 @@ class App:
     async def run_monitoring(self):
         self.log.info(f"run monitoring")
         channels = list(self.storage.get_all_channels())
-        await self.parser_service.monitoring(channels)
+        await self.parser_service.start_monitoring(channels)
 
     async def run(self):
         await self.initialize()

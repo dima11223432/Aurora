@@ -11,6 +11,7 @@
         "react": "^19.2.5",
         "react-dom": "^19.2.5",
         "react-router-dom": "^7.13.0",
+        "react-tradingview-embed": "^3.0.6",
       },
       "devDependencies": {
         "@eslint/js": "^9.39.1",
@@ -525,6 +526,8 @@
     "react-router": ["react-router@7.14.1", "", { "dependencies": { "cookie": "^1.0.1", "set-cookie-parser": "^2.6.0" }, "peerDependencies": { "react": ">=18", "react-dom": ">=18" }, "optionalPeers": ["react-dom"] }, "sha512-5BCvFskyAAVumqhEKh/iPhLOIkfxcEUz8WqFIARCkMg8hZZzDYX9CtwxXA0e+qT8zAxmMC0x3Ckb9iMONwc5jg=="],
 
     "react-router-dom": ["react-router-dom@7.14.1", "", { "dependencies": { "react-router": "7.14.1" }, "peerDependencies": { "react": ">=18", "react-dom": ">=18" } }, "sha512-ZkrQuwwhGibjQLqH1eCdyiZyLWglPxzxdl5tgwgKEyCSGC76vmAjleGocRe3J/MLfzMUIKwaFJWpFVJhK3d2xA=="],
+
+    "react-tradingview-embed": ["react-tradingview-embed@3.0.6", "", { "peerDependencies": { "react": ">= 16.8.0", "react-dom": ">= 16.8.0" } }, "sha512-1qClGqBHOi7mvRFvhBxXSoyoPrNR8aPi/yfF/mYt8EWStA8LoWBl9ufemCyG+mc61iPmNGjJla0XB00FPENaPg=="],
 
     "resolve-from": ["resolve-from@4.0.0", "", {}, "sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g=="],
 
