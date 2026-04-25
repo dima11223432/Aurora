@@ -152,3 +152,24 @@ func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]
 	}
 	return channels, nil
 }
+
+func (r *RecommendationService) GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
+	const op = "Api_Service.internal.services.RecommendationService.GetAllParsingChannelsWithCategories"
+	res, err := r.RecommendationClient.GetAllParsingChannelsWithCategories(
+		ctx,
+		&rsv1.GetAllParsingChannelsWithCategoriesRequest{},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s, %w", op, err)
+	}
+	respChannels := res.GetChannels()
+	filteredChannels := make(map[string][]string, 0)
+	for category, channels := range respChannels {
+		convertedChannels := make([]string, 0, len(channels.Usernames))
+		for _, channel := range channels.Usernames {
+			convertedChannels = append(convertedChannels, channel)
+		}
+		filteredChannels[category] = convertedChannels
+	}
+	return filteredChannels, nil
+}

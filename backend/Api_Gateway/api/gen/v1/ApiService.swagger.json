@@ -144,6 +144,28 @@
         ]
       }
     },
+    "/v1/get_all_parsing_channels_with_categories": {
+      "get": {
+        "operationId": "ApiService_GetAllParsingChannelsWithCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllParsingChannelsWithCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/get_recommendated_posts": {
       "post": {
         "operationId": "ApiService_GetRecommendatedPosts",
@@ -335,6 +357,17 @@
     "v1AddNewParsingChannelResponse": {
       "type": "object"
     },
+    "v1ChannelList": {
+      "type": "object",
+      "properties": {
+        "usernames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "v1Cursor": {
       "type": "object",
       "properties": {
@@ -382,6 +415,17 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "v1GetAllParsingChannelsWithCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/v1ChannelList"
           }
         }
       }

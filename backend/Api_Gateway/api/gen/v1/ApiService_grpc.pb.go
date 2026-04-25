@@ -19,15 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ApiService_Login_FullMethodName                   = "/api.v1.ApiService/Login"
-	ApiService_IsAdmin_FullMethodName                 = "/api.v1.ApiService/IsAdmin"
-	ApiService_SetPriorityChannels_FullMethodName     = "/api.v1.ApiService/SetPriorityChannels"
-	ApiService_GetRecommendatedPosts_FullMethodName   = "/api.v1.ApiService/GetRecommendatedPosts"
-	ApiService_GetUserPriorityChannels_FullMethodName = "/api.v1.ApiService/GetUserPriorityChannels"
-	ApiService_DeletePriorityChannels_FullMethodName  = "/api.v1.ApiService/DeletePriorityChannels"
-	ApiService_GetAllParsingChannels_FullMethodName   = "/api.v1.ApiService/GetAllParsingChannels"
-	ApiService_AddNewParsingChannel_FullMethodName    = "/api.v1.ApiService/AddNewParsingChannel"
-	ApiService_DeleteParsingChannel_FullMethodName    = "/api.v1.ApiService/DeleteParsingChannel"
+	ApiService_Login_FullMethodName                               = "/api.v1.ApiService/Login"
+	ApiService_IsAdmin_FullMethodName                             = "/api.v1.ApiService/IsAdmin"
+	ApiService_SetPriorityChannels_FullMethodName                 = "/api.v1.ApiService/SetPriorityChannels"
+	ApiService_GetRecommendatedPosts_FullMethodName               = "/api.v1.ApiService/GetRecommendatedPosts"
+	ApiService_GetUserPriorityChannels_FullMethodName             = "/api.v1.ApiService/GetUserPriorityChannels"
+	ApiService_DeletePriorityChannels_FullMethodName              = "/api.v1.ApiService/DeletePriorityChannels"
+	ApiService_GetAllParsingChannels_FullMethodName               = "/api.v1.ApiService/GetAllParsingChannels"
+	ApiService_AddNewParsingChannel_FullMethodName                = "/api.v1.ApiService/AddNewParsingChannel"
+	ApiService_DeleteParsingChannel_FullMethodName                = "/api.v1.ApiService/DeleteParsingChannel"
+	ApiService_GetAllParsingChannelsWithCategories_FullMethodName = "/api.v1.ApiService/GetAllParsingChannelsWithCategories"
 )
 
 // ApiServiceClient is the client API for ApiService service.
@@ -43,6 +44,7 @@ type ApiServiceClient interface {
 	GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error)
 	AddNewParsingChannel(ctx context.Context, in *AddNewParsingChannelRequest, opts ...grpc.CallOption) (*AddNewParsingChannelResponse, error)
 	DeleteParsingChannel(ctx context.Context, in *DeleteParsingChannelRequest, opts ...grpc.CallOption) (*DeleteParsingChannelResponse, error)
+	GetAllParsingChannelsWithCategories(ctx context.Context, in *GetAllParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsWithCategoriesResponse, error)
 }
 
 type apiServiceClient struct {
@@ -143,6 +145,16 @@ func (c *apiServiceClient) DeleteParsingChannel(ctx context.Context, in *DeleteP
 	return out, nil
 }
 
+func (c *apiServiceClient) GetAllParsingChannelsWithCategories(ctx context.Context, in *GetAllParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsWithCategoriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllParsingChannelsWithCategoriesResponse)
+	err := c.cc.Invoke(ctx, ApiService_GetAllParsingChannelsWithCategories_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServiceServer is the server API for ApiService service.
 // All implementations should embed UnimplementedApiServiceServer
 // for forward compatibility.
@@ -156,6 +168,7 @@ type ApiServiceServer interface {
 	GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error)
 	AddNewParsingChannel(context.Context, *AddNewParsingChannelRequest) (*AddNewParsingChannelResponse, error)
 	DeleteParsingChannel(context.Context, *DeleteParsingChannelRequest) (*DeleteParsingChannelResponse, error)
+	GetAllParsingChannelsWithCategories(context.Context, *GetAllParsingChannelsWithCategoriesRequest) (*GetAllParsingChannelsWithCategoriesResponse, error)
 }
 
 // UnimplementedApiServiceServer should be embedded to have
@@ -191,6 +204,9 @@ func (UnimplementedApiServiceServer) AddNewParsingChannel(context.Context, *AddN
 }
 func (UnimplementedApiServiceServer) DeleteParsingChannel(context.Context, *DeleteParsingChannelRequest) (*DeleteParsingChannelResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteParsingChannel not implemented")
+}
+func (UnimplementedApiServiceServer) GetAllParsingChannelsWithCategories(context.Context, *GetAllParsingChannelsWithCategoriesRequest) (*GetAllParsingChannelsWithCategoriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllParsingChannelsWithCategories not implemented")
 }
 func (UnimplementedApiServiceServer) testEmbeddedByValue() {}
 
@@ -374,6 +390,24 @@ func _ApiService_DeleteParsingChannel_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApiService_GetAllParsingChannelsWithCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllParsingChannelsWithCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).GetAllParsingChannelsWithCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_GetAllParsingChannelsWithCategories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).GetAllParsingChannelsWithCategories(ctx, req.(*GetAllParsingChannelsWithCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ApiService_ServiceDesc is the grpc.ServiceDesc for ApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -416,6 +450,10 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteParsingChannel",
 			Handler:    _ApiService_DeleteParsingChannel_Handler,
+		},
+		{
+			MethodName: "GetAllParsingChannelsWithCategories",
+			Handler:    _ApiService_GetAllParsingChannelsWithCategories_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

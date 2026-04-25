@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"recommendationService/internal/domain/models"
 	"recommendationService/internal/storage"
 
@@ -110,4 +111,46 @@ func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) erro
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
+}
+
+func (s *Storage) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
+	const op = "internal.storage.postgres.GetParsingChannelsByCategory"
+
+	q := `SELECT c.username 
+        FROM channels c
+        INNER JOIN channels_info ci ON c.id = ci.channel_id
+        WHERE ci.category = $1`
+	query, err := s.parserDB.QueryContext(ctx, q, category)
+	if err != nil {
+		log.Println("DEHUIBHWEYUDGWIUYTEG")
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	channelsUsernames := make([]string, 0)
+	for query.Next() {
+		var channel string
+		if err := query.Scan(&channel); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		channelsUsernames = append(channelsUsernames, channel)
+	}
+	return channelsUsernames, nil
+}
+
+func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
+	const op = "internal.storage.postgres.GetAllCategories"
+
+	q := `SELECT name FROM channel_categories`
+	query, err := s.parserDB.QueryContext(ctx, q)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	categories := make([]string, 0)
+	for query.Next() {
+		var category string
+		if err := query.Scan(&category); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		categories = append(categories, category)
+	}
+	return categories, nil
 }
