@@ -15,29 +15,29 @@ const Shtora = () => {
     setSelectedChannels(selected);
 
     const TOKEN = localStorage.getItem("token");
-  //   try {
-  //     const response = await fetch(
-  //       "http://localhost:8081/v1/set_priority_channels",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           Authorization: `Bearer ${TOKEN}`,
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           priority_channels: [...selectedChannels],
-  //         }),
-  //       },
-  //     );
-  //
-  //     const data = await response.json();
-  //     console.log("Response:", data);
-  //     return data;
-  //   } catch (error) {
-  //     console.error("Error:", error);
-  //     throw error;
-  //   }
-  // };
+    //   try {
+    //     const response = await fetch(
+    //       "http://localhost:8081/v1/set_priority_channels",
+    //       {
+    //         method: "POST",
+    //         headers: {
+    //           Authorization: `Bearer ${TOKEN}`,
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify({
+    //           priority_channels: [...selectedChannels],
+    //         }),
+    //       },
+    //     );
+    //
+    //     const data = await response.json();
+    //     console.log("Response:", data);
+    //     return data;
+    //   } catch (error) {
+    //     console.error("Error:", error);
+    //     throw error;
+    //   }
+  };
 
   useEffect(() => {
     const login = async () => {
