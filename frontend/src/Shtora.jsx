@@ -11,7 +11,7 @@ const Shtora = () => {
     console.log(selectedChannels);
     const selected = Array.from(
       document.querySelectorAll('input[type="checkbox"]:checked'),
-    ).map((checkbox) => checkbox.nextSibling.textContent.trim());
+    ).map((checkbox) => checkbox.value);
     setSelectedChannels(selected);
 
     const TOKEN = localStorage.getItem("token");
