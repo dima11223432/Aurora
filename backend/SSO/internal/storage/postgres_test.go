@@ -182,11 +182,9 @@ func (p *PostgresTestSuite) TestDeletePriorityChannels() {
 	p.NoError(err)
 }
 
-
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
 }
-
 
 func (p *PostgresTestSuite) TestStorage_IsAdmin() {
 	ctx := context.Background()
