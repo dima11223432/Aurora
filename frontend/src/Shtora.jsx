@@ -9,6 +9,10 @@ const Shtora = () => {
     const [selectedChannels, setSelectedChannels] = useState([]);
 
     const setPriorityChannels = async () => {
+        console.log("бла бла бла блу блу блу измненили чекбоксик");
+        const selected = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.nextSibling.textContent.trim());
+        setSelectedChannels(selected);
+
         const TOKEN = localStorage.getItem("token");
         try {
             const response = await fetch('http://localhost:8081/v1/set_priority_channels', {
@@ -18,7 +22,7 @@ const Shtora = () => {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                priority_channels: ['Kafka_Channel1']
+                priority_channels: [...selectedChannels]
             })
             });
 
@@ -51,6 +55,7 @@ const Shtora = () => {
 		};
 		login();
 	}, []);
+
 
 	useEffect(() => {
 		const fetchParsingChannels = async () => {
@@ -99,7 +104,7 @@ const Shtora = () => {
 								className="py-2 px-3 rounded-lg hover:bg-blue-700/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
 								style={{backdropFilter: 'blur(1px)'}}
 							>
-                                <checkbox onClick={setPriorityChannels} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
+                                <checkbox id={`channel-${idx}`} onClick={setPriorityChannels} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
 								<span className="group-hover:text-blue-200 transition-colors duration-200">
 									{typeof channel === 'string' ? channel : channel?.name || JSON.stringify(channel)}
 								</span>
