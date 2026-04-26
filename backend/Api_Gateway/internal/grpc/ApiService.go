@@ -16,17 +16,21 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type API interface {
-	CreateGroup(ctx context.Context, name string) (int64, error)
-	DeleteGroup(ctx context.Context, groupID int64) error
-	UpdateGroup(ctx context.Context, groupID int64, newGroupName string) error
-	GetAllGroups(ctx context.Context) ([]models.Group, error)
-	CreateContact(ctx context.Context, email string, groupID int64) (int64, error)
-	UpdateContact(ctx context.Context, contactID int64, newEmail string) error
-	GetAllContactsByGroupID(ctx context.Context, groupID int64) ([]models.Contact, error)
-	DeleteContact(ctx context.Context, contactID int64) error
-	CreateNotification(ctx context.Context, title, text string, groupID int64) (int64, error)
-	SendNotification(ctx context.Context, notificationID int64) (string, error)
+type Auth interface {
+	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
+	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
+	SetPriorityChannels(ctx context.Context, channels []string) error
+	DeletePriorityChannels(ctx context.Context, channels []string) error
+	IsAdminByContext(ctx context.Context) (bool, error)
+}
+
+type RecommendatinService interface {
+	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
+	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	DeleteParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string, category string) error
+	GetUserPriorityChannels(ctx context.Context) ([]string, error)
+	GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
 
 type ApiService struct {
@@ -203,6 +207,18 @@ func (a *ApiService) CreateContact(ctx context.Context, req *v1.CreateContactReq
 	if err != nil {
 		return nil, err
 	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername, req.Category)
+	if err != nil {
+		if errors.Is(err, errs.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &v1.AddNewParsingChannelResponse{}, nil
+}
 
 	return &v1.CreateContactResponse{
 		Id: id,
@@ -238,5 +254,31 @@ func (a *ApiService) SendNotification(ctx context.Context, req *v1.SendNotificat
 	return &v1.SendNotificationResponse{
 		EventId: EventId,
 		Status:  "ok",
+	}, nil
+}
+
+func (a *ApiService) GetAllParsingChannelsWithCategories(
+	ctx context.Context,
+	_ *v1.GetAllParsingChannelsWithCategoriesRequest,
+) (*v1.GetAllParsingChannelsWithCategoriesResponse, error) {
+
+	channelsWithCategories, err := a.recommendatinService.GetAllParsingChannelsWithCategories(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get channels with categories")
+	}
+
+	protoChannels := make(map[string]*v1.ChannelList, 0)
+	for category, channels := range channelsWithCategories {
+		protoChannels[category] = &v1.ChannelList{
+			Usernames: channels,
+		}
+	}
+
+	for category, channels := range channelsWithCategories {
+		channelsWithCategories[category] = channels
+	}
+
+	return &v1.GetAllParsingChannelsWithCategoriesResponse{
+		Channels: protoChannels,
 	}, nil
 }

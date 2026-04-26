@@ -42,13 +42,16 @@ func (r *RecommendationService) GetAllParsingChannels(
 	return parsingChannels.Channels, nil
 }
 
-func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string) error {
+func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
 		return fmt.Errorf("channel is empty")
 	}
 	const op = "Api_Service.internal.services.RecommendationService.AddNewParsingChannel"
-	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{ChannelUsername: channel})
+	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{
+		ChannelUsername: channel,
+		Category:        category,
+	})
 	if err != nil {
 		st, ok := status.FromError(err)
 
@@ -151,4 +154,25 @@ func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]
 		channels = append(channels, channel)
 	}
 	return channels, nil
+}
+
+func (r *RecommendationService) GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
+	const op = "Api_Service.internal.services.RecommendationService.GetAllParsingChannelsWithCategories"
+	res, err := r.RecommendationClient.GetAllParsingChannelsWithCategories(
+		ctx,
+		&rsv1.GetAllParsingChannelsWithCategoriesRequest{},
+	)
+	if err != nil {
+		return nil, fmt.Errorf("%s, %w", op, err)
+	}
+	respChannels := res.GetChannels()
+	filteredChannels := make(map[string][]string, 0)
+	for category, channels := range respChannels {
+		convertedChannels := make([]string, 0, len(channels.Usernames))
+		for _, channel := range channels.Usernames {
+			convertedChannels = append(convertedChannels, channel)
+		}
+		filteredChannels[category] = convertedChannels
+	}
+	return filteredChannels, nil
 }

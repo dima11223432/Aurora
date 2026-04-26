@@ -63,10 +63,37 @@ service ApiService {
       body:"*"
     };
   }
+  rpc GetAllParsingChannelsWithCategories(GetAllParsingChannelsWithCategoriesRequest) returns (GetAllParsingChannelsWithCategoriesResponse){
+    option (google.api.http) = {
+      get: "/v1/get_all_parsing_channels_with_categories"
+    };
+  }
+  rpc GetAllCategories(GetAllCategoriesRequest) returns (GetAllCategoriesResponse){
+    option (google.api.http) = {
+      get: "/v1/get_all_categories"
+    };
+  }
+}
+
+message GetAllCategoriesRequest{
+  
+}
+
+message GetAllCategoriesResponse{
+  repeated string categories = 1;
+}
+
+message GetAllParsingChannelsWithCategoriesRequest{
+  
+}
+
+message GetAllParsingChannelsWithCategoriesResponse{
+  map <string, ChannelList> channels = 1;
 }
 
 message AddNewParsingChannelRequest {
   string channel_username = 1;
+  string category = 2;
 }
 
 message AddNewParsingChannelResponse {
@@ -160,4 +187,6 @@ message Cursor{
   string id = 2;
 }
 
-
+message ChannelList{
+  repeated string usernames = 1;
+}

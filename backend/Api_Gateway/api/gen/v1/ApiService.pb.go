@@ -23,16 +23,177 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type GetAllCategoriesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllCategoriesRequest) Reset() {
+	*x = GetAllCategoriesRequest{}
+	mi := &file_v1_ApiService_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllCategoriesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllCategoriesRequest) ProtoMessage() {}
+
+func (x *GetAllCategoriesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllCategoriesRequest.ProtoReflect.Descriptor instead.
+func (*GetAllCategoriesRequest) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
+}
+
+type GetAllCategoriesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Categories    []string               `protobuf:"bytes,1,rep,name=categories,proto3" json:"categories,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllCategoriesResponse) Reset() {
+	*x = GetAllCategoriesResponse{}
+	mi := &file_v1_ApiService_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllCategoriesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllCategoriesResponse) ProtoMessage() {}
+
+func (x *GetAllCategoriesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllCategoriesResponse.ProtoReflect.Descriptor instead.
+func (*GetAllCategoriesResponse) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *GetAllCategoriesResponse) GetCategories() []string {
+	if x != nil {
+		return x.Categories
+	}
+	return nil
+}
+
+type GetAllParsingChannelsWithCategoriesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllParsingChannelsWithCategoriesRequest) Reset() {
+	*x = GetAllParsingChannelsWithCategoriesRequest{}
+	mi := &file_v1_ApiService_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllParsingChannelsWithCategoriesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllParsingChannelsWithCategoriesRequest) ProtoMessage() {}
+
+func (x *GetAllParsingChannelsWithCategoriesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllParsingChannelsWithCategoriesRequest.ProtoReflect.Descriptor instead.
+func (*GetAllParsingChannelsWithCategoriesRequest) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{2}
+}
+
+type GetAllParsingChannelsWithCategoriesResponse struct {
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Channels      map[string]*ChannelList `protobuf:"bytes,1,rep,name=channels,proto3" json:"channels,omitempty" protobuf_key:"bytes,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAllParsingChannelsWithCategoriesResponse) Reset() {
+	*x = GetAllParsingChannelsWithCategoriesResponse{}
+	mi := &file_v1_ApiService_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAllParsingChannelsWithCategoriesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAllParsingChannelsWithCategoriesResponse) ProtoMessage() {}
+
+func (x *GetAllParsingChannelsWithCategoriesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAllParsingChannelsWithCategoriesResponse.ProtoReflect.Descriptor instead.
+func (*GetAllParsingChannelsWithCategoriesResponse) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetAllParsingChannelsWithCategoriesResponse) GetChannels() map[string]*ChannelList {
+	if x != nil {
+		return x.Channels
+	}
+	return nil
+}
+
 type AddNewParsingChannelRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ChannelUsername string                 `protobuf:"bytes,1,opt,name=channel_username,json=channelUsername,proto3" json:"channel_username,omitempty"`
+	Category        string                 `protobuf:"bytes,2,opt,name=category,proto3" json:"category,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
 
 func (x *AddNewParsingChannelRequest) Reset() {
 	*x = AddNewParsingChannelRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[0]
+	mi := &file_v1_ApiService_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -44,7 +205,7 @@ func (x *AddNewParsingChannelRequest) String() string {
 func (*AddNewParsingChannelRequest) ProtoMessage() {}
 
 func (x *AddNewParsingChannelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[0]
+	mi := &file_v1_ApiService_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -57,12 +218,19 @@ func (x *AddNewParsingChannelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddNewParsingChannelRequest.ProtoReflect.Descriptor instead.
 func (*AddNewParsingChannelRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{0}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *AddNewParsingChannelRequest) GetChannelUsername() string {
 	if x != nil {
 		return x.ChannelUsername
+	}
+	return ""
+}
+
+func (x *AddNewParsingChannelRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
 	}
 	return ""
 }
@@ -75,7 +243,7 @@ type AddNewParsingChannelResponse struct {
 
 func (x *AddNewParsingChannelResponse) Reset() {
 	*x = AddNewParsingChannelResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[1]
+	mi := &file_v1_ApiService_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -87,7 +255,7 @@ func (x *AddNewParsingChannelResponse) String() string {
 func (*AddNewParsingChannelResponse) ProtoMessage() {}
 
 func (x *AddNewParsingChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[1]
+	mi := &file_v1_ApiService_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -100,7 +268,7 @@ func (x *AddNewParsingChannelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddNewParsingChannelResponse.ProtoReflect.Descriptor instead.
 func (*AddNewParsingChannelResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{1}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{5}
 }
 
 type DeleteParsingChannelRequest struct {
@@ -112,7 +280,7 @@ type DeleteParsingChannelRequest struct {
 
 func (x *DeleteParsingChannelRequest) Reset() {
 	*x = DeleteParsingChannelRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[2]
+	mi := &file_v1_ApiService_proto_msgTypes[6]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -124,7 +292,7 @@ func (x *DeleteParsingChannelRequest) String() string {
 func (*DeleteParsingChannelRequest) ProtoMessage() {}
 
 func (x *DeleteParsingChannelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[2]
+	mi := &file_v1_ApiService_proto_msgTypes[6]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -137,7 +305,7 @@ func (x *DeleteParsingChannelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteParsingChannelRequest.ProtoReflect.Descriptor instead.
 func (*DeleteParsingChannelRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{2}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{6}
 }
 
 func (x *DeleteParsingChannelRequest) GetChannelUsername() string {
@@ -155,7 +323,7 @@ type DeleteParsingChannelResponse struct {
 
 func (x *DeleteParsingChannelResponse) Reset() {
 	*x = DeleteParsingChannelResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[3]
+	mi := &file_v1_ApiService_proto_msgTypes[7]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -167,7 +335,7 @@ func (x *DeleteParsingChannelResponse) String() string {
 func (*DeleteParsingChannelResponse) ProtoMessage() {}
 
 func (x *DeleteParsingChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[3]
+	mi := &file_v1_ApiService_proto_msgTypes[7]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -180,7 +348,7 @@ func (x *DeleteParsingChannelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteParsingChannelResponse.ProtoReflect.Descriptor instead.
 func (*DeleteParsingChannelResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{3}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{7}
 }
 
 type GetAllParsingChannelsRequest struct {
@@ -191,7 +359,7 @@ type GetAllParsingChannelsRequest struct {
 
 func (x *GetAllParsingChannelsRequest) Reset() {
 	*x = GetAllParsingChannelsRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[4]
+	mi := &file_v1_ApiService_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -203,7 +371,7 @@ func (x *GetAllParsingChannelsRequest) String() string {
 func (*GetAllParsingChannelsRequest) ProtoMessage() {}
 
 func (x *GetAllParsingChannelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[4]
+	mi := &file_v1_ApiService_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -216,7 +384,7 @@ func (x *GetAllParsingChannelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllParsingChannelsRequest.ProtoReflect.Descriptor instead.
 func (*GetAllParsingChannelsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{4}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{8}
 }
 
 type GetUserPriorityChannelsRequest struct {
@@ -227,7 +395,7 @@ type GetUserPriorityChannelsRequest struct {
 
 func (x *GetUserPriorityChannelsRequest) Reset() {
 	*x = GetUserPriorityChannelsRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[5]
+	mi := &file_v1_ApiService_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -239,7 +407,7 @@ func (x *GetUserPriorityChannelsRequest) String() string {
 func (*GetUserPriorityChannelsRequest) ProtoMessage() {}
 
 func (x *GetUserPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[5]
+	mi := &file_v1_ApiService_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -252,7 +420,7 @@ func (x *GetUserPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPriorityChannelsRequest.ProtoReflect.Descriptor instead.
 func (*GetUserPriorityChannelsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{5}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{9}
 }
 
 type GetUserPriorityChannelsResponse struct {
@@ -264,7 +432,7 @@ type GetUserPriorityChannelsResponse struct {
 
 func (x *GetUserPriorityChannelsResponse) Reset() {
 	*x = GetUserPriorityChannelsResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[6]
+	mi := &file_v1_ApiService_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -276,7 +444,7 @@ func (x *GetUserPriorityChannelsResponse) String() string {
 func (*GetUserPriorityChannelsResponse) ProtoMessage() {}
 
 func (x *GetUserPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[6]
+	mi := &file_v1_ApiService_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -289,7 +457,7 @@ func (x *GetUserPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserPriorityChannelsResponse.ProtoReflect.Descriptor instead.
 func (*GetUserPriorityChannelsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{6}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetUserPriorityChannelsResponse) GetChannels() []string {
@@ -308,7 +476,7 @@ type GetAllParsingChannelsResponse struct {
 
 func (x *GetAllParsingChannelsResponse) Reset() {
 	*x = GetAllParsingChannelsResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[7]
+	mi := &file_v1_ApiService_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -320,7 +488,7 @@ func (x *GetAllParsingChannelsResponse) String() string {
 func (*GetAllParsingChannelsResponse) ProtoMessage() {}
 
 func (x *GetAllParsingChannelsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[7]
+	mi := &file_v1_ApiService_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -333,7 +501,7 @@ func (x *GetAllParsingChannelsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetAllParsingChannelsResponse.ProtoReflect.Descriptor instead.
 func (*GetAllParsingChannelsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{7}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetAllParsingChannelsResponse) GetChannels() []string {
@@ -352,7 +520,7 @@ type DeletePriorityChannelRequest struct {
 
 func (x *DeletePriorityChannelRequest) Reset() {
 	*x = DeletePriorityChannelRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[8]
+	mi := &file_v1_ApiService_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -364,7 +532,7 @@ func (x *DeletePriorityChannelRequest) String() string {
 func (*DeletePriorityChannelRequest) ProtoMessage() {}
 
 func (x *DeletePriorityChannelRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[8]
+	mi := &file_v1_ApiService_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -377,7 +545,7 @@ func (x *DeletePriorityChannelRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePriorityChannelRequest.ProtoReflect.Descriptor instead.
 func (*DeletePriorityChannelRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{8}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *DeletePriorityChannelRequest) GetChannels() []string {
@@ -395,7 +563,7 @@ type DeletePriorityChannelResponse struct {
 
 func (x *DeletePriorityChannelResponse) Reset() {
 	*x = DeletePriorityChannelResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[9]
+	mi := &file_v1_ApiService_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -407,7 +575,7 @@ func (x *DeletePriorityChannelResponse) String() string {
 func (*DeletePriorityChannelResponse) ProtoMessage() {}
 
 func (x *DeletePriorityChannelResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[9]
+	mi := &file_v1_ApiService_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -420,7 +588,7 @@ func (x *DeletePriorityChannelResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePriorityChannelResponse.ProtoReflect.Descriptor instead.
 func (*DeletePriorityChannelResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{9}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{13}
 }
 
 type GetRecommendatedPostsRequest struct {
@@ -432,7 +600,7 @@ type GetRecommendatedPostsRequest struct {
 
 func (x *GetRecommendatedPostsRequest) Reset() {
 	*x = GetRecommendatedPostsRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[10]
+	mi := &file_v1_ApiService_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -444,7 +612,7 @@ func (x *GetRecommendatedPostsRequest) String() string {
 func (*GetRecommendatedPostsRequest) ProtoMessage() {}
 
 func (x *GetRecommendatedPostsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[10]
+	mi := &file_v1_ApiService_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -457,7 +625,7 @@ func (x *GetRecommendatedPostsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRecommendatedPostsRequest.ProtoReflect.Descriptor instead.
 func (*GetRecommendatedPostsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{10}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetRecommendatedPostsRequest) GetCursor() *Cursor {
@@ -477,7 +645,7 @@ type GetRecommendatedPostsResponse struct {
 
 func (x *GetRecommendatedPostsResponse) Reset() {
 	*x = GetRecommendatedPostsResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[11]
+	mi := &file_v1_ApiService_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -489,7 +657,7 @@ func (x *GetRecommendatedPostsResponse) String() string {
 func (*GetRecommendatedPostsResponse) ProtoMessage() {}
 
 func (x *GetRecommendatedPostsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[11]
+	mi := &file_v1_ApiService_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -502,7 +670,7 @@ func (x *GetRecommendatedPostsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetRecommendatedPostsResponse.ProtoReflect.Descriptor instead.
 func (*GetRecommendatedPostsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{11}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetRecommendatedPostsResponse) GetPosts() []*Post {
@@ -528,7 +696,7 @@ type SetPriorityChannelsRequest struct {
 
 func (x *SetPriorityChannelsRequest) Reset() {
 	*x = SetPriorityChannelsRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[12]
+	mi := &file_v1_ApiService_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -540,7 +708,7 @@ func (x *SetPriorityChannelsRequest) String() string {
 func (*SetPriorityChannelsRequest) ProtoMessage() {}
 
 func (x *SetPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[12]
+	mi := &file_v1_ApiService_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -553,7 +721,7 @@ func (x *SetPriorityChannelsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPriorityChannelsRequest.ProtoReflect.Descriptor instead.
 func (*SetPriorityChannelsRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{12}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *SetPriorityChannelsRequest) GetPriorityChannels() []string {
@@ -571,7 +739,7 @@ type SetPriorityChannelsResponse struct {
 
 func (x *SetPriorityChannelsResponse) Reset() {
 	*x = SetPriorityChannelsResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[13]
+	mi := &file_v1_ApiService_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -583,7 +751,7 @@ func (x *SetPriorityChannelsResponse) String() string {
 func (*SetPriorityChannelsResponse) ProtoMessage() {}
 
 func (x *SetPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[13]
+	mi := &file_v1_ApiService_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -596,7 +764,7 @@ func (x *SetPriorityChannelsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetPriorityChannelsResponse.ProtoReflect.Descriptor instead.
 func (*SetPriorityChannelsResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{13}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{17}
 }
 
 type LoginRequest struct {
@@ -613,7 +781,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[14]
+	mi := &file_v1_ApiService_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -625,7 +793,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[14]
+	mi := &file_v1_ApiService_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -638,7 +806,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{14}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *LoginRequest) GetTelegramId() int64 {
@@ -692,7 +860,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[15]
+	mi := &file_v1_ApiService_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -704,7 +872,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[15]
+	mi := &file_v1_ApiService_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -717,7 +885,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{15}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *LoginResponse) GetToken() string {
@@ -736,7 +904,7 @@ type IsAdminRequest struct {
 
 func (x *IsAdminRequest) Reset() {
 	*x = IsAdminRequest{}
-	mi := &file_v1_ApiService_proto_msgTypes[16]
+	mi := &file_v1_ApiService_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -748,7 +916,7 @@ func (x *IsAdminRequest) String() string {
 func (*IsAdminRequest) ProtoMessage() {}
 
 func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[16]
+	mi := &file_v1_ApiService_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -761,7 +929,7 @@ func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminRequest.ProtoReflect.Descriptor instead.
 func (*IsAdminRequest) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{16}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *IsAdminRequest) GetTelegramId() int64 {
@@ -780,7 +948,7 @@ type IsAdminResponse struct {
 
 func (x *IsAdminResponse) Reset() {
 	*x = IsAdminResponse{}
-	mi := &file_v1_ApiService_proto_msgTypes[17]
+	mi := &file_v1_ApiService_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -792,7 +960,7 @@ func (x *IsAdminResponse) String() string {
 func (*IsAdminResponse) ProtoMessage() {}
 
 func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[17]
+	mi := &file_v1_ApiService_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -805,7 +973,7 @@ func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminResponse.ProtoReflect.Descriptor instead.
 func (*IsAdminResponse) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{17}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *IsAdminResponse) GetIsAdmin() bool {
@@ -829,7 +997,7 @@ type Post struct {
 
 func (x *Post) Reset() {
 	*x = Post{}
-	mi := &file_v1_ApiService_proto_msgTypes[18]
+	mi := &file_v1_ApiService_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -841,7 +1009,7 @@ func (x *Post) String() string {
 func (*Post) ProtoMessage() {}
 
 func (x *Post) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[18]
+	mi := &file_v1_ApiService_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -854,7 +1022,7 @@ func (x *Post) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Post.ProtoReflect.Descriptor instead.
 func (*Post) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{18}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *Post) GetStocks() []*Stock {
@@ -909,7 +1077,7 @@ type Stock struct {
 
 func (x *Stock) Reset() {
 	*x = Stock{}
-	mi := &file_v1_ApiService_proto_msgTypes[19]
+	mi := &file_v1_ApiService_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -921,7 +1089,7 @@ func (x *Stock) String() string {
 func (*Stock) ProtoMessage() {}
 
 func (x *Stock) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[19]
+	mi := &file_v1_ApiService_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -934,7 +1102,7 @@ func (x *Stock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Stock.ProtoReflect.Descriptor instead.
 func (*Stock) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{19}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *Stock) GetStockName() string {
@@ -961,7 +1129,7 @@ type Cursor struct {
 
 func (x *Cursor) Reset() {
 	*x = Cursor{}
-	mi := &file_v1_ApiService_proto_msgTypes[20]
+	mi := &file_v1_ApiService_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -973,7 +1141,7 @@ func (x *Cursor) String() string {
 func (*Cursor) ProtoMessage() {}
 
 func (x *Cursor) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[20]
+	mi := &file_v1_ApiService_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -986,7 +1154,7 @@ func (x *Cursor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cursor.ProtoReflect.Descriptor instead.
 func (*Cursor) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{20}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *Cursor) GetScore() int64 {
@@ -1003,13 +1171,69 @@ func (x *Cursor) GetId() string {
 	return ""
 }
 
+type ChannelList struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Usernames     []string               `protobuf:"bytes,1,rep,name=usernames,proto3" json:"usernames,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ChannelList) Reset() {
+	*x = ChannelList{}
+	mi := &file_v1_ApiService_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ChannelList) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ChannelList) ProtoMessage() {}
+
+func (x *ChannelList) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ChannelList.ProtoReflect.Descriptor instead.
+func (*ChannelList) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *ChannelList) GetUsernames() []string {
+	if x != nil {
+		return x.Usernames
+	}
+	return nil
+}
+
 var File_v1_ApiService_proto protoreflect.FileDescriptor
 
 const file_v1_ApiService_proto_rawDesc = "" +
 	"\n" +
-	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"H\n" +
+	"\x13v1/ApiService.proto\x12\x06api.v1\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"\x19\n" +
+	"\x17GetAllCategoriesRequest\":\n" +
+	"\x18GetAllCategoriesResponse\x12\x1e\n" +
+	"\n" +
+	"categories\x18\x01 \x03(\tR\n" +
+	"categories\",\n" +
+	"*GetAllParsingChannelsWithCategoriesRequest\"\xde\x01\n" +
+	"+GetAllParsingChannelsWithCategoriesResponse\x12]\n" +
+	"\bchannels\x18\x01 \x03(\v2A.api.v1.GetAllParsingChannelsWithCategoriesResponse.ChannelsEntryR\bchannels\x1aP\n" +
+	"\rChannelsEntry\x12\x10\n" +
+	"\x03key\x18\x01 \x01(\tR\x03key\x12)\n" +
+	"\x05value\x18\x02 \x01(\v2\x13.api.v1.ChannelListR\x05value:\x028\x01\"d\n" +
 	"\x1bAddNewParsingChannelRequest\x12)\n" +
-	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\"\x1e\n" +
+	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\x12\x1a\n" +
+	"\bcategory\x18\x02 \x01(\tR\bcategory\"\x1e\n" +
 	"\x1cAddNewParsingChannelResponse\"H\n" +
 	"\x1bDeleteParsingChannelRequest\x12)\n" +
 	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\"\x1e\n" +
@@ -1061,7 +1285,9 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\x04side\x18\x02 \x01(\tR\x04side\".\n" +
 	"\x06Cursor\x12\x14\n" +
 	"\x05score\x18\x01 \x01(\x03R\x05score\x12\x0e\n" +
-	"\x02id\x18\x02 \x01(\tR\x02id2\x90\t\n" +
+	"\x02id\x18\x02 \x01(\tR\x02id\"+\n" +
+	"\vChannelList\x12\x1c\n" +
+	"\tusernames\x18\x01 \x03(\tR\tusernames2\xce\v\n" +
 	"\n" +
 	"ApiService\x12J\n" +
 	"\x05Login\x12\x14.api.v1.LoginRequest\x1a\x15.api.v1.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12S\n" +
@@ -1072,7 +1298,9 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\x16DeletePriorityChannels\x12$.api.v1.DeletePriorityChannelRequest\x1a%.api.v1.DeletePriorityChannelResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/delete_priority_channels\x12\x8d\x01\n" +
 	"\x15GetAllParsingChannels\x12$.api.v1.GetAllParsingChannelsRequest\x1a%.api.v1.GetAllParsingChannelsResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/get_all_parsing_channels\x12\x89\x01\n" +
 	"\x14AddNewParsingChannel\x12#.api.v1.AddNewParsingChannelRequest\x1a$.api.v1.AddNewParsingChannelResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/add_new_parsing_channel\x12\x88\x01\n" +
-	"\x14DeleteParsingChannel\x12#.api.v1.DeleteParsingChannelRequest\x1a$.api.v1.DeleteParsingChannelResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/v1/delete_parsing_channelB\x13Z\x11api/v1/ApiServiceb\x06proto3"
+	"\x14DeleteParsingChannel\x12#.api.v1.DeleteParsingChannelRequest\x1a$.api.v1.DeleteParsingChannelResponse\"%\x82\xd3\xe4\x93\x02\x1f:\x01*\"\x1a/v1/delete_parsing_channel\x12\xc4\x01\n" +
+	"#GetAllParsingChannelsWithCategories\x122.api.v1.GetAllParsingChannelsWithCategoriesRequest\x1a3.api.v1.GetAllParsingChannelsWithCategoriesResponse\"4\x82\xd3\xe4\x93\x02.\x12,/v1/get_all_parsing_channels_with_categories\x12u\n" +
+	"\x10GetAllCategories\x12\x1f.api.v1.GetAllCategoriesRequest\x1a .api.v1.GetAllCategoriesResponse\"\x1e\x82\xd3\xe4\x93\x02\x18\x12\x16/v1/get_all_categoriesB\x13Z\x11api/v1/ApiServiceb\x06proto3"
 
 var (
 	file_v1_ApiService_proto_rawDescOnce sync.Once
@@ -1086,60 +1314,72 @@ func file_v1_ApiService_proto_rawDescGZIP() []byte {
 	return file_v1_ApiService_proto_rawDescData
 }
 
-var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 21)
+var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_v1_ApiService_proto_goTypes = []any{
-	(*AddNewParsingChannelRequest)(nil),     // 0: api.v1.AddNewParsingChannelRequest
-	(*AddNewParsingChannelResponse)(nil),    // 1: api.v1.AddNewParsingChannelResponse
-	(*DeleteParsingChannelRequest)(nil),     // 2: api.v1.DeleteParsingChannelRequest
-	(*DeleteParsingChannelResponse)(nil),    // 3: api.v1.DeleteParsingChannelResponse
-	(*GetAllParsingChannelsRequest)(nil),    // 4: api.v1.GetAllParsingChannelsRequest
-	(*GetUserPriorityChannelsRequest)(nil),  // 5: api.v1.GetUserPriorityChannelsRequest
-	(*GetUserPriorityChannelsResponse)(nil), // 6: api.v1.GetUserPriorityChannelsResponse
-	(*GetAllParsingChannelsResponse)(nil),   // 7: api.v1.GetAllParsingChannelsResponse
-	(*DeletePriorityChannelRequest)(nil),    // 8: api.v1.DeletePriorityChannelRequest
-	(*DeletePriorityChannelResponse)(nil),   // 9: api.v1.DeletePriorityChannelResponse
-	(*GetRecommendatedPostsRequest)(nil),    // 10: api.v1.GetRecommendatedPostsRequest
-	(*GetRecommendatedPostsResponse)(nil),   // 11: api.v1.GetRecommendatedPostsResponse
-	(*SetPriorityChannelsRequest)(nil),      // 12: api.v1.SetPriorityChannelsRequest
-	(*SetPriorityChannelsResponse)(nil),     // 13: api.v1.SetPriorityChannelsResponse
-	(*LoginRequest)(nil),                    // 14: api.v1.LoginRequest
-	(*LoginResponse)(nil),                   // 15: api.v1.LoginResponse
-	(*IsAdminRequest)(nil),                  // 16: api.v1.IsAdminRequest
-	(*IsAdminResponse)(nil),                 // 17: api.v1.IsAdminResponse
-	(*Post)(nil),                            // 18: api.v1.Post
-	(*Stock)(nil),                           // 19: api.v1.Stock
-	(*Cursor)(nil),                          // 20: api.v1.Cursor
-	(*timestamppb.Timestamp)(nil),           // 21: google.protobuf.Timestamp
+	(*GetAllCategoriesRequest)(nil),                     // 0: api.v1.GetAllCategoriesRequest
+	(*GetAllCategoriesResponse)(nil),                    // 1: api.v1.GetAllCategoriesResponse
+	(*GetAllParsingChannelsWithCategoriesRequest)(nil),  // 2: api.v1.GetAllParsingChannelsWithCategoriesRequest
+	(*GetAllParsingChannelsWithCategoriesResponse)(nil), // 3: api.v1.GetAllParsingChannelsWithCategoriesResponse
+	(*AddNewParsingChannelRequest)(nil),                 // 4: api.v1.AddNewParsingChannelRequest
+	(*AddNewParsingChannelResponse)(nil),                // 5: api.v1.AddNewParsingChannelResponse
+	(*DeleteParsingChannelRequest)(nil),                 // 6: api.v1.DeleteParsingChannelRequest
+	(*DeleteParsingChannelResponse)(nil),                // 7: api.v1.DeleteParsingChannelResponse
+	(*GetAllParsingChannelsRequest)(nil),                // 8: api.v1.GetAllParsingChannelsRequest
+	(*GetUserPriorityChannelsRequest)(nil),              // 9: api.v1.GetUserPriorityChannelsRequest
+	(*GetUserPriorityChannelsResponse)(nil),             // 10: api.v1.GetUserPriorityChannelsResponse
+	(*GetAllParsingChannelsResponse)(nil),               // 11: api.v1.GetAllParsingChannelsResponse
+	(*DeletePriorityChannelRequest)(nil),                // 12: api.v1.DeletePriorityChannelRequest
+	(*DeletePriorityChannelResponse)(nil),               // 13: api.v1.DeletePriorityChannelResponse
+	(*GetRecommendatedPostsRequest)(nil),                // 14: api.v1.GetRecommendatedPostsRequest
+	(*GetRecommendatedPostsResponse)(nil),               // 15: api.v1.GetRecommendatedPostsResponse
+	(*SetPriorityChannelsRequest)(nil),                  // 16: api.v1.SetPriorityChannelsRequest
+	(*SetPriorityChannelsResponse)(nil),                 // 17: api.v1.SetPriorityChannelsResponse
+	(*LoginRequest)(nil),                                // 18: api.v1.LoginRequest
+	(*LoginResponse)(nil),                               // 19: api.v1.LoginResponse
+	(*IsAdminRequest)(nil),                              // 20: api.v1.IsAdminRequest
+	(*IsAdminResponse)(nil),                             // 21: api.v1.IsAdminResponse
+	(*Post)(nil),                                        // 22: api.v1.Post
+	(*Stock)(nil),                                       // 23: api.v1.Stock
+	(*Cursor)(nil),                                      // 24: api.v1.Cursor
+	(*ChannelList)(nil),                                 // 25: api.v1.ChannelList
+	nil,                                                 // 26: api.v1.GetAllParsingChannelsWithCategoriesResponse.ChannelsEntry
+	(*timestamppb.Timestamp)(nil),                       // 27: google.protobuf.Timestamp
 }
 var file_v1_ApiService_proto_depIdxs = []int32{
-	20, // 0: api.v1.GetRecommendatedPostsRequest.cursor:type_name -> api.v1.Cursor
-	18, // 1: api.v1.GetRecommendatedPostsResponse.posts:type_name -> api.v1.Post
-	20, // 2: api.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> api.v1.Cursor
-	19, // 3: api.v1.Post.stocks:type_name -> api.v1.Stock
-	21, // 4: api.v1.Post.date:type_name -> google.protobuf.Timestamp
-	14, // 5: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
-	16, // 6: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
-	12, // 7: api.v1.ApiService.SetPriorityChannels:input_type -> api.v1.SetPriorityChannelsRequest
-	10, // 8: api.v1.ApiService.GetRecommendatedPosts:input_type -> api.v1.GetRecommendatedPostsRequest
-	5,  // 9: api.v1.ApiService.GetUserPriorityChannels:input_type -> api.v1.GetUserPriorityChannelsRequest
-	8,  // 10: api.v1.ApiService.DeletePriorityChannels:input_type -> api.v1.DeletePriorityChannelRequest
-	4,  // 11: api.v1.ApiService.GetAllParsingChannels:input_type -> api.v1.GetAllParsingChannelsRequest
-	0,  // 12: api.v1.ApiService.AddNewParsingChannel:input_type -> api.v1.AddNewParsingChannelRequest
-	2,  // 13: api.v1.ApiService.DeleteParsingChannel:input_type -> api.v1.DeleteParsingChannelRequest
-	15, // 14: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
-	17, // 15: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
-	13, // 16: api.v1.ApiService.SetPriorityChannels:output_type -> api.v1.SetPriorityChannelsResponse
-	11, // 17: api.v1.ApiService.GetRecommendatedPosts:output_type -> api.v1.GetRecommendatedPostsResponse
-	6,  // 18: api.v1.ApiService.GetUserPriorityChannels:output_type -> api.v1.GetUserPriorityChannelsResponse
-	9,  // 19: api.v1.ApiService.DeletePriorityChannels:output_type -> api.v1.DeletePriorityChannelResponse
-	7,  // 20: api.v1.ApiService.GetAllParsingChannels:output_type -> api.v1.GetAllParsingChannelsResponse
-	1,  // 21: api.v1.ApiService.AddNewParsingChannel:output_type -> api.v1.AddNewParsingChannelResponse
-	3,  // 22: api.v1.ApiService.DeleteParsingChannel:output_type -> api.v1.DeleteParsingChannelResponse
-	14, // [14:23] is the sub-list for method output_type
-	5,  // [5:14] is the sub-list for method input_type
-	5,  // [5:5] is the sub-list for extension type_name
-	5,  // [5:5] is the sub-list for extension extendee
-	0,  // [0:5] is the sub-list for field type_name
+	26, // 0: api.v1.GetAllParsingChannelsWithCategoriesResponse.channels:type_name -> api.v1.GetAllParsingChannelsWithCategoriesResponse.ChannelsEntry
+	24, // 1: api.v1.GetRecommendatedPostsRequest.cursor:type_name -> api.v1.Cursor
+	22, // 2: api.v1.GetRecommendatedPostsResponse.posts:type_name -> api.v1.Post
+	24, // 3: api.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> api.v1.Cursor
+	23, // 4: api.v1.Post.stocks:type_name -> api.v1.Stock
+	27, // 5: api.v1.Post.date:type_name -> google.protobuf.Timestamp
+	25, // 6: api.v1.GetAllParsingChannelsWithCategoriesResponse.ChannelsEntry.value:type_name -> api.v1.ChannelList
+	18, // 7: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
+	20, // 8: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
+	16, // 9: api.v1.ApiService.SetPriorityChannels:input_type -> api.v1.SetPriorityChannelsRequest
+	14, // 10: api.v1.ApiService.GetRecommendatedPosts:input_type -> api.v1.GetRecommendatedPostsRequest
+	9,  // 11: api.v1.ApiService.GetUserPriorityChannels:input_type -> api.v1.GetUserPriorityChannelsRequest
+	12, // 12: api.v1.ApiService.DeletePriorityChannels:input_type -> api.v1.DeletePriorityChannelRequest
+	8,  // 13: api.v1.ApiService.GetAllParsingChannels:input_type -> api.v1.GetAllParsingChannelsRequest
+	4,  // 14: api.v1.ApiService.AddNewParsingChannel:input_type -> api.v1.AddNewParsingChannelRequest
+	6,  // 15: api.v1.ApiService.DeleteParsingChannel:input_type -> api.v1.DeleteParsingChannelRequest
+	2,  // 16: api.v1.ApiService.GetAllParsingChannelsWithCategories:input_type -> api.v1.GetAllParsingChannelsWithCategoriesRequest
+	0,  // 17: api.v1.ApiService.GetAllCategories:input_type -> api.v1.GetAllCategoriesRequest
+	19, // 18: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
+	21, // 19: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
+	17, // 20: api.v1.ApiService.SetPriorityChannels:output_type -> api.v1.SetPriorityChannelsResponse
+	15, // 21: api.v1.ApiService.GetRecommendatedPosts:output_type -> api.v1.GetRecommendatedPostsResponse
+	10, // 22: api.v1.ApiService.GetUserPriorityChannels:output_type -> api.v1.GetUserPriorityChannelsResponse
+	13, // 23: api.v1.ApiService.DeletePriorityChannels:output_type -> api.v1.DeletePriorityChannelResponse
+	11, // 24: api.v1.ApiService.GetAllParsingChannels:output_type -> api.v1.GetAllParsingChannelsResponse
+	5,  // 25: api.v1.ApiService.AddNewParsingChannel:output_type -> api.v1.AddNewParsingChannelResponse
+	7,  // 26: api.v1.ApiService.DeleteParsingChannel:output_type -> api.v1.DeleteParsingChannelResponse
+	3,  // 27: api.v1.ApiService.GetAllParsingChannelsWithCategories:output_type -> api.v1.GetAllParsingChannelsWithCategoriesResponse
+	1,  // 28: api.v1.ApiService.GetAllCategories:output_type -> api.v1.GetAllCategoriesResponse
+	18, // [18:29] is the sub-list for method output_type
+	7,  // [7:18] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_v1_ApiService_proto_init() }
@@ -1153,7 +1393,7 @@ func file_v1_ApiService_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_ApiService_proto_rawDesc), len(file_v1_ApiService_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   21,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
