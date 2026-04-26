@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import RecommendationCard from "./RecommendationCard";
 import Footer from "./Footer";
+import Shtora from "./Shtora";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -89,6 +90,7 @@ export default function RecommendationFeed() {
       {recommendatedPosts.map((post, index) => (
         <RecommendationCard key={index} {...post} />
       ))}
+      <Shtora />
     </div>
   );
 }
