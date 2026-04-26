@@ -1,11 +1,36 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import axios from "axios";
 
 const Shtora = () => {
 	const [parsingChannels, setParsingChannels] = useState([]);
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
+    const [selectedChannels, setSelectedChannels] = useState([]);
+
+    const setPriorityChannels = async () => {
+        const TOKEN = localStorage.getItem("token");
+        try {
+            const response = await fetch('http://localhost:8081/v1/set_priority_channels', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${TOKEN}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                priority_channels: ['Kafka_Channel1']
+            })
+            });
+
+            const data = await response.json();
+            console.log('Response:', data);
+            return data;
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    };         
+
 
 	useEffect(() => {
 		const login = async () => {
@@ -68,11 +93,13 @@ const Shtora = () => {
 						<li className="text-gray-400 text-sm italic animate-pulse">Нет доступных каналов</li>
 					) : (
 						parsingChannels.map((channel, idx) => (
+                            
 							<li
 								key={idx}
 								className="py-2 px-3 rounded-lg hover:bg-blue-700/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
 								style={{backdropFilter: 'blur(1px)'}}
 							>
+                                <checkbox onClick={setPriorityChannels} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" />
 								<span className="group-hover:text-blue-200 transition-colors duration-200">
 									{typeof channel === 'string' ? channel : channel?.name || JSON.stringify(channel)}
 								</span>
