@@ -7,36 +7,39 @@ const Shtora = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState([]);
 
-  const setPriorityChannels = async () => {
+  useEffect(() => {
     console.log(selectedChannels);
-    const selected = Array.from(
-      document.querySelectorAll('input[type="checkbox"]:checked'),
-    ).map((checkbox) => checkbox.value);
+  }, [selectedChannels.length]);
+
+  const setPriorityChannels = async () => {
+    const selected = [
+      ...document.querySelectorAll('input[type="checkbox"]:checked'),
+    ].map((cb) => cb.nextSibling.textContent);
     setSelectedChannels(selected);
 
     const TOKEN = localStorage.getItem("token");
-    //   try {
-    //     const response = await fetch(
-    //       "http://localhost:8081/v1/set_priority_channels",
-    //       {
-    //         method: "POST",
-    //         headers: {
-    //           Authorization: `Bearer ${TOKEN}`,
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({
-    //           priority_channels: [...selectedChannels],
-    //         }),
-    //       },
-    //     );
-    //
-    //     const data = await response.json();
-    //     console.log("Response:", data);
-    //     return data;
-    //   } catch (error) {
-    //     console.error("Error:", error);
-    //     throw error;
-    //   }
+    try {
+      const response = await fetch(
+        "http://localhost:8081/v1/set_priority_channels",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            priority_channels: [...selectedChannels],
+          }),
+        },
+      );
+
+      const data = await response.json();
+      console.log("Response:", data);
+      return data;
+    } catch (error) {
+      console.error("Error:", error);
+      throw error;
+    }
   };
 
   useEffect(() => {
@@ -112,7 +115,7 @@ const Shtora = () => {
                 <input
                   type="checkbox"
                   id={`channel-${idx}`}
-                  onClick={setPriorityChannels}
+                  onChange={setPriorityChannels}
                   className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                 />
                 <span className="group-hover:text-blue-200 transition-colors duration-200">
