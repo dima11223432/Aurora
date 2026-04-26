@@ -55,3 +55,11 @@ func (u *userDataProviderSuite) TestGetRecommendatedPosts() {
 func TestUserDataProviderTestSuite(t *testing.T) {
 	suite.Run(t, new(userDataProviderSuite))
 }
+
+func (u *userDataProviderSuite) TestDeleteParsingChannel() {
+	ctx := context.Background()
+	channel := "test_channel"
+	u.mock.On("DeleteParsingChannel", ctx, channel).Return(nil)
+	err := u.service.DeleteParsingChannel(ctx, channel)
+	u.NoError(err)
+}
