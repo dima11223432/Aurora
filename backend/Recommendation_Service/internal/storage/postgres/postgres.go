@@ -85,11 +85,12 @@ func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
 
 }
 
-func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
+func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
 	const op = "internal.storage.postgres.AddNewParsingChannel"
 
-	q := `INSERT INTO channels (username) VALUES ($1)`
-	_, err := s.parserDB.ExecContext(ctx, q, channel)
+	q1 := `INSERT INTO channels (username) VALUES ($1)`
+	q2 := `INSERT INTO channels_info (channel_id, category) VALUES ((SELECT id FROM channels WHERE username = $1), $2)`
+	_, err := s.parserDB.ExecContext(ctx, q1, channel)
 	if err != nil {
 		var pqErr *pq.Error
 		if errors.As(err, &pqErr) {
@@ -97,6 +98,11 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) erro
 				return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 			}
 		}
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	_, err = s.parserDB.ExecContext(ctx, q2, channel, category)
+	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil

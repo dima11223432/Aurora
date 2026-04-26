@@ -24,7 +24,7 @@ type PriorityChannelsProvider interface {
 
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
-	AddNewParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
 	GetAllCategories(ctx context.Context) ([]string, error)
 	GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
@@ -106,9 +106,9 @@ func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string,
 	return channels, nil
 }
 
-func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel string) error {
+func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewParsingChannel"
-	err := u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel)
+	err := u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel, category)
 	if err != nil {
 		if errors.Is(err, storage.ErrChannelExists) {
 			u.log.Error("parsing channel already exists",

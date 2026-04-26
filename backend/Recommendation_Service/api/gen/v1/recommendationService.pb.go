@@ -185,6 +185,7 @@ func (*DeleteParsingChannelResponse) Descriptor() ([]byte, []int) {
 type AddNewParsingChannelRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	ChannelUsername string                 `protobuf:"bytes,1,opt,name=channel_username,json=channelUsername,proto3" json:"channel_username,omitempty"`
+	Category        string                 `protobuf:"bytes,2,opt,name=category,proto3" json:"category,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -222,6 +223,13 @@ func (*AddNewParsingChannelRequest) Descriptor() ([]byte, []int) {
 func (x *AddNewParsingChannelRequest) GetChannelUsername() string {
 	if x != nil {
 		return x.ChannelUsername
+	}
+	return ""
+}
+
+func (x *AddNewParsingChannelRequest) GetCategory() string {
+	if x != nil {
+		return x.Category
 	}
 	return ""
 }
@@ -779,9 +787,10 @@ const file_v1_recommendationService_proto_rawDesc = "" +
 	"\x05value\x18\x02 \x01(\v2\x1e.recommendation.v1.ChannelListR\x05value:\x028\x01\"H\n" +
 	"\x1bDeleteParsingChannelRequest\x12)\n" +
 	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\"\x1e\n" +
-	"\x1cDeleteParsingChannelResponse\"H\n" +
+	"\x1cDeleteParsingChannelResponse\"d\n" +
 	"\x1bAddNewParsingChannelRequest\x12)\n" +
-	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\"\x1e\n" +
+	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\x12\x1a\n" +
+	"\bcategory\x18\x02 \x01(\tR\bcategory\"\x1e\n" +
 	"\x1cAddNewParsingChannelResponse\"\x1e\n" +
 	"\x1cGetAllParsingChannelsRequest\";\n" +
 	"\x1dGetAllParsingChannelsResponse\x12\x1a\n" +
