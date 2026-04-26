@@ -19,11 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RecommendationService_GetUserPriorityChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
-	RecommendationService_GetRecommendatedPosts_FullMethodName   = "/recommendation.v1.RecommendationService/GetRecommendatedPosts"
-	RecommendationService_GetAllParsingChannels_FullMethodName   = "/recommendation.v1.RecommendationService/GetAllParsingChannels"
-	RecommendationService_AddNewParsingChannel_FullMethodName    = "/recommendation.v1.RecommendationService/AddNewParsingChannel"
-	RecommendationService_DeleteParsingChannel_FullMethodName    = "/recommendation.v1.RecommendationService/DeleteParsingChannel"
+	RecommendationService_GetUserPriorityChannels_FullMethodName             = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
+	RecommendationService_GetRecommendatedPosts_FullMethodName               = "/recommendation.v1.RecommendationService/GetRecommendatedPosts"
+	RecommendationService_GetAllParsingChannels_FullMethodName               = "/recommendation.v1.RecommendationService/GetAllParsingChannels"
+	RecommendationService_AddNewParsingChannel_FullMethodName                = "/recommendation.v1.RecommendationService/AddNewParsingChannel"
+	RecommendationService_DeleteParsingChannel_FullMethodName                = "/recommendation.v1.RecommendationService/DeleteParsingChannel"
+	RecommendationService_GetAllParsingChannelsWithCategories_FullMethodName = "/recommendation.v1.RecommendationService/GetAllParsingChannelsWithCategories"
 )
 
 // RecommendationServiceClient is the client API for RecommendationService service.
@@ -35,6 +36,7 @@ type RecommendationServiceClient interface {
 	GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error)
 	AddNewParsingChannel(ctx context.Context, in *AddNewParsingChannelRequest, opts ...grpc.CallOption) (*AddNewParsingChannelResponse, error)
 	DeleteParsingChannel(ctx context.Context, in *DeleteParsingChannelRequest, opts ...grpc.CallOption) (*DeleteParsingChannelResponse, error)
+	GetAllParsingChannelsWithCategories(ctx context.Context, in *GetAllParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsWithCategoriesResponse, error)
 }
 
 type recommendationServiceClient struct {
@@ -95,6 +97,16 @@ func (c *recommendationServiceClient) DeleteParsingChannel(ctx context.Context, 
 	return out, nil
 }
 
+func (c *recommendationServiceClient) GetAllParsingChannelsWithCategories(ctx context.Context, in *GetAllParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsWithCategoriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllParsingChannelsWithCategoriesResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetAllParsingChannelsWithCategories_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // RecommendationServiceServer is the server API for RecommendationService service.
 // All implementations should embed UnimplementedRecommendationServiceServer
 // for forward compatibility.
@@ -104,6 +116,7 @@ type RecommendationServiceServer interface {
 	GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error)
 	AddNewParsingChannel(context.Context, *AddNewParsingChannelRequest) (*AddNewParsingChannelResponse, error)
 	DeleteParsingChannel(context.Context, *DeleteParsingChannelRequest) (*DeleteParsingChannelResponse, error)
+	GetAllParsingChannelsWithCategories(context.Context, *GetAllParsingChannelsWithCategoriesRequest) (*GetAllParsingChannelsWithCategoriesResponse, error)
 }
 
 // UnimplementedRecommendationServiceServer should be embedded to have
@@ -127,6 +140,9 @@ func (UnimplementedRecommendationServiceServer) AddNewParsingChannel(context.Con
 }
 func (UnimplementedRecommendationServiceServer) DeleteParsingChannel(context.Context, *DeleteParsingChannelRequest) (*DeleteParsingChannelResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteParsingChannel not implemented")
+}
+func (UnimplementedRecommendationServiceServer) GetAllParsingChannelsWithCategories(context.Context, *GetAllParsingChannelsWithCategoriesRequest) (*GetAllParsingChannelsWithCategoriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllParsingChannelsWithCategories not implemented")
 }
 func (UnimplementedRecommendationServiceServer) testEmbeddedByValue() {}
 
@@ -238,6 +254,24 @@ func _RecommendationService_DeleteParsingChannel_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecommendationService_GetAllParsingChannelsWithCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllParsingChannelsWithCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).GetAllParsingChannelsWithCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_GetAllParsingChannelsWithCategories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).GetAllParsingChannelsWithCategories(ctx, req.(*GetAllParsingChannelsWithCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // RecommendationService_ServiceDesc is the grpc.ServiceDesc for RecommendationService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -264,6 +298,10 @@ var RecommendationService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteParsingChannel",
 			Handler:    _RecommendationService_DeleteParsingChannel_Handler,
+		},
+		{
+			MethodName: "GetAllParsingChannelsWithCategories",
+			Handler:    _RecommendationService_GetAllParsingChannelsWithCategories_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

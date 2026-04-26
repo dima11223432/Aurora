@@ -86,11 +86,16 @@ export default function RecommendationFeed() {
   return (
     // {/* <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6"> */}
 
-    <div className="bg-gray-900 backdrop-blur-sm flex flex-col gap-6 p-4 sm:p-6 flex items-center justify-center">
-      {recommendatedPosts.map((post, index) => (
-        <RecommendationCard key={index} {...post} />
-      ))}
-      <Shtora />
+    <div className="bg-gray-900 min-h-screen flex flex-col p-4 sm:p-6">
+      <div className="flex-grow flex flex-col items-center gap-6">
+        {recommendatedPosts.map((post, index) => (
+          <RecommendationCard key={index} {...post} />
+        ))}
+
+        {isLoading && <p className="text-white">Загрузка...</p>}
+      </div>
+
+      <Footer />
     </div>
   );
 }
