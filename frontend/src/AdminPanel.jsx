@@ -147,7 +147,7 @@ export default function AdminPanel() {
                 <select
                   className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-red-400/50 appearance-none cursor-pointer"
                   onChange={(e) => setAddedChannelCategory(e.target.value)}
-                  value={deletedChannel}
+                  value={addedChannelCategory}
                 >
                   <option value="" className="bg-[#0F1A2F]">
                     -- Выберите категорию --
