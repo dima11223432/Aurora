@@ -5,6 +5,7 @@ export default function AdminPanel() {
   const [parsingChannels, setParsingChannels] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [addedChannel, setAddedChannel] = useState("");
+  const [addedChannelCategory, setAddedChannelCategory] = useState("");
   const [deletedChannel, setDeletedChannel] = useState("");
   const [categories, setCategories] = useState([]);
 
@@ -62,7 +63,7 @@ export default function AdminPanel() {
       const token = localStorage.getItem("token");
       axios.post(
         "http://localhost:8081/v1/add_new_parsing_channel",
-        { channel_username: addedChannel },
+        { channel_username: addedChannel, category: addedChannelCategory },
         { headers: { Authorization: `Bearer ${token}` } },
       );
     } catch (e) {
@@ -134,14 +135,36 @@ export default function AdminPanel() {
             >
               Добавить новый канал
             </label>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <input
-                id="channel-input"
-                className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-[#0fd2f5] focus:ring-1 focus:ring-[#0fd2f5] transition-all placeholder:text-gray-600"
-                placeholder="durov"
-                value={addedChannel}
-                onChange={(e) => setAddedChannel(e.target.value)}
-              />
+            <div className="grid grid-cls-2 sm:flex-row gap-3">
+              <div className="flex justify-between">
+                <input
+                  id="channel-input"
+                  className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-[#0fd2f5] focus:ring-1 focus:ring-[#0fd2f5] transition-all placeholder:text-gray-600"
+                  placeholder="durov"
+                  value={addedChannel}
+                  onChange={(e) => setAddedChannel(e.target.value)}
+                />
+                <select
+                  className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-red-400/50 appearance-none cursor-pointer"
+                  onChange={(e) => setAddedChannelCategory(e.target.value)}
+                  value={deletedChannel}
+                >
+                  <option value="" className="bg-[#0F1A2F]">
+                    -- Выберите категорию --
+                  </option>
+
+                  {parsingChannels.length > 0 &&
+                    parsingChannels.map((item) => (
+                      <option
+                        key={item.category}
+                        value={item.category}
+                        className="bg-[#0F1A2F]"
+                      >
+                        {item.category}
+                      </option>
+                    ))}
+                </select>
+              </div>
               <button
                 onClick={() => AddNewParsingChannel()}
                 className="bg-[#0fd2f5] text-[#0A0F1F] font-bold py-3 px-6 rounded-2xl hover:bg-white active:scale-95 transition-all shadow-lg shadow-[#0fd2f5]/20"
@@ -172,7 +195,7 @@ export default function AdminPanel() {
                       value={username}
                       className="bg-[#0F1A2F]"
                     >
-                      {username} {/* Теперь тут строка, а не объект! */}
+                      {username}
                     </option>
                   ))}
               </select>
