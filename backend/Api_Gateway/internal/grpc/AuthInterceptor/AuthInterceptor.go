@@ -14,13 +14,15 @@ import (
 )
 
 type CtxUserIdKey struct{}
+type CtxIsAdminKey struct{}
 
 type AuthInterceptor struct {
 	AuthConfig AuthConfig
 }
 
 type Claims struct {
-	ID int64 `json:"id"`
+	ID      int64 `json:"id"`
+	IsAdmin bool  `json:"is_admin"`
 	jwt.RegisteredClaims
 }
 
@@ -92,6 +94,7 @@ func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
 		}
 
 		ctx = context.WithValue(ctx, CtxUserIdKey{}, claims.ID)
+		ctx = context.WithValue(ctx, CtxIsAdminKey{}, claims.IsAdmin)
 
 		return handler(ctx, req)
 	}
@@ -103,4 +106,12 @@ func (a *AuthInterceptor) GetUserIdFromContext(ctx context.Context) (int64, erro
 		return 0, errors.New("user id not found in context")
 	}
 	return userID, nil
+}
+
+func (a *AuthInterceptor) GetIsAdminFromContext(ctx context.Context) (bool, error) {
+	isAdmin, ok := ctx.Value(CtxIsAdminKey{}).(bool)
+	if !ok {
+		return false, errors.New("is admin not found in context")
+	}
+	return isAdmin, nil
 }

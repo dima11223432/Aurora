@@ -34,6 +34,11 @@ service ApiService {
       body:"*"
     };
   }
+  rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_user_priority_channels"
+    };
+  }
   rpc DeletePriorityChannels(DeletePriorityChannelRequest) returns (DeletePriorityChannelResponse) {
     option (google.api.http) = {
       post: "/v1/delete_priority_channels"
@@ -46,9 +51,72 @@ service ApiService {
       body:"*"
     };
   }
+  rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/add_new_parsing_channel"
+      body:"*"
+    };
+  }
+  rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_parsing_channel"
+      body:"*"
+    };
+  }
+  rpc GetAllParsingChannelsWithCategories(GetAllParsingChannelsWithCategoriesRequest) returns (GetAllParsingChannelsWithCategoriesResponse){
+    option (google.api.http) = {
+      get: "/v1/get_all_parsing_channels_with_categories"
+    };
+  }
+  rpc GetAllCategories(GetAllCategoriesRequest) returns (GetAllCategoriesResponse){
+    option (google.api.http) = {
+      get: "/v1/get_all_categories"
+    };
+  }
+}
+
+message GetAllCategoriesRequest{
+  
+}
+
+message GetAllCategoriesResponse{
+  repeated string categories = 1;
+}
+
+message GetAllParsingChannelsWithCategoriesRequest{
+  
+}
+
+message GetAllParsingChannelsWithCategoriesResponse{
+  map <string, ChannelList> channels = 1;
+}
+
+message AddNewParsingChannelRequest {
+  string channel_username = 1;
+  string category = 2;
+}
+
+message AddNewParsingChannelResponse {
+  
+}
+
+message DeleteParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message DeleteParsingChannelResponse {
+  
 }
 
 message GetAllParsingChannelsRequest {
+}
+
+message GetUserPriorityChannelsRequest {
+  
+}
+
+message GetUserPriorityChannelsResponse {
+  repeated string channels = 1;
 }
 
 message GetAllParsingChannelsResponse {
@@ -117,4 +185,8 @@ message Stock {
 message Cursor{
   int64 score = 1;
   string id = 2;
+}
+
+message ChannelList{
+  repeated string usernames = 1;
 }

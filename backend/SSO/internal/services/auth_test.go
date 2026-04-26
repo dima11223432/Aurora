@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -101,6 +102,58 @@ func (s *AuthTestSuite) TestSetPriorityChannels() {
 
 	err = s.service.SetPriorityChannels(context.Background(), id, []string{"channel1", "channel2"})
 	s.NoError(err)
+}
+
+func (s *AuthTestSuite) TestDeletePriorityChannels() {
+	user := models.User{
+
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	token, err := s.service.Login(context.Background(), user, 1)
+	s.NoError(err)
+	s.NotEmpty(token)
+	err = s.service.SetPriorityChannels(context.Background(), 1, []string{"channel1", "channel2"})
+	s.NoError(err)
+	err = s.service.DeletePriorityChannels(context.Background(), 1, []string{"channel1", "channel2"})
+	s.NoError(err)
+}
+
+func (s *AuthTestSuite) TestIsAdmin() {
+	ctx := context.Background()
+
+	adminUser := models.User{
+		Telegram_id: 111111111,
+		First_name:  "Admin",
+		Last_name:   "User",
+		Username:    "admin_user",
+		Is_admin:    true,
+	}
+
+	regularUser := models.User{
+		Telegram_id: 222222222,
+		First_name:  "Regular",
+		Last_name:   "User",
+		Username:    "regular_user",
+		Is_admin:    false,
+	}
+
+	_, err := s.service.Login(ctx, adminUser, 1)
+	assert.NoError(s.T(), err)
+
+	_, err = s.service.Login(ctx, regularUser, 1)
+	assert.NoError(s.T(), err)
+
+	isAdmin, err := s.service.IsAdmin(ctx, adminUser.Telegram_id)
+	assert.NoError(s.T(), err)
+	assert.True(s.T(), isAdmin)
+
+	isAdmin, err = s.service.IsAdmin(ctx, regularUser.Telegram_id)
+	assert.NoError(s.T(), err)
+	assert.False(s.T(), isAdmin)
 }
 
 func TestAuthSuite(t *testing.T) {

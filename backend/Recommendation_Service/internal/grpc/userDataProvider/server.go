@@ -2,8 +2,10 @@ package grpcauth
 
 import (
 	"context"
+	"errors"
 	recv1 "recommendationService/api/gen/v1"
 	"recommendationService/internal/domain/models"
+	"recommendationService/internal/storage"
 
 	"github.com/samber/lo"
 
@@ -21,6 +23,10 @@ type UserDataProvider interface {
 
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	AddNewParsingChannel(ctx context.Context, channel string, category string) error
+	DeleteParsingChannel(ctx context.Context, channel string) error
+	GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
+	GetAllCategories(ctx context.Context) ([]string, error)
 }
 
 type NewsDataProvider interface {
@@ -44,6 +50,14 @@ func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, parsingChann
 		parsingChannelsProvider: parsingChannelsProvider,
 		newsDataProvider:        newsNewsDataProvider,
 	})
+}
+
+func NewServerAPI(userDataProvider UserDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsDataProvider NewsDataProvider) *serverAPI {
+	return &serverAPI{
+		userDataProvider:        userDataProvider,
+		parsingChannelsProvider: parsingChannelsProvider,
+		newsDataProvider:        newsDataProvider,
+	}
 }
 
 func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *recv1.GetUserPriorityChannelsRequest) (*recv1.GetUserPriorityChannelsResponse, error) {
@@ -112,5 +126,51 @@ func (s *serverAPI) GetAllParsingChannels(ctx context.Context, req *recv1.GetAll
 	}
 	return &recv1.GetAllParsingChannelsResponse{
 		Channels: channels,
+	}, nil
+}
+
+func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewParsingChannelRequest) (*recv1.AddNewParsingChannelResponse, error) {
+	channelUsername := req.GetChannelUsername()
+	channelCategory := req.GetCategory()
+	if channelUsername == "" {
+		return nil, status.Error(codes.InvalidArgument, "channel username is empty")
+	}
+	err := s.parsingChannelsProvider.AddNewParsingChannel(ctx, channelUsername, channelCategory)
+	if err != nil {
+		if errors.Is(err, storage.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &recv1.AddNewParsingChannelResponse{}, nil
+}
+
+func (s *serverAPI) DeleteParsingChannel(ctx context.Context, req *recv1.DeleteParsingChannelRequest) (*recv1.DeleteParsingChannelResponse, error) {
+	channelUsername := req.GetChannelUsername()
+	if channelUsername == "" {
+		return nil, status.Error(codes.InvalidArgument, "channel username is empty")
+	}
+	err := s.parsingChannelsProvider.DeleteParsingChannel(ctx, channelUsername)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &recv1.DeleteParsingChannelResponse{}, nil
+}
+
+func (s *serverAPI) GetAllParsingChannelsWithCategories(ctx context.Context, req *recv1.GetAllParsingChannelsWithCategoriesRequest) (*recv1.GetAllParsingChannelsWithCategoriesResponse, error) {
+	channelsWithCategories, err := s.parsingChannelsProvider.GetParsingChannelsWithCategories(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	protoChannels := make(map[string]*recv1.ChannelList)
+
+	for category, channels := range channelsWithCategories {
+		protoChannels[category] = &recv1.ChannelList{
+			Usernames: channels,
+		}
+	}
+
+	return &recv1.GetAllParsingChannelsWithCategoriesResponse{
+		Channels: protoChannels,
 	}, nil
 }
