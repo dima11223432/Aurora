@@ -11,6 +11,15 @@ service RecommendationService {
   rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse);
   rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse);
   rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse);
+  rpc GetAllParsingChannelsWithCategories(GetAllParsingChannelsWithCategoriesRequest) returns (GetAllParsingChannelsWithCategoriesResponse);
+}
+
+message GetAllParsingChannelsWithCategoriesRequest {
+  
+}
+
+message GetAllParsingChannelsWithCategoriesResponse{
+  map<string, ChannelList> channels = 1;
 }
 
 message DeleteParsingChannelRequest {
@@ -22,6 +31,7 @@ message DeleteParsingChannelResponse {
 
 message AddNewParsingChannelRequest {
   string channel_username = 1;
+  string category = 2;
 }
 
 message AddNewParsingChannelResponse {
@@ -69,4 +79,8 @@ message Post {
 message Stock {
   string stock_name = 1;
   string side = 2;
+}
+
+message ChannelList{
+  repeated string usernames = 1;
 }

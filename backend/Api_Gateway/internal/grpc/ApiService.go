@@ -28,8 +28,9 @@ type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	DeleteParsingChannel(ctx context.Context, channel string) error
-	AddNewParsingChannel(ctx context.Context, channel string) error
+	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
+	GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
 
 type ApiService struct {
@@ -185,7 +186,7 @@ func (a *ApiService) AddNewParsingChannel(
 	if !isAdmin {
 		return nil, status.Error(codes.PermissionDenied, "permission denied")
 	}
-	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername)
+	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername, req.Category)
 	if err != nil {
 		if errors.Is(err, errs.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")
@@ -225,5 +226,31 @@ func (a *ApiService) GetUserPriorityChannels(
 	}
 	return &v1.GetUserPriorityChannelsResponse{
 		Channels: channels,
+	}, nil
+}
+
+func (a *ApiService) GetAllParsingChannelsWithCategories(
+	ctx context.Context,
+	_ *v1.GetAllParsingChannelsWithCategoriesRequest,
+) (*v1.GetAllParsingChannelsWithCategoriesResponse, error) {
+
+	channelsWithCategories, err := a.recommendatinService.GetAllParsingChannelsWithCategories(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get channels with categories")
+	}
+
+	protoChannels := make(map[string]*v1.ChannelList, 0)
+	for category, channels := range channelsWithCategories {
+		protoChannels[category] = &v1.ChannelList{
+			Usernames: channels,
+		}
+	}
+
+	for category, channels := range channelsWithCategories {
+		channelsWithCategories[category] = channels
+	}
+
+	return &v1.GetAllParsingChannelsWithCategoriesResponse{
+		Channels: protoChannels,
 	}, nil
 }
