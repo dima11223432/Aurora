@@ -93,7 +93,6 @@ export default function RecommendationFeed() {
 
         {isLoading && <p className="text-white">Загрузка...</p>}
       </div>
-
       <Footer />
     </div>
   );
