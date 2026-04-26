@@ -71,3 +71,18 @@ func (u *UserDataProviderSuite) TestGetRecommendatedPosts_Success() {
 	u.Equal("Test text", resp.Posts[0].PostText)
 	u.Equal(mockNextCursor.ID, resp.NextCursor.Id)
 }
+
+func (u *UserDataProviderSuite) TestDeleteParsingChannel() {
+	ctx := context.Background()
+	channelUsername := "channel1"
+
+	u.mock.On("DeleteParsingChannel", ctx, channelUsername).Return(nil).Once()
+
+	resp, err := u.s.DeleteParsingChannel(ctx, &recv1.DeleteParsingChannelRequest{
+		ChannelUsername: channelUsername,
+	})
+
+	u.NoError(err)
+	u.NotNil(resp)
+	u.mock.AssertExpectations(u.T())
+}
