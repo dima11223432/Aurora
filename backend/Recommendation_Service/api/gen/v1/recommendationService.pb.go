@@ -24,7 +24,8 @@ const (
 
 type AddNewUserCustomParsingChannelRequest struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
-	ChannelUsername string                 `protobuf:"bytes,1,opt,name=channel_username,json=channelUsername,proto3" json:"channel_username,omitempty"`
+	UserId          int64                  `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ChannelUsername string                 `protobuf:"bytes,2,opt,name=channel_username,json=channelUsername,proto3" json:"channel_username,omitempty"`
 	unknownFields   protoimpl.UnknownFields
 	sizeCache       protoimpl.SizeCache
 }
@@ -57,6 +58,13 @@ func (x *AddNewUserCustomParsingChannelRequest) ProtoReflect() protoreflect.Mess
 // Deprecated: Use AddNewUserCustomParsingChannelRequest.ProtoReflect.Descriptor instead.
 func (*AddNewUserCustomParsingChannelRequest) Descriptor() ([]byte, []int) {
 	return file_v1_recommendationService_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *AddNewUserCustomParsingChannelRequest) GetUserId() int64 {
+	if x != nil {
+		return x.UserId
+	}
+	return 0
 }
 
 func (x *AddNewUserCustomParsingChannelRequest) GetChannelUsername() string {
@@ -858,9 +866,10 @@ var File_v1_recommendationService_proto protoreflect.FileDescriptor
 
 const file_v1_recommendationService_proto_rawDesc = "" +
 	"\n" +
-	"\x1ev1/recommendationService.proto\x12\x11recommendation.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"R\n" +
-	"%AddNewUserCustomParsingChannelRequest\x12)\n" +
-	"\x10channel_username\x18\x01 \x01(\tR\x0fchannelUsername\"(\n" +
+	"\x1ev1/recommendationService.proto\x12\x11recommendation.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"k\n" +
+	"%AddNewUserCustomParsingChannelRequest\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\x03R\x06userId\x12)\n" +
+	"\x10channel_username\x18\x02 \x01(\tR\x0fchannelUsername\"(\n" +
 	"&AddNewUserCustomParsingChannelResponse\",\n" +
 	"*GetAllParsingChannelsWithCategoriesRequest\"\xf4\x01\n" +
 	"+GetAllParsingChannelsWithCategoriesResponse\x12h\n" +

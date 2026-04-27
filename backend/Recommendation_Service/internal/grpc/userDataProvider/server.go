@@ -24,6 +24,7 @@ type UserDataProvider interface {
 type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	AddNewParsingChannel(ctx context.Context, channel string, category string) error
+	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
 	GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 	GetAllCategories(ctx context.Context) ([]string, error)
@@ -127,6 +128,20 @@ func (s *serverAPI) GetAllParsingChannels(ctx context.Context, req *recv1.GetAll
 	return &recv1.GetAllParsingChannelsResponse{
 		Channels: channels,
 	}, nil
+}
+
+func (s *serverAPI) AddNewUserCustomParsingChannel(
+	ctx context.Context,
+	req *recv1.AddNewUserCustomParsingChannelRequest,
+) (*recv1.AddNewUserCustomParsingChannelResponse, error) {
+	userID := req.GetUserId()
+	channelUsername := req.GetChannelUsername()
+
+	if err := s.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channelUsername); err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+
+	return &recv1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
 func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewParsingChannelRequest) (*recv1.AddNewParsingChannelResponse, error) {

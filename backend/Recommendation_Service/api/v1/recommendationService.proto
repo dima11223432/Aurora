@@ -16,7 +16,8 @@ service RecommendationService {
 }
 
 message AddNewUserCustomParsingChannelRequest {
-  string channel_username = 1;
+  int64 user_id = 1;
+  string channel_username = 2;
 }
 
 message AddNewUserCustomParsingChannelResponse{
