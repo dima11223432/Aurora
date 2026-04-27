@@ -57,6 +57,12 @@ service ApiService {
       body:"*"
     };
   }
+  rpc AddNewUserCustomParsingChannel(AddNewUserCustomParsingChannelRequest) returns (AddNewUserCustomParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/add_new_user_custom_parsing_channel"
+      body:"*"
+    };
+  }
   rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse) {
     option (google.api.http) = {
       post: "/v1/delete_parsing_channel"
@@ -73,6 +79,14 @@ service ApiService {
       get: "/v1/get_all_categories"
     };
   }
+}
+
+message AddNewUserCustomParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message AddNewUserCustomParsingChannelResponse {
+  
 }
 
 message GetAllCategoriesRequest{
