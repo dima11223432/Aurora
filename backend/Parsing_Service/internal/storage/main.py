@@ -1,5 +1,5 @@
 import psycopg2
-
+import asyncpg
 from internal.config.config import Config
 
 
@@ -12,9 +12,21 @@ class ChannelStorage:
             host=cfg.DB_HOST,
             port=cfg.DB_PORT,
         )
+        self.trigger_conn = None
+        self.cfg = cfg
         self.conn.autocommit = False
 
         self.conn.commit()
+
+    async def run_trigger(self):
+        self.trigger_conn = await asyncpg.connect(self.cfg.DB_URL)
+
+        await self.trigger_conn.add_listener(
+            "new_channel_event", self.handle_new_channel
+        )
+
+    def handle_new_channel(self, connection, pid, channel, payload):
+        print(payload)
 
     def add_channel(self, username):
         username = username.lstrip("@")

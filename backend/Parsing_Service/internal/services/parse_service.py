@@ -1,6 +1,7 @@
 import os
 import socks
 import asyncio
+from internal.storage.main import ChannelStorage
 from telethon import TelegramClient, events
 from telethon.errors import UserNotParticipantError
 from telethon.tl.functions.channels import GetFullChannelRequest, JoinChannelRequest
@@ -15,6 +16,7 @@ class ParserService:
     def __init__(self, logger, cfg):
         self.log = logger
         self.kafka_controller = KafkaController(logger)
+        self.channel_storage = ChannelStorage(cfg)
         self.phone_number = cfg.PHONE_NUMBER
         self.api_id = cfg.API_ID
         self.api_hash = cfg.API_HASH
@@ -107,7 +109,7 @@ class ParserService:
         )
 
         try:
-            self.log.success("Monitoring active. Press Ctrl+C to stop.")
+            self.log.success("Monitoring active.")
             await self.client.run_until_disconnected()
         except Exception as e:
             self.log.error(f"Monitoring interrupted: {e}")

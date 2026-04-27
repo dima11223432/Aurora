@@ -39,6 +39,17 @@ class App:
         channels = list(self.storage.get_all_channels())
         await self.parser_service.start_monitoring(channels)
 
+    async def run_trigger(self):
+        await self.storage.run_trigger()
+
     async def run(self):
         await self.initialize()
-        await self.run_monitoring()
+
+        trigger_task = asyncio.create_task(self.run_trigger())
+
+        self.monitoring_task = asyncio.create_task(self.run_monitoring())
+
+        try:
+            await asyncio.gather(trigger_task, self.monitoring_task)
+        except asyncio.CancelledError:
+            pass
