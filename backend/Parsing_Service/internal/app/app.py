@@ -28,7 +28,9 @@ class App:
         self.storage = storage
 
     async def initialize(self):
-        self.parser_service = ParserService(self.log, self.config)
+
+        channels = list(self.storage.get_all_channels())
+        self.parser_service = ParserService(self.log, self.config, channels)
         self.log.debug("ParserService initialized")
         self.log.debug("Connectiong to telegram...")
 
@@ -36,20 +38,8 @@ class App:
 
     async def run_monitoring(self):
         self.log.info(f"run monitoring")
-        channels = list(self.storage.get_all_channels())
-        await self.parser_service.start_monitoring(channels)
-
-    async def run_trigger(self):
-        await self.storage.run_trigger()
+        await self.parser_service.start_monitoring()
 
     async def run(self):
         await self.initialize()
-
-        trigger_task = asyncio.create_task(self.run_trigger())
-
-        self.monitoring_task = asyncio.create_task(self.run_monitoring())
-
-        try:
-            await asyncio.gather(trigger_task, self.monitoring_task)
-        except asyncio.CancelledError:
-            pass
+        await self.run_monitoring()
