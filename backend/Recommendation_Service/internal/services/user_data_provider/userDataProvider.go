@@ -109,7 +109,7 @@ func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string,
 
 func (u *UserDataProvider) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewUserCustomParsingChannel"
-	if err := u.AddNewUserCustomParsingChannel(ctx, userID, channel); err != nil {
+	if err := u.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channel); err != nil {
 		u.log.Error("failed to add new user custom parsing channel",
 			slog.String("op", op),
 			slog.Any("err", err),
