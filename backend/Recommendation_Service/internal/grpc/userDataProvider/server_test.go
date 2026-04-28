@@ -25,7 +25,7 @@ func (u *UserDataProviderSuite) TestAddNewParsingChannel() {
     ctx := context.Background()
     
     u.Run("Success", func() {
-        channelUsername := "valid_channel"
+        channelUsername := "channel"
         req := &recv1.AddNewParsingChannelRequest{
             ChannelUsername: channelUsername,
         }
@@ -58,6 +58,24 @@ func (u *UserDataProviderSuite) TestAddNewParsingChannel() {
         u.mock.AssertNotCalled(u.T(), "AddNewParsingChannel", ctx, "")
     })
     
+	u.Run("Database Error", func() {
+        channelUsername := "channel"
+        req := &recv1.AddNewParsingChannelRequest{
+            ChannelUsername: channelUsername,
+        }
+        
+        dbError := errors.New("db error")
+        u.mock.On("AddNewParsingChannel", ctx, channelUsername).
+            Return(dbError).Once()
+        
+        resp, err := u.s.AddNewParsingChannel(ctx, req)
+        
+        u.Error(err)
+        u.Nil(resp)
+
+		u.mock.AssertExpectations(u.T())
+	})
+
 }
 
 func (u *UserDataProviderSuite) TestGetUserPriorityChannels() {
