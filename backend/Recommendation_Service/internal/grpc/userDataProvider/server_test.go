@@ -21,6 +21,27 @@ func (u *UserDataProviderSuite) SetupTest() {
 	u.s = NewServerAPI(u.mock, u.mock, u.mock)
 }
 
+func (u *UserDataProviderSuite) TestAddNewParsingChannel() {
+    ctx := context.Background()
+    
+    u.Run("Success", func() {
+        channelUsername := "valid_channel"
+        req := &recv1.AddNewParsingChannelRequest{
+            ChannelUsername: channelUsername,
+        }
+        
+        u.mock.On("AddNewParsingChannel", ctx, channelUsername).
+            Return(nil).Once()
+        
+        resp, err := u.s.AddNewParsingChannel(ctx, req)
+        
+        u.NoError(err)
+        u.NotNil(resp)
+        u.mock.AssertExpectations(u.T())
+    })
+    
+}
+
 func (u *UserDataProviderSuite) TestGetUserPriorityChannels() {
 	ctx := context.Background()
 	userID := int64(1)
