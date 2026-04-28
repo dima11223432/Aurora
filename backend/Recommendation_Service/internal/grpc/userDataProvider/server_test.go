@@ -39,6 +39,24 @@ func (u *UserDataProviderSuite) TestAddNewParsingChannel() {
         u.NotNil(resp)
         u.mock.AssertExpectations(u.T())
     })
+
+	u.Run("Invalid Input", func() {
+        req := &recv1.AddNewParsingChannelRequest{
+            ChannelUsername: "", 
+        }
+        
+        resp, err := u.s.AddNewParsingChannel(ctx, req)
+        
+        u.Error(err) 
+        
+        status, ok := status.FromError(err)
+        u.True(ok, "Должна быть ошибка")
+        u.Equal(codes.InvalidArgument, status.Code(), "Неверный код")
+        
+        u.Nil(resp)
+        
+        u.mock.AssertNotCalled(u.T(), "AddNewParsingChannel", ctx, "")
+    })
     
 }
 
