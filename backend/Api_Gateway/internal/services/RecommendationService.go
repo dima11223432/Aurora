@@ -42,6 +42,21 @@ func (r *RecommendationService) GetAllParsingChannels(
 	return parsingChannels.Channels, nil
 }
 
+func (r *RecommendationService) AddUserCustomParsingChannels(ctx context.Context, userID int64, channel string) error {
+	const op = "Api_Service.internal.services.RecommendationService.AddUserCustomParsingChannels"
+
+	if channel == "" {
+		return fmt.Errorf("%s, %w", op, errs.ErrIsEmpty)
+	}
+
+	_, err := r.RecommendationClient.AddNewUserCustomParsingChannel(ctx, &rsv1.AddNewUserCustomParsingChannelRequest{})
+	if err != nil {
+		r.log.Error("failed to add new user custom parsing channel", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s, %w", op, err)
+	}
+	return nil
+}
+
 func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
