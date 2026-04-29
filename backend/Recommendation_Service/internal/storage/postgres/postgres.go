@@ -137,6 +137,20 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string, cate
 	return nil
 }
 
+func (s *Storage) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
+	const op = "internal.storage.postgres.DeleteUserCustomParsingChannel"
+	q := `DELETE FROM user_custom_parsing_channels WHERE user_id = $1 AND channel_username = $2`
+	_, err := s.parserDB.ExecContext(ctx, q, userID, channel)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	err = s.DeleteParsingChannel(ctx, channel)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
 func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.DeleteParsingChannel"
 

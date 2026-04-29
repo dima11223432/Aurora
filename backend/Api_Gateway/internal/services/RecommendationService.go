@@ -42,14 +42,21 @@ func (r *RecommendationService) GetAllParsingChannels(
 	return parsingChannels.Channels, nil
 }
 
-func (r *RecommendationService) AddUserCustomParsingChannels(ctx context.Context, userID int64, channel string) error {
+func (r *RecommendationService) AddNewUserCustomParsingChannels(ctx context.Context, channel string) error {
 	const op = "Api_Service.internal.services.RecommendationService.AddUserCustomParsingChannels"
-
+	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		r.log.Error("invalid user id in context", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s, %w", op, err)
+	}
 	if channel == "" {
 		return fmt.Errorf("%s, %w", op, errs.ErrIsEmpty)
 	}
 
-	_, err := r.RecommendationClient.AddNewUserCustomParsingChannel(ctx, &rsv1.AddNewUserCustomParsingChannelRequest{})
+	_, err = r.RecommendationClient.AddNewUserCustomParsingChannel(ctx, &rsv1.AddNewUserCustomParsingChannelRequest{
+		ChannelUsername: channel,
+		UserId:          userID,
+	})
 	if err != nil {
 		r.log.Error("failed to add new user custom parsing channel", slog.String("op", op), slog.Any("err", err))
 		return fmt.Errorf("%s, %w", op, err)

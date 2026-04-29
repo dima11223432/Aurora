@@ -30,6 +30,7 @@ type RecommendatinService interface {
 	DeleteParsingChannel(ctx context.Context, channel string) error
 	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
+	AddNewUserCustomParsingChannels(ctx context.Context, channel string) error
 	GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
 
@@ -173,6 +174,21 @@ func (a *ApiService) GetAllParsingChannels(
 	return &v1.GetAllParsingChannelsResponse{
 		Channels: channels,
 	}, nil
+}
+
+func (a *ApiService) AddNewUserCustomParsingChannel(
+	ctx context.Context,
+	req *v1.AddNewUserCustomParsingChannelRequest,
+) (*v1.AddNewUserCustomParsingChannelResponse, error) {
+	channels := req.GetChannelUsername()
+	err := a.recommendatinService.AddNewUserCustomParsingChannels(ctx, channels)
+	if err != nil {
+		if errors.Is(err, errs.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &v1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
 func (a *ApiService) AddNewParsingChannel(
