@@ -85,11 +85,22 @@ const Shtora = () => {
     <div className="fixed top-4 left-4 z-50">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="bg-gradient-to-r from-blue-700 via-blue-600 to-blue-800 hover:from-blue-800 hover:to-blue-900 text-white font-bold py-2 px-5 rounded-xl shadow-2xl focus:outline-none transition-all duration-300 hover:scale-105 hover:shadow-blue-500/40"
-        style={{ backdropFilter: "blur(2px)" }}
-      >
-        {isOpen ? "Скрыть ТГК" : "Показать ТГК"}
-      </button>
+        className="text-white font-bold py-2 px-5 rounded-xl shadow-2xl focus:outline-none transition-all duration-300 hover:scale-105 hover:shadow-blue-500/40"
+        style={{
+        background: "linear-gradient(to right, #208390, #36DEF4)",
+        backdropFilter: "blur(2px)",
+        border: "none",
+        cursor: "pointer",
+        }}
+        onMouseEnter={(e) =>
+        (e.target.style.background = "linear-gradient(to right, #6bedfeff, #54f1ffff)")
+      }
+      onMouseLeave={(e) =>
+      (e.target.style.background = "linear-gradient(to right, #208390, #36DEF4)")
+    }
+    >
+  {isOpen ? "Скрыть ТГК" : "Показать ТГК"}
+</button>
       <div
         className={`mt-2 w-72 max-w-xs ${isOpen ? "shtora-animate-in" : "shtora-animate-out pointer-events-none opacity-0"} bg-gray-900/90 rounded-2xl shadow-2xl border border-blue-700 p-5 absolute left-0 top-14 transition-all duration-500 backdrop-blur-xl`}
         style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
