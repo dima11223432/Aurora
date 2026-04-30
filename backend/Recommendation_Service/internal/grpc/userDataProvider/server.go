@@ -161,7 +161,7 @@ func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewP
 	return &recv1.AddNewParsingChannelResponse{}, nil
 }
 
-func (s *serverAPI) DeleteUserCustomParsingChanel(
+func (s *serverAPI) DeleteUserCustomParsingChannel(
 	ctx context.Context,
 	req *recv1.DeleteUserCustomParsingChannelRequest,
 ) (*recv1.DeleteUserCustomParsingChannelResponse, error) {

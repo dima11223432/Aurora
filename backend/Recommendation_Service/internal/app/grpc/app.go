@@ -17,6 +17,7 @@ type ParsingChannelsProvider interface {
 	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
+	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 	GetAllCategories(ctx context.Context) ([]string, error)
 }
