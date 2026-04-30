@@ -26,6 +26,7 @@ type ParsingChannelsProvider interface {
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
+	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetAllCategories(ctx context.Context) ([]string, error)
 	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
@@ -132,6 +133,18 @@ func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel str
 			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
 		u.log.Error("failed to add new parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
+func (u UserDataProvider) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
+	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteUserCustomParsingChannel"
+	if err := u.parsingChannelsProvider.DeleteUserCustomParsingChannel(ctx, userID, channel); err != nil {
+		u.log.Error("failed to delete user custom parsing channel",
 			slog.String("op", op),
 			slog.Any("err", err),
 		)
