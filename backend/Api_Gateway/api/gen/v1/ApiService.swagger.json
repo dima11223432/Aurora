@@ -144,6 +144,38 @@
         ]
       }
     },
+    "/v1/delete_user_custom_parsing_channel": {
+      "post": {
+        "operationId": "ApiService_DeleteUserCustomParsingChannel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteUserCustomParsingChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DeleteUserCustomParsingChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/get_all_categories": {
       "get": {
         "operationId": "ApiService_GetAllCategories",
@@ -471,6 +503,17 @@
       }
     },
     "v1DeletePriorityChannelResponse": {
+      "type": "object"
+    },
+    "v1DeleteUserCustomParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DeleteUserCustomParsingChannelResponse": {
       "type": "object"
     },
     "v1GetAllCategoriesResponse": {
