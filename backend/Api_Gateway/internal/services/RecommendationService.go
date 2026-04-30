@@ -87,6 +87,35 @@ func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channe
 	return nil
 }
 
+func (r *RecommendationService) DeleteUserCustomParsingChannel(
+	ctx context.Context,
+	channel string,
+) error {
+	const op = "Api_Service.internal.services.RecommendationService.DeleteUserCustomParsingChannel"
+	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		r.log.Error("Invalid user id in context",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	_, err = r.RecommendationClient.DeleteUserCustomParsingChannel(ctx,
+		&rsv1.DeleteUserCustomParsingChannelRequest{
+			UserId:          userID,
+			ChannelUsername: channel,
+		},
+	)
+	if err != nil {
+		r.log.Error("Failed to delete user custom parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
 func (r *RecommendationService) DeleteParsingChannel(ctx context.Context, channel string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
