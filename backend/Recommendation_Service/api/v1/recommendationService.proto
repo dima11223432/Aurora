@@ -10,8 +10,18 @@ service RecommendationService {
   rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse);
   rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse);
   rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse);
+  rpc AddNewUserCustomParsingChannel(AddNewUserCustomParsingChannelRequest) returns (AddNewUserCustomParsingChannelResponse);
   rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse);
   rpc GetAllParsingChannelsWithCategories(GetAllParsingChannelsWithCategoriesRequest) returns (GetAllParsingChannelsWithCategoriesResponse);
+}
+
+message AddNewUserCustomParsingChannelRequest {
+  int64 user_id = 1;
+  string channel_username = 2;
+}
+
+message AddNewUserCustomParsingChannelResponse{
+
 }
 
 message GetAllParsingChannelsWithCategoriesRequest {
