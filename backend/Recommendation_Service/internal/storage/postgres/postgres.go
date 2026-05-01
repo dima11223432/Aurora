@@ -88,11 +88,14 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
 	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
 
-	if _, err := s.parserDB.ExecContext(ctx, q, userID, channel); err != nil {
+	err := s.AddOnlyNewParsingChannel(ctx, channel)
+	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	s.AddOnlyNewParsingChannel(ctx, channel)
+	if _, err := s.parserDB.ExecContext(ctx, q, userID, channel); err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
 
 	return nil
 }
