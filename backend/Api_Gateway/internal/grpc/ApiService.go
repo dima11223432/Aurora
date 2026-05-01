@@ -28,6 +28,7 @@ type RecommendatinService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	DeleteParsingChannel(ctx context.Context, channel string) error
+	DeleteUserCustomParsingChannel(ctx context.Context, channel string) error
 	AddNewParsingChannel(ctx context.Context, channel string, category string) error
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
 	AddNewUserCustomParsingChannels(ctx context.Context, channel string) error
@@ -210,6 +211,17 @@ func (a *ApiService) AddNewParsingChannel(
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 	return &v1.AddNewParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) DeleteUserCustomParsingChannel(
+	ctx context.Context,
+	req *v1.DeleteUserCustomParsingChannelRequest,
+) (*v1.DeleteUserCustomParsingChannelResponse, error) {
+	err := a.recommendatinService.DeleteUserCustomParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		return &v1.DeleteUserCustomParsingChannelResponse{}, status.Error(codes.Internal, "failed to get post")
+	}
+	return &v1.DeleteUserCustomParsingChannelResponse{}, nil
 }
 
 func (a *ApiService) DeleteParsingChannel(

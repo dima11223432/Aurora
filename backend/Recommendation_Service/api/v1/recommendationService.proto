@@ -11,8 +11,18 @@ service RecommendationService {
   rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse);
   rpc AddNewParsingChannel(AddNewParsingChannelRequest) returns (AddNewParsingChannelResponse);
   rpc AddNewUserCustomParsingChannel(AddNewUserCustomParsingChannelRequest) returns (AddNewUserCustomParsingChannelResponse);
+  rpc DeleteUserCustomParsingChannel(DeleteUserCustomParsingChannelRequest) returns (DeleteUserCustomParsingChannelResponse);
   rpc DeleteParsingChannel(DeleteParsingChannelRequest) returns (DeleteParsingChannelResponse);
   rpc GetAllParsingChannelsWithCategories(GetAllParsingChannelsWithCategoriesRequest) returns (GetAllParsingChannelsWithCategoriesResponse);
+}
+
+message DeleteUserCustomParsingChannelRequest {
+  int64 user_id = 1;
+  string channel_username = 2;
+}
+
+message DeleteUserCustomParsingChannelResponse{
+
 }
 
 message AddNewUserCustomParsingChannelRequest {
