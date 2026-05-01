@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	github.com/dima11223432/Aurora_SSO_Protos v0.0.7
-	github.com/dima11223432/recommendationService_protos v0.1.1
+	github.com/dima11223432/recommendationService_protos v0.1.5
 	github.com/golang-jwt/jwt/v5 v5.3.1
 	github.com/golang-migrate/migrate/v4 v4.19.1
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0

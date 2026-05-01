@@ -19,17 +19,19 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	ApiService_Login_FullMethodName                               = "/api.v1.ApiService/Login"
-	ApiService_IsAdmin_FullMethodName                             = "/api.v1.ApiService/IsAdmin"
-	ApiService_SetPriorityChannels_FullMethodName                 = "/api.v1.ApiService/SetPriorityChannels"
-	ApiService_GetRecommendatedPosts_FullMethodName               = "/api.v1.ApiService/GetRecommendatedPosts"
-	ApiService_GetUserPriorityChannels_FullMethodName             = "/api.v1.ApiService/GetUserPriorityChannels"
-	ApiService_DeletePriorityChannels_FullMethodName              = "/api.v1.ApiService/DeletePriorityChannels"
-	ApiService_GetAllParsingChannels_FullMethodName               = "/api.v1.ApiService/GetAllParsingChannels"
-	ApiService_AddNewParsingChannel_FullMethodName                = "/api.v1.ApiService/AddNewParsingChannel"
-	ApiService_DeleteParsingChannel_FullMethodName                = "/api.v1.ApiService/DeleteParsingChannel"
-	ApiService_GetAllParsingChannelsWithCategories_FullMethodName = "/api.v1.ApiService/GetAllParsingChannelsWithCategories"
-	ApiService_GetAllCategories_FullMethodName                    = "/api.v1.ApiService/GetAllCategories"
+	ApiService_Login_FullMethodName                                      = "/api.v1.ApiService/Login"
+	ApiService_IsAdmin_FullMethodName                                    = "/api.v1.ApiService/IsAdmin"
+	ApiService_SetPriorityChannels_FullMethodName                        = "/api.v1.ApiService/SetPriorityChannels"
+	ApiService_GetRecommendatedPosts_FullMethodName                      = "/api.v1.ApiService/GetRecommendatedPosts"
+	ApiService_GetUserPriorityChannels_FullMethodName                    = "/api.v1.ApiService/GetUserPriorityChannels"
+	ApiService_DeletePriorityChannels_FullMethodName                     = "/api.v1.ApiService/DeletePriorityChannels"
+	ApiService_GetAllDefaultParsingChannels_FullMethodName               = "/api.v1.ApiService/GetAllDefaultParsingChannels"
+	ApiService_AddNewDefaultParsingChannel_FullMethodName                = "/api.v1.ApiService/AddNewDefaultParsingChannel"
+	ApiService_AddNewUserCustomParsingChannel_FullMethodName             = "/api.v1.ApiService/AddNewUserCustomParsingChannel"
+	ApiService_DeleteUserCustomParsingChannel_FullMethodName             = "/api.v1.ApiService/DeleteUserCustomParsingChannel"
+	ApiService_DeleteDefaultParsingChannel_FullMethodName                = "/api.v1.ApiService/DeleteDefaultParsingChannel"
+	ApiService_GetAllDefaultParsingChannelsWithCategories_FullMethodName = "/api.v1.ApiService/GetAllDefaultParsingChannelsWithCategories"
+	ApiService_GetAllCategories_FullMethodName                           = "/api.v1.ApiService/GetAllCategories"
 )
 
 // ApiServiceClient is the client API for ApiService service.
@@ -42,10 +44,12 @@ type ApiServiceClient interface {
 	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
 	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
 	DeletePriorityChannels(ctx context.Context, in *DeletePriorityChannelRequest, opts ...grpc.CallOption) (*DeletePriorityChannelResponse, error)
-	GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error)
-	AddNewParsingChannel(ctx context.Context, in *AddNewParsingChannelRequest, opts ...grpc.CallOption) (*AddNewParsingChannelResponse, error)
-	DeleteParsingChannel(ctx context.Context, in *DeleteParsingChannelRequest, opts ...grpc.CallOption) (*DeleteParsingChannelResponse, error)
-	GetAllParsingChannelsWithCategories(ctx context.Context, in *GetAllParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsWithCategoriesResponse, error)
+	GetAllDefaultParsingChannels(ctx context.Context, in *GetAllDefaultParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsResponse, error)
+	AddNewDefaultParsingChannel(ctx context.Context, in *AddNewDefaultParsingChannelRequest, opts ...grpc.CallOption) (*AddNewDefaultParsingChannelResponse, error)
+	AddNewUserCustomParsingChannel(ctx context.Context, in *AddNewUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*AddNewUserCustomParsingChannelResponse, error)
+	DeleteUserCustomParsingChannel(ctx context.Context, in *DeleteUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*DeleteUserCustomParsingChannelResponse, error)
+	DeleteDefaultParsingChannel(ctx context.Context, in *DeleteDefaultParsingChannelRequest, opts ...grpc.CallOption) (*DeleteDefaultParsingChannelResponse, error)
+	GetAllDefaultParsingChannelsWithCategories(ctx context.Context, in *GetAllDefaultParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error)
 	GetAllCategories(ctx context.Context, in *GetAllCategoriesRequest, opts ...grpc.CallOption) (*GetAllCategoriesResponse, error)
 }
 
@@ -117,40 +121,60 @@ func (c *apiServiceClient) DeletePriorityChannels(ctx context.Context, in *Delet
 	return out, nil
 }
 
-func (c *apiServiceClient) GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error) {
+func (c *apiServiceClient) GetAllDefaultParsingChannels(ctx context.Context, in *GetAllDefaultParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAllParsingChannelsResponse)
-	err := c.cc.Invoke(ctx, ApiService_GetAllParsingChannels_FullMethodName, in, out, cOpts...)
+	out := new(GetAllDefaultParsingChannelsResponse)
+	err := c.cc.Invoke(ctx, ApiService_GetAllDefaultParsingChannels_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *apiServiceClient) AddNewParsingChannel(ctx context.Context, in *AddNewParsingChannelRequest, opts ...grpc.CallOption) (*AddNewParsingChannelResponse, error) {
+func (c *apiServiceClient) AddNewDefaultParsingChannel(ctx context.Context, in *AddNewDefaultParsingChannelRequest, opts ...grpc.CallOption) (*AddNewDefaultParsingChannelResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(AddNewParsingChannelResponse)
-	err := c.cc.Invoke(ctx, ApiService_AddNewParsingChannel_FullMethodName, in, out, cOpts...)
+	out := new(AddNewDefaultParsingChannelResponse)
+	err := c.cc.Invoke(ctx, ApiService_AddNewDefaultParsingChannel_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *apiServiceClient) DeleteParsingChannel(ctx context.Context, in *DeleteParsingChannelRequest, opts ...grpc.CallOption) (*DeleteParsingChannelResponse, error) {
+func (c *apiServiceClient) AddNewUserCustomParsingChannel(ctx context.Context, in *AddNewUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*AddNewUserCustomParsingChannelResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DeleteParsingChannelResponse)
-	err := c.cc.Invoke(ctx, ApiService_DeleteParsingChannel_FullMethodName, in, out, cOpts...)
+	out := new(AddNewUserCustomParsingChannelResponse)
+	err := c.cc.Invoke(ctx, ApiService_AddNewUserCustomParsingChannel_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *apiServiceClient) GetAllParsingChannelsWithCategories(ctx context.Context, in *GetAllParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsWithCategoriesResponse, error) {
+func (c *apiServiceClient) DeleteUserCustomParsingChannel(ctx context.Context, in *DeleteUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*DeleteUserCustomParsingChannelResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAllParsingChannelsWithCategoriesResponse)
-	err := c.cc.Invoke(ctx, ApiService_GetAllParsingChannelsWithCategories_FullMethodName, in, out, cOpts...)
+	out := new(DeleteUserCustomParsingChannelResponse)
+	err := c.cc.Invoke(ctx, ApiService_DeleteUserCustomParsingChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiServiceClient) DeleteDefaultParsingChannel(ctx context.Context, in *DeleteDefaultParsingChannelRequest, opts ...grpc.CallOption) (*DeleteDefaultParsingChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteDefaultParsingChannelResponse)
+	err := c.cc.Invoke(ctx, ApiService_DeleteDefaultParsingChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiServiceClient) GetAllDefaultParsingChannelsWithCategories(ctx context.Context, in *GetAllDefaultParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllDefaultParsingChannelsWithCategoriesResponse)
+	err := c.cc.Invoke(ctx, ApiService_GetAllDefaultParsingChannelsWithCategories_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -177,10 +201,12 @@ type ApiServiceServer interface {
 	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
 	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
 	DeletePriorityChannels(context.Context, *DeletePriorityChannelRequest) (*DeletePriorityChannelResponse, error)
-	GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error)
-	AddNewParsingChannel(context.Context, *AddNewParsingChannelRequest) (*AddNewParsingChannelResponse, error)
-	DeleteParsingChannel(context.Context, *DeleteParsingChannelRequest) (*DeleteParsingChannelResponse, error)
-	GetAllParsingChannelsWithCategories(context.Context, *GetAllParsingChannelsWithCategoriesRequest) (*GetAllParsingChannelsWithCategoriesResponse, error)
+	GetAllDefaultParsingChannels(context.Context, *GetAllDefaultParsingChannelsRequest) (*GetAllDefaultParsingChannelsResponse, error)
+	AddNewDefaultParsingChannel(context.Context, *AddNewDefaultParsingChannelRequest) (*AddNewDefaultParsingChannelResponse, error)
+	AddNewUserCustomParsingChannel(context.Context, *AddNewUserCustomParsingChannelRequest) (*AddNewUserCustomParsingChannelResponse, error)
+	DeleteUserCustomParsingChannel(context.Context, *DeleteUserCustomParsingChannelRequest) (*DeleteUserCustomParsingChannelResponse, error)
+	DeleteDefaultParsingChannel(context.Context, *DeleteDefaultParsingChannelRequest) (*DeleteDefaultParsingChannelResponse, error)
+	GetAllDefaultParsingChannelsWithCategories(context.Context, *GetAllDefaultParsingChannelsWithCategoriesRequest) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error)
 	GetAllCategories(context.Context, *GetAllCategoriesRequest) (*GetAllCategoriesResponse, error)
 }
 
@@ -209,17 +235,23 @@ func (UnimplementedApiServiceServer) GetUserPriorityChannels(context.Context, *G
 func (UnimplementedApiServiceServer) DeletePriorityChannels(context.Context, *DeletePriorityChannelRequest) (*DeletePriorityChannelResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeletePriorityChannels not implemented")
 }
-func (UnimplementedApiServiceServer) GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAllParsingChannels not implemented")
+func (UnimplementedApiServiceServer) GetAllDefaultParsingChannels(context.Context, *GetAllDefaultParsingChannelsRequest) (*GetAllDefaultParsingChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllDefaultParsingChannels not implemented")
 }
-func (UnimplementedApiServiceServer) AddNewParsingChannel(context.Context, *AddNewParsingChannelRequest) (*AddNewParsingChannelResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method AddNewParsingChannel not implemented")
+func (UnimplementedApiServiceServer) AddNewDefaultParsingChannel(context.Context, *AddNewDefaultParsingChannelRequest) (*AddNewDefaultParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddNewDefaultParsingChannel not implemented")
 }
-func (UnimplementedApiServiceServer) DeleteParsingChannel(context.Context, *DeleteParsingChannelRequest) (*DeleteParsingChannelResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method DeleteParsingChannel not implemented")
+func (UnimplementedApiServiceServer) AddNewUserCustomParsingChannel(context.Context, *AddNewUserCustomParsingChannelRequest) (*AddNewUserCustomParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddNewUserCustomParsingChannel not implemented")
 }
-func (UnimplementedApiServiceServer) GetAllParsingChannelsWithCategories(context.Context, *GetAllParsingChannelsWithCategoriesRequest) (*GetAllParsingChannelsWithCategoriesResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAllParsingChannelsWithCategories not implemented")
+func (UnimplementedApiServiceServer) DeleteUserCustomParsingChannel(context.Context, *DeleteUserCustomParsingChannelRequest) (*DeleteUserCustomParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteUserCustomParsingChannel not implemented")
+}
+func (UnimplementedApiServiceServer) DeleteDefaultParsingChannel(context.Context, *DeleteDefaultParsingChannelRequest) (*DeleteDefaultParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteDefaultParsingChannel not implemented")
+}
+func (UnimplementedApiServiceServer) GetAllDefaultParsingChannelsWithCategories(context.Context, *GetAllDefaultParsingChannelsWithCategoriesRequest) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllDefaultParsingChannelsWithCategories not implemented")
 }
 func (UnimplementedApiServiceServer) GetAllCategories(context.Context, *GetAllCategoriesRequest) (*GetAllCategoriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllCategories not implemented")
@@ -352,74 +384,110 @@ func _ApiService_DeletePriorityChannels_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ApiService_GetAllParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllParsingChannelsRequest)
+func _ApiService_GetAllDefaultParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllDefaultParsingChannelsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServiceServer).GetAllParsingChannels(ctx, in)
+		return srv.(ApiServiceServer).GetAllDefaultParsingChannels(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ApiService_GetAllParsingChannels_FullMethodName,
+		FullMethod: ApiService_GetAllDefaultParsingChannels_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).GetAllParsingChannels(ctx, req.(*GetAllParsingChannelsRequest))
+		return srv.(ApiServiceServer).GetAllDefaultParsingChannels(ctx, req.(*GetAllDefaultParsingChannelsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ApiService_AddNewParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddNewParsingChannelRequest)
+func _ApiService_AddNewDefaultParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddNewDefaultParsingChannelRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServiceServer).AddNewParsingChannel(ctx, in)
+		return srv.(ApiServiceServer).AddNewDefaultParsingChannel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ApiService_AddNewParsingChannel_FullMethodName,
+		FullMethod: ApiService_AddNewDefaultParsingChannel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).AddNewParsingChannel(ctx, req.(*AddNewParsingChannelRequest))
+		return srv.(ApiServiceServer).AddNewDefaultParsingChannel(ctx, req.(*AddNewDefaultParsingChannelRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ApiService_DeleteParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteParsingChannelRequest)
+func _ApiService_AddNewUserCustomParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddNewUserCustomParsingChannelRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServiceServer).DeleteParsingChannel(ctx, in)
+		return srv.(ApiServiceServer).AddNewUserCustomParsingChannel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ApiService_DeleteParsingChannel_FullMethodName,
+		FullMethod: ApiService_AddNewUserCustomParsingChannel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).DeleteParsingChannel(ctx, req.(*DeleteParsingChannelRequest))
+		return srv.(ApiServiceServer).AddNewUserCustomParsingChannel(ctx, req.(*AddNewUserCustomParsingChannelRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ApiService_GetAllParsingChannelsWithCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllParsingChannelsWithCategoriesRequest)
+func _ApiService_DeleteUserCustomParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserCustomParsingChannelRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ApiServiceServer).GetAllParsingChannelsWithCategories(ctx, in)
+		return srv.(ApiServiceServer).DeleteUserCustomParsingChannel(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ApiService_GetAllParsingChannelsWithCategories_FullMethodName,
+		FullMethod: ApiService_DeleteUserCustomParsingChannel_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApiServiceServer).GetAllParsingChannelsWithCategories(ctx, req.(*GetAllParsingChannelsWithCategoriesRequest))
+		return srv.(ApiServiceServer).DeleteUserCustomParsingChannel(ctx, req.(*DeleteUserCustomParsingChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApiService_DeleteDefaultParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDefaultParsingChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).DeleteDefaultParsingChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_DeleteDefaultParsingChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).DeleteDefaultParsingChannel(ctx, req.(*DeleteDefaultParsingChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApiService_GetAllDefaultParsingChannelsWithCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllDefaultParsingChannelsWithCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).GetAllDefaultParsingChannelsWithCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_GetAllDefaultParsingChannelsWithCategories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).GetAllDefaultParsingChannelsWithCategories(ctx, req.(*GetAllDefaultParsingChannelsWithCategoriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -474,20 +542,28 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ApiService_DeletePriorityChannels_Handler,
 		},
 		{
-			MethodName: "GetAllParsingChannels",
-			Handler:    _ApiService_GetAllParsingChannels_Handler,
+			MethodName: "GetAllDefaultParsingChannels",
+			Handler:    _ApiService_GetAllDefaultParsingChannels_Handler,
 		},
 		{
-			MethodName: "AddNewParsingChannel",
-			Handler:    _ApiService_AddNewParsingChannel_Handler,
+			MethodName: "AddNewDefaultParsingChannel",
+			Handler:    _ApiService_AddNewDefaultParsingChannel_Handler,
 		},
 		{
-			MethodName: "DeleteParsingChannel",
-			Handler:    _ApiService_DeleteParsingChannel_Handler,
+			MethodName: "AddNewUserCustomParsingChannel",
+			Handler:    _ApiService_AddNewUserCustomParsingChannel_Handler,
 		},
 		{
-			MethodName: "GetAllParsingChannelsWithCategories",
-			Handler:    _ApiService_GetAllParsingChannelsWithCategories_Handler,
+			MethodName: "DeleteUserCustomParsingChannel",
+			Handler:    _ApiService_DeleteUserCustomParsingChannel_Handler,
+		},
+		{
+			MethodName: "DeleteDefaultParsingChannel",
+			Handler:    _ApiService_DeleteDefaultParsingChannel_Handler,
+		},
+		{
+			MethodName: "GetAllDefaultParsingChannelsWithCategories",
+			Handler:    _ApiService_GetAllDefaultParsingChannelsWithCategories_Handler,
 		},
 		{
 			MethodName: "GetAllCategories",

@@ -38,7 +38,7 @@ export default function AdminPanel() {
       try {
         const token = localStorage.getItem("token");
         const resp = await axios.get(
-          "http://localhost:8081/v1/get_all_parsing_channels_with_categories",
+          "http://localhost:8081/v1/get_all_default_parsing_channels_with_categories",
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
@@ -62,7 +62,7 @@ export default function AdminPanel() {
     try {
       const token = localStorage.getItem("token");
       axios.post(
-        "http://localhost:8081/v1/add_new_parsing_channel",
+        "http://localhost:8081/v1/add_new_default_parsing_channel",
         { channel_username: addedChannel, category: addedChannelCategory },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -125,7 +125,6 @@ export default function AdminPanel() {
               )}
             </div>
           </section>
-
           <hr className="border-white/5" />
 
           <section className="flex flex-col gap-4">
@@ -147,7 +146,7 @@ export default function AdminPanel() {
                 <select
                   className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-red-400/50 appearance-none cursor-pointer"
                   onChange={(e) => setAddedChannelCategory(e.target.value)}
-                  value={deletedChannel}
+                  value={addedChannelCategory}
                 >
                   <option value="" className="bg-[#0F1A2F]">
                     -- Выберите категорию --

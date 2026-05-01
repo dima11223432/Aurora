@@ -24,25 +24,27 @@ type Auth interface {
 	IsAdminByContext(ctx context.Context) (bool, error)
 }
 
-type RecommendatinService interface {
+type RecommendationService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
-	GetAllParsingChannels(ctx context.Context) ([]string, error)
-	DeleteParsingChannel(ctx context.Context, channel string) error
-	AddNewParsingChannel(ctx context.Context, channel string, category string) error
+	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
+	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
+	DeleteUserCustomParsingChannel(ctx context.Context, channel string) error
+	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
-	GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
+	AddNewUserCustomParsingChannels(ctx context.Context, channel string) error
+	GetAllDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
 
 type ApiService struct {
 	v1.UnimplementedApiServiceServer
-	api  API
-	auth *services.AuthService
+	recommendationService RecommendationService
+	auth                  Auth
 }
 
-func RegisterGrpcServer(gRPC *grpc.Server, api API, auth *services.AuthService) {
+func RegisterGrpcServer(gRPC *grpc.Server, auth Auth, recommendationService RecommendationService) {
 	v1.RegisterApiServiceServer(gRPC, &ApiService{
-		auth: auth,
-		api:  api,
+		auth:                  auth,
+		recommendationService: recommendationService,
 	})
 }
 
@@ -76,6 +78,32 @@ func (a *ApiService) Login(
 		Token: token,
 	}, nil
 
+func (a *ApiService) DeletePriorityChannels(
+	ctx context.Context,
+	req *v1.DeletePriorityChannelRequest,
+) (*v1.DeletePriorityChannelResponse, error) {
+	err := a.auth.DeletePriorityChannels(ctx, req.GetChannels())
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &v1.DeletePriorityChannelResponse{}, nil
+}
+
+func (a *ApiService) SetPriorityChannels(
+	ctx context.Context,
+	req *v1.SetPriorityChannelsRequest,
+) (*v1.SetPriorityChannelsResponse, error) {
+	channels := req.GetPriorityChannels()
+
+	err := a.auth.SetPriorityChannels(ctx, channels)
+	if err != nil {
+		if errors.Is(err, custom_errors.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &v1.SetPriorityChannelsResponse{}, nil
 }
 
 func (a *ApiService) IsAdmin(
@@ -94,13 +122,16 @@ func (a *ApiService) IsAdmin(
 
 func (a *ApiService) UpdateGroup(
 	ctx context.Context,
-	req *v1.UpdateGroupRequest,
-) (*v1.UpdateGroupResponse, error) {
-	if req.Id <= 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "id must be > 0")
+	req *v1.GetRecommendatedPostsRequest,
+) (*v1.GetRecommendatedPostsResponse, error) {
+	var cursor *models.Cursor
+	if req.GetCursor() != nil {
+		cursor = &models.Cursor{
+			Score: float64(req.GetCursor().Score),
+			ID:    req.GetCursor().Id,
+		}
 	}
-
-	err := a.api.UpdateGroup(ctx, req.Id, req.Name)
+	posts, nextCursor, err := a.recommendationService.GetUserRecommendatedPosts(ctx, cursor)
 	if err != nil {
 		return nil, err
 	}
@@ -118,11 +149,12 @@ func (a *ApiService) DeleteGroup(
 		return nil, status.Errorf(codes.InvalidArgument, "id must be > 0")
 	}
 
-	err := a.api.DeleteGroup(ctx, req.Id)
-	if err != nil {
-		return &v1.DeleteGroupResponse{
-			Success: false,
-		}, status.Errorf(codes.Internal, "fail to delete group")
+	var protoNextCursor *v1.Cursor
+	if nextCursor != nil {
+		protoNextCursor = &v1.Cursor{
+			Score: int64(nextCursor.Score),
+			Id:    nextCursor.ID,
+		}
 	}
 
 	return &v1.DeleteGroupResponse{
@@ -185,48 +217,98 @@ func (a *ApiService) GetAllContactsByGroupID(
 			Email: contact.Email,
 		})
 	}
-	return &v1.GetAllContactsByGroupIDResponse{
-		Contacts: pbContact,
+	return &v1.GetRecommendatedPostsResponse{
+		Posts:      postList,
+		NextCursor: protoNextCursor,
 	}, nil
 }
 
-func (a *ApiService) UpdateContact(ctx context.Context, req *v1.UpdateContactRequest) (*v1.UpdateContactResponse, error) {
-	err := a.api.UpdateContact(ctx, req.Id, req.Email)
-
+func (a *ApiService) GetAllDefaultParsingChannels(
+	ctx context.Context,
+	_ *v1.GetAllDefaultParsingChannelsRequest,
+) (*v1.GetAllDefaultParsingChannelsResponse, error) {
+	channels, err := a.recommendationService.GetAllDefaultParsingChannels(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	return &v1.UpdateContactResponse{
-		Success: true,
+	return &v1.GetAllDefaultParsingChannelsResponse{
+		Channels: channels,
 	}, nil
 }
 
-func (a *ApiService) CreateContact(ctx context.Context, req *v1.CreateContactRequest) (*v1.CreateContactResponse, error) {
-	id, err := a.api.CreateContact(ctx, req.Email, req.GroupId)
-	if err != nil {
-		return nil, err
-	}
-	if !isAdmin {
-		return nil, status.Error(codes.PermissionDenied, "permission denied")
-	}
-	err = a.recommendatinService.AddNewParsingChannel(ctx, req.ChannelUsername, req.Category)
+func (a *ApiService) AddNewUserCustomParsingChannel(
+	ctx context.Context,
+	req *v1.AddNewUserCustomParsingChannelRequest,
+) (*v1.AddNewUserCustomParsingChannelResponse, error) {
+	channel := req.GetChannelUsername()
+	err := a.recommendationService.AddNewUserCustomParsingChannels(ctx, channel)
 	if err != nil {
 		if errors.Is(err, errs.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")
 		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
-	return &v1.AddNewParsingChannelResponse{}, nil
+	return &v1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
-	return &v1.CreateContactResponse{
-		Id: id,
-	}, nil
+func (a *ApiService) AddNewDefaultParsingChannel(
+	ctx context.Context,
+	req *v1.AddNewDefaultParsingChannelRequest,
+) (*v1.AddNewDefaultParsingChannelResponse, error) {
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendationService.AddNewDefaultParsingChannel(ctx, req.ChannelUsername, req.Category)
+	if err != nil {
+		if errors.Is(err, errs.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	return &v1.AddNewDefaultParsingChannelResponse{}, nil
 }
 
-func (a *ApiService) CreateNotification(ctx context.Context, req *v1.CreateNotificationRequest) (*v1.CreateNotificationResponse, error) {
-	id, err := a.api.CreateNotification(ctx, req.Title, req.Text, req.GroupId)
+func (a *ApiService) DeleteUserCustomParsingChannel(
+	ctx context.Context,
+	req *v1.DeleteUserCustomParsingChannelRequest,
+) (*v1.DeleteUserCustomParsingChannelResponse, error) {
+	err := a.recommendationService.DeleteUserCustomParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to delete channel")
+	}
+	return &v1.DeleteUserCustomParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) DeleteDefaultParsingChannel(
+	ctx context.Context,
+	req *v1.DeleteDefaultParsingChannelRequest,
+) (*v1.DeleteDefaultParsingChannelResponse, error) {
+
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "invalid JWT")
+	}
+	if !isAdmin {
+		return nil, status.Error(codes.PermissionDenied, "permission denied")
+	}
+	err = a.recommendationService.DeleteDefaultParsingChannel(ctx, req.ChannelUsername)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to delete channel")
+	}
+	return &v1.DeleteDefaultParsingChannelResponse{}, nil
+}
+
+func (a *ApiService) GetUserPriorityChannels(
+	ctx context.Context,
+	_ *v1.GetUserPriorityChannelsRequest,
+) (*v1.GetUserPriorityChannelsResponse, error) {
+
+	channels, err := a.recommendationService.GetUserPriorityChannels(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -257,28 +339,24 @@ func (a *ApiService) SendNotification(ctx context.Context, req *v1.SendNotificat
 	}, nil
 }
 
-func (a *ApiService) GetAllParsingChannelsWithCategories(
+func (a *ApiService) GetAllDefaultParsingChannelsWithCategories(
 	ctx context.Context,
-	_ *v1.GetAllParsingChannelsWithCategoriesRequest,
-) (*v1.GetAllParsingChannelsWithCategoriesResponse, error) {
+	_ *v1.GetAllDefaultParsingChannelsWithCategoriesRequest,
+) (*v1.GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
 
-	channelsWithCategories, err := a.recommendatinService.GetAllParsingChannelsWithCategories(ctx)
+	channelsWithCategories, err := a.recommendationService.GetAllDefaultParsingChannelsWithCategories(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "failed to get channels with categories")
 	}
 
-	protoChannels := make(map[string]*v1.ChannelList, 0)
+	protoChannels := make(map[string]*v1.ChannelList)
 	for category, channels := range channelsWithCategories {
 		protoChannels[category] = &v1.ChannelList{
 			Usernames: channels,
 		}
 	}
 
-	for category, channels := range channelsWithCategories {
-		channelsWithCategories[category] = channels
-	}
-
-	return &v1.GetAllParsingChannelsWithCategoriesResponse{
+	return &v1.GetAllDefaultParsingChannelsWithCategoriesResponse{
 		Channels: protoChannels,
 	}, nil
 }

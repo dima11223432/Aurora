@@ -26,29 +26,51 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 	}
 }
 
-func (r *RecommendationService) GetAllParsingChannels(
+func (r *RecommendationService) GetAllDefaultParsingChannels(
 	ctx context.Context,
 ) ([]string, error) {
-	const op = "Api_Service.internal.services.RecommendationService.GetAllParsingChannels"
+	const op = "Api_Service.internal.services.RecommendationService.GetAllDefaultParsingChannels"
 
-	parsingChannels, err := r.RecommendationClient.GetAllParsingChannels(
+	parsingChannels, err := r.RecommendationClient.GetAllDefaultParsingChannels(
 		ctx,
-		&rsv1.GetAllParsingChannelsRequest{},
+		&rsv1.GetAllDefaultParsingChannelsRequest{},
 	)
 	if err != nil {
-		r.log.Error("failed to get all parsing channels", slog.String("op", op), slog.Any("err", err))
+		r.log.Error("failed to get all default parsing channels", slog.String("op", op), slog.Any("err", err))
 		return nil, fmt.Errorf("%s, %w", op, err)
 	}
 	return parsingChannels.Channels, nil
 }
 
-func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
+func (r *RecommendationService) AddNewUserCustomParsingChannels(ctx context.Context, channel string) error {
+	const op = "Api_Service.internal.services.RecommendationService.AddUserCustomParsingChannels"
+	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		r.log.Error("invalid user id in context", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s, %w", op, err)
+	}
+	if channel == "" {
+		return fmt.Errorf("%s, %w", op, errs.ErrIsEmpty)
+	}
+
+	_, err = r.RecommendationClient.AddNewUserCustomParsingChannel(ctx, &rsv1.AddNewUserCustomParsingChannelRequest{
+		ChannelUsername: channel,
+		UserId:          userID,
+	})
+	if err != nil {
+		r.log.Error("failed to add new user custom parsing channel", slog.String("op", op), slog.Any("err", err))
+		return fmt.Errorf("%s, %w", op, err)
+	}
+	return nil
+}
+
+func (r *RecommendationService) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
 		return fmt.Errorf("channel is empty")
 	}
-	const op = "Api_Service.internal.services.RecommendationService.AddNewParsingChannel"
-	_, err := r.RecommendationClient.AddNewParsingChannel(ctx, &rsv1.AddNewParsingChannelRequest{
+	const op = "Api_Service.internal.services.RecommendationService.AddNewDefaultParsingChannel"
+	_, err := r.RecommendationClient.AddNewDefaultParsingChannel(ctx, &rsv1.AddNewDefaultParsingChannelRequest{
 		ChannelUsername: channel,
 		Category:        category,
 	})
@@ -59,21 +81,52 @@ func (r *RecommendationService) AddNewParsingChannel(ctx context.Context, channe
 			return fmt.Errorf("%s, %w", op, errs.ErrChannelExists)
 		}
 
-		r.log.Error("failed to add new parsing channel", slog.String("op", op), slog.Any("err", err))
+		r.log.Error("failed to add new default parsing channel", slog.String("op", op), slog.Any("err", err))
 		return fmt.Errorf("%s, %w", op, err)
 	}
 	return nil
 }
 
-func (r *RecommendationService) DeleteParsingChannel(ctx context.Context, channel string) error {
+func (r *RecommendationService) DeleteUserCustomParsingChannel(
+	ctx context.Context,
+	channel string,
+) error {
+	const op = "Api_Service.internal.services.RecommendationService.DeleteUserCustomParsingChannel"
+	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		r.log.Error("Invalid user id in context",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	_, err = r.RecommendationClient.DeleteUserCustomParsingChannel(ctx,
+		&rsv1.DeleteUserCustomParsingChannelRequest{
+			UserId:          userID,
+			ChannelUsername: channel,
+		},
+	)
+	if err != nil {
+		r.log.Error("Failed to delete user custom parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
+func (r *RecommendationService) DeleteDefaultParsingChannel(ctx context.Context, channel string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
 		return fmt.Errorf("channel is empty")
 	}
-	const op = "Api_Service.internal.services.RecommendationService.DeleteParsingChannel"
-	_, err := r.RecommendationClient.DeleteParsingChannel(ctx, &rsv1.DeleteParsingChannelRequest{ChannelUsername: channel})
+	const op = "Api_Service.internal.services.RecommendationService.DeleteDefaultParsingChannel"
+	_, err := r.RecommendationClient.DeleteDefaultParsingChannel(ctx, &rsv1.DeleteDefaultParsingChannelRequest{
+		ChannelUsername: channel,
+	})
 	if err != nil {
-		r.log.Error("failed to delete parsing channel", slog.String("op", op), slog.Any("err", err))
+		r.log.Error("failed to delete default parsing channel", slog.String("op", op), slog.Any("err", err))
 		return fmt.Errorf("%s, %w", op, err)
 	}
 	return nil
@@ -99,6 +152,10 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 			Cursor: newCursor,
 		},
 	)
+	if err != nil {
+		return nil, nil, fmt.Errorf("%s, %w", op, err)
+	}
+
 	var nextCursor *models.Cursor
 	if res.NextCursor != nil {
 		nextCursor = &models.Cursor{
@@ -107,9 +164,6 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 		}
 	}
 
-	if err != nil {
-		return nil, nil, fmt.Errorf("%s, %w", op, err)
-	}
 	var posts []models.Post
 	for _, post := range res.Posts {
 		var stocks []models.Stock
@@ -129,7 +183,6 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 		})
 	}
 	return posts, nextCursor, nil
-
 }
 
 func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]string, error) {
@@ -156,17 +209,18 @@ func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]
 	return channels, nil
 }
 
-func (r *RecommendationService) GetAllParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
-	const op = "Api_Service.internal.services.RecommendationService.GetAllParsingChannelsWithCategories"
-	res, err := r.RecommendationClient.GetAllParsingChannelsWithCategories(
+func (r *RecommendationService) GetAllDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
+	const op = "Api_Service.internal.services.RecommendationService.GetAllDefaultParsingChannelsWithCategories"
+	res, err := r.RecommendationClient.GetAllDefaultParsingChannelsWithCategories(
 		ctx,
-		&rsv1.GetAllParsingChannelsWithCategoriesRequest{},
+		&rsv1.GetAllDefaultParsingChannelsWithCategoriesRequest{},
 	)
 	if err != nil {
+		r.log.Error("failed to get all default parsing channels", slog.String("op", op), slog.Any("err", err))
 		return nil, fmt.Errorf("%s, %w", op, err)
 	}
 	respChannels := res.GetChannels()
-	filteredChannels := make(map[string][]string, 0)
+	filteredChannels := make(map[string][]string)
 	for category, channels := range respChannels {
 		convertedChannels := make([]string, 0, len(channels.Usernames))
 		for _, channel := range channels.Usernames {
