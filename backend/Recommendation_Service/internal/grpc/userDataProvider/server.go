@@ -22,12 +22,12 @@ type UserDataProvider interface {
 }
 
 type ParsingChannelsProvider interface {
-	GetAllParsingChannels(ctx context.Context) ([]string, error)
-	AddNewParsingChannel(ctx context.Context, channel string, category string) error
+	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
+	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
 	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
-	DeleteParsingChannel(ctx context.Context, channel string) error
+	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
 	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
-	GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
+	GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 	GetAllCategories(ctx context.Context) ([]string, error)
 }
 
@@ -121,12 +121,12 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRec
 	}, nil
 }
 
-func (s *serverAPI) GetAllParsingChannels(ctx context.Context, req *recv1.GetAllParsingChannelsRequest) (*recv1.GetAllParsingChannelsResponse, error) {
-	channels, err := s.parsingChannelsProvider.GetAllParsingChannels(ctx)
+func (s *serverAPI) GetAllDefaultParsingChannels(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsRequest) (*recv1.GetAllDefaultParsingChannelsResponse, error) {
+	channels, err := s.parsingChannelsProvider.GetAllDefaultParsingChannels(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error")
 	}
-	return &recv1.GetAllParsingChannelsResponse{
+	return &recv1.GetAllDefaultParsingChannelsResponse{
 		Channels: channels,
 	}, nil
 }
@@ -145,20 +145,20 @@ func (s *serverAPI) AddNewUserCustomParsingChannel(
 	return &recv1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
-func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewParsingChannelRequest) (*recv1.AddNewParsingChannelResponse, error) {
+func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewDefaultParsingChannelRequest) (*recv1.AddNewDefaultParsingChannelResponse, error) {
 	channelUsername := req.GetChannelUsername()
 	channelCategory := req.GetCategory()
 	if channelUsername == "" {
 		return nil, status.Error(codes.InvalidArgument, "channel username is empty")
 	}
-	err := s.parsingChannelsProvider.AddNewParsingChannel(ctx, channelUsername, channelCategory)
+	err := s.parsingChannelsProvider.AddNewDefaultParsingChannel(ctx, channelUsername, channelCategory)
 	if err != nil {
 		if errors.Is(err, storage.ErrChannelExists) {
 			return nil, status.Error(codes.AlreadyExists, "channel already exists")
 		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
-	return &recv1.AddNewParsingChannelResponse{}, nil
+	return &recv1.AddNewDefaultParsingChannelResponse{}, nil
 }
 
 func (s *serverAPI) DeleteUserCustomParsingChannel(
@@ -174,20 +174,20 @@ func (s *serverAPI) DeleteUserCustomParsingChannel(
 	return &recv1.DeleteUserCustomParsingChannelResponse{}, nil
 }
 
-func (s *serverAPI) DeleteParsingChannel(ctx context.Context, req *recv1.DeleteParsingChannelRequest) (*recv1.DeleteParsingChannelResponse, error) {
+func (s *serverAPI) DeleteDefaultParsingChannel(ctx context.Context, req *recv1.DeleteDefaultParsingChannelRequest) (*recv1.DeleteDefaultParsingChannelResponse, error) {
 	channelUsername := req.GetChannelUsername()
 	if channelUsername == "" {
 		return nil, status.Error(codes.InvalidArgument, "channel username is empty")
 	}
-	err := s.parsingChannelsProvider.DeleteParsingChannel(ctx, channelUsername)
+	err := s.parsingChannelsProvider.DeleteDefaultParsingChannel(ctx, channelUsername)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error")
 	}
-	return &recv1.DeleteParsingChannelResponse{}, nil
+	return &recv1.DeleteDefaultParsingChannelResponse{}, nil
 }
 
-func (s *serverAPI) GetAllParsingChannelsWithCategories(ctx context.Context, req *recv1.GetAllParsingChannelsWithCategoriesRequest) (*recv1.GetAllParsingChannelsWithCategoriesResponse, error) {
-	channelsWithCategories, err := s.parsingChannelsProvider.GetParsingChannelsWithCategories(ctx)
+func (s *serverAPI) GetAllDefaultParsingChannelsWithCategories(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsWithCategoriesRequest) (*recv1.GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
+	channelsWithCategories, err := s.parsingChannelsProvider.GetDefaultParsingChannelsWithCategories(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, "internal error")
 	}
@@ -199,7 +199,7 @@ func (s *serverAPI) GetAllParsingChannelsWithCategories(ctx context.Context, req
 		}
 	}
 
-	return &recv1.GetAllParsingChannelsWithCategoriesResponse{
+	return &recv1.GetAllDefaultParsingChannelsWithCategoriesResponse{
 		Channels: protoChannels,
 	}, nil
 }

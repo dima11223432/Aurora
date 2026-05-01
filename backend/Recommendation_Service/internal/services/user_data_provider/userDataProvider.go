@@ -23,13 +23,13 @@ type PriorityChannelsProvider interface {
 }
 
 type ParsingChannelsProvider interface {
-	GetAllParsingChannels(ctx context.Context) ([]string, error)
-	AddNewParsingChannel(ctx context.Context, channel string, category string) error
-	DeleteParsingChannel(ctx context.Context, channel string) error
+	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
+	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
+	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
 	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetAllCategories(ctx context.Context) ([]string, error)
 	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
-	GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
+	GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
 }
 
 type PriorityNewsProvider interface {
@@ -95,9 +95,9 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 	return posts, nextCursor, nil
 }
 
-func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string, error) {
+func (u *UserDataProvider) GetAllDefaultParsingChannels(ctx context.Context) ([]string, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetAllParsingChannels"
-	channels, err := u.parsingChannelsProvider.GetAllParsingChannels(ctx)
+	channels, err := u.parsingChannelsProvider.GetAllDefaultParsingChannels(ctx)
 	if err != nil {
 		u.log.Error("failed to get all parsing channels",
 			slog.String("op", op),
@@ -120,9 +120,9 @@ func (u *UserDataProvider) AddNewUserCustomParsingChannel(ctx context.Context, u
 	return nil
 }
 
-func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
+func (u *UserDataProvider) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewParsingChannel"
-	err := u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel, category)
+	err := u.parsingChannelsProvider.AddNewDefaultParsingChannel(ctx, channel, category)
 	if err != nil {
 		if errors.Is(err, storage.ErrChannelExists) {
 			u.log.Error("parsing channel already exists",
@@ -153,9 +153,9 @@ func (u UserDataProvider) DeleteUserCustomParsingChannel(ctx context.Context, us
 	return nil
 }
 
-func (u *UserDataProvider) DeleteParsingChannel(ctx context.Context, channel string) error {
+func (u *UserDataProvider) DeleteDefaultParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteParsingChannel"
-	err := u.parsingChannelsProvider.DeleteParsingChannel(ctx, channel)
+	err := u.parsingChannelsProvider.DeleteDefaultParsingChannel(ctx, channel)
 	if err != nil {
 		u.log.Error("failed to delete parsing channel",
 			slog.String("op", op),
@@ -166,36 +166,39 @@ func (u *UserDataProvider) DeleteParsingChannel(ctx context.Context, channel str
 	return nil
 }
 
-func (u *UserDataProvider) GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
-	const op = "internal.services.user_data_provider.userDataProvider.go.GetParsingChannelsWithCategories"
-
-	categoriesWithChannels := make(map[string][]string, 0)
+func (u *UserDataProvider) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
+	const op = "internal.services.user_data_provider.GetDefaultParsingChannelsWithCategories"
 
 	categories, err := u.parsingChannelsProvider.GetAllCategories(ctx)
 	if err != nil {
-		u.log.Error("failed to get parsing channels with categories",
-			slog.String("op", op),
-			slog.Any("err", err),
-		)
+		u.log.Error("step 1: failed to get all categories", slog.String("op", op), slog.Any("err", err))
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
+
+	categoriesWithChannels := make(map[string][]string)
+
 	for _, category := range categories {
-		channels, err := u.parsingChannelsProvider.GetParsingChannelsByCategory(ctx, category)
+		channels, err := u.parsingChannelsProvider.GetDefaultParsingChannelsByCategory(ctx, category)
 		if err != nil {
-			u.log.Error("failed to get parsing channels with categories",
-				slog.String("op", op),
+			u.log.Error("step 2: failed to get channels for category",
+				slog.String("category", category),
 				slog.Any("err", err),
 			)
 			return nil, fmt.Errorf("%s: %w", op, err)
 		}
+
+		if channels == nil {
+			channels = []string{}
+		}
 		categoriesWithChannels[category] = channels
 	}
+
 	return categoriesWithChannels, nil
 }
 
-func (u *UserDataProvider) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
+func (u *UserDataProvider) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetParsingChannelsByCategory"
-	channels, err := u.parsingChannelsProvider.GetParsingChannelsByCategory(ctx, category)
+	channels, err := u.parsingChannelsProvider.GetDefaultParsingChannelsByCategory(ctx, category)
 	if err != nil {
 		u.log.Error("failed to get parsing channels by category",
 			slog.String("op", op),

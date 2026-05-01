@@ -191,9 +191,30 @@ func local_request_ApiService_DeletePriorityChannels_0(ctx context.Context, mars
 	return msg, metadata, err
 }
 
-func request_ApiService_GetAllParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ApiService_GetAllDefaultParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetAllParsingChannelsRequest
+		protoReq GetAllDefaultParsingChannelsRequest
+		metadata runtime.ServerMetadata
+	)
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.GetAllDefaultParsingChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_ApiService_GetAllDefaultParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetAllDefaultParsingChannelsRequest
+		metadata runtime.ServerMetadata
+	)
+	msg, err := server.GetAllDefaultParsingChannels(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_ApiService_AddNewDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AddNewDefaultParsingChannelRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -202,46 +223,19 @@ func request_ApiService_GetAllParsingChannels_0(ctx context.Context, marshaler r
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.GetAllParsingChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.AddNewDefaultParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_ApiService_GetAllParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ApiService_AddNewDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetAllParsingChannelsRequest
+		protoReq AddNewDefaultParsingChannelRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.GetAllParsingChannels(ctx, &protoReq)
-	return msg, metadata, err
-}
-
-func request_ApiService_AddNewParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq AddNewParsingChannelRequest
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	if req.Body != nil {
-		_, _ = io.Copy(io.Discard, req.Body)
-	}
-	msg, err := client.AddNewParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
-	return msg, metadata, err
-}
-
-func local_request_ApiService_AddNewParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
-	var (
-		protoReq AddNewParsingChannelRequest
-		metadata runtime.ServerMetadata
-	)
-	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
-	}
-	msg, err := server.AddNewParsingChannel(ctx, &protoReq)
+	msg, err := server.AddNewDefaultParsingChannel(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -299,9 +293,9 @@ func local_request_ApiService_DeleteUserCustomParsingChannel_0(ctx context.Conte
 	return msg, metadata, err
 }
 
-func request_ApiService_DeleteParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ApiService_DeleteDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteParsingChannelRequest
+		protoReq DeleteDefaultParsingChannelRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -310,40 +304,40 @@ func request_ApiService_DeleteParsingChannel_0(ctx context.Context, marshaler ru
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.DeleteParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.DeleteDefaultParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_ApiService_DeleteParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ApiService_DeleteDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq DeleteParsingChannelRequest
+		protoReq DeleteDefaultParsingChannelRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.DeleteParsingChannel(ctx, &protoReq)
+	msg, err := server.DeleteDefaultParsingChannel(ctx, &protoReq)
 	return msg, metadata, err
 }
 
-func request_ApiService_GetAllParsingChannelsWithCategories_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_ApiService_GetAllDefaultParsingChannelsWithCategories_0(ctx context.Context, marshaler runtime.Marshaler, client ApiServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetAllParsingChannelsWithCategoriesRequest
+		protoReq GetAllDefaultParsingChannelsWithCategoriesRequest
 		metadata runtime.ServerMetadata
 	)
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.GetAllParsingChannelsWithCategories(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetAllDefaultParsingChannelsWithCategories(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_ApiService_GetAllParsingChannelsWithCategories_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_ApiService_GetAllDefaultParsingChannelsWithCategories_0(ctx context.Context, marshaler runtime.Marshaler, server ApiServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetAllParsingChannelsWithCategoriesRequest
+		protoReq GetAllDefaultParsingChannelsWithCategoriesRequest
 		metadata runtime.ServerMetadata
 	)
-	msg, err := server.GetAllParsingChannelsWithCategories(ctx, &protoReq)
+	msg, err := server.GetAllDefaultParsingChannelsWithCategories(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -494,45 +488,45 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		}
 		forward_ApiService_DeletePriorityChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiService_GetAllParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_ApiService_GetAllDefaultParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/GetAllParsingChannels", runtime.WithHTTPPathPattern("/v1/get_all_parsing_channels"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/GetAllDefaultParsingChannels", runtime.WithHTTPPathPattern("/v1/get_all_default_parsing_channels"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ApiService_GetAllParsingChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ApiService_GetAllDefaultParsingChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_GetAllParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_GetAllDefaultParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiService_AddNewParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_ApiService_AddNewDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/AddNewParsingChannel", runtime.WithHTTPPathPattern("/v1/add_new_parsing_channel"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/AddNewDefaultParsingChannel", runtime.WithHTTPPathPattern("/v1/add_new_default_parsing_channel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ApiService_AddNewParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ApiService_AddNewDefaultParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_AddNewParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_AddNewDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_ApiService_AddNewUserCustomParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -574,45 +568,45 @@ func RegisterApiServiceHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		}
 		forward_ApiService_DeleteUserCustomParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiService_DeleteParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_ApiService_DeleteDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/DeleteParsingChannel", runtime.WithHTTPPathPattern("/v1/delete_parsing_channel"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/DeleteDefaultParsingChannel", runtime.WithHTTPPathPattern("/v1/delete_default_parsing_channel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ApiService_DeleteParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ApiService_DeleteDefaultParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_DeleteParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_DeleteDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_ApiService_GetAllParsingChannelsWithCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_ApiService_GetAllDefaultParsingChannelsWithCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/GetAllParsingChannelsWithCategories", runtime.WithHTTPPathPattern("/v1/get_all_parsing_channels_with_categories"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.v1.ApiService/GetAllDefaultParsingChannelsWithCategories", runtime.WithHTTPPathPattern("/v1/get_all_default_parsing_channels_with_categories"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_ApiService_GetAllParsingChannelsWithCategories_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_ApiService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_GetAllParsingChannelsWithCategories_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodGet, pattern_ApiService_GetAllCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -776,39 +770,39 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		}
 		forward_ApiService_DeletePriorityChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiService_GetAllParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_ApiService_GetAllDefaultParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/GetAllParsingChannels", runtime.WithHTTPPathPattern("/v1/get_all_parsing_channels"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/GetAllDefaultParsingChannels", runtime.WithHTTPPathPattern("/v1/get_all_default_parsing_channels"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ApiService_GetAllParsingChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ApiService_GetAllDefaultParsingChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_GetAllParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_GetAllDefaultParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiService_AddNewParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_ApiService_AddNewDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/AddNewParsingChannel", runtime.WithHTTPPathPattern("/v1/add_new_parsing_channel"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/AddNewDefaultParsingChannel", runtime.WithHTTPPathPattern("/v1/add_new_default_parsing_channel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ApiService_AddNewParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ApiService_AddNewDefaultParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_AddNewParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_AddNewDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodPost, pattern_ApiService_AddNewUserCustomParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -844,39 +838,39 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		}
 		forward_ApiService_DeleteUserCustomParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_ApiService_DeleteParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_ApiService_DeleteDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/DeleteParsingChannel", runtime.WithHTTPPathPattern("/v1/delete_parsing_channel"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/DeleteDefaultParsingChannel", runtime.WithHTTPPathPattern("/v1/delete_default_parsing_channel"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ApiService_DeleteParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ApiService_DeleteDefaultParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_DeleteParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_DeleteDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodGet, pattern_ApiService_GetAllParsingChannelsWithCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodGet, pattern_ApiService_GetAllDefaultParsingChannelsWithCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/GetAllParsingChannelsWithCategories", runtime.WithHTTPPathPattern("/v1/get_all_parsing_channels_with_categories"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.v1.ApiService/GetAllDefaultParsingChannelsWithCategories", runtime.WithHTTPPathPattern("/v1/get_all_default_parsing_channels_with_categories"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_ApiService_GetAllParsingChannelsWithCategories_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_ApiService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_ApiService_GetAllParsingChannelsWithCategories_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_ApiService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	mux.Handle(http.MethodGet, pattern_ApiService_GetAllCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
@@ -899,33 +893,33 @@ func RegisterApiServiceHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 }
 
 var (
-	pattern_ApiService_Login_0                               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "login"}, ""))
-	pattern_ApiService_IsAdmin_0                             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "is_admin"}, ""))
-	pattern_ApiService_SetPriorityChannels_0                 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "set_priority_channels"}, ""))
-	pattern_ApiService_GetRecommendatedPosts_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_recommendated_posts"}, ""))
-	pattern_ApiService_GetUserPriorityChannels_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_user_priority_channels"}, ""))
-	pattern_ApiService_DeletePriorityChannels_0              = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete_priority_channels"}, ""))
-	pattern_ApiService_GetAllParsingChannels_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_all_parsing_channels"}, ""))
-	pattern_ApiService_AddNewParsingChannel_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "add_new_parsing_channel"}, ""))
-	pattern_ApiService_AddNewUserCustomParsingChannel_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "add_new_user_custom_parsing_channel"}, ""))
-	pattern_ApiService_DeleteUserCustomParsingChannel_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete_user_custom_parsing_channel"}, ""))
-	pattern_ApiService_DeleteParsingChannel_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete_parsing_channel"}, ""))
-	pattern_ApiService_GetAllParsingChannelsWithCategories_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_all_parsing_channels_with_categories"}, ""))
-	pattern_ApiService_GetAllCategories_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_all_categories"}, ""))
+	pattern_ApiService_Login_0                                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "login"}, ""))
+	pattern_ApiService_IsAdmin_0                                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "is_admin"}, ""))
+	pattern_ApiService_SetPriorityChannels_0                        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "set_priority_channels"}, ""))
+	pattern_ApiService_GetRecommendatedPosts_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_recommendated_posts"}, ""))
+	pattern_ApiService_GetUserPriorityChannels_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_user_priority_channels"}, ""))
+	pattern_ApiService_DeletePriorityChannels_0                     = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete_priority_channels"}, ""))
+	pattern_ApiService_GetAllDefaultParsingChannels_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_all_default_parsing_channels"}, ""))
+	pattern_ApiService_AddNewDefaultParsingChannel_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "add_new_default_parsing_channel"}, ""))
+	pattern_ApiService_AddNewUserCustomParsingChannel_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "add_new_user_custom_parsing_channel"}, ""))
+	pattern_ApiService_DeleteUserCustomParsingChannel_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete_user_custom_parsing_channel"}, ""))
+	pattern_ApiService_DeleteDefaultParsingChannel_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "delete_default_parsing_channel"}, ""))
+	pattern_ApiService_GetAllDefaultParsingChannelsWithCategories_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_all_default_parsing_channels_with_categories"}, ""))
+	pattern_ApiService_GetAllCategories_0                           = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"v1", "get_all_categories"}, ""))
 )
 
 var (
-	forward_ApiService_Login_0                               = runtime.ForwardResponseMessage
-	forward_ApiService_IsAdmin_0                             = runtime.ForwardResponseMessage
-	forward_ApiService_SetPriorityChannels_0                 = runtime.ForwardResponseMessage
-	forward_ApiService_GetRecommendatedPosts_0               = runtime.ForwardResponseMessage
-	forward_ApiService_GetUserPriorityChannels_0             = runtime.ForwardResponseMessage
-	forward_ApiService_DeletePriorityChannels_0              = runtime.ForwardResponseMessage
-	forward_ApiService_GetAllParsingChannels_0               = runtime.ForwardResponseMessage
-	forward_ApiService_AddNewParsingChannel_0                = runtime.ForwardResponseMessage
-	forward_ApiService_AddNewUserCustomParsingChannel_0      = runtime.ForwardResponseMessage
-	forward_ApiService_DeleteUserCustomParsingChannel_0      = runtime.ForwardResponseMessage
-	forward_ApiService_DeleteParsingChannel_0                = runtime.ForwardResponseMessage
-	forward_ApiService_GetAllParsingChannelsWithCategories_0 = runtime.ForwardResponseMessage
-	forward_ApiService_GetAllCategories_0                    = runtime.ForwardResponseMessage
+	forward_ApiService_Login_0                                      = runtime.ForwardResponseMessage
+	forward_ApiService_IsAdmin_0                                    = runtime.ForwardResponseMessage
+	forward_ApiService_SetPriorityChannels_0                        = runtime.ForwardResponseMessage
+	forward_ApiService_GetRecommendatedPosts_0                      = runtime.ForwardResponseMessage
+	forward_ApiService_GetUserPriorityChannels_0                    = runtime.ForwardResponseMessage
+	forward_ApiService_DeletePriorityChannels_0                     = runtime.ForwardResponseMessage
+	forward_ApiService_GetAllDefaultParsingChannels_0               = runtime.ForwardResponseMessage
+	forward_ApiService_AddNewDefaultParsingChannel_0                = runtime.ForwardResponseMessage
+	forward_ApiService_AddNewUserCustomParsingChannel_0             = runtime.ForwardResponseMessage
+	forward_ApiService_DeleteUserCustomParsingChannel_0             = runtime.ForwardResponseMessage
+	forward_ApiService_DeleteDefaultParsingChannel_0                = runtime.ForwardResponseMessage
+	forward_ApiService_GetAllDefaultParsingChannelsWithCategories_0 = runtime.ForwardResponseMessage
+	forward_ApiService_GetAllCategories_0                           = runtime.ForwardResponseMessage
 )

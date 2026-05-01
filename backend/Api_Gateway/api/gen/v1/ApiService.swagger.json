@@ -16,14 +16,14 @@
     "application/json"
   ],
   "paths": {
-    "/v1/add_new_parsing_channel": {
+    "/v1/add_new_default_parsing_channel": {
       "post": {
-        "operationId": "ApiService_AddNewParsingChannel",
+        "operationId": "ApiService_AddNewDefaultParsingChannel",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1AddNewParsingChannelResponse"
+              "$ref": "#/definitions/v1AddNewDefaultParsingChannelResponse"
             }
           },
           "default": {
@@ -39,7 +39,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1AddNewParsingChannelRequest"
+              "$ref": "#/definitions/v1AddNewDefaultParsingChannelRequest"
             }
           }
         ],
@@ -80,14 +80,14 @@
         ]
       }
     },
-    "/v1/delete_parsing_channel": {
+    "/v1/delete_default_parsing_channel": {
       "post": {
-        "operationId": "ApiService_DeleteParsingChannel",
+        "operationId": "ApiService_DeleteDefaultParsingChannel",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1DeleteParsingChannelResponse"
+              "$ref": "#/definitions/v1DeleteDefaultParsingChannelResponse"
             }
           },
           "default": {
@@ -103,7 +103,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1DeleteParsingChannelRequest"
+              "$ref": "#/definitions/v1DeleteDefaultParsingChannelRequest"
             }
           }
         ],
@@ -198,14 +198,14 @@
         ]
       }
     },
-    "/v1/get_all_parsing_channels": {
-      "post": {
-        "operationId": "ApiService_GetAllParsingChannels",
+    "/v1/get_all_default_parsing_channels": {
+      "get": {
+        "operationId": "ApiService_GetAllDefaultParsingChannels",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetAllParsingChannelsResponse"
+              "$ref": "#/definitions/v1GetAllDefaultParsingChannelsResponse"
             }
           },
           "default": {
@@ -215,29 +215,19 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v1GetAllParsingChannelsRequest"
-            }
-          }
-        ],
         "tags": [
           "ApiService"
         ]
       }
     },
-    "/v1/get_all_parsing_channels_with_categories": {
+    "/v1/get_all_default_parsing_channels_with_categories": {
       "get": {
-        "operationId": "ApiService_GetAllParsingChannelsWithCategories",
+        "operationId": "ApiService_GetAllDefaultParsingChannelsWithCategories",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetAllParsingChannelsWithCategoriesResponse"
+              "$ref": "#/definitions/v1GetAllDefaultParsingChannelsWithCategoriesResponse"
             }
           },
           "default": {
@@ -432,7 +422,7 @@
         }
       }
     },
-    "v1AddNewParsingChannelRequest": {
+    "v1AddNewDefaultParsingChannelRequest": {
       "type": "object",
       "properties": {
         "channelUsername": {
@@ -443,7 +433,7 @@
         }
       }
     },
-    "v1AddNewParsingChannelResponse": {
+    "v1AddNewDefaultParsingChannelResponse": {
       "type": "object"
     },
     "v1AddNewUserCustomParsingChannelRequest": {
@@ -480,7 +470,7 @@
         }
       }
     },
-    "v1DeleteParsingChannelRequest": {
+    "v1DeleteDefaultParsingChannelRequest": {
       "type": "object",
       "properties": {
         "channelUsername": {
@@ -488,7 +478,7 @@
         }
       }
     },
-    "v1DeleteParsingChannelResponse": {
+    "v1DeleteDefaultParsingChannelResponse": {
       "type": "object"
     },
     "v1DeletePriorityChannelRequest": {
@@ -527,10 +517,7 @@
         }
       }
     },
-    "v1GetAllParsingChannelsRequest": {
-      "type": "object"
-    },
-    "v1GetAllParsingChannelsResponse": {
+    "v1GetAllDefaultParsingChannelsResponse": {
       "type": "object",
       "properties": {
         "channels": {
@@ -541,7 +528,7 @@
         }
       }
     },
-    "v1GetAllParsingChannelsWithCategoriesResponse": {
+    "v1GetAllDefaultParsingChannelsWithCategoriesResponse": {
       "type": "object",
       "properties": {
         "channels": {

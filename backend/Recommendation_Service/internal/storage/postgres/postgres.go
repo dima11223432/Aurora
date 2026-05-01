@@ -62,7 +62,7 @@ func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64)
 	return channels, nil
 }
 
-func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
+func (s *Storage) GetAllDefaultParsingChannels(ctx context.Context) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllParsingChannels"
 
 	q := `SELECT username FROM channels`
@@ -88,7 +88,7 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
 	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
 
-	err := s.AddOnlyNewParsingChannel(ctx, channel)
+	err := s.AddOnlyNewDefaultParsingChannel(ctx, channel)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -100,7 +100,7 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 	return nil
 }
 
-func (s *Storage) AddOnlyNewParsingChannel(ctx context.Context, channel string) error {
+func (s *Storage) AddOnlyNewDefaultParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
 	q := `INSERT INTO channels (username) VALUES ($1)`
 	_, err := s.parserDB.ExecContext(ctx, q, channel)
@@ -116,7 +116,7 @@ func (s *Storage) AddOnlyNewParsingChannel(ctx context.Context, channel string) 
 	return nil
 }
 
-func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string, category string) error {
+func (s *Storage) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 	const op = "internal.storage.postgres.AddNewParsingChannel"
 
 	q1 := `INSERT INTO channels (username) VALUES ($1)`
@@ -146,14 +146,14 @@ func (s *Storage) DeleteUserCustomParsingChannel(ctx context.Context, userID int
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
-	err = s.DeleteParsingChannel(ctx, channel)
+	err = s.DeleteDefaultParsingChannel(ctx, channel)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
 }
 
-func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) error {
+func (s *Storage) DeleteDefaultParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.DeleteParsingChannel"
 
 	q := `DELETE FROM channels WHERE username = $1`
@@ -164,13 +164,30 @@ func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) erro
 	return nil
 }
 
-func (s *Storage) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
+// func (s *Storage) GetAllDefaulParsingChannels(ctx context.Context) ([]string, error) {
+// 	const op = "internal.storage.postgres.GetAllDefaulParsingChannels"
+//
+// 	q := `SELECT channel_username FROM default_channels`
+// 	channels := make([]string, 0)
+// 	rows, err := s.parserDB.QueryContext(ctx, q)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("%s: %w", op, err)
+// 	}
+//
+// 	for rows.Next() {
+// 		var channel string
+// 		if err := rows.Scan(&channel); err != nil {
+// 			return nil, fmt.Errorf("%s: %w", op, err)
+// 		}
+// 		channels = append(channels, channel)
+// 	}
+// 	return channels, nil
+// }
+
+func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
 	const op = "internal.storage.postgres.GetParsingChannelsByCategory"
 
-	q := `SELECT c.username 
-        FROM channels c
-        INNER JOIN channels_info ci ON c.id = ci.channel_id
-        WHERE ci.category = $1`
+	q := `SELECT c.username FROM channels c INNER JOIN channels_info ci ON c.id = ci.channel_id WHERE ci.category = $1`
 	query, err := s.parserDB.QueryContext(ctx, q, category)
 	if err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
