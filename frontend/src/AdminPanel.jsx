@@ -38,7 +38,7 @@ export default function AdminPanel() {
       try {
         const token = localStorage.getItem("token");
         const resp = await axios.get(
-          "http://localhost:8081/v1/get_all_parsing_channels_with_categories",
+          "http://localhost:8081/v1/get_all_default_parsing_channels_with_categories",
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
@@ -62,7 +62,7 @@ export default function AdminPanel() {
     try {
       const token = localStorage.getItem("token");
       axios.post(
-        "http://localhost:8081/v1/add_new_parsing_channel",
+        "http://localhost:8081/v1/add_new_default_parsing_channel",
         { channel_username: addedChannel, category: addedChannelCategory },
         { headers: { Authorization: `Bearer ${token}` } },
       );

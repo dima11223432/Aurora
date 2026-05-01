@@ -145,7 +145,7 @@ func (s *serverAPI) AddNewUserCustomParsingChannel(
 	return &recv1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
-func (s *serverAPI) AddNewParsingChannel(ctx context.Context, req *recv1.AddNewDefaultParsingChannelRequest) (*recv1.AddNewDefaultParsingChannelResponse, error) {
+func (s *serverAPI) AddNewDefaultParsingChannel(ctx context.Context, req *recv1.AddNewDefaultParsingChannelRequest) (*recv1.AddNewDefaultParsingChannelResponse, error) {
 	channelUsername := req.GetChannelUsername()
 	channelCategory := req.GetCategory()
 	if channelUsername == "" {
