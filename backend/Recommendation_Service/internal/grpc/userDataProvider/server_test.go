@@ -39,9 +39,9 @@ func (u *UserDataProviderSuite) TestGetAllParsingChannels() {
 	ctx := context.Background()
 	expected := []string{"channel1", "channel2"}
 
-	u.mock.On("GetAllParsingChannels", ctx).Return(expected, nil)
+	u.mock.On("GetAllDefaultParsingChannels", ctx).Return(expected, nil)
 
-	resp, err := u.s.GetAllParsingChannels(ctx, &recv1.GetAllParsingChannelsRequest{})
+	resp, err := u.s.GetAllDefaultParsingChannels(ctx, &recv1.GetAllDefaultParsingChannelsRequest{})
 
 	u.NoError(err)
 	u.NotNil(resp)
