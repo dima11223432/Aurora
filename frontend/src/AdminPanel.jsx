@@ -125,7 +125,6 @@ export default function AdminPanel() {
               )}
             </div>
           </section>
-
           <hr className="border-white/5" />
 
           <section className="flex flex-col gap-4">
