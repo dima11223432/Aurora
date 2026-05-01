@@ -88,28 +88,28 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
 	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
 
-	err := s.AddOnlyNewDefaultParsingChannel(ctx, channel)
+	err := s.AddNewParsingChannel(ctx, channel)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	if _, err := s.parserDB.ExecContext(ctx, q, userID, channel); err != nil {
+		if GetDublicateError(err) {
+			return nil
+		}
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
 	return nil
 }
 
-func (s *Storage) AddOnlyNewDefaultParsingChannel(ctx context.Context, channel string) error {
+func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
 	q := `INSERT INTO channels (username) VALUES ($1)`
 	_, err := s.parserDB.ExecContext(ctx, q, channel)
 	if err != nil {
-		var pqErr *pq.Error
-		if errors.As(err, &pqErr) {
-			if pqErr.Code == "23505" {
-				return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
-			}
+		if GetDublicateError(err) {
+			return nil
 		}
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -123,11 +123,8 @@ func (s *Storage) AddNewDefaultParsingChannel(ctx context.Context, channel strin
 	q2 := `INSERT INTO channels_info (channel_id, category) VALUES ((SELECT id FROM default_channels WHERE username = $1), $2)`
 	_, err := s.parserDB.ExecContext(ctx, q1, channel)
 	if err != nil {
-		var pqErr *pq.Error
-		if errors.As(err, &pqErr) {
-			if pqErr.Code == "23505" {
-				return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
-			}
+		if GetDublicateError(err) {
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -163,26 +160,6 @@ func (s *Storage) DeleteDefaultParsingChannel(ctx context.Context, channel strin
 	}
 	return nil
 }
-
-// func (s *Storage) GetAllDefaulParsingChannels(ctx context.Context) ([]string, error) {
-// 	const op = "internal.storage.postgres.GetAllDefaulParsingChannels"
-//
-// 	q := `SELECT channel_username FROM default_channels`
-// 	channels := make([]string, 0)
-// 	rows, err := s.parserDB.QueryContext(ctx, q)
-// 	if err != nil {
-// 		return nil, fmt.Errorf("%s: %w", op, err)
-// 	}
-//
-// 	for rows.Next() {
-// 		var channel string
-// 		if err := rows.Scan(&channel); err != nil {
-// 			return nil, fmt.Errorf("%s: %w", op, err)
-// 		}
-// 		channels = append(channels, channel)
-// 	}
-// 	return channels, nil
-// }
 
 func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
 	const op = "internal.storage.postgres.GetParsingChannelsByCategory"
@@ -220,4 +197,14 @@ func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 		categories = append(categories, category)
 	}
 	return categories, nil
+}
+
+func GetDublicateError(err error) bool {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) {
+		if pqErr.Code == "23505" {
+			return true
+		}
+	}
+	return false
 }
