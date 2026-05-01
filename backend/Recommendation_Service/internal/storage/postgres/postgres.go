@@ -42,7 +42,7 @@ func New(storagePath string, parsingServicePath string) (*Storage, error) {
 func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	const op = "internal.storage.postgres.GetPriorityChannelsByUserID"
 
-	q := `SELECT channel_username FROM default_channels WHERE user_id = $1`
+	q := `SELECT channel_username FROM channels WHERE user_id = $1`
 
 	var channels []models.PriorityChannel
 

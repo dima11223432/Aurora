@@ -19,7 +19,7 @@ const Shtora = () => {
             Authorization: `Bearer ${TOKEN}`,
             "Content-Type": "application/json",
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -49,7 +49,7 @@ const Shtora = () => {
           body: JSON.stringify({
             priority_channels: channels,
           }),
-        }
+        },
       );
 
       const data = await response.json();
@@ -96,9 +96,8 @@ const Shtora = () => {
       try {
         if (!isLoggedIn) return;
         const token = localStorage.getItem("token");
-        const resp = await axios.post(
-          "http://localhost:8081/v1/get_all_parsing_channels",
-          {},
+        const resp = await axios.get(
+          "http://localhost:8081/v1/get_all_default_parsing_channels",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -138,9 +137,10 @@ const Shtora = () => {
             </li>
           ) : (
             parsingChannels.map((channel, idx) => {
-              const channelName = typeof channel === "string"
-                ? channel
-                : channel?.name || JSON.stringify(channel);
+              const channelName =
+                typeof channel === "string"
+                  ? channel
+                  : channel?.name || JSON.stringify(channel);
               const isChecked = selectedChannels.includes(channelName);
               return (
                 <li
@@ -155,7 +155,7 @@ const Shtora = () => {
                     onChange={() => handleCheckboxChange(channelName)}
                     className="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
                   />
-                  <label 
+                  <label
                     htmlFor={`channel-${idx}`}
                     className="flex-1 group-hover:text-cyan-200 transition-colors duration-200 cursor-pointer"
                   >
@@ -196,3 +196,4 @@ const Shtora = () => {
 };
 
 export default Shtora;
+
