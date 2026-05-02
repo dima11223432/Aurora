@@ -141,7 +141,7 @@ func (u *UserDataProvider) AddNewDefaultParsingChannel(ctx context.Context, chan
 	return nil
 }
 
-func (u UserDataProvider) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
+func (u *UserDataProvider) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteUserCustomParsingChannel"
 	if err := u.parsingChannelsProvider.DeleteUserCustomParsingChannel(ctx, userID, channel); err != nil {
 		u.log.Error("failed to delete user custom parsing channel",
