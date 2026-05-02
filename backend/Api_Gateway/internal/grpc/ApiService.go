@@ -30,6 +30,7 @@ type RecommendationService interface {
 	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
 	DeleteUserCustomParsingChannel(ctx context.Context, channel string) error
 	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
+	GetAllUserCustomParsingChannels(ctx context.Context) ([]string, error)
 	GetUserPriorityChannels(ctx context.Context) ([]string, error)
 	AddNewUserCustomParsingChannels(ctx context.Context, channel string) error
 	GetAllDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
@@ -157,6 +158,19 @@ func (a *ApiService) GetRecommendatedPosts(
 	return &v1.GetRecommendatedPostsResponse{
 		Posts:      postList,
 		NextCursor: protoNextCursor,
+	}, nil
+}
+
+func (a *ApiService) GetAllUserCustomParsingChannels(
+	ctx context.Context,
+	_ *v1.GetAllUserCustomParsingChannelsRequest,
+) (*v1.GetAllUserCustomParsingChannelsResponse, error) {
+	channels, err := a.recommendationService.GetAllUserCustomParsingChannels(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "failed to get parsing channels")
+	}
+	return &v1.GetAllUserCustomParsingChannelsResponse{
+		Channels: channels,
 	}, nil
 }
 

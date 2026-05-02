@@ -180,6 +180,27 @@ func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, categ
 	return channelsUsernames, nil
 }
 
+func (s *Storage) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
+	const op = "internal.storage.postgres.GetAllUserCustomParsingChannels"
+
+	q := `SELECT channel_username FROM user_custom_parsing_channels WHERE user_id = $1`
+	channels := make([]string, 0)
+	query, err := s.parserDB.QueryContext(ctx, q, userID)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	for query.Next() {
+		var channel string
+		if err := query.Scan(&channel); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		channels = append(channels, channel)
+	}
+
+	return channels, nil
+}
+
 func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllCategories"
 

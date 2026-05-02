@@ -25,6 +25,7 @@ const (
 	ApiService_GetRecommendatedPosts_FullMethodName                      = "/api.v1.ApiService/GetRecommendatedPosts"
 	ApiService_GetUserPriorityChannels_FullMethodName                    = "/api.v1.ApiService/GetUserPriorityChannels"
 	ApiService_DeletePriorityChannels_FullMethodName                     = "/api.v1.ApiService/DeletePriorityChannels"
+	ApiService_GetAllUserCustomParsingChannels_FullMethodName            = "/api.v1.ApiService/GetAllUserCustomParsingChannels"
 	ApiService_GetAllDefaultParsingChannels_FullMethodName               = "/api.v1.ApiService/GetAllDefaultParsingChannels"
 	ApiService_AddNewDefaultParsingChannel_FullMethodName                = "/api.v1.ApiService/AddNewDefaultParsingChannel"
 	ApiService_AddNewUserCustomParsingChannel_FullMethodName             = "/api.v1.ApiService/AddNewUserCustomParsingChannel"
@@ -44,6 +45,7 @@ type ApiServiceClient interface {
 	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
 	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
 	DeletePriorityChannels(ctx context.Context, in *DeletePriorityChannelRequest, opts ...grpc.CallOption) (*DeletePriorityChannelResponse, error)
+	GetAllUserCustomParsingChannels(ctx context.Context, in *GetAllUserCustomParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllUserCustomParsingChannelsResponse, error)
 	GetAllDefaultParsingChannels(ctx context.Context, in *GetAllDefaultParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsResponse, error)
 	AddNewDefaultParsingChannel(ctx context.Context, in *AddNewDefaultParsingChannelRequest, opts ...grpc.CallOption) (*AddNewDefaultParsingChannelResponse, error)
 	AddNewUserCustomParsingChannel(ctx context.Context, in *AddNewUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*AddNewUserCustomParsingChannelResponse, error)
@@ -115,6 +117,16 @@ func (c *apiServiceClient) DeletePriorityChannels(ctx context.Context, in *Delet
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(DeletePriorityChannelResponse)
 	err := c.cc.Invoke(ctx, ApiService_DeletePriorityChannels_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiServiceClient) GetAllUserCustomParsingChannels(ctx context.Context, in *GetAllUserCustomParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllUserCustomParsingChannelsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllUserCustomParsingChannelsResponse)
+	err := c.cc.Invoke(ctx, ApiService_GetAllUserCustomParsingChannels_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -201,6 +213,7 @@ type ApiServiceServer interface {
 	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
 	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
 	DeletePriorityChannels(context.Context, *DeletePriorityChannelRequest) (*DeletePriorityChannelResponse, error)
+	GetAllUserCustomParsingChannels(context.Context, *GetAllUserCustomParsingChannelsRequest) (*GetAllUserCustomParsingChannelsResponse, error)
 	GetAllDefaultParsingChannels(context.Context, *GetAllDefaultParsingChannelsRequest) (*GetAllDefaultParsingChannelsResponse, error)
 	AddNewDefaultParsingChannel(context.Context, *AddNewDefaultParsingChannelRequest) (*AddNewDefaultParsingChannelResponse, error)
 	AddNewUserCustomParsingChannel(context.Context, *AddNewUserCustomParsingChannelRequest) (*AddNewUserCustomParsingChannelResponse, error)
@@ -234,6 +247,9 @@ func (UnimplementedApiServiceServer) GetUserPriorityChannels(context.Context, *G
 }
 func (UnimplementedApiServiceServer) DeletePriorityChannels(context.Context, *DeletePriorityChannelRequest) (*DeletePriorityChannelResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeletePriorityChannels not implemented")
+}
+func (UnimplementedApiServiceServer) GetAllUserCustomParsingChannels(context.Context, *GetAllUserCustomParsingChannelsRequest) (*GetAllUserCustomParsingChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllUserCustomParsingChannels not implemented")
 }
 func (UnimplementedApiServiceServer) GetAllDefaultParsingChannels(context.Context, *GetAllDefaultParsingChannelsRequest) (*GetAllDefaultParsingChannelsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllDefaultParsingChannels not implemented")
@@ -380,6 +396,24 @@ func _ApiService_DeletePriorityChannels_Handler(srv interface{}, ctx context.Con
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServiceServer).DeletePriorityChannels(ctx, req.(*DeletePriorityChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApiService_GetAllUserCustomParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllUserCustomParsingChannelsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).GetAllUserCustomParsingChannels(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_GetAllUserCustomParsingChannels_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).GetAllUserCustomParsingChannels(ctx, req.(*GetAllUserCustomParsingChannelsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -540,6 +574,10 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeletePriorityChannels",
 			Handler:    _ApiService_DeletePriorityChannels_Handler,
+		},
+		{
+			MethodName: "GetAllUserCustomParsingChannels",
+			Handler:    _ApiService_GetAllUserCustomParsingChannels_Handler,
 		},
 		{
 			MethodName: "GetAllDefaultParsingChannels",
