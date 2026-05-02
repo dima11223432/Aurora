@@ -209,6 +209,29 @@ func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]
 	return channels, nil
 }
 
+func (r *RecommendationService) GetAllUserCustomParsingChannel(ctx context.Context) ([]string, error) {
+	const op = "Api_Service.internal.services.RecommendationService.GetAllUserCustomParsingChannel"
+	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	res, err := r.RecommendationClient.GetAllUserCustomParsingChannels(
+		ctx,
+		&rsv1.GetAllUserCustomParsingChannelsRequest{
+			UserId: userID,
+		})
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	channels := make([]string, 0, len(res.Channels))
+	for _, channel := range res.GetChannels() {
+		channels = append(channels, channel)
+	}
+	return channels, nil
+}
+
 func (r *RecommendationService) GetAllDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetAllDefaultParsingChannelsWithCategories"
 	res, err := r.RecommendationClient.GetAllDefaultParsingChannelsWithCategories(
