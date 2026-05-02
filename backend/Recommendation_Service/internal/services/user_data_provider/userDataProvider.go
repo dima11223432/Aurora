@@ -27,6 +27,7 @@ type ParsingChannelsProvider interface {
 	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
 	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
 	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
+	GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error)
 	GetAllCategories(ctx context.Context) ([]string, error)
 	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
@@ -164,6 +165,19 @@ func (u *UserDataProvider) DeleteDefaultParsingChannel(ctx context.Context, chan
 		return fmt.Errorf("%s: %w", op, err)
 	}
 	return nil
+}
+
+func (u *UserDataProvider) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
+	const op = "internal.services.user_dats_provider.userDataProvider.go.GetAllDefaultParsingChannels"
+	channels, err := u.parsingChannelsProvider.GetAllUserCustomParsingChannels(ctx, userID)
+	if err != nil {
+		u.log.Error("failed to get all user custom parsing channels",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+	return channels, nil
 }
 
 func (u *UserDataProvider) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
