@@ -49,6 +49,11 @@ service ApiService {
       body: "*"
     };
   }
+  rpc GetAllUserCustomParsingChannels(GetAllUserCustomParsingChannelsRequest) returns  (GetAllUserCustomParsingChannelsResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_all_user_custom_parsing_channels"
+    };
+  }
 
   rpc GetAllDefaultParsingChannels(GetAllDefaultParsingChannelsRequest) returns (GetAllDefaultParsingChannelsResponse) {
     option (google.api.http) = {
@@ -95,6 +100,13 @@ service ApiService {
       get: "/v1/get_all_categories"
     };
   }
+}
+
+message GetAllUserCustomParsingChannelsRequest {
+}
+
+message GetAllUserCustomParsingChannelsResponse {
+  repeated string channels = 1;
 }
 
 message DeleteUserCustomParsingChannelRequest {
