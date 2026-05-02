@@ -155,6 +155,9 @@ func (s *serverAPI) AddNewUserCustomParsingChannel(
 	channelUsername := req.GetChannelUsername()
 
 	if err := s.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channelUsername); err != nil {
+		if errors.Is(err, storage.ErrChannelExists) {
+			return nil, status.Error(codes.AlreadyExists, "channel already exists")
+		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 
