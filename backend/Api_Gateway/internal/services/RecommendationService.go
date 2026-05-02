@@ -209,7 +209,7 @@ func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]
 	return channels, nil
 }
 
-func (r *RecommendationService) GetAllUserCustomParsingChannel(ctx context.Context) ([]string, error) {
+func (r *RecommendationService) GetAllUserCustomParsingChannels(ctx context.Context) ([]string, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetAllUserCustomParsingChannel"
 	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
 	if err != nil {
