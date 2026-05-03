@@ -27,7 +27,7 @@ func (p *PostgresTestSuite) SetupTest() {
 func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	ctx := context.Background()
 
-	channels, err := p.storage.GetAllParsingChannels(ctx)
+	channels, err := p.storage.GetAllDefaultParsingChannels(ctx)
 	p.NoError(err)
 	p.NotEmpty(channels)
 }

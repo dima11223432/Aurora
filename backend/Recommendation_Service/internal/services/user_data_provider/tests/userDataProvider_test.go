@@ -25,8 +25,8 @@ func (u *userDataProviderSuite) SetupTest() {
 
 func (u *userDataProviderSuite) TestGetUserPriorityChannels() {
 	ctx := context.Background()
-	u.mock.On("GetAllParsingChannels", ctx).Return([]string{"channel1", "channel2"}, nil)
-	channels, err := u.service.GetAllParsingChannels(ctx)
+	u.mock.On("GetAllDefaultParsingChannels", ctx).Return([]string{"channel1", "channel2"}, nil)
+	channels, err := u.service.GetAllDefaultParsingChannels(ctx)
 	u.NoError(err)
 	u.Equal([]string{"channel1", "channel2"}, channels)
 }
