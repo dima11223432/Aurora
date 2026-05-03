@@ -44,7 +44,8 @@ class ParserService:
                 entity = await self.client.get_entity(channel)
 
                 if not isinstance(entity, Channel):
-                    self.log.warning(f"{channel} is not a channel, skipping...")
+                    self.log.warning(f"{channel} is not a channel, skipping and delete")
+                    self.channel_storage.delete_channel(channel)
                     continue
                 if entity.left:
                     self.log.info(f"Account not in {channel}, attempting to join...")
@@ -53,6 +54,7 @@ class ParserService:
 
             except ValueError:
                 self.log.error(f"Channel {channel} not found (invalid username or ID)")
+                self.channel_storage.delete_channel(channel)
                 if channel in self.parsing_channels:
                     self.parsing_channels.remove(channel)
             except Exception as e:
@@ -112,6 +114,13 @@ class ParserService:
     async def _handle_new_channel(self, connection, pid, channel, payload):
         try:
             await self._ensure_subscribed([payload])
+
+            if payload not in self.parsing_channels:
+                self.log.info(
+                    f"Parsing channels: {self.channel_storage.get_all_channels()}"
+                )
+                return
+
             self.parsing_channels.add(payload)
             self.channel_storage.add_channel(payload)
             self.log.info(f"Subscribed to new channel: {channel}")
