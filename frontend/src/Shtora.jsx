@@ -8,7 +8,28 @@ const Shtora = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState([]);
   const [customChannel, setCustomChannel] = useState("");
+  const [userCustomParsingChannels, setUserCustomParsingChannels] = useState(
+    [],
+  );
   const [isAddingChannel, setIsAddingChannel] = useState(false);
+
+  const getAllUserCustomParsingChannels = async () => {
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+
+    try {
+      const responce = await axios.get(routes.getAllUserCustomParsingChannels, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      });
+      const data = await responce.data.channels;
+      setUserCustomParsingChannels(data);
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const addNewUserCustomParsingChannelRequest = async (channelUsername) => {
     const TOKEN = localStorage.getItem("token");
@@ -151,6 +172,7 @@ const Shtora = () => {
       }
     };
     fetchParsingChannels();
+    getAllUserCustomParsingChannels();
   }, [isLoggedIn]);
 
   return (
@@ -208,6 +230,11 @@ const Shtora = () => {
             })
           )}
         </ul>
+        <div className="mt-3 pt-3 border-t border-cyan-700/50">
+          <p className="text-xl font-bold text-cyan-400">Ваши личные каналы:</p>
+        </div>
+        {userCustomParsingChannels.length > 0 &&
+          userCustomParsingChannels.map((channel, idx) => <div>{channel}</div>)}
         <div className="mt-3 pt-3 border-t border-cyan-700/50">
           <div className="flex gap-2">
             <input
