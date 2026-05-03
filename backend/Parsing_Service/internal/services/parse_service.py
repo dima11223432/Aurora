@@ -114,6 +114,13 @@ class ParserService:
     async def _handle_new_channel(self, connection, pid, channel, payload):
         try:
             await self._ensure_subscribed([payload])
+
+            if payload not in self.parsing_channels:
+                self.log.info(
+                    f"Parsing channels: {self.channel_storage.get_all_channels()}"
+                )
+                return
+
             self.parsing_channels.add(payload)
             self.channel_storage.add_channel(payload)
             self.log.info(f"Subscribed to new channel: {channel}")
