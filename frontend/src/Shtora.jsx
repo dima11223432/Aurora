@@ -8,7 +8,28 @@ const Shtora = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState([]);
   const [customChannel, setCustomChannel] = useState("");
+  const [userCustomParsingChannels, setUserCustomParsingChannels] = useState(
+    [],
+  );
   const [isAddingChannel, setIsAddingChannel] = useState(false);
+
+  const getAllUserCustomParsingChannels = async () => {
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+
+    try {
+      const responce = await axios.get(routes.getAllUserCustomParsingChannels, {
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+        },
+      });
+      const data = await responce.data.channels;
+      setUserCustomParsingChannels(data);
+      return data;
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const addNewUserCustomParsingChannelRequest = async (channelUsername) => {
     const TOKEN = localStorage.getItem("token");
@@ -78,6 +99,25 @@ const Shtora = () => {
     }
   };
 
+  const deletePriorityChannelsRequest = async (channels) => {
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
+
+    try {
+      const responce = await axios.post(
+        routes.deletePriorityChannels,
+        { channels: channels },
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        },
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const setPriorityChannelsRequest = async (channels) => {
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) return;
@@ -106,11 +146,12 @@ const Shtora = () => {
     let newSelectedChannels;
     if (selectedChannels.includes(channel)) {
       newSelectedChannels = selectedChannels.filter((ch) => ch !== channel);
+      await deletePriorityChannelsRequest([channel]);
     } else {
       newSelectedChannels = [...selectedChannels, channel];
+      await setPriorityChannelsRequest(newSelectedChannels);
     }
     setSelectedChannels(newSelectedChannels);
-    await setPriorityChannelsRequest(newSelectedChannels);
   };
 
   useEffect(() => {
@@ -151,6 +192,7 @@ const Shtora = () => {
       }
     };
     fetchParsingChannels();
+    getAllUserCustomParsingChannels();
   }, [isLoggedIn]);
 
   return (
@@ -208,6 +250,41 @@ const Shtora = () => {
             })
           )}
         </ul>
+        <div className="mt-3 pt-3 border-t border-cyan-700/50">
+          <p className="text-xl font-bold text-cyan-400">Ваши личные каналы:</p>
+        </div>
+        {userCustomParsingChannels.length > 0 &&
+          userCustomParsingChannels.map((channel, idx) => {
+            const channelName =
+              typeof channel === "string"
+                ? channel
+                : channel?.name || JSON.stringify(channel);
+            const isChecked = selectedChannels.includes(channelName);
+            return (
+              <li
+                key={idx}
+                className="py-2 px-3 rounded-lg hover:bg-cyan-500/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
+                style={{ backdropFilter: "blur(1px)" }}
+              >
+                <input
+                  type="checkbox"
+                  id={`channel-${idx}`}
+                  checked={isChecked}
+                  onChange={() => handleCheckboxChange(channelName)}
+                  className="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
+                />
+                <label
+                  htmlFor={`channel-${idx}`}
+                  className="flex-1 group-hover:text-cyan-200 transition-colors duration-200 cursor-pointer"
+                >
+                  {channelName}
+                </label>
+                <span className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-cyan-300 transition-opacity duration-200">
+                  →
+                </span>
+              </li>
+            );
+          })}
         <div className="mt-3 pt-3 border-t border-cyan-700/50">
           <div className="flex gap-2">
             <input
