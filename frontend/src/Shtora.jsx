@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { routes } from "./config/api";
 
 const Shtora = () => {
   const [parsingChannels, setParsingChannels] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState([]);
+  const [customChannel, setCustomChannel] = useState("");
+  const [isAddingChannel, setIsAddingChannel] = useState(false);
 
   const getUserPriorityChannels = async () => {
     const TOKEN = localStorage.getItem("token");
 
     try {
       const response = await fetch(
-        "http://localhost:8081/v1/get_user_priority_channels",
+        routes.getUserPriorityChannels,
         {
           method: "GET",
           headers: {
@@ -39,7 +42,7 @@ const Shtora = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8081/v1/set_priority_channels",
+        routes.setPriorityChannels,
         {
           method: "POST",
           headers: {
@@ -74,7 +77,7 @@ const Shtora = () => {
   useEffect(() => {
     const login = async () => {
       try {
-        const res = await axios.post("http://localhost:8081/v1/login", {
+        const res = await axios.post(routes.login, {
           telegram_id: 123456789,
           username: "john_doe",
           first_name: "John",
@@ -97,7 +100,7 @@ const Shtora = () => {
         if (!isLoggedIn) return;
         const token = localStorage.getItem("token");
         const resp = await axios.get(
-          "http://localhost:8081/v1/get_all_default_parsing_channels",
+          routes.getAllDefaultParsingChannels,
           {
             headers: {
               Authorization: `Bearer ${token}`,
