@@ -46,6 +46,9 @@ class ParserService:
                 if not isinstance(entity, Channel):
                     self.log.warning(f"{channel} is not a channel, skipping and delete")
                     self.channel_storage.delete_channel(channel)
+                    self.channel_storage.delete_channel_from_user_custom_channels(
+                        channel
+                    )
                     continue
                 if entity.left:
                     self.log.info(f"Account not in {channel}, attempting to join...")
@@ -55,10 +58,15 @@ class ParserService:
             except ValueError:
                 self.log.error(f"Channel {channel} not found (invalid username or ID)")
                 self.channel_storage.delete_channel(channel)
+                self.channel_storage.delete_channel_from_user_custom_channels(channel)
                 if channel in self.parsing_channels:
                     self.parsing_channels.remove(channel)
             except Exception as e:
                 self.log.error(f"Reliability check failed for {channel}: {e}")
+                self.channel_storage.delete_channel(channel)
+                self.channel_storage.delete_channel_from_user_custom_channels(channel)
+                if channel in self.parsing_channels:
+                    self.parsing_channels.remove(channel)
 
     def _build_post_link(self, chat, message_id):
         if getattr(chat, "username", None):
