@@ -10,20 +10,62 @@ const Shtora = () => {
   const [customChannel, setCustomChannel] = useState("");
   const [isAddingChannel, setIsAddingChannel] = useState(false);
 
+  const addNewUserCustomParsingChannelRequest = async (channelUsername) => {
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN || !channelUsername.trim()) return;
+
+    try {
+      const response = await axios.post(
+        routes.addNewUserCustomParsingChannel,
+        { channel_username: channelUsername.trim() },
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        },
+      );
+
+      const data = await response.json();
+      console.log("Успешно добавлен канал", data);
+      return data;
+    } catch (error) {
+      if (error.response) {
+        const { code, message } = error.response.data;
+
+        if (code === "AlreadyExists" || error.response.status === 409) {
+          console.error("Такой канал уже есть!");
+        }
+      } else {
+        console.error("Network error", error.message);
+      }
+      throw error;
+    }
+  };
+
+  const handleAddCustomChannel = async () => {
+    if (!customChannel.trim()) return;
+    setIsAddingChannel(true);
+    try {
+      await addNewUserCustomParsingChannelRequest(customChannel);
+      setCustomChannel("");
+      await getUserPriorityChannels();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsAddingChannel(false);
+    }
+  };
   const getUserPriorityChannels = async () => {
     const TOKEN = localStorage.getItem("token");
 
     try {
-      const response = await fetch(
-        routes.getUserPriorityChannels,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-            "Content-Type": "application/json",
-          },
+      const response = await fetch(routes.getUserPriorityChannels, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          "Content-Type": "application/json",
         },
-      );
+      });
 
       const data = await response.json();
       console.log(data);
@@ -41,19 +83,16 @@ const Shtora = () => {
     if (!TOKEN) return;
 
     try {
-      const response = await fetch(
-        routes.setPriorityChannels,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            priority_channels: channels,
-          }),
+      const response = await fetch(routes.setPriorityChannels, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${TOKEN}`,
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          priority_channels: channels,
+        }),
+      });
 
       const data = await response.json();
       console.log("Set priority channels response:", data);
@@ -99,14 +138,11 @@ const Shtora = () => {
       try {
         if (!isLoggedIn) return;
         const token = localStorage.getItem("token");
-        const resp = await axios.get(
-          routes.getAllDefaultParsingChannels,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const resp = await axios.get(routes.getAllDefaultParsingChannels, {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
         const channels = resp.data.channels || [];
         setParsingChannels(channels);
         await getUserPriorityChannels();
@@ -172,6 +208,25 @@ const Shtora = () => {
             })
           )}
         </ul>
+        <div className="mt-3 pt-3 border-t border-cyan-700/50">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={customChannel}
+              onChange={(e) => setCustomChannel(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleAddCustomChannel()}
+              placeholder="Новый канал (username)"
+              className="flex-1 bg-gray-800/80 text-white text-sm px-3 py-2 rounded-lg border border-cyan-700/50 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
+            />
+            <button
+              onClick={handleAddCustomChannel}
+              disabled={isAddingChannel || !customChannel.trim()}
+              className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-sm px-3 py-2 rounded-lg transition-colors duration-200"
+            >
+              {isAddingChannel ? "..." : "➕"}
+            </button>
+          </div>
+        </div>
         {/* {selectedChannels.length > 0 && (
           <div className="mt-3 pt-2 border-t border-cyan-700/50 text-xs text-cyan-300">
     
@@ -199,4 +254,3 @@ const Shtora = () => {
 };
 
 export default Shtora;
-
