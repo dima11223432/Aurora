@@ -123,19 +123,22 @@ class ParserService:
         try:
             await self._ensure_subscribed([payload])
 
+            self.parsing_channels.add(payload)
+            self.channel_storage.add_channel(payload)
+            self.log.info(f"Subscribed to new channel: {channel}")
             if payload not in self.parsing_channels:
                 self.log.info(
                     f"Parsing channels: {self.channel_storage.get_all_channels()}"
                 )
                 return
 
-            self.parsing_channels.add(payload)
-            self.channel_storage.add_channel(payload)
-            self.log.info(f"Subscribed to new channel: {channel}")
-
+            self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
             self.client.add_event_handler(
                 self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
             )
+            # self.client.add_event_handler(
+            #     self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
+            # )
             self.log.info(
                 f"Subscribed to new channel: {self.channel_storage.get_all_channels()}"
             )
