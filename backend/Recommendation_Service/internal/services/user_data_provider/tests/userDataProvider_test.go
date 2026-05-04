@@ -25,8 +25,8 @@ func (u *userDataProviderSuite) SetupTest() {
 
 func (u *userDataProviderSuite) TestGetUserPriorityChannels() {
 	ctx := context.Background()
-	u.mock.On("GetAllParsingChannels", ctx).Return([]string{"channel1", "channel2"}, nil)
-	channels, err := u.service.GetAllParsingChannels(ctx)
+	u.mock.On("GetAllDefaultParsingChannels", ctx).Return([]string{"channel1", "channel2"}, nil)
+	channels, err := u.service.GetAllDefaultParsingChannels(ctx)
 	u.NoError(err)
 	u.Equal([]string{"channel1", "channel2"}, channels)
 }
@@ -44,12 +44,20 @@ func (u *userDataProviderSuite) TestGetRecommendatedPosts() {
 	userID := int64(1)
 	u.mock.On("GetPriorityChannelsByUserID", ctx, userID).
 		Return([]models.PriorityChannel{{Channel: "Kafka_Channel1"}}, nil)
-	u.mock.On("GetPostsByChannels", ctx, []string{"Kafka_Channel1"}, userID, mock.Anything, int64(4)).
+	u.mock.On("GetPostsByChannels", ctx, []string{"Kafka_Channel1"}, userID, mock.Anything, int64(5)).
 		Return([]models.Post{}, (*models.Cursor)(nil), nil)
 	posts, cursor, err := u.service.GetRecommendatedPosts(ctx, userID, nil)
 	u.NoError(err)
 	u.Empty(posts)
 	u.Empty(cursor)
+}
+
+func (u *userDataProviderSuite) TestDeleteParsingChannel() {
+	ctx := context.Background()
+	channel := "test_channel"
+	u.mock.On("DeleteDefaultParsingChannel", ctx, channel).Return(nil)
+	err := u.service.DeleteDefaultParsingChannel(ctx, channel)
+	u.NoError(err)
 }
 
 func TestUserDataProviderTestSuite(t *testing.T) {

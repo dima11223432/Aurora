@@ -15,6 +15,7 @@ class Config:
         self.DB_NAME = None
         self.DB_USER = None
         self.DB_PASSWORD = None
+        self.DB_URL = None
         self.DB_HOST = None
         self.DB_PORT = None
         self.PROXY_URL = None
@@ -28,6 +29,7 @@ class Config:
         self.DB_NAME = os.getenv("DB_NAME", "")
         self.DB_USER = os.getenv("DB_USER", "")
         self.DB_PASSWORD = os.getenv("DB_PASSWORD", "")
+        self.DB_URL = os.getenv("DB_URL", "")
         self.DB_HOST = os.getenv("DB_HOST", "")
         self.DB_PORT = os.getenv("DB_PORT", "")
         self.PROXY_URL = os.getenv("PROXY_URL", "")

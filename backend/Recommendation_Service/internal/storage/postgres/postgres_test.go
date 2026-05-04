@@ -27,9 +27,21 @@ func (p *PostgresTestSuite) SetupTest() {
 func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	ctx := context.Background()
 
-	channels, err := p.storage.GetAllParsingChannels(ctx)
+	channels, err := p.storage.GetAllDefaultParsingChannels(ctx)
 	p.NoError(err)
 	p.NotEmpty(channels)
+}
+
+func (p *PostgresTestSuite) TestDeleteParsingChannel() {
+
+	ctx := context.Background()
+	channelName := "test_channel"
+
+	err := p.storage.AddNewParsingChannel(ctx, channelName)
+	p.NoError(err)
+
+	err = p.storage.DeleteDefaultParsingChannel(ctx, channelName)
+	p.NoError(err)
 }
 
 func (p *PostgresTestSuite) TestGetPriorityChannelsByUserID() {
