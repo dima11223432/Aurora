@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_BASE_URL_SECURE, routes } from "./config/api";
 
 function Herozone() {
   const [isLoading, setIsLoading] = useState(false);
@@ -8,7 +9,7 @@ function Herozone() {
   const widgetContainerRef = useRef(null);
 
   const navigate = useNavigate();
-  const API_URL = "https://localhost:8081/v1/login";
+  const API_URL = routes.loginSecure;
 
   useEffect(() => {
     const tg = window.Telegram?.WebApp;

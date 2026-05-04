@@ -58,6 +58,11 @@ func (r *RecommendationService) AddNewUserCustomParsingChannels(ctx context.Cont
 		UserId:          userID,
 	})
 	if err != nil {
+		if st, ok := status.FromError(err); ok {
+			if st.Code() == codes.AlreadyExists {
+				return fmt.Errorf("%s:%w", op, errs.ErrChannelExists)
+			}
+		}
 		r.log.Error("failed to add new user custom parsing channel", slog.String("op", op), slog.Any("err", err))
 		return fmt.Errorf("%s, %w", op, err)
 	}

@@ -3,6 +3,7 @@ import axios from "axios";
 import RecommendationCard from "./RecommendationCard";
 import Footer from "./Footer";
 import Shtora from "./Shtora";
+import { routes } from "./config/api";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -15,7 +16,7 @@ export default function RecommendationFeed() {
   useEffect(() => {
     const login = async () => {
       try {
-        const res = await axios.post("http://localhost:8081/v1/login", {
+        const res = await axios.post(routes.login, {
           telegram_id: 123456789,
           username: "john_doe",
           first_name: "John",
@@ -42,7 +43,7 @@ export default function RecommendationFeed() {
       const token = localStorage.getItem("token");
 
       const response = await axios.post(
-        "http://localhost:8081/v1/get_recommendated_posts",
+        routes.getRecommendatedPosts,
         { cursor },
         {
           headers: {

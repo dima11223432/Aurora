@@ -95,7 +95,7 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 
 	if _, err := s.parserDB.ExecContext(ctx, q, userID, channel); err != nil {
 		if GetDublicateError(err) {
-			return nil
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -109,7 +109,7 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) erro
 	_, err := s.parserDB.ExecContext(ctx, q, channel)
 	if err != nil {
 		if GetDublicateError(err) {
-			return nil
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
 		return fmt.Errorf("%s: %w", op, err)
 	}

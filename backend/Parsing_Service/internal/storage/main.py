@@ -53,5 +53,14 @@ class ChannelStorage:
         self.conn.commit()
         cur.close()
 
+    def delete_channel_from_user_custom_channels(self, channel):
+        cur = self.conn.cursor()
+        cur.execute(
+            "DELETE FROM user_custom_parsing_channels WHERE channel_username = %s",
+            (channel,),
+        )
+        self.conn.commit()
+        cur.close()
+
     def close(self):
         self.conn.close()
