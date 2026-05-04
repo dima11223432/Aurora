@@ -7,6 +7,7 @@ import (
 	servicesauth "authService/internal/services/auth"
 	"authService/internal/storage"
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/stretchr/testify/mock"
@@ -206,4 +207,66 @@ func (s *AuthServerTestSuite) TestLogin_InvalidCredentials_ReturnsInvalidArgumen
 
 func TestAuthServer(t *testing.T) {
 	suite.Run(t, new(AuthServerTestSuite))
+}
+
+func (s *AuthServerTestSuite) TestIsAdmin_ValidationTelegramIDRequired() {
+	req := &ssov1.IsAdminRequest{
+		TelegramId: 0,
+	}
+
+	resp, err := s.server.IsAdmin(context.Background(), req)
+
+	s.Nil(resp)
+	s.Error(err)
+	s.Equal(codes.InvalidArgument, status.Code(err))
+	s.Equal("user is required", status.Convert(err).Message())
+}
+
+func (s *AuthServerTestSuite) TestIsAdmin_Success() {
+	req := &ssov1.IsAdminRequest{
+		TelegramId: 123456789,
+	}
+
+	s.authMock.On("IsAdmin", mock.Anything, int64(123456789)).
+		Return(true, nil).Once()
+
+	resp, err := s.server.IsAdmin(context.Background(), req)
+
+	s.NoError(err)
+	s.NotNil(resp)
+	s.True(resp.GetIsAdmin())
+	s.authMock.AssertExpectations(s.T())
+}
+
+func (s *AuthServerTestSuite) TestIsAdmin_UserNotFound() {
+	req := &ssov1.IsAdminRequest{
+		TelegramId: 999999999,
+	}
+
+	s.authMock.On("IsAdmin", mock.Anything, int64(999999999)).
+		Return(false, storage.ErrUserNotFound).Once()
+
+	resp, err := s.server.IsAdmin(context.Background(), req)
+
+	s.Nil(resp)
+	s.Error(err)
+	s.Equal(codes.NotFound, status.Code(err))
+	s.Equal("user not found", status.Convert(err).Message())
+	s.authMock.AssertExpectations(s.T())
+}
+
+func (s *AuthServerTestSuite) TestIsAdmin_InternalError() {
+	req := &ssov1.IsAdminRequest{
+		TelegramId: 123456789,
+	}
+
+	s.authMock.On("IsAdmin", mock.Anything, int64(123456789)).
+		Return(false, errors.New("some internal error")).Once()
+
+	resp, err := s.server.IsAdmin(context.Background(), req)
+
+	s.Nil(resp)
+	s.Error(err)
+	s.Equal(codes.Internal, status.Code(err))
+	s.authMock.AssertExpectations(s.T())
 }
