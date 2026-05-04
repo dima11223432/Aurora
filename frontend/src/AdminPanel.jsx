@@ -76,7 +76,7 @@ export default function AdminPanel() {
     try {
       const token = localStorage.getItem("token");
       axios.post(
-        routes.deleteParsingChannel,
+        routes.deleteDefaultParsingChannel,
         { channel_username: deletedChannel },
         { headers: { Authorization: `Bearer ${token}` } },
       );

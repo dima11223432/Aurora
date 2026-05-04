@@ -253,38 +253,40 @@ const Shtora = () => {
         <div className="mt-3 pt-3 border-t border-cyan-700/50">
           <p className="text-xl font-bold text-cyan-400">Ваши личные каналы:</p>
         </div>
-        {userCustomParsingChannels.length > 0 &&
-          userCustomParsingChannels.map((channel, idx) => {
-            const channelName =
-              typeof channel === "string"
-                ? channel
-                : channel?.name || JSON.stringify(channel);
-            const isChecked = selectedChannels.includes(channelName);
-            return (
-              <li
-                key={idx}
-                className="py-2 px-3 rounded-lg hover:bg-cyan-500/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
-                style={{ backdropFilter: "blur(1px)" }}
-              >
-                <input
-                  type="checkbox"
-                  id={`channel-${idx}`}
-                  checked={isChecked}
-                  onChange={() => handleCheckboxChange(channelName)}
-                  className="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
-                />
-                <label
-                  htmlFor={`channel-${idx}`}
-                  className="flex-1 group-hover:text-cyan-200 transition-colors duration-200 cursor-pointer"
+        <ul className="max-h-60 overflow-y-auto space-y-1">
+          {userCustomParsingChannels.length > 0 &&
+            userCustomParsingChannels.map((channel, idx) => {
+              const channelName =
+                typeof channel === "string"
+                  ? channel
+                  : channel?.name || JSON.stringify(channel);
+              const isChecked = selectedChannels.includes(channelName);
+              return (
+                <li
+                  key={idx}
+                  className="py-2 px-3 rounded-lg hover:bg-cyan-500/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
+                  style={{ backdropFilter: "blur(1px)" }}
                 >
-                  {channelName}
-                </label>
-                <span className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-cyan-300 transition-opacity duration-200">
-                  →
-                </span>
-              </li>
-            );
-          })}
+                  <input
+                    type="checkbox"
+                    id={`channel-${idx}`}
+                    checked={isChecked}
+                    onChange={() => handleCheckboxChange(channelName)}
+                    className="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
+                  />
+                  <label
+                    htmlFor={`channel-${idx}`}
+                    className="flex-1 group-hover:text-cyan-200 transition-colors duration-200 cursor-pointer"
+                  >
+                    {channelName}
+                  </label>
+                  <span className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-cyan-300 transition-opacity duration-200">
+                    →
+                  </span>
+                </li>
+              );
+            })}
+        </ul>
         <div className="mt-3 pt-3 border-t border-cyan-700/50">
           <div className="flex gap-2">
             <input
