@@ -9,7 +9,7 @@ const routes = {
 
   getAllDefaultParsingChannelsWithCategories: `${API_BASE_URL}/v1/get_all_default_parsing_channels_with_categories`,
   addNewDefaultParsingChannel: `${API_BASE_URL}/v1/add_new_default_parsing_channel`,
-  deleteParsingChannel: `${API_BASE_URL}/v1/delete_parsing_channel`,
+  deleteDefaultParsingChannel: `${API_BASE_URL}/v1/delete_default_parsing_channel`,
 
   getRecommendatedPosts: `${API_BASE_URL}/v1/get_recommendated_posts`,
 
