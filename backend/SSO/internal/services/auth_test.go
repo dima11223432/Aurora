@@ -159,3 +159,46 @@ func (s *AuthTestSuite) TestIsAdmin() {
 func TestAuthSuite(t *testing.T) {
 	suite.Run(t, new(AuthTestSuite))
 }
+
+func (s *AuthTestSuite) TestLogin_AppNotFound() {
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+
+	_, err := s.service.Login(context.Background(), user, 999)
+	s.Error(err)
+}
+
+func (s *AuthTestSuite) TestRegisterNewUser_AlreadyExists() {
+	ctx := context.Background()
+	user := models.User{
+		Telegram_id: 999999999,
+		First_name:  "Test",
+		Last_name:   "User",
+		Username:    "testuser",
+		Is_admin:    false,
+	}
+
+	id, err := s.service.RegisterNewUser(ctx, user)
+	s.NoError(err)
+	s.NotZero(id)
+
+	_, err = s.service.RegisterNewUser(ctx, user)
+	s.Error(err)
+	s.ErrorIs(err, auth.ErrUserExists)
+}
+
+func (s *AuthTestSuite) TestIsAdmin_UserNotFound() {
+	_, err := s.service.IsAdmin(context.Background(), 999999999)
+	s.Error(err)
+	s.ErrorIs(err, auth.ErrInvalidCredentials)
+}
+
+func (s *AuthTestSuite) TestSetPriorityChannels_Error() {
+	err := s.service.SetPriorityChannels(context.Background(), 999999, []string{"channel1"})
+	s.Error(err)
+}
