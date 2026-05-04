@@ -78,9 +78,9 @@ func (u *UserDataProviderSuite) TestDeleteParsingChannel() {
 	ctx := context.Background()
 	channelUsername := "channel1"
 
-	u.mock.On("DeleteParsingChannel", ctx, channelUsername).Return(nil).Once()
+	u.mock.On("DeleteDefaultParsingChannel", ctx, channelUsername).Return(nil).Once()
 
-	resp, err := u.s.DeleteParsingChannel(ctx, &recv1.DeleteParsingChannelRequest{
+	resp, err := u.s.DeleteDefaultParsingChannel(ctx, &recv1.DeleteDefaultParsingChannelRequest{
 		ChannelUsername: channelUsername,
 	})
 
@@ -88,12 +88,12 @@ func (u *UserDataProviderSuite) TestDeleteParsingChannel() {
 	u.NotNil(resp)
 	u.mock.AssertExpectations(u.T())
 
-	resp, err = u.s.DeleteParsingChannel(ctx, &recv1.DeleteParsingChannelRequest{
+	resp, err = u.s.DeleteDefaultParsingChannel(ctx, &recv1.DeleteDefaultParsingChannelRequest{
 		ChannelUsername: "",
 	})
 
 	u.Nil(resp)
 	u.Error(err)
 	u.Equal(codes.InvalidArgument, status.Code(err))
-	u.mock.AssertNotCalled(u.T(), "DeleteParsingChannel", ctx, "")
+	u.mock.AssertNotCalled(u.T(), "DeleteDefaultParsingChannel", ctx, "")
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log/slog"
 	"recommendationService/internal/domain/models"
+	"recommendationService/internal/storage"
 	"time"
 )
 
