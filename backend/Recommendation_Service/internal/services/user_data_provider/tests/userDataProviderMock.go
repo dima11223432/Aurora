@@ -60,3 +60,8 @@ func (u *userDataProviderMock) GetRecommendatedPosts(ctx context.Context, userID
 	args := u.Called(ctx, userID, cursor)
 	return args.Get(0).([]models.Post), args.Get(1).(*models.Cursor), args.Error(2)
 }
+
+func (u *userDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
+	args := u.Called(ctx, userID)
+	return args.Get(0).([]string), args.Error(1)
+}

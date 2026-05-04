@@ -32,6 +32,18 @@ func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	p.NotEmpty(channels)
 }
 
+func (p *PostgresTestSuite) TestDeleteParsingChannel() {
+
+	ctx := context.Background()
+	channelName := "test_channel"
+
+	err := p.storage.AddNewParsingChannel(ctx, channelName)
+	p.NoError(err)
+
+	err = p.storage.DeleteDefaultParsingChannel(ctx, channelName)
+	p.NoError(err)
+}
+
 func (p *PostgresTestSuite) TestGetPriorityChannelsByUserID() {
 	userID := int64(1)
 	ctx := context.Background()
