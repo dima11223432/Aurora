@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log/slog"
 	"recommendationService/internal/domain/models"
-	"recommendationService/internal/storage"
 	"time"
 )
 
@@ -88,7 +87,7 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 		channelNames = append(channelNames, ch.Channel)
 	}
 
-	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 4)
+	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 5)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s: %w", op, err)
 	}

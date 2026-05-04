@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/suite"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type UserDataProviderSuite struct {
@@ -70,4 +72,28 @@ func (u *UserDataProviderSuite) TestGetRecommendatedPosts_Success() {
 	u.Len(resp.Posts, 1)
 	u.Equal("Test text", resp.Posts[0].PostText)
 	u.Equal(mockNextCursor.ID, resp.NextCursor.Id)
+}
+
+func (u *UserDataProviderSuite) TestDeleteParsingChannel() {
+	ctx := context.Background()
+	channelUsername := "channel1"
+
+	u.mock.On("DeleteParsingChannel", ctx, channelUsername).Return(nil).Once()
+
+	resp, err := u.s.DeleteParsingChannel(ctx, &recv1.DeleteParsingChannelRequest{
+		ChannelUsername: channelUsername,
+	})
+
+	u.NoError(err)
+	u.NotNil(resp)
+	u.mock.AssertExpectations(u.T())
+
+	resp, err = u.s.DeleteParsingChannel(ctx, &recv1.DeleteParsingChannelRequest{
+		ChannelUsername: "",
+	})
+
+	u.Nil(resp)
+	u.Error(err)
+	u.Equal(codes.InvalidArgument, status.Code(err))
+	u.mock.AssertNotCalled(u.T(), "DeleteParsingChannel", ctx, "")
 }
