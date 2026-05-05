@@ -45,28 +45,23 @@ class ParserService:
 
                 if not isinstance(entity, Channel):
                     self.log.warning(f"{channel} is not a channel, skipping and delete")
-                    self.channel_storage.delete_channel(channel)
-                    self.channel_storage.delete_channel_from_user_custom_channels(
-                        channel
-                    )
+                    self.clearDbFromChannel(channel)
                     continue
                 if entity.left:
                     self.log.info(f"Account not in {channel}, attempting to join...")
                     await self.client(JoinChannelRequest(entity))
                     self.log.success(f"Successfully joined {channel}")
 
+                if channel not in self.parsing_channels:
+                    self.parsing_channels.add(channel)
+                    self.log.info(f"Added {channel} to parsing channels")
+
             except ValueError:
                 self.log.error(f"Channel {channel} not found (invalid username or ID)")
-                self.channel_storage.delete_channel(channel)
-                self.channel_storage.delete_channel_from_user_custom_channels(channel)
-                if channel in self.parsing_channels:
-                    self.parsing_channels.remove(channel)
+                self.clearDbFromChannel(channel)
             except Exception as e:
                 self.log.error(f"Reliability check failed for {channel}: {e}")
-                self.channel_storage.delete_channel(channel)
-                self.channel_storage.delete_channel_from_user_custom_channels(channel)
-                if channel in self.parsing_channels:
-                    self.parsing_channels.remove(channel)
+                self.clearDbFromChannel(channel)
 
     def _build_post_link(self, chat, message_id):
         if getattr(chat, "username", None):
@@ -119,26 +114,34 @@ class ParserService:
             self.log.error(f"Failed to fetch posts from {channel_name}: {e}")
             return None
 
+    async def _handle_delete_channel(self, connection, pid, channel, payload):
+        self.parsing_channels.remove(payload)
+        self.log.info(
+            f"Removed {payload} from parsing channels: {self.parsing_channels}"
+        )
+        self.log.info(f"Parsing channels: {self.channel_storage.get_all_channels()}")
+
+        self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
+        self.client.add_event_handler(
+            self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
+        )
+
     async def _handle_new_channel(self, connection, pid, channel, payload):
         try:
             await self._ensure_subscribed([payload])
 
-            self.parsing_channels.add(payload)
-            self.channel_storage.add_channel(payload)
-            self.log.info(f"Subscribed to new channel: {channel}")
             if payload not in self.parsing_channels:
-                self.log.info(
-                    f"Parsing channels: {self.channel_storage.get_all_channels()}"
+                self.log.warning(
+                    f"Channel {payload} was removed during validation, skipping"
                 )
                 return
 
+            self.channel_storage.add_channel(payload)
             self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
             self.client.add_event_handler(
                 self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
             )
-            # self.client.add_event_handler(
-            #     self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
-            # )
+            self.log.info(f"Updated parsing channels: {self.parsing_channels}")
             self.log.info(
                 f"Subscribed to new channel: {self.channel_storage.get_all_channels()}"
             )
@@ -152,7 +155,9 @@ class ParserService:
         self.client.add_event_handler(
             self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
         )
-        await self.channel_storage.run_trigger(self._handle_new_channel)
+        await self.channel_storage.run_trigger(
+            self._handle_new_channel, self._handle_delete_channel
+        )
         try:
             self.log.success("Monitoring active.")
             await self.client.run_until_disconnected()
@@ -160,3 +165,9 @@ class ParserService:
             self.log.error(f"Monitoring interrupted: {e}")
         finally:
             await self.client.disconnect()
+
+    def clearDbFromChannel(self, channel):
+        self.channel_storage.delete_channel(channel)
+        self.channel_storage.delete_channel_from_user_custom_channels(channel)
+        if channel in self.parsing_channels:
+            self.parsing_channels.remove(channel)
