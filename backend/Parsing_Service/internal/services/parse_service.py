@@ -114,6 +114,18 @@ class ParserService:
             self.log.error(f"Failed to fetch posts from {channel_name}: {e}")
             return None
 
+    async def _handle_delete_channel(self, connection, pid, channel, payload):
+        self.parsing_channels.remove(payload)
+        self.log.info(
+            f"Removed {payload} from parsing channels: {self.parsing_channels}"
+        )
+        self.log.info(f"Parsing channels: {self.channel_storage.get_all_channels()}")
+
+        self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
+        self.client.add_event_handler(
+            self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
+        )
+
     async def _handle_new_channel(self, connection, pid, channel, payload):
         try:
             await self._ensure_subscribed([payload])
@@ -143,7 +155,9 @@ class ParserService:
         self.client.add_event_handler(
             self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
         )
-        await self.channel_storage.run_trigger(self._handle_new_channel)
+        await self.channel_storage.run_trigger(
+            self._handle_new_channel, self._handle_delete_channel
+        )
         try:
             self.log.success("Monitoring active.")
             await self.client.run_until_disconnected()

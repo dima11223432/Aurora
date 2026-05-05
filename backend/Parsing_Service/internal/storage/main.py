@@ -18,10 +18,13 @@ class ChannelStorage:
 
         self.conn.commit()
 
-    async def run_trigger(self, handle_func):
+    async def run_trigger(self, handle_insert_func, handle_delete_func):
         self.trigger_conn = await asyncpg.connect(self.cfg.DB_URL)
 
-        await self.trigger_conn.add_listener("new_channel_event", handle_func)
+        await self.trigger_conn.add_listener("new_channel_event", handle_insert_func)
+        await self.trigger_conn.add_listener(
+            "deleted_channel_event", handle_delete_func
+        )
 
     def add_channel(self, username):
         username = username.lstrip("@")
