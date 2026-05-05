@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { routes } from "./config/api";
+import Channel from "./Channel";
+import BaseChannelCard from "./Channel";
 
 const Shtora = () => {
   const [parsingChannels, setParsingChannels] = useState([]);
@@ -224,28 +226,12 @@ const Shtora = () => {
                   : channel?.name || JSON.stringify(channel);
               const isChecked = selectedChannels.includes(channelName);
               return (
-                <li
-                  key={idx}
-                  className="py-2 px-3 rounded-lg hover:bg-cyan-500/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
-                  style={{ backdropFilter: "blur(1px)" }}
-                >
-                  <input
-                    type="checkbox"
-                    id={`channel-${idx}`}
-                    checked={isChecked}
-                    onChange={() => handleCheckboxChange(channelName)}
-                    className="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
-                  />
-                  <label
-                    htmlFor={`channel-${idx}`}
-                    className="flex-1 group-hover:text-cyan-200 transition-colors duration-200 cursor-pointer"
-                  >
-                    {channelName}
-                  </label>
-                  <span className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-cyan-300 transition-opacity duration-200">
-                    →
-                  </span>
-                </li>
+                <BaseChannelCard
+                  idx={idx}
+                  isChecked={isChecked}
+                  channelName={channelName}
+                  handleCheckboxChange={handleCheckboxChange}
+                />
               );
             })
           )}
@@ -262,28 +248,12 @@ const Shtora = () => {
                   : channel?.name || JSON.stringify(channel);
               const isChecked = selectedChannels.includes(channelName);
               return (
-                <li
-                  key={idx}
-                  className="py-2 px-3 rounded-lg hover:bg-cyan-500/70 hover:scale-[1.03] hover:shadow-lg text-white cursor-pointer transition-all duration-200 flex items-center gap-2 group"
-                  style={{ backdropFilter: "blur(1px)" }}
-                >
-                  <input
-                    type="checkbox"
-                    id={`channel-${idx}`}
-                    checked={isChecked}
-                    onChange={() => handleCheckboxChange(channelName)}
-                    className="w-4 h-4 text-cyan-600 bg-gray-100 border-gray-300 rounded focus:ring-cyan-500 focus:ring-2"
-                  />
-                  <label
-                    htmlFor={`channel-${idx}`}
-                    className="flex-1 group-hover:text-cyan-200 transition-colors duration-200 cursor-pointer"
-                  >
-                    {channelName}
-                  </label>
-                  <span className="ml-auto opacity-0 group-hover:opacity-100 text-xs text-cyan-300 transition-opacity duration-200">
-                    →
-                  </span>
-                </li>
+                <BaseChannelCard
+                  idx={idx}
+                  isChecked={isChecked}
+                  channelName={channelName}
+                  handleCheckboxChange={handleCheckboxChange}
+                />
               );
             })}
         </ul>
