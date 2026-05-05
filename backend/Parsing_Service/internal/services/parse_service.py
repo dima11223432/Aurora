@@ -49,11 +49,18 @@ class ParserService:
                     self.channel_storage.delete_channel_from_user_custom_channels(
                         channel
                     )
+
+                    if channel in self.parsing_channels:
+                        self.parsing_channels.remove(channel)
                     continue
                 if entity.left:
                     self.log.info(f"Account not in {channel}, attempting to join...")
                     await self.client(JoinChannelRequest(entity))
                     self.log.success(f"Successfully joined {channel}")
+
+                if channel not in self.parsing_channels:
+                    self.parsing_channels.add(channel)
+                    self.log.info(f"Added {channel} to parsing channels")
 
             except ValueError:
                 self.log.error(f"Channel {channel} not found (invalid username or ID)")
@@ -123,22 +130,18 @@ class ParserService:
         try:
             await self._ensure_subscribed([payload])
 
-            self.parsing_channels.add(payload)
-            self.channel_storage.add_channel(payload)
-            self.log.info(f"Subscribed to new channel: {channel}")
             if payload not in self.parsing_channels:
-                self.log.info(
-                    f"Parsing channels: {self.channel_storage.get_all_channels()}"
+                self.log.warning(
+                    f"Channel {payload} was removed during validation, skipping"
                 )
                 return
 
+            self.channel_storage.add_channel(payload)
             self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
             self.client.add_event_handler(
                 self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
             )
-            # self.client.add_event_handler(
-            #     self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
-            # )
+            self.log.info(f"Updated parsing channels: {self.parsing_channels}")
             self.log.info(
                 f"Subscribed to new channel: {self.channel_storage.get_all_channels()}"
             )
