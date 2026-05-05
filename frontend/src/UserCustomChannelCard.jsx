@@ -13,10 +13,14 @@ export default function UserCustomChannelCard({
       isChecked={isChecked}
       channelName={channelName}
       handleCheckboxChange={handleCheckboxChange}
-      deleteUserCustomParsingChannel={deleteUserCustomParsingChannel}
     >
       <div>
-        <button className="text-cyan-300 hover:text-cyan hover:bg-cyan-300/20 rounded-2xl transition-colors">
+        <button
+          onClick={() => {
+            deleteUserCustomParsingChannel(channelName);
+          }}
+          className="text-cyan-300 hover:text-cyan hover:bg-cyan-300/20 rounded-2xl transition-colors"
+        >
           <svg
             className="w-6 h-6"
             fill="none"

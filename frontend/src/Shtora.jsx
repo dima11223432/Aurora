@@ -49,7 +49,7 @@ const Shtora = () => {
         },
       );
 
-      const data = await response.json();
+      const data = await response.data;
       console.log("Успешно добавлен канал", data);
       return data;
     } catch (error) {
@@ -105,6 +105,25 @@ const Shtora = () => {
   const deleteUserCustomParsingChannelRequest = async (channelUsername) => {
     const TOKEN = localStorage.getItem("token");
     if (!TOKEN) return;
+
+    try {
+      const resp = axios.post(
+        routes.deleteUserCustomParsingChannel,
+        { channel_username: channelUsername },
+
+        {
+          headers: {
+            Authorization: `Bearer ${TOKEN}`,
+          },
+        },
+      );
+
+      const data = await resp.data;
+      console.log("Успешно удален канал", data);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const deletePriorityChannelsRequest = async (channels) => {
@@ -259,7 +278,9 @@ const Shtora = () => {
                   isChecked={isChecked}
                   channelName={channelName}
                   handleCheckboxChange={handleCheckboxChange}
-                  deleteUserCustomParsingChannel={() => {}}
+                  deleteUserCustomParsingChannel={
+                    deleteUserCustomParsingChannelRequest
+                  }
                 />
               );
             })}
