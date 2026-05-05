@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { routes } from "./config/api";
-import Channel from "./Channel";
-import BaseChannelCard from "./Channel";
+import Channel from "./BaseChannelCard";
+import BaseChannelCard from "./BaseChannelCard";
+import UserCustomChannelCard from "./UserCustomChannelCard";
 
 const Shtora = () => {
   const [parsingChannels, setParsingChannels] = useState([]);
@@ -99,6 +100,11 @@ const Shtora = () => {
       console.error("Error: ", error);
       return null;
     }
+  };
+
+  const deleteUserCustomParsingChannelRequest = async (channelUsername) => {
+    const TOKEN = localStorage.getItem("token");
+    if (!TOKEN) return;
   };
 
   const deletePriorityChannelsRequest = async (channels) => {
@@ -248,11 +254,12 @@ const Shtora = () => {
                   : channel?.name || JSON.stringify(channel);
               const isChecked = selectedChannels.includes(channelName);
               return (
-                <BaseChannelCard
+                <UserCustomChannelCard
                   idx={idx}
                   isChecked={isChecked}
                   channelName={channelName}
                   handleCheckboxChange={handleCheckboxChange}
+                  deleteUserCustomParsingChannel={() => {}}
                 />
               );
             })}
