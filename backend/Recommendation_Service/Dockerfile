@@ -17,6 +17,6 @@ RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 44000
+EXPOSE 44040
 
 CMD ["./recommendation_service", "--config", "./config/local.yaml"]

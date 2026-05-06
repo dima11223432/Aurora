@@ -10,6 +10,8 @@ import (
 	"net"
 	"strconv"
 
+	"API_Service/internal/config"
+
 	ssov1 "github.com/dima11223432/Aurora_SSO_Protos/api/gen/v1"
 	recv1 "github.com/dima11223432/recommendationService_protos/api/gen/v1"
 
@@ -25,28 +27,32 @@ type App struct {
 	port int
 }
 
-func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string) *App {
-	AuthInterceptor := authinterceptor.NewAuthInterceptor(authinterceptor.AuthConfig{JwtSecret: jwtSecret, PublicRoutes: publicRoutes})
+func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string, ssoConfig config.ServiceConfig, recsConfig config.ServiceConfig) *App {
+	authInterceptor := authinterceptor.NewAuthInterceptor(authinterceptor.AuthConfig{JwtSecret: jwtSecret, PublicRoutes: publicRoutes})
 
 	gRPCServer := grpc.NewServer(
 		grpc.UnaryInterceptor(
-			AuthInterceptor.SetAuthInterceptor(),
+			authInterceptor.SetAuthInterceptor(),
 		),
 	)
-	authConn, err := grpc.NewClient(":44044", grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	authAddr := fmt.Sprintf("%s:%d", ssoConfig.Host, ssoConfig.Port)
+	recsAddr := fmt.Sprintf("%s:%d", recsConfig.Host, recsConfig.Port)
+
+	authConn, err := grpc.NewClient(authAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil {
 		logrus.Fatalf("cant connect to authService: %v", err)
 	}
 	authClient := ssov1.NewAuthServiceClient(authConn)
-	authService := services.NewAuthService(logger, authClient, AuthInterceptor)
+	authService := services.NewAuthService(logger, authClient, authInterceptor)
 
-	recsConn, err := grpc.NewClient(":44040", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	recsConn, err := grpc.NewClient(recsAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Error("cant connect to recommendationService: %v", slog.Any("err", err))
 	}
 	recsClient := recv1.NewRecommendationServiceClient(recsConn)
-	recommendationService := services.NewRecommendationService(recsClient, logger, AuthInterceptor)
+	recommendationService := services.NewRecommendationService(recsClient, logger, authInterceptor)
 
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService, recommendationService)
 	reflection.Register(gRPCServer)

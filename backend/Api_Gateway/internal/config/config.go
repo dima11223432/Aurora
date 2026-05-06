@@ -16,6 +16,7 @@ type Config struct {
 	GRPC_GatewayConfig GRPC_Gateway_Config `yaml:"grpc-gateway"`
 	Auth               Auth                `yaml:"auth"`
 	RedisConfig        RedisConfig         `yaml:"redis"`
+	Services          ServicesConfig      `yaml:"services"`
 }
 
 type Auth struct {
@@ -38,6 +39,16 @@ type RedisConfig struct {
 	Password string `yaml:"password"`
 	Port     int    `yaml:"port"`
 	DB       int    `yaml:"db"`
+}
+
+type ServicesConfig struct {
+	SSO     ServiceConfig `yaml:"sso"`
+	RECS    ServiceConfig `yaml:"recs"`
+}
+
+type ServiceConfig struct {
+	Host string `yaml:"host"`
+	Port int    `yaml:"port"`
 }
 
 func MustLoad() *Config {

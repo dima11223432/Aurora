@@ -1,14 +1,14 @@
 env: "local"
 
-storage_pass: "postgres://postgres:pass@localhost:5432/users?sslmode=disable"
-parsing_service_pass: "postgres://postgres:pass@localhost:5432/parser?sslmode=disable"
+storage_pass: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
+parsing_service_pass: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
 token_ttl: 1h
 
 grpc:
   port: 44040
   timeout: 10h
 redis:
-  host: "localhost:6379"
+  host: "redis-master:6379"
   password: "1111"
   db: 0
   port: 6379

@@ -48,7 +48,7 @@ USER appuser
 WORKDIR /app
 
 # Открытие порта
-EXPOSE 8080
+EXPOSE 8081 44000
 
 # Проверка здоровья
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \

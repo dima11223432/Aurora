@@ -1,6 +1,6 @@
 env: "local"
 
-storage_pass: "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable"
+storage_pass: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
 
 auth:
   jwt_secret: "test-secret"
@@ -14,7 +14,7 @@ auth:
 token_ttl: 1h
 
 redis:
-  host: "localhost:6379"
+  host: "redis-master:6379"
   password: "1111"
   db: 0
   port: 6379
@@ -26,3 +26,11 @@ grpc:
 grpc-gateway:
   port: 8081
   timeout: 10h
+
+services:
+  sso:
+    host: "sso"
+    port: 44044
+  recs:
+    host: "recommendation-service"
+    port: 44040
