@@ -1,0 +1,238 @@
+services:
+  # Infrastructure
+  postgres:
+    image: postgres:15-alpine
+    container_name: aurora-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: aurora
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aurora-network
+
+  postgres-parser:
+    image: postgres:15-alpine
+    container_name: aurora-parser-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: parser
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_parser_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aurora-network
+
+  redis-master:
+    image: redis:7-alpine
+    container_name: redis-master
+    restart: unless-stopped
+    command: >
+      redis-server
+      --bind 0.0.0.0
+      --protected-mode no
+      --requirepass "1111"
+      --masterauth "1111"
+      --appendonly yes
+      --appendfsync everysec
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_master_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "1111", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - aurora-network
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - aurora-network
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    networks:
+      - aurora-network
+
+  # Services
+  api-gateway:
+    build:
+      context: ./Api_Gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+      - "44043:44043"
+    volumes:
+      - ./Api_Gateway/config:/app/config
+    environment:
+      - ENV=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  sso:
+    build:
+      context: ./SSO
+      dockerfile: Dockerfile
+    container_name: sso
+    restart: unless-stopped
+    ports:
+      - "44044:44044"
+    volumes:
+      - ./SSO/config:/app/config
+      - ./SSO/migrations:/app/migrations
+    environment:
+      - ENV=prod
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  recommendation-service:
+    build:
+      context: ./Recommendation_Service
+      dockerfile: Dockerfile
+    container_name: recommendation-service
+    restart: unless-stopped
+    ports:
+      - "44040:44040"
+    volumes:
+      - ./Recommendation_Service/config:/app/config
+    environment:
+      - ENV=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  cache-service:
+    build:
+      context: ./Cache_Service
+      dockerfile: Dockerfile
+    container_name: cache-service
+    restart: unless-stopped
+    ports:
+      - "44045:44044"
+      - "44046:44045"
+    volumes:
+      - ./Cache_Service/config:/app/config
+      - ./Cache_Service/migrations:/app/migrations
+    environment:
+      - ENV=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - aurora-network
+
+  parsing-service:
+    build:
+      context: ./Parsing_Service
+      dockerfile: Dockerfile
+    container_name: parsing-service
+    restart: unless-stopped
+    ports:
+      - "44042:44042"
+    volumes:
+      - ./Parsing_Service/config:/app/config
+      - ./Parsing_Service/logs:/app/logs
+    environment:
+      - ENV=prod
+      - PYTHONPATH=/app
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_TOPIC=telegram_posts
+      - DB_URL=postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable
+      - DB_HOST=postgres-parser
+      - DB_PORT=5432
+      - DB_NAME=parser
+      - DB_USER=postgres
+      - DB_PASSWORD=pass
+    depends_on:
+      postgres-parser:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - aurora-network
+
+  analytic-service:
+    build:
+      context: ./Analitic_Service
+      dockerfile: Dockerfile
+    container_name: analytic-service
+    restart: unless-stopped
+    ports:
+      - "44047:44043"
+    volumes:
+      - ./Analitic_Service/logs:/app/logs
+    environment:
+      - ENV=prod
+      - PYTHONPATH=/app
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+    networks:
+      - aurora-network
+
+networks:
+  aurora-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  postgres_parser_data:
+  redis_master_data:
