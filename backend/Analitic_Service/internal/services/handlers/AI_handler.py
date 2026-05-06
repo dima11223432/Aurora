@@ -6,19 +6,21 @@ from dotenv import load_dotenv, find_dotenv
 from telethon.helpers import Path
 
 
+
 from ..AI_API.DeepSeek import answer as ds
 from ..AI_API.GemmaAI import answer as ge
 from ..AI_API.StepAI import answer as st
 from ..AI_API.YandexAI import answer as ya
-
+from ..LSTM_Laura.QwenAnalis import answer as qw
+from ..LSTM_Laura.Laura_LSTM_savepredict import run, predict
 # from AnaliticKafka import getMessage
 
 
 def AI_handler(context):
     env_path = Path(__file__).parent / "config" / "API_Keys.env"
     load_dotenv(env_path)
-    AI_answer = {"ds": {}}
-    AI_list = {"ds"}
+    AI_answer = {"ds": {}, "ge": {}, "st": {}, "ya": {}} #ds - deepseek, 
+    AI_list = {"ds", "ge", "st", "ya"}
 
     for i in AI_list:
         try:
@@ -28,4 +30,6 @@ def AI_handler(context):
             AI_answer[i]["reason"] = part[1]
         except:
             AI_answer[i]["answer"] = 0
+        m, s, d = run(qw(context))
+        predict(m, s, d)
     return AI_answer
