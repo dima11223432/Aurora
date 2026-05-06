@@ -19,9 +19,15 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RecommendationService_GetUserPriorityChannels_FullMethodName = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
-	RecommendationService_GetRecommendatedPosts_FullMethodName   = "/recommendation.v1.RecommendationService/GetRecommendatedPosts"
-	RecommendationService_GetAllParsingChannels_FullMethodName   = "/recommendation.v1.RecommendationService/GetAllParsingChannels"
+	RecommendationService_GetUserPriorityChannels_FullMethodName                    = "/recommendation.v1.RecommendationService/GetUserPriorityChannels"
+	RecommendationService_GetRecommendatedPosts_FullMethodName                      = "/recommendation.v1.RecommendationService/GetRecommendatedPosts"
+	RecommendationService_GetAllDefaultParsingChannels_FullMethodName               = "/recommendation.v1.RecommendationService/GetAllDefaultParsingChannels"
+	RecommendationService_GetAllUserCustomParsingChannels_FullMethodName            = "/recommendation.v1.RecommendationService/GetAllUserCustomParsingChannels"
+	RecommendationService_AddNewDefaultParsingChannel_FullMethodName                = "/recommendation.v1.RecommendationService/AddNewDefaultParsingChannel"
+	RecommendationService_DeleteDefaultParsingChannel_FullMethodName                = "/recommendation.v1.RecommendationService/DeleteDefaultParsingChannel"
+	RecommendationService_GetAllDefaultParsingChannelsWithCategories_FullMethodName = "/recommendation.v1.RecommendationService/GetAllDefaultParsingChannelsWithCategories"
+	RecommendationService_AddNewUserCustomParsingChannel_FullMethodName             = "/recommendation.v1.RecommendationService/AddNewUserCustomParsingChannel"
+	RecommendationService_DeleteUserCustomParsingChannel_FullMethodName             = "/recommendation.v1.RecommendationService/DeleteUserCustomParsingChannel"
 )
 
 // RecommendationServiceClient is the client API for RecommendationService service.
@@ -30,7 +36,13 @@ const (
 type RecommendationServiceClient interface {
 	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
 	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
-	GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error)
+	GetAllDefaultParsingChannels(ctx context.Context, in *GetAllDefaultParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsResponse, error)
+	GetAllUserCustomParsingChannels(ctx context.Context, in *GetAllUserCustomParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllUserCustomParsingChannelsResponse, error)
+	AddNewDefaultParsingChannel(ctx context.Context, in *AddNewDefaultParsingChannelRequest, opts ...grpc.CallOption) (*AddNewDefaultParsingChannelResponse, error)
+	DeleteDefaultParsingChannel(ctx context.Context, in *DeleteDefaultParsingChannelRequest, opts ...grpc.CallOption) (*DeleteDefaultParsingChannelResponse, error)
+	GetAllDefaultParsingChannelsWithCategories(ctx context.Context, in *GetAllDefaultParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error)
+	AddNewUserCustomParsingChannel(ctx context.Context, in *AddNewUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*AddNewUserCustomParsingChannelResponse, error)
+	DeleteUserCustomParsingChannel(ctx context.Context, in *DeleteUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*DeleteUserCustomParsingChannelResponse, error)
 }
 
 type recommendationServiceClient struct {
@@ -61,10 +73,70 @@ func (c *recommendationServiceClient) GetRecommendatedPosts(ctx context.Context,
 	return out, nil
 }
 
-func (c *recommendationServiceClient) GetAllParsingChannels(ctx context.Context, in *GetAllParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllParsingChannelsResponse, error) {
+func (c *recommendationServiceClient) GetAllDefaultParsingChannels(ctx context.Context, in *GetAllDefaultParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetAllParsingChannelsResponse)
-	err := c.cc.Invoke(ctx, RecommendationService_GetAllParsingChannels_FullMethodName, in, out, cOpts...)
+	out := new(GetAllDefaultParsingChannelsResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetAllDefaultParsingChannels_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recommendationServiceClient) GetAllUserCustomParsingChannels(ctx context.Context, in *GetAllUserCustomParsingChannelsRequest, opts ...grpc.CallOption) (*GetAllUserCustomParsingChannelsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllUserCustomParsingChannelsResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetAllUserCustomParsingChannels_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recommendationServiceClient) AddNewDefaultParsingChannel(ctx context.Context, in *AddNewDefaultParsingChannelRequest, opts ...grpc.CallOption) (*AddNewDefaultParsingChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddNewDefaultParsingChannelResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_AddNewDefaultParsingChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recommendationServiceClient) DeleteDefaultParsingChannel(ctx context.Context, in *DeleteDefaultParsingChannelRequest, opts ...grpc.CallOption) (*DeleteDefaultParsingChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteDefaultParsingChannelResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_DeleteDefaultParsingChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recommendationServiceClient) GetAllDefaultParsingChannelsWithCategories(ctx context.Context, in *GetAllDefaultParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAllDefaultParsingChannelsWithCategoriesResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_GetAllDefaultParsingChannelsWithCategories_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recommendationServiceClient) AddNewUserCustomParsingChannel(ctx context.Context, in *AddNewUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*AddNewUserCustomParsingChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AddNewUserCustomParsingChannelResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_AddNewUserCustomParsingChannel_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recommendationServiceClient) DeleteUserCustomParsingChannel(ctx context.Context, in *DeleteUserCustomParsingChannelRequest, opts ...grpc.CallOption) (*DeleteUserCustomParsingChannelResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteUserCustomParsingChannelResponse)
+	err := c.cc.Invoke(ctx, RecommendationService_DeleteUserCustomParsingChannel_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +149,13 @@ func (c *recommendationServiceClient) GetAllParsingChannels(ctx context.Context,
 type RecommendationServiceServer interface {
 	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
 	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
-	GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error)
+	GetAllDefaultParsingChannels(context.Context, *GetAllDefaultParsingChannelsRequest) (*GetAllDefaultParsingChannelsResponse, error)
+	GetAllUserCustomParsingChannels(context.Context, *GetAllUserCustomParsingChannelsRequest) (*GetAllUserCustomParsingChannelsResponse, error)
+	AddNewDefaultParsingChannel(context.Context, *AddNewDefaultParsingChannelRequest) (*AddNewDefaultParsingChannelResponse, error)
+	DeleteDefaultParsingChannel(context.Context, *DeleteDefaultParsingChannelRequest) (*DeleteDefaultParsingChannelResponse, error)
+	GetAllDefaultParsingChannelsWithCategories(context.Context, *GetAllDefaultParsingChannelsWithCategoriesRequest) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error)
+	AddNewUserCustomParsingChannel(context.Context, *AddNewUserCustomParsingChannelRequest) (*AddNewUserCustomParsingChannelResponse, error)
+	DeleteUserCustomParsingChannel(context.Context, *DeleteUserCustomParsingChannelRequest) (*DeleteUserCustomParsingChannelResponse, error)
 }
 
 // UnimplementedRecommendationServiceServer should be embedded to have
@@ -93,8 +171,26 @@ func (UnimplementedRecommendationServiceServer) GetUserPriorityChannels(context.
 func (UnimplementedRecommendationServiceServer) GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetRecommendatedPosts not implemented")
 }
-func (UnimplementedRecommendationServiceServer) GetAllParsingChannels(context.Context, *GetAllParsingChannelsRequest) (*GetAllParsingChannelsResponse, error) {
-	return nil, status.Error(codes.Unimplemented, "method GetAllParsingChannels not implemented")
+func (UnimplementedRecommendationServiceServer) GetAllDefaultParsingChannels(context.Context, *GetAllDefaultParsingChannelsRequest) (*GetAllDefaultParsingChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllDefaultParsingChannels not implemented")
+}
+func (UnimplementedRecommendationServiceServer) GetAllUserCustomParsingChannels(context.Context, *GetAllUserCustomParsingChannelsRequest) (*GetAllUserCustomParsingChannelsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllUserCustomParsingChannels not implemented")
+}
+func (UnimplementedRecommendationServiceServer) AddNewDefaultParsingChannel(context.Context, *AddNewDefaultParsingChannelRequest) (*AddNewDefaultParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddNewDefaultParsingChannel not implemented")
+}
+func (UnimplementedRecommendationServiceServer) DeleteDefaultParsingChannel(context.Context, *DeleteDefaultParsingChannelRequest) (*DeleteDefaultParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteDefaultParsingChannel not implemented")
+}
+func (UnimplementedRecommendationServiceServer) GetAllDefaultParsingChannelsWithCategories(context.Context, *GetAllDefaultParsingChannelsWithCategoriesRequest) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAllDefaultParsingChannelsWithCategories not implemented")
+}
+func (UnimplementedRecommendationServiceServer) AddNewUserCustomParsingChannel(context.Context, *AddNewUserCustomParsingChannelRequest) (*AddNewUserCustomParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddNewUserCustomParsingChannel not implemented")
+}
+func (UnimplementedRecommendationServiceServer) DeleteUserCustomParsingChannel(context.Context, *DeleteUserCustomParsingChannelRequest) (*DeleteUserCustomParsingChannelResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteUserCustomParsingChannel not implemented")
 }
 func (UnimplementedRecommendationServiceServer) testEmbeddedByValue() {}
 
@@ -152,20 +248,128 @@ func _RecommendationService_GetRecommendatedPosts_Handler(srv interface{}, ctx c
 	return interceptor(ctx, in, info, handler)
 }
 
-func _RecommendationService_GetAllParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetAllParsingChannelsRequest)
+func _RecommendationService_GetAllDefaultParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllDefaultParsingChannelsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(RecommendationServiceServer).GetAllParsingChannels(ctx, in)
+		return srv.(RecommendationServiceServer).GetAllDefaultParsingChannels(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: RecommendationService_GetAllParsingChannels_FullMethodName,
+		FullMethod: RecommendationService_GetAllDefaultParsingChannels_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(RecommendationServiceServer).GetAllParsingChannels(ctx, req.(*GetAllParsingChannelsRequest))
+		return srv.(RecommendationServiceServer).GetAllDefaultParsingChannels(ctx, req.(*GetAllDefaultParsingChannelsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecommendationService_GetAllUserCustomParsingChannels_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllUserCustomParsingChannelsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).GetAllUserCustomParsingChannels(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_GetAllUserCustomParsingChannels_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).GetAllUserCustomParsingChannels(ctx, req.(*GetAllUserCustomParsingChannelsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecommendationService_AddNewDefaultParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddNewDefaultParsingChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).AddNewDefaultParsingChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_AddNewDefaultParsingChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).AddNewDefaultParsingChannel(ctx, req.(*AddNewDefaultParsingChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecommendationService_DeleteDefaultParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDefaultParsingChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).DeleteDefaultParsingChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_DeleteDefaultParsingChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).DeleteDefaultParsingChannel(ctx, req.(*DeleteDefaultParsingChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecommendationService_GetAllDefaultParsingChannelsWithCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAllDefaultParsingChannelsWithCategoriesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).GetAllDefaultParsingChannelsWithCategories(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_GetAllDefaultParsingChannelsWithCategories_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).GetAllDefaultParsingChannelsWithCategories(ctx, req.(*GetAllDefaultParsingChannelsWithCategoriesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecommendationService_AddNewUserCustomParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddNewUserCustomParsingChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).AddNewUserCustomParsingChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_AddNewUserCustomParsingChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).AddNewUserCustomParsingChannel(ctx, req.(*AddNewUserCustomParsingChannelRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecommendationService_DeleteUserCustomParsingChannel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserCustomParsingChannelRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecommendationServiceServer).DeleteUserCustomParsingChannel(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecommendationService_DeleteUserCustomParsingChannel_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecommendationServiceServer).DeleteUserCustomParsingChannel(ctx, req.(*DeleteUserCustomParsingChannelRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -186,8 +390,32 @@ var RecommendationService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _RecommendationService_GetRecommendatedPosts_Handler,
 		},
 		{
-			MethodName: "GetAllParsingChannels",
-			Handler:    _RecommendationService_GetAllParsingChannels_Handler,
+			MethodName: "GetAllDefaultParsingChannels",
+			Handler:    _RecommendationService_GetAllDefaultParsingChannels_Handler,
+		},
+		{
+			MethodName: "GetAllUserCustomParsingChannels",
+			Handler:    _RecommendationService_GetAllUserCustomParsingChannels_Handler,
+		},
+		{
+			MethodName: "AddNewDefaultParsingChannel",
+			Handler:    _RecommendationService_AddNewDefaultParsingChannel_Handler,
+		},
+		{
+			MethodName: "DeleteDefaultParsingChannel",
+			Handler:    _RecommendationService_DeleteDefaultParsingChannel_Handler,
+		},
+		{
+			MethodName: "GetAllDefaultParsingChannelsWithCategories",
+			Handler:    _RecommendationService_GetAllDefaultParsingChannelsWithCategories_Handler,
+		},
+		{
+			MethodName: "AddNewUserCustomParsingChannel",
+			Handler:    _RecommendationService_AddNewUserCustomParsingChannel_Handler,
+		},
+		{
+			MethodName: "DeleteUserCustomParsingChannel",
+			Handler:    _RecommendationService_DeleteUserCustomParsingChannel_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

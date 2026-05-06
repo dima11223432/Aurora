@@ -43,10 +43,10 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 
 	recsConn, err := grpc.NewClient(":44040", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		logger.Error("cant connect to recommendationService: %v", err)
+		logger.Error("cant connect to recommendationService: %v", slog.Any("err", err))
 	}
 	recsClient := recv1.NewRecommendationServiceClient(recsConn)
-	recommendationService := services.NewRecommendationService(recsClient, AuthInterceptor)
+	recommendationService := services.NewRecommendationService(recsClient, logger, AuthInterceptor)
 
 	grpcAuth.RegisterGrpcServer(gRPCServer, authService, recommendationService)
 	reflection.Register(gRPCServer)
@@ -62,23 +62,23 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string)
 }
 
 func (a *App) MustRun() {
-	a.log.Info("Starting gRPC server on port %d...", a.port)
+	a.log.Info("Starting gRPC server", slog.Int("port", a.port))
 	if err := a.Run(); err != nil {
-		a.log.Error("gRPC server failed to start: %v", err)
+		a.log.Error("gRPC server failed to start", slog.Any("error", err))
 	}
 }
 
 func (a *App) Run() error {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
-		a.log.Error("Failed to listen on port %d: %v", a.port, err)
+		a.log.Error("Failed to listen on port", slog.Int("port", a.port), slog.Any("error", err))
 		return err
 	}
 
-	a.log.Info("gRPC server listening on ", slog.String("addr", listener.Addr().String()))
+	a.log.Info("gRPC server listening", slog.String("addr", listener.Addr().String()))
 
 	if err := a.gRPC.Serve(listener); err != nil {
-		a.log.Error("gRPC server stopped with error: %v", err)
+		a.log.Error("gRPC server stopped with error", slog.Any("error", err))
 		return err
 	}
 

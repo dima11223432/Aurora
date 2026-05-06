@@ -16,6 +16,134 @@
     "application/json"
   ],
   "paths": {
+    "/v1/add_new_default_parsing_channel": {
+      "post": {
+        "operationId": "ApiService_AddNewDefaultParsingChannel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddNewDefaultParsingChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AddNewDefaultParsingChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/add_new_user_custom_parsing_channel": {
+      "post": {
+        "operationId": "ApiService_AddNewUserCustomParsingChannel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1AddNewUserCustomParsingChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1AddNewUserCustomParsingChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/connect_wallet": {
+      "post": {
+        "operationId": "ApiService_ConnectWallet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ConnectWalletResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ConnectWalletRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/delete_default_parsing_channel": {
+      "post": {
+        "operationId": "ApiService_DeleteDefaultParsingChannel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1DeleteDefaultParsingChannelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1DeleteDefaultParsingChannelRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/delete_priority_channels": {
       "post": {
         "operationId": "ApiService_DeletePriorityChannels",
@@ -48,14 +176,14 @@
         ]
       }
     },
-    "/v1/get_all_parsing_channels": {
+    "/v1/delete_user_custom_parsing_channel": {
       "post": {
-        "operationId": "ApiService_GetAllParsingChannels",
+        "operationId": "ApiService_DeleteUserCustomParsingChannel",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetAllParsingChannelsResponse"
+              "$ref": "#/definitions/v1DeleteUserCustomParsingChannelResponse"
             }
           },
           "default": {
@@ -71,10 +199,98 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1GetAllParsingChannelsRequest"
+              "$ref": "#/definitions/v1DeleteUserCustomParsingChannelRequest"
             }
           }
         ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_all_categories": {
+      "get": {
+        "operationId": "ApiService_GetAllCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_all_default_parsing_channels": {
+      "get": {
+        "operationId": "ApiService_GetAllDefaultParsingChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllDefaultParsingChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_all_default_parsing_channels_with_categories": {
+      "get": {
+        "operationId": "ApiService_GetAllDefaultParsingChannelsWithCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllDefaultParsingChannelsWithCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_all_user_custom_parsing_channels": {
+      "get": {
+        "operationId": "ApiService_GetAllUserCustomParsingChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetAllUserCustomParsingChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "ApiService"
         ]
@@ -107,6 +323,28 @@
             }
           }
         ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
+    "/v1/get_user_priority_channels": {
+      "get": {
+        "operationId": "ApiService_GetUserPriorityChannels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetUserPriorityChannelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
         "tags": [
           "ApiService"
         ]
@@ -238,6 +476,59 @@
         }
       }
     },
+    "v1AddNewDefaultParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      }
+    },
+    "v1AddNewDefaultParsingChannelResponse": {
+      "type": "object"
+    },
+    "v1AddNewUserCustomParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        }
+      }
+    },
+    "v1AddNewUserCustomParsingChannelResponse": {
+      "type": "object"
+    },
+    "v1ChannelList": {
+      "type": "object",
+      "properties": {
+        "usernames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1ConnectWalletRequest": {
+      "type": "object",
+      "properties": {
+        "walletAddress": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ConnectWalletResponse": {
+      "type": "object"
+    },
     "v1Cursor": {
       "type": "object",
       "properties": {
@@ -249,6 +540,17 @@
           "type": "string"
         }
       }
+    },
+    "v1DeleteDefaultParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DeleteDefaultParsingChannelResponse": {
+      "type": "object"
     },
     "v1DeletePriorityChannelRequest": {
       "type": "object",
@@ -264,10 +566,51 @@
     "v1DeletePriorityChannelResponse": {
       "type": "object"
     },
-    "v1GetAllParsingChannelsRequest": {
+    "v1DeleteUserCustomParsingChannelRequest": {
+      "type": "object",
+      "properties": {
+        "channelUsername": {
+          "type": "string"
+        }
+      }
+    },
+    "v1DeleteUserCustomParsingChannelResponse": {
       "type": "object"
     },
-    "v1GetAllParsingChannelsResponse": {
+    "v1GetAllCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1GetAllDefaultParsingChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "v1GetAllDefaultParsingChannelsWithCategoriesResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/v1ChannelList"
+          }
+        }
+      }
+    },
+    "v1GetAllUserCustomParsingChannelsResponse": {
       "type": "object",
       "properties": {
         "channels": {
@@ -298,6 +641,17 @@
         },
         "nextCursor": {
           "$ref": "#/definitions/v1Cursor"
+        }
+      }
+    },
+    "v1GetUserPriorityChannelsResponse": {
+      "type": "object",
+      "properties": {
+        "channels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

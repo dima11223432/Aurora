@@ -19,58 +19,183 @@ service ApiService {
   rpc IsAdmin(IsAdminRequest) returns (IsAdminResponse) {
     option (google.api.http) = {
       post: "/v1/is_admin"
-      body:"*"
+      body: "*"
     };
   }
+
   rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse) {
     option (google.api.http) = {
       post: "/v1/set_priority_channels"
-      body:"*"
+      body: "*"
     };
   }
+
   rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse) {
     option (google.api.http) = {
       post: "/v1/get_recommendated_posts"
-      body:"*"
+      body: "*"
     };
   }
+
+  rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_user_priority_channels"
+    };
+  }
+
   rpc DeletePriorityChannels(DeletePriorityChannelRequest) returns (DeletePriorityChannelResponse) {
     option (google.api.http) = {
       post: "/v1/delete_priority_channels"
-      body:"*"
+      body: "*"
     };
   }
-  rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse) {
+  rpc GetAllUserCustomParsingChannels(GetAllUserCustomParsingChannelsRequest) returns  (GetAllUserCustomParsingChannelsResponse) {
     option (google.api.http) = {
-      post: "/v1/get_all_parsing_channels"
-      body:"*"
+      get: "/v1/get_all_user_custom_parsing_channels"
+    };
+  }
+
+  rpc GetAllDefaultParsingChannels(GetAllDefaultParsingChannelsRequest) returns (GetAllDefaultParsingChannelsResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_all_default_parsing_channels"
+    };
+  }
+
+  rpc AddNewDefaultParsingChannel(AddNewDefaultParsingChannelRequest) returns (AddNewDefaultParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/add_new_default_parsing_channel"
+      body: "*"
+    };
+  }
+
+  rpc AddNewUserCustomParsingChannel(AddNewUserCustomParsingChannelRequest) returns (AddNewUserCustomParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/add_new_user_custom_parsing_channel"
+      body: "*"
+    };
+  }
+
+  rpc DeleteUserCustomParsingChannel(DeleteUserCustomParsingChannelRequest) returns (DeleteUserCustomParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_user_custom_parsing_channel"
+      body: "*"
+    };
+  }
+
+  rpc DeleteDefaultParsingChannel(DeleteDefaultParsingChannelRequest) returns (DeleteDefaultParsingChannelResponse) {
+    option (google.api.http) = {
+      post: "/v1/delete_default_parsing_channel"
+      body: "*"
+    };
+  }
+
+  rpc GetAllDefaultParsingChannelsWithCategories(GetAllDefaultParsingChannelsWithCategoriesRequest) returns (GetAllDefaultParsingChannelsWithCategoriesResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_all_default_parsing_channels_with_categories"
+    };
+  }
+
+  rpc GetAllCategories(GetAllCategoriesRequest) returns (GetAllCategoriesResponse) {
+    option (google.api.http) = {
+      get: "/v1/get_all_categories"
+    };
+  }
+  rpc ConnectWallet(ConnectWalletRequest) returns (ConnectWalletResponse) {
+    option (google.api.http) = {
+      post: "/v1/connect_wallet"
+      body: "*"
     };
   }
 }
 
-message GetAllParsingChannelsRequest {
+message ConnectWalletRequest {
+  string wallet_address = 1;
+  string signature = 2;
+  string payload = 3;
 }
 
-message GetAllParsingChannelsResponse {
+message ConnectWalletResponse {
+}
+
+message GetAllUserCustomParsingChannelsRequest {
+}
+
+message GetAllUserCustomParsingChannelsResponse {
   repeated string channels = 1;
 }
 
-message DeletePriorityChannelRequest{
+message DeleteUserCustomParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message DeleteUserCustomParsingChannelResponse {
+}
+
+message AddNewUserCustomParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message AddNewUserCustomParsingChannelResponse {
+}
+
+message GetAllCategoriesRequest {
+}
+
+message GetAllCategoriesResponse {
+  repeated string categories = 1;
+}
+
+message GetAllDefaultParsingChannelsWithCategoriesRequest {
+}
+
+message GetAllDefaultParsingChannelsWithCategoriesResponse {
+  map<string, ChannelList> channels = 1;
+}
+
+message AddNewDefaultParsingChannelRequest {
+  string channel_username = 1;
+  string category = 2;
+}
+
+message AddNewDefaultParsingChannelResponse {
+}
+
+message DeleteDefaultParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message DeleteDefaultParsingChannelResponse {
+}
+
+message GetAllDefaultParsingChannelsRequest {
+}
+
+message GetAllDefaultParsingChannelsResponse {
   repeated string channels = 1;
 }
 
-message DeletePriorityChannelResponse{
+message GetUserPriorityChannelsRequest {
 }
 
-message GetRecommendatedPostsRequest{
+message GetUserPriorityChannelsResponse {
+  repeated string channels = 1;
+}
+
+message DeletePriorityChannelRequest {
+  repeated string channels = 1;
+}
+
+message DeletePriorityChannelResponse {
+}
+
+message GetRecommendatedPostsRequest {
   Cursor cursor = 1;
 }
 
-message GetRecommendatedPostsResponse{
+message GetRecommendatedPostsResponse {
   repeated Post posts = 1;
   Cursor next_cursor = 2;
 }
-
 
 message SetPriorityChannelsRequest {
   repeated string priority_channels = 1;
@@ -78,7 +203,6 @@ message SetPriorityChannelsRequest {
 
 message SetPriorityChannelsResponse {
 }
-
 
 message LoginRequest {
   int64 telegram_id = 1;
@@ -114,9 +238,12 @@ message Stock {
   string stock_name = 1;
   string side = 2;
 }
-message Cursor{
+
+message Cursor {
   int64 score = 1;
   string id = 2;
 }
 
-
+message ChannelList {
+  repeated string usernames = 1;
+}

@@ -89,9 +89,9 @@ func local_request_RecommendationService_GetRecommendatedPosts_0(ctx context.Con
 	return msg, metadata, err
 }
 
-func request_RecommendationService_GetAllParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func request_RecommendationService_GetAllDefaultParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetAllParsingChannelsRequest
+		protoReq GetAllDefaultParsingChannelsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
@@ -100,19 +100,181 @@ func request_RecommendationService_GetAllParsingChannels_0(ctx context.Context, 
 	if req.Body != nil {
 		_, _ = io.Copy(io.Discard, req.Body)
 	}
-	msg, err := client.GetAllParsingChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	msg, err := client.GetAllDefaultParsingChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
 	return msg, metadata, err
 }
 
-func local_request_RecommendationService_GetAllParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+func local_request_RecommendationService_GetAllDefaultParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
 	var (
-		protoReq GetAllParsingChannelsRequest
+		protoReq GetAllDefaultParsingChannelsRequest
 		metadata runtime.ServerMetadata
 	)
 	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
 	}
-	msg, err := server.GetAllParsingChannels(ctx, &protoReq)
+	msg, err := server.GetAllDefaultParsingChannels(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_RecommendationService_GetAllUserCustomParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetAllUserCustomParsingChannelsRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.GetAllUserCustomParsingChannels(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RecommendationService_GetAllUserCustomParsingChannels_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetAllUserCustomParsingChannelsRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.GetAllUserCustomParsingChannels(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_RecommendationService_AddNewDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AddNewDefaultParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.AddNewDefaultParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RecommendationService_AddNewDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AddNewDefaultParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.AddNewDefaultParsingChannel(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_RecommendationService_DeleteDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteDefaultParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.DeleteDefaultParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RecommendationService_DeleteDefaultParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteDefaultParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.DeleteDefaultParsingChannel(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetAllDefaultParsingChannelsWithCategoriesRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.GetAllDefaultParsingChannelsWithCategories(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq GetAllDefaultParsingChannelsWithCategoriesRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.GetAllDefaultParsingChannelsWithCategories(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_RecommendationService_AddNewUserCustomParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AddNewUserCustomParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.AddNewUserCustomParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RecommendationService_AddNewUserCustomParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq AddNewUserCustomParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.AddNewUserCustomParsingChannel(ctx, &protoReq)
+	return msg, metadata, err
+}
+
+func request_RecommendationService_DeleteUserCustomParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, client RecommendationServiceClient, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteUserCustomParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	if req.Body != nil {
+		_, _ = io.Copy(io.Discard, req.Body)
+	}
+	msg, err := client.DeleteUserCustomParsingChannel(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
+	return msg, metadata, err
+}
+
+func local_request_RecommendationService_DeleteUserCustomParsingChannel_0(ctx context.Context, marshaler runtime.Marshaler, server RecommendationServiceServer, req *http.Request, pathParams map[string]string) (proto.Message, runtime.ServerMetadata, error) {
+	var (
+		protoReq DeleteUserCustomParsingChannelRequest
+		metadata runtime.ServerMetadata
+	)
+	if err := marshaler.NewDecoder(req.Body).Decode(&protoReq); err != nil && !errors.Is(err, io.EOF) {
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "%v", err)
+	}
+	msg, err := server.DeleteUserCustomParsingChannel(ctx, &protoReq)
 	return msg, metadata, err
 }
 
@@ -162,25 +324,145 @@ func RegisterRecommendationServiceHandlerServer(ctx context.Context, mux *runtim
 		}
 		forward_RecommendationService_GetRecommendatedPosts_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllDefaultParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllParsingChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllParsingChannels"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllDefaultParsingChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllDefaultParsingChannels"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := local_request_RecommendationService_GetAllParsingChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		resp, md, err := local_request_RecommendationService_GetAllDefaultParsingChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
 		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_RecommendationService_GetAllParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RecommendationService_GetAllDefaultParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllUserCustomParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllUserCustomParsingChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllUserCustomParsingChannels"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RecommendationService_GetAllUserCustomParsingChannels_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_GetAllUserCustomParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_AddNewDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/AddNewDefaultParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/AddNewDefaultParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RecommendationService_AddNewDefaultParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_AddNewDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_DeleteDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/DeleteDefaultParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/DeleteDefaultParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RecommendationService_DeleteDefaultParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_DeleteDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllDefaultParsingChannelsWithCategories", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllDefaultParsingChannelsWithCategories"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_AddNewUserCustomParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/AddNewUserCustomParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/AddNewUserCustomParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RecommendationService_AddNewUserCustomParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_AddNewUserCustomParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_DeleteUserCustomParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		var stream runtime.ServerTransportStream
+		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/recommendation.v1.RecommendationService/DeleteUserCustomParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/DeleteUserCustomParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := local_request_RecommendationService_DeleteUserCustomParsingChannel_0(annotatedContext, inboundMarshaler, server, req, pathParams)
+		md.HeaderMD, md.TrailerMD = metadata.Join(md.HeaderMD, stream.Header()), metadata.Join(md.TrailerMD, stream.Trailer())
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_DeleteUserCustomParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 
 	return nil
@@ -256,34 +538,148 @@ func RegisterRecommendationServiceHandlerClient(ctx context.Context, mux *runtim
 		}
 		forward_RecommendationService_GetRecommendatedPosts_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
-	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllDefaultParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllParsingChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllParsingChannels"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllDefaultParsingChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllDefaultParsingChannels"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		resp, md, err := request_RecommendationService_GetAllParsingChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		resp, md, err := request_RecommendationService_GetAllDefaultParsingChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
 		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
 		if err != nil {
 			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
 			return
 		}
-		forward_RecommendationService_GetAllParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+		forward_RecommendationService_GetAllDefaultParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllUserCustomParsingChannels_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllUserCustomParsingChannels", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllUserCustomParsingChannels"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RecommendationService_GetAllUserCustomParsingChannels_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_GetAllUserCustomParsingChannels_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_AddNewDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/AddNewDefaultParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/AddNewDefaultParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RecommendationService_AddNewDefaultParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_AddNewDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_DeleteDefaultParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/DeleteDefaultParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/DeleteDefaultParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RecommendationService_DeleteDefaultParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_DeleteDefaultParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/GetAllDefaultParsingChannelsWithCategories", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/GetAllDefaultParsingChannelsWithCategories"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_AddNewUserCustomParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/AddNewUserCustomParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/AddNewUserCustomParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RecommendationService_AddNewUserCustomParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_AddNewUserCustomParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
+	})
+	mux.Handle(http.MethodPost, pattern_RecommendationService_DeleteUserCustomParsingChannel_0, func(w http.ResponseWriter, req *http.Request, pathParams map[string]string) {
+		ctx, cancel := context.WithCancel(req.Context())
+		defer cancel()
+		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/recommendation.v1.RecommendationService/DeleteUserCustomParsingChannel", runtime.WithHTTPPathPattern("/recommendation.v1.RecommendationService/DeleteUserCustomParsingChannel"))
+		if err != nil {
+			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		resp, md, err := request_RecommendationService_DeleteUserCustomParsingChannel_0(annotatedContext, inboundMarshaler, client, req, pathParams)
+		annotatedContext = runtime.NewServerMetadataContext(annotatedContext, md)
+		if err != nil {
+			runtime.HTTPError(annotatedContext, mux, outboundMarshaler, w, req, err)
+			return
+		}
+		forward_RecommendationService_DeleteUserCustomParsingChannel_0(annotatedContext, mux, outboundMarshaler, w, req, resp, mux.GetForwardResponseOptions()...)
 	})
 	return nil
 }
 
 var (
-	pattern_RecommendationService_GetUserPriorityChannels_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetUserPriorityChannels"}, ""))
-	pattern_RecommendationService_GetRecommendatedPosts_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetRecommendatedPosts"}, ""))
-	pattern_RecommendationService_GetAllParsingChannels_0   = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetAllParsingChannels"}, ""))
+	pattern_RecommendationService_GetUserPriorityChannels_0                    = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetUserPriorityChannels"}, ""))
+	pattern_RecommendationService_GetRecommendatedPosts_0                      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetRecommendatedPosts"}, ""))
+	pattern_RecommendationService_GetAllDefaultParsingChannels_0               = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetAllDefaultParsingChannels"}, ""))
+	pattern_RecommendationService_GetAllUserCustomParsingChannels_0            = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetAllUserCustomParsingChannels"}, ""))
+	pattern_RecommendationService_AddNewDefaultParsingChannel_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "AddNewDefaultParsingChannel"}, ""))
+	pattern_RecommendationService_DeleteDefaultParsingChannel_0                = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "DeleteDefaultParsingChannel"}, ""))
+	pattern_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "GetAllDefaultParsingChannelsWithCategories"}, ""))
+	pattern_RecommendationService_AddNewUserCustomParsingChannel_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "AddNewUserCustomParsingChannel"}, ""))
+	pattern_RecommendationService_DeleteUserCustomParsingChannel_0             = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"recommendation.v1.RecommendationService", "DeleteUserCustomParsingChannel"}, ""))
 )
 
 var (
-	forward_RecommendationService_GetUserPriorityChannels_0 = runtime.ForwardResponseMessage
-	forward_RecommendationService_GetRecommendatedPosts_0   = runtime.ForwardResponseMessage
-	forward_RecommendationService_GetAllParsingChannels_0   = runtime.ForwardResponseMessage
+	forward_RecommendationService_GetUserPriorityChannels_0                    = runtime.ForwardResponseMessage
+	forward_RecommendationService_GetRecommendatedPosts_0                      = runtime.ForwardResponseMessage
+	forward_RecommendationService_GetAllDefaultParsingChannels_0               = runtime.ForwardResponseMessage
+	forward_RecommendationService_GetAllUserCustomParsingChannels_0            = runtime.ForwardResponseMessage
+	forward_RecommendationService_AddNewDefaultParsingChannel_0                = runtime.ForwardResponseMessage
+	forward_RecommendationService_DeleteDefaultParsingChannel_0                = runtime.ForwardResponseMessage
+	forward_RecommendationService_GetAllDefaultParsingChannelsWithCategories_0 = runtime.ForwardResponseMessage
+	forward_RecommendationService_AddNewUserCustomParsingChannel_0             = runtime.ForwardResponseMessage
+	forward_RecommendationService_DeleteUserCustomParsingChannel_0             = runtime.ForwardResponseMessage
 )
