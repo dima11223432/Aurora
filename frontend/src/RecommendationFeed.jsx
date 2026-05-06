@@ -4,6 +4,7 @@ import RecommendationCard from "./RecommendationCard";
 import Footer from "./Footer";
 import Shtora from "./Shtora";
 import { routes } from "./config/api";
+import { TonConnectButton } from "@tonconnect/ui-react";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -88,6 +89,9 @@ export default function RecommendationFeed() {
     // {/* <div className="min-h-screen flex flex-col gap-6 bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6"> */}
 
     <div className="bg-gray-900 min-h-screen flex flex-col p-4 sm:p-6">
+      <div className="flex justify-end mb-4">
+        <TonConnectButton />
+      </div>
       <div className="flex-grow flex flex-col items-center gap-6">
         {recommendatedPosts.map((post, index) => (
           <RecommendationCard key={index} {...post} />

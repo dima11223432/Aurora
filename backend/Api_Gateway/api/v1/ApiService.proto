@@ -100,6 +100,21 @@ service ApiService {
       get: "/v1/get_all_categories"
     };
   }
+  rpc ConnectWallet(ConnectWalletRequest) returns (ConnectWalletResponse) {
+    option (google.api.http) = {
+      post: "/v1/connect_wallet"
+      body: "*"
+    };
+  }
+}
+
+message ConnectWalletRequest {
+  string wallet_address = 1;
+  string signature = 2;
+  string payload = 3;
+}
+
+message ConnectWalletResponse {
 }
 
 message GetAllUserCustomParsingChannelsRequest {
