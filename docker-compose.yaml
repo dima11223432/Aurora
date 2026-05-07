@@ -127,130 +127,130 @@ services:
     networks:
       - aurora-network
 
-  sso:
-    build:
-      context: ./backend/SSO
-      dockerfile: Dockerfile
-    container_name: aurora-sso
-    ports:
-      - "44044:44044"
-    # volumes:
-    #   - ./backend/SSO/config:/app/config
-    #   - ./backend/SSO/migrations:/app/migrations
-    environment:
-      - ENV=local
-      - TOKEN_TTL=1h
-      - GRPC_PORT=44044
-      - GRPC_TIMEOUT=10h
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-    depends_on:
-      - postgres
-    networks:
-      - aurora-network
-    command: >
-      sh -c "
-      echo 'Waiting for DB...' &&
-      until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done &&
-      echo 'Running migrations...' &&
-      ./migrator -db-dsn 'postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable' -migrations-path ./migrations -migrations-table schema_migrations up &&
-      echo 'Starting SSO...' &&
-      ./main --config ./config/local.yaml
-      "
-    healthcheck:
-      test:
-        ["CMD-SHELL", "pg_isready -h postgres -p 5432 -U postgres || exit 1"]
-      interval: 5s
-      timeout: 3s
-      retries: 10
-
-  recommendation-service:
-    build:
-      context: ./backend/Recommendation_Service
-      dockerfile: Dockerfile
-    container_name: aurora-recommendation
-    ports:
-      - "44040:44040"
-    volumes:
-      - ./backend/Recommendation_Service/config:/app/config
-    environment:
-      - ENV=local
-      - TOKEN_TTL=1h
-      - GRPC_PORT=44040
-      - GRPC_TIMEOUT=10h
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-    depends_on:
-      - postgres
-      - sso
-      - redis-master
-      - kafka
-    networks:
-      - aurora-network
-
-  api-gateway:
-    build:
-      context: ./backend/Api_Gateway
-      dockerfile: Dockerfile
-    container_name: aurora-api-gateway
-    ports:
-      - "8081:8081"
-      - "44000:44000"
-    volumes:
-      - ./backend/Api_Gateway/config:/app/config
-    environment:
-      - REDIS_HOST=redis-master
-      - REDIS_PORT=6379
-      - REDIS_PASSWORD=1111
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=aurora
-      - AUTH_HOST=sso
-      - RECS_ADDR=recommendation-service
-      - RECS_PORT=44040
-      - AUTH_PORT=44044
-    depends_on:
-      - postgres
-      - sso
-      - recommendation-service
-      - redis-master
-      - kafka
-    networks:
-      - aurora-network
-  frontend-prod:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.prod
-      args:
-        - VITE_API_URL=http://api-gateway:8081
-        - VITE_SSO_URL=http://sso:44044
-    container_name: aurora-frontend-prod
-    ports:
-      - "5173:5173"
-    depends_on:
-      - api-gateway
-      - sso
-    networks:
-      - aurora-network
-    restart: unless-stopped
-  # prometheus:
-  #   image: prom/prometheus
-  #   container_name: prometheus
-  #   volumes:
-  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  # sso:
+  #   build:
+  #     context: ./backend/SSO
+  #     dockerfile: Dockerfile
+  #   container_name: aurora-sso
   #   ports:
-  #     - "9090:9090"
-
-  # grafana:
-  #   image: grafana/grafana
-  #   container_name: grafana
-  #   ports:
-  #     - "3000:3000"
+  #     - "44044:44044"
+  #   # volumes:
+  #   #   - ./backend/SSO/config:/app/config
+  #   #   - ./backend/SSO/migrations:/app/migrations
   #   environment:
-  #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  #     - ENV=local
+  #     - TOKEN_TTL=1h
+  #     - GRPC_PORT=44044
+  #     - GRPC_TIMEOUT=10h
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=postgres
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - aurora-network
+  #   command: >
+  #     sh -c "
+  #     echo 'Waiting for DB...' &&
+  #     until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done &&
+  #     echo 'Running migrations...' &&
+  #     ./migrator -db-dsn 'postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable' -migrations-path ./migrations -migrations-table schema_migrations up &&
+  #     echo 'Starting SSO...' &&
+  #     ./main --config ./config/local.yaml
+  #     "
+  #   healthcheck:
+  #     test:
+  #       ["CMD-SHELL", "pg_isready -h postgres -p 5432 -U postgres || exit 1"]
+  #     interval: 5s
+  #     timeout: 3s
+  #     retries: 10
+  #
+  # recommendation-service:
+  #   build:
+  #     context: ./backend/Recommendation_Service
+  #     dockerfile: Dockerfile
+  #   container_name: aurora-recommendation
+  #   ports:
+  #     - "44040:44040"
+  #   volumes:
+  #     - ./backend/Recommendation_Service/config:/app/config
+  #   environment:
+  #     - ENV=local
+  #     - TOKEN_TTL=1h
+  #     - GRPC_PORT=44040
+  #     - GRPC_TIMEOUT=10h
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=postgres
+  #   depends_on:
+  #     - postgres
+  #     - sso
+  #     - redis-master
+  #     - kafka
+  #   networks:
+  #     - aurora-network
+  #
+  # api-gateway:
+  #   build:
+  #     context: ./backend/Api_Gateway
+  #     dockerfile: Dockerfile
+  #   container_name: aurora-api-gateway
+  #   ports:
+  #     - "8081:8081"
+  #     - "44000:44000"
+  #   volumes:
+  #     - ./backend/Api_Gateway/config:/app/config
+  #   environment:
+  #     - REDIS_HOST=redis-master
+  #     - REDIS_PORT=6379
+  #     - REDIS_PASSWORD=1111
+  #     - DB_HOST=postgres
+  #     - DB_PORT=5432
+  #     - DB_USER=postgres
+  #     - DB_PASSWORD=postgres
+  #     - DB_NAME=aurora
+  #     - AUTH_HOST=sso
+  #     - RECS_ADDR=recommendation-service
+  #     - RECS_PORT=44040
+  #     - AUTH_PORT=44044
+  #   depends_on:
+  #     - postgres
+  #     - sso
+  #     - recommendation-service
+  #     - redis-master
+  #     - kafka
+  #   networks:
+  #     - aurora-network
+  # # frontend-prod:
+  # #   build:
+  # #     context: ./frontend
+  # #     dockerfile: Dockerfile.prod
+  # #     args:
+  # #       - VITE_API_URL=http://api-gateway:8081
+  # #       - VITE_SSO_URL=http://sso:44044
+  # #   container_name: aurora-frontend-prod
+  # #   ports:
+  # #     - "5173:5173"
+  # #   depends_on:
+  # #     - api-gateway
+  # #     - sso
+  # #   networks:
+  # #     - aurora-network
+  # #   restart: unless-stopped
+  # # prometheus:
+  # #   image: prom/prometheus
+  # #   container_name: prometheus
+  # #   volumes:
+  # #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  # #   ports:
+  # #     - "9090:9090"
+  #
+  # # grafana:
+  # #   image: grafana/grafana
+  # #   container_name: grafana
+  # #   ports:
+  # #     - "3000:3000"
+  # #   environment:
+  # #     - GF_SECURITY_ADMIN_PASSWORD=admin

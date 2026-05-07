@@ -115,16 +115,26 @@ class ParserService:
             return None
 
     async def _handle_delete_channel(self, connection, pid, channel, payload):
-        self.parsing_channels.remove(payload)
-        self.log.info(
-            f"Removed {payload} from parsing channels: {self.parsing_channels}"
-        )
-        self.log.info(f"Parsing channels: {self.channel_storage.get_all_channels()}")
+        try:
+            self.parsing_channels.remove(payload)
+            self.log.info(
+                f"Removed {payload} from parsing channels: {self.parsing_channels}"
+            )
+            self.log.info(
+                f"Parsing channels: {self.channel_storage.get_all_channels()}"
+            )
 
-        self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
-        self.client.add_event_handler(
-            self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
-        )
+            self.client.remove_event_handler(self.handle_new_message, events.NewMessage)
+            self.client.add_event_handler(
+                self.handle_new_message, events.NewMessage(chats=self.parsing_channels)
+            )
+
+        except Exception as e:
+            self.log.error(e)
+
+            self.log.info(
+                f"Parsing channels: {self.channel_storage.get_all_channels()}"
+            )
 
     async def _handle_new_channel(self, connection, pid, channel, payload):
         try:
