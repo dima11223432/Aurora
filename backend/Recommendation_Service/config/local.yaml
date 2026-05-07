@@ -1,7 +1,7 @@
 env: "local"
 
 storage_pass: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
-parsing_service_pass: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
+parsing_service_pass: "postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable"
 token_ttl: 1h
 
 grpc:

@@ -1,8 +1,7 @@
 FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libpq-dev \
+    gcc libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -19,4 +18,4 @@ USER appuser
 
 EXPOSE 44042
 
-CMD ["python3", "-m", "cmd.parser.main"]
+CMD sh -c "alembic upgrade head && python3 -m cmd.parser.main"

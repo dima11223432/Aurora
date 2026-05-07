@@ -192,14 +192,18 @@ services:
     environment:
       - ENV=prod
       - PYTHONPATH=/app
+      - DATABASE_URL=postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=telegram_posts
-      - DB_URL=postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable
       - DB_HOST=postgres-parser
       - DB_PORT=5432
       - DB_NAME=parser
       - DB_USER=postgres
       - DB_PASSWORD=pass
+      - PROXY_HOST=host.docker.internal
+      - PROXY_PORT=10808
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres-parser:
         condition: service_healthy
@@ -227,6 +231,23 @@ services:
         condition: service_started
     networks:
       - aurora-network
+
+  frontend-prod:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_URL=http://api-gateway:8081
+        - VITE_SSO_URL=http://sso:44044
+    container_name: aurora-frontend-prod
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+      - sso
+    networks:
+      - aurora-network
+    restart: unless-stopped
 
 networks:
   aurora-network:

@@ -20,6 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
+    op.drop_table("channels", if_exists=True)
     op.create_table(
         "channels",
         sa.Column("id", sa.Integer, primary_key=True),
