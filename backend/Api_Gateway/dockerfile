@@ -1,4 +1,3 @@
-# ===== Стадия 1: Сборка =====
 FROM golang:1.25-alpine AS builder
 
 RUN apk add --no-cache git
@@ -10,12 +9,10 @@ RUN go mod download
 
 COPY . .
 
-# Сборка бинарного файла
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -ldflags="-w -s" \
     -o /app/bin/api-gateway ./cmd/API_Service//main.go
 
-# runtime image
 FROM alpine:latest
 
 RUN apk --no-cache add ca-certificates
@@ -24,11 +21,10 @@ RUN adduser -D -g '' appuser
 
 WORKDIR /app
 
-# Открытие порта
 EXPOSE 8081 44000
 
 USER appuser
 
 EXPOSE 8081
 
-CMD ["./main", "--config", "./config/local.yaml"]
+CMD ["/app/bin/api-gateway", "--config", "./config/local.yaml"]
