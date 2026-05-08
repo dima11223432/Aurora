@@ -15,7 +15,7 @@ build-backend:
     - docker build --no-cache -t parsing-service .
     - cd ../Recommendation_Service
     - docker build --no-cache -t recommendation-service .
-    - cd ../Analytics
+    - cd ../Analitic_Service
     - docker build --no-cache -t analytic-service .
     - cd ../Cache_Service
     - docker build --no-cache -t cache-service .
