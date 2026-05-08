@@ -2,8 +2,11 @@ package app
 
 import (
 	grpcApp "API_Service/internal/app/grpc"
+	"API_Service/internal/cache"
 	"API_Service/internal/config"
+	"context"
 	"log/slog"
+	"time"
 )
 
 type App struct {
