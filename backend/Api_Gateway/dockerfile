@@ -1,6 +1,6 @@
-FROM golang:1.25-alpine AS builder
+FROM golang:1.25-alpine
 
-RUN apk add --no-cache git
+RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
 
@@ -9,22 +9,16 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -ldflags="-w -s" \
-    -o /app/bin/api-gateway ./cmd/API_Service//main.go
+COPY ./config ./config
 
-FROM alpine:latest
+RUN go build -o api-gateway ./cmd/API_Service/main.go
 
-RUN apk --no-cache add ca-certificates
+RUN chmod +x api-gateway
 
 RUN adduser -D -g '' appuser
-
-WORKDIR /app
+RUN chown -R appuser:appuser /app
+USER appuser
 
 EXPOSE 8081 44000
 
-USER appuser
-
-EXPOSE 8081
-
-CMD ["/app/bin/api-gateway", "--config", "./config/local.yaml"]
+CMD ["./api-gateway", "--config", "./config/local.yaml"]
