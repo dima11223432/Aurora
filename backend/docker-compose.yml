@@ -176,8 +176,6 @@ services:
     restart: unless-stopped
     ports:
       - "44042:44042"
-    volumes:
-      - ./Parsing_Service/logs:/app/logs
     environment:
       - ENV=prod
       - PYTHONPATH=/app
@@ -209,8 +207,6 @@ services:
     restart: unless-stopped
     ports:
       - "44047:44043"
-    volumes:
-      - ./Analitic_Service/logs:/app/logs
     environment:
       - ENV=prod
       - PYTHONPATH=/app
