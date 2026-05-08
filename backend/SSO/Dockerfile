@@ -11,6 +11,11 @@ COPY . .
 COPY ./config ./config
 COPY ./migrations ./migrations
 
+RUN go build -o sso ./cmd/sso
+RUN go build -o migrator ./cmd/migrator
+
+RUN chmod +x sso migrator
+
 RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 USER appuser
@@ -21,7 +26,7 @@ CMD ["sh", "-c", "\
   echo 'Waiting for database...' && \
   until pg_isready -h ${DB_HOST:-aurora-db} -p ${DB_PORT:-5432} -U ${DB_USER:-postgres}; do sleep 2; done && \
   echo 'Running migrations...' && \
-  go run ./cmd/migrator -db-dsn \"$DATABASE_URL\" -migrations-path ./migrations -migrations-table schema_migrations up && \
+  ./migrator -db-dsn \"$DATABASE_URL\" -migrations-path ./migrations -migrations-table schema_migrations up && \
   echo 'Starting app...' && \
-  go run ./cmd/sso --config ./config/local.yaml \
+  ./sso --config ./config/local.yaml \
 "]

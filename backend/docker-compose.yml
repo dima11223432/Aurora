@@ -133,6 +133,15 @@ services:
         condition: service_healthy
     networks:
       - aurora-network
+    command: >
+      sh -c "
+      echo 'Waiting for database...' &&
+      until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done &&
+      echo 'Running migrations...' &&
+      ./migrator -db-dsn \"$$DATABASE_URL\" -migrations-path ./migrations -migrations-table schema_migrations up &&
+      echo 'Starting app...' &&
+      ./sso --config ./config/local.yaml
+      "
 
   recommendation-service:
     build:
