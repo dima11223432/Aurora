@@ -1,41 +1,11 @@
 stages:
-  - build
   - deploy
-
-build-backend:
-  stage: build
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "PROD"'
-  script:
-    - cd backend/Api_Gateway
-    - docker build --no-cache -t aurora_api_gateway .
-    - cd ../SSO
-    - docker build --no-cache -t aurora_sso .
-    - cd ../Parsing_Service
-    - docker build --no-cache -t parsing-service .
-    - cd ../Recommendation_Service
-    - docker build --no-cache -t recommendation-service .
-    - cd ../Analitic_Service
-    - docker build --no-cache -t analytic-service .
-    - cd ../Cache_Service
-    - docker build --no-cache -t cache-service .
-
-build-frontend:
-  stage: build
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "PROD"'
-  script:
-    - cd frontend
-    - docker build --no-cache -t aurora-frontend:latest -f Dockerfile.prod .
 
 deploy-staging:
   stage: deploy
-
-  rules:
-    - if: '$CI_COMMIT_BRANCH == "PROD"'
   script:
     - |
       cd backend
       docker-compose down -v --remove-orphans || true
-      docker-compose up -d --build
-      docker image prune -f
+      docker-compose build
+      docker-compose up -d

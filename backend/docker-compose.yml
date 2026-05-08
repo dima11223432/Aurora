@@ -120,7 +120,6 @@ services:
       dockerfile: Dockerfile
     container_name: sso
     restart: unless-stopped
-    command: ["./main", "--config", "./config/local.yaml"]
     ports:
       - "44044:44044"
     volumes:
@@ -141,7 +140,6 @@ services:
       dockerfile: Dockerfile
     container_name: recommendation-service
     restart: unless-stopped
-    command: ["./recommendation_service", "--config", "./config/local.yaml"]
     ports:
       - "44040:44040"
     volumes:
@@ -162,7 +160,6 @@ services:
       dockerfile: Dockerfile
     container_name: cache-service
     restart: unless-stopped
-    command: ["/app/cache-service", "--config=./config/local.yaml"]
     ports:
       - "44045:44044"
       - "44046:44045"
