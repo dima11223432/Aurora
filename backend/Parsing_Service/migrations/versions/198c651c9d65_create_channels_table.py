@@ -25,6 +25,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("username", sa.String(255), nullable=False, unique=True),
     )
+
     pass
 
 

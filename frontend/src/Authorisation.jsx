@@ -1,13 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./styles/Landing.css";
 import Logo from "./assets/Aurora.png";
+import { API_BASE_URL_NGROK } from "./config/api";
 
 export const Landing = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [telegramUser, setTelegramUser] = useState(null);
   const widgetContainerRef = useRef(null);
-  const API_URL = "https://localhost:8081/v1/login";
+  const API_URL = `${API_BASE_URL_NGROK}/v1/login`;
   useEffect(() => {
     window.onTelegramAuth = async (user) => {
       console.log("Telegram auth success:", user);

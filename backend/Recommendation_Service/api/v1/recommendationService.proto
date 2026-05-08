@@ -8,22 +8,73 @@ import "google/protobuf/timestamp.proto";
 service RecommendationService {
   rpc GetUserPriorityChannels(GetUserPriorityChannelsRequest) returns (GetUserPriorityChannelsResponse);
   rpc GetRecommendatedPosts(GetRecommendatedPostsRequest) returns (GetRecommendatedPostsResponse);
-  rpc GetAllParsingChannels(GetAllParsingChannelsRequest) returns (GetAllParsingChannelsResponse);
+  rpc GetAllDefaultParsingChannels(GetAllDefaultParsingChannelsRequest) returns (GetAllDefaultParsingChannelsResponse);
+  rpc GetAllUserCustomParsingChannels(GetAllUserCustomParsingChannelsRequest) returns (GetAllUserCustomParsingChannelsResponse);
+  rpc AddNewDefaultParsingChannel(AddNewDefaultParsingChannelRequest) returns (AddNewDefaultParsingChannelResponse);
+  rpc DeleteDefaultParsingChannel(DeleteDefaultParsingChannelRequest) returns (DeleteDefaultParsingChannelResponse);
+  rpc GetAllDefaultParsingChannelsWithCategories(GetAllDefaultParsingChannelsWithCategoriesRequest) returns (GetAllDefaultParsingChannelsWithCategoriesResponse);
+  rpc AddNewUserCustomParsingChannel(AddNewUserCustomParsingChannelRequest) returns (AddNewUserCustomParsingChannelResponse);
+  rpc DeleteUserCustomParsingChannel(DeleteUserCustomParsingChannelRequest) returns (DeleteUserCustomParsingChannelResponse);
+}
+message GetAllUserCustomParsingChannelsRequest {
+  int64 user_id = 1;
 }
 
-message GetAllParsingChannelsRequest {
-}
-
-message GetAllParsingChannelsResponse {
+message GetAllUserCustomParsingChannelsResponse {
   repeated string channels = 1;
 }
 
-message GetRecommendatedPostsRequest{
+message DeleteDefaultParsingChannelRequest {
+  string channel_username = 1;
+}
+
+message DeleteDefaultParsingChannelResponse {
+}
+
+message DeleteUserCustomParsingChannelRequest {
+  int64 user_id = 1;
+  string channel_username = 2;
+}
+
+message DeleteUserCustomParsingChannelResponse {
+}
+
+message AddNewDefaultParsingChannelRequest {
+  string channel_username = 1;
+  string category = 2;
+}
+
+message AddNewDefaultParsingChannelResponse {
+}
+
+message AddNewUserCustomParsingChannelRequest {
+  int64 user_id = 1;
+  string channel_username = 2;
+}
+
+message AddNewUserCustomParsingChannelResponse {
+}
+
+message GetAllDefaultParsingChannelsRequest {
+}
+
+message GetAllDefaultParsingChannelsResponse {
+  repeated string channels = 1;
+}
+
+message GetAllDefaultParsingChannelsWithCategoriesRequest {
+}
+
+message GetAllDefaultParsingChannelsWithCategoriesResponse {
+  map<string, ChannelList> channels = 1;
+}
+
+message GetRecommendatedPostsRequest {
   int64 user_id = 1;
   Cursor cursor = 2;
 }
 
-message GetRecommendatedPostsResponse{
+message GetRecommendatedPostsResponse {
   repeated Post posts = 1;
   Cursor next_cursor = 2;
 }
@@ -32,11 +83,11 @@ message GetUserPriorityChannelsRequest {
   int64 user_id = 1;
 }
 
-message GetUserPriorityChannelsResponse{
+message GetUserPriorityChannelsResponse {
   repeated string channels = 1;
 }
 
-message Cursor{
+message Cursor {
   int64 score = 1;
   string id = 2;
 }
@@ -53,4 +104,8 @@ message Post {
 message Stock {
   string stock_name = 1;
   string side = 2;
+}
+
+message ChannelList {
+  repeated string usernames = 1;
 }

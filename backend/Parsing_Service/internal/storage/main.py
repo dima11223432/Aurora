@@ -1,5 +1,5 @@
 import psycopg2
-
+import asyncpg
 from internal.config.config import Config
 
 
@@ -12,9 +12,19 @@ class ChannelStorage:
             host=cfg.DB_HOST,
             port=cfg.DB_PORT,
         )
+        self.trigger_conn = None
+        self.cfg = cfg
         self.conn.autocommit = False
 
         self.conn.commit()
+
+    async def run_trigger(self, handle_insert_func, handle_delete_func):
+        self.trigger_conn = await asyncpg.connect(self.cfg.DB_URL)
+
+        await self.trigger_conn.add_listener("new_channel_event", handle_insert_func)
+        await self.trigger_conn.add_listener(
+            "deleted_channel_event", handle_delete_func
+        )
 
     def add_channel(self, username):
         username = username.lstrip("@")
@@ -43,6 +53,15 @@ class ChannelStorage:
         username = username.lstrip("@")
         cur = self.conn.cursor()
         cur.execute("DELETE FROM channels WHERE username = %s", (username,))
+        self.conn.commit()
+        cur.close()
+
+    def delete_channel_from_user_custom_channels(self, channel):
+        cur = self.conn.cursor()
+        cur.execute(
+            "DELETE FROM user_custom_parsing_channels WHERE channel_username = %s",
+            (channel,),
+        )
         self.conn.commit()
         cur.close()
 

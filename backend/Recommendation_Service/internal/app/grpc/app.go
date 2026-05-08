@@ -13,7 +13,14 @@ import (
 )
 
 type ParsingChannelsProvider interface {
-	GetAllParsingChannels(ctx context.Context) ([]string, error)
+	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
+	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
+	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
+	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
+	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
+	GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error)
+	GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
+	GetAllCategories(ctx context.Context) ([]string, error)
 }
 
 type userDataProvider interface {

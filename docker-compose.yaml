@@ -1,9 +1,23 @@
 version: "3.8"
 
+networks:
+  app_net:
+    driver: bridge
+  kafka-net:
+    driver: bridge
+  aurora-network:
+    driver: bridge
+volumes:
+  postgres_data:
+  redis_master_data:
+  redis_replica_data:
+
 services:
   postgres:
     image: postgres:15-alpine
     container_name: aurora-db
+    networks:
+      - aurora-network
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
@@ -19,13 +33,13 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - aurora-network
 
   redis-master:
     image: redis:7-alpine
     container_name: redis_master
     restart: unless-stopped
+    networks:
+      - aurora-network
     command: >
       redis-server
       --bind 0.0.0.0
@@ -43,13 +57,13 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    networks:
-      - aurora-network
 
   redis-replica:
     image: redis:7-alpine
     container_name: redis_replica
     restart: unless-stopped
+    networks:
+      - aurora-network
     command: >
       redis-server
       --bind 0.0.0.0
@@ -69,14 +83,15 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-    networks:
-      - aurora-network
 
   redis-sentinel-1:
     image: redis:7-alpine
     container_name: redis_sentinel_1
     restart: unless-stopped
-    command: redis-sentinel /usr/local/etc/redis/sentinel.conf
+    networks:
+      - aurora-network
+    command: >
+      redis-sentinel /usr/local/etc/redis/sentinel.conf
     depends_on:
       - redis-master
       - redis-replica
@@ -84,8 +99,6 @@ services:
       - "26379:26379"
     volumes:
       - ./redis-sentinel.conf:/usr/local/etc/redis/sentinel.conf
-    networks:
-      - aurora-network
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -108,21 +121,9 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "kafka-topics --bootstrap-server localhost:9092 --list || exit 1",
-        ]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 15s
     networks:
       - aurora-network
 
@@ -138,7 +139,6 @@ services:
     #   - ./backend/SSO/migrations:/app/migrations
     environment:
       - ENV=local
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
       - TOKEN_TTL=1h
       - GRPC_PORT=44044
       - GRPC_TIMEOUT=10h
@@ -154,8 +154,6 @@ services:
       sh -c "
       echo 'Waiting for DB...' &&
       until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done &&
-      echo 'Running migrations...' &&
-      ./migrator -db-dsn 'postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable' -migrations-path ./migrations -migrations-table schema_migrations up &&
       echo 'Starting SSO...' &&
       ./main --config ./config/local.yaml
       "
@@ -166,6 +164,32 @@ services:
       timeout: 3s
       retries: 10
 
+  recommendation-service:
+    build:
+      context: ./backend/Recommendation_Service
+      dockerfile: Dockerfile
+    container_name: aurora-recommendation
+    ports:
+      - "44040:44040"
+    volumes:
+      - ./backend/Recommendation_Service/config:/app/config
+    environment:
+      - ENV=local
+      - TOKEN_TTL=1h
+      - GRPC_PORT=44040
+      - GRPC_TIMEOUT=10h
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+    depends_on:
+      - postgres
+      - sso
+      - redis-master
+      - kafka
+    networks:
+      - aurora-network
+
   api-gateway:
     build:
       context: ./backend/Api_Gateway
@@ -174,8 +198,8 @@ services:
     ports:
       - "8081:8081"
       - "44000:44000"
-    # volumes:
-    #   - ./backend/Api_Gateway/config:/app/config
+    volumes:
+      - ./backend/Api_Gateway/config:/app/config
     environment:
       - REDIS_HOST=redis-master
       - REDIS_PORT=6379
@@ -187,9 +211,12 @@ services:
       - DB_NAME=aurora
       - AUTH_HOST=sso
       - AUTH_PORT=44044
+      - RECS_HOST=recommendation-service
+      - RECS_PORT=44040
     depends_on:
       - postgres
       - sso
+      - recommendation-service
       - redis-master
       - kafka
     networks:
@@ -210,11 +237,18 @@ services:
     networks:
       - aurora-network
     restart: unless-stopped
-networks:
-  aurora-network:
-    driver: bridge
+  # prometheus:
+  #   image: prom/prometheus
+  #   container_name: prometheus
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
 
-volumes:
-  postgres_data:
-  redis_master_data:
-  redis_replica_data:
+  # grafana:
+  #   image: grafana/grafana
+  #   container_name: grafana
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin

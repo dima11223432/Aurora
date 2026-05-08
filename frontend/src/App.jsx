@@ -1,16 +1,22 @@
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import './App.css'
-
-import HeroZone from './Herozone.jsx'
+import "./index.css";
+import Analytics from "./Analytics";
+import Herozone from "./Herozone";
+import RecommendationFeed from "./RecommendationFeed";
+import AdminPanel from "./AdminPanel";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HeroZone />} />
+        <Route path="/" element={<Herozone />} />
+        <Route path="/analytics" element={<Analytics />} />
+        <Route path="/feed" element={<RecommendationFeed />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App
+export default App;

@@ -9,12 +9,13 @@ ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_SSO_URL=$VITE_SSO_URL
 
 COPY package*.json ./
+
+RUN npm install
+
 COPY tailwind.config.js ./
-COPY postcss.config.cjs ./
-
-RUN npm ci
-
-COPY . .
+COPY vite.config.js ./
+COPY index.html ./
+COPY src/ ./src/
 
 RUN npm run build
 
