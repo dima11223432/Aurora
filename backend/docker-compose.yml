@@ -138,6 +138,7 @@ services:
     build:
       context: ./Recommendation_Service
       dockerfile: Dockerfile
+    command: ["./recommendation_service", "--config", "./config/local.yaml"]
     container_name: recommendation-service
     restart: unless-stopped
     ports:
