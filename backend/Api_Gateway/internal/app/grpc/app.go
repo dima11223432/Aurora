@@ -8,7 +8,6 @@ import (
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
 	"log/slog"
 	"net"
-	"os"
 	"strconv"
 
 	"API_Service/internal/config"
