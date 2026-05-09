@@ -72,6 +72,34 @@ func (p *PostgresTestSuite) TestGetAllCategoriesSuccessReturnsAllRecords() {
 	p.Contains(categories, cat2)
 }
 
+func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	categoryName := fmt.Sprintf("test_case2_category_%d", suffix)
+
+	_, err := p.storage.parserDB.ExecContext(
+		ctx,
+		`INSERT INTO channel_categories (category_name) VALUES ($1)`,
+		categoryName,
+	)
+	p.Require().NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(
+			context.Background(),
+			`DELETE FROM channel_categories WHERE category_name = $1`,
+			categoryName,
+		)
+	})
+
+	categories, err := p.storage.GetAllCategories(ctx)
+	p.Require().NoError(err)
+	p.Contains(categories, categoryName)
+	for _, category := range categories {
+		p.IsType("", category)
+	}
+}
+
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
 }
