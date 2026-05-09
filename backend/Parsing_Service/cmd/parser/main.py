@@ -27,8 +27,6 @@ def setup_logger():
         sys.stdout,
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
         level="INFO",
-        rotation="100 MB",
-        retention="7 days",
     )
 
 
