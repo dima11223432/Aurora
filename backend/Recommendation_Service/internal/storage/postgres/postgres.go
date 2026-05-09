@@ -84,6 +84,27 @@ func (s *Storage) GetAllParsingChannels(ctx context.Context) ([]string, error) {
 
 }
 
+func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
+	const op = "internal.storage.postgres.GetAllCategories"
+
+	q := `SELECT category_name FROM channel_categories`
+
+	categories := make([]string, 0)
+	query, err := s.parserDB.QueryContext(ctx, q)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	for query.Next() {
+		var categoryName string
+		if err := query.Scan(&categoryName); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		categories = append(categories, categoryName)
+	}
+	return categories, nil
+}
+
 func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.AddNewParsingChannel"
 
