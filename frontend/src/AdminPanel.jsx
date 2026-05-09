@@ -62,6 +62,12 @@ export default function AdminPanel() {
   const AddNewParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
+      console.log(token);
+      console.log(
+        "Adding new parsing channel as admin",
+        addedChannel,
+        addedChannelCategory,
+      );
       axios.post(
         routes.addNewDefaultParsingChannel,
         { channel_username: addedChannel, category: addedChannelCategory },
