@@ -4,7 +4,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc libpq-dev curl \
     && rm -rf /var/lib/apt/lists/*
 
-RUN curl -Ls https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh | bash
+RUN curl -Lo /usr/local/bin/xray "https://github.com/XTLS/Xray/releases/download/v1.8.6/xray-linux-64-musl" && \
+    chmod +x /usr/local/bin/xray
 
 WORKDIR /app
 
@@ -22,4 +23,4 @@ USER appuser
 
 EXPOSE 44042
 
-CMD sh -c "xray run -c /app/vpn.json > /app/logs/xray.log 2>&1 & sleep 3 && alembic upgrade head && python3 -m cmd.parser.main"
+CMD sh -c "xray version && xray run -c /app/vpn.json > /app/logs/xray.log 2>&1 & sleep 3 && alembic upgrade head && python3 -m cmd.parser.main"
