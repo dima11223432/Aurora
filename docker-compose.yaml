@@ -189,6 +189,7 @@ services:
     volumes:
       - ./Parsing_Service/config:/app/config
       - ./Parsing_Service/logs:/app/logs
+      - ./Parsing_Service/vpn.json:/app/vpn.json:ro
     environment:
       - ENV=prod
       - PYTHONPATH=/app
@@ -207,6 +208,7 @@ services:
     depends_on:
       postgres-parser:
         condition: service_healthy
+    command: sh -c "xray run -c /app/vpn.json & python3 -m cmd.parser.main"
       kafka:
         condition: service_started
     networks:
