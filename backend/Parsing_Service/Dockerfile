@@ -15,6 +15,10 @@ RUN useradd -m -u 1000 appuser
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY config/config.env /app/config/config.env
+COPY vpn.json /app/vpn.json
+COPY pars_session.session /app/pars_session.session
+
 USER root
 
 COPY . .
