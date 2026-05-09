@@ -31,8 +31,12 @@ def setup_logger():
 
 
 if __name__ == "__main__":
+    print("DEBUG: API_ID from env:", os.getenv("API_ID"))
+    print("DEBUG: ENV_PATH:", os.getenv("ENV_PATH"))
     cfg = Config()
+    print("DEBUG: cfg.API_ID before load:", cfg.API_ID)
     cfg.load_config()
+    print("DEBUG: cfg.API_ID after load:", cfg.API_ID)
     channel_storage = ChannelStorage(cfg)
     setup_logger()
     app = App(logger, cfg, channel_storage)
