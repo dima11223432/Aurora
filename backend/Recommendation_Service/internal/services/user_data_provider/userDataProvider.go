@@ -32,6 +32,8 @@ type ParsingChannelsProvider interface {
 	GetAllCategories(ctx context.Context) ([]string, error)
 	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
+	AddNewParsingChannel(ctx context.Context, channel string) error
+	SetChannelCategory(ctx context.Context, channel string, category string) error
 }
 
 type PriorityNewsProvider interface {
@@ -135,6 +137,30 @@ func (u *UserDataProvider) AddNewDefaultParsingChannel(ctx context.Context, chan
 			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
 		u.log.Error("failed to add new parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	err = u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel)
+	if err != nil {
+		if errors.Is(err, storage.ErrChannelExists) {
+			u.log.Error("parsing channel already exists",
+				slog.String("op", op),
+				slog.String("channel", channel),
+				slog.Any("err", err),
+			)
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+		}
+		u.log.Error("failed to add new parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	err = u.parsingChannelsProvider.SetChannelCategory(ctx, channel, category)
+	if err != nil {
+		u.log.Error("failed to set channel category",
 			slog.String("op", op),
 			slog.Any("err", err),
 		)
