@@ -22,7 +22,7 @@ export default function RecommendationFeed() {
           username: "john_doe",
           first_name: "John",
           last_name: "Doe",
-          is_admin: false,
+          is_admin: true,
           app_id: 1,
         });
 
