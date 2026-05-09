@@ -102,6 +102,8 @@ services:
     ports:
       - "8081:8081"
       - "44043:44043"
+    volumes:
+      - ./Api_Gateway/config:/app/config
     environment:
       - ENV=prod
     depends_on:
@@ -120,6 +122,9 @@ services:
     restart: unless-stopped
     ports:
       - "44044:44044"
+    volumes:
+      - ./SSO/config:/app/config
+      - ./SSO/migrations:/app/migrations
     environment:
       - ENV=prod
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
@@ -137,6 +142,8 @@ services:
     restart: unless-stopped
     ports:
       - "44040:44040"
+    volumes:
+      - ./Recommendation_Service/config:/app/config
     environment:
       - ENV=prod
     depends_on:
@@ -156,6 +163,9 @@ services:
     ports:
       - "44045:44044"
       - "44046:44045"
+    volumes:
+      - ./Cache_Service/config:/app/config
+      - ./Cache_Service/migrations:/app/migrations
     environment:
       - ENV=prod
     depends_on:
@@ -176,6 +186,11 @@ services:
     restart: unless-stopped
     ports:
       - "44042:44042"
+    volumes:
+      - ./Parsing_Service/config:/app/config
+      - ./Parsing_Service/logs:/app/logs
+      - ./Parsing_Service/vpn.json:/app/vpn.json:ro
+      - ./Parsing_Service/pars_session.session:/app/pars_session.session:ro
     environment:
       - ENV=prod
       - PYTHONPATH=/app
@@ -187,7 +202,7 @@ services:
       - DB_NAME=parser
       - DB_USER=postgres
       - DB_PASSWORD=pass
-      - PROXY_HOST=host.docker.internal
+      - PROXY_HOST=127.0.0.1
       - PROXY_PORT=10808
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -207,6 +222,8 @@ services:
     restart: unless-stopped
     ports:
       - "44047:44043"
+    volumes:
+      - ./Analitic_Service/logs:/app/logs
     environment:
       - ENV=prod
       - PYTHONPATH=/app
