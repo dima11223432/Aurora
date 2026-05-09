@@ -1,6 +1,6 @@
-const API_BASE_URL = "http://212.248.90.220:8081";
-const API_BASE_URL_SECURE = "https://localhost:8081";
-const API_BASE_URL_NGROK = "https://27dc-213-176-17-134.ngrok-free.app";
+const API_BASE_URL = "";
+const API_BASE_URL_SECURE = "";
+const API_BASE_URL_NGROK = "";
 
 const routes = {
   login: `${API_BASE_URL}/v1/login`,
