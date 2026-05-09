@@ -18,16 +18,13 @@ def setup_logger():
     )
 
     logger.add(
-        "logs/parser_errors.log",
+        sys.stderr,
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
         level="ERROR",
-        rotation="10 MB",
-        retention="30 days",
-        compression="zip",
     )
 
     logger.add(
-        "logs/parser.log",
+        sys.stdout,
         format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
         level="INFO",
         rotation="100 MB",

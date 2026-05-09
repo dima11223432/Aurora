@@ -27,4 +27,4 @@ EXPOSE 44042
 
 WORKDIR /app
 
-CMD sh -c "xray version && xray run -c /app/vpn.json > /app/logs/xray.log 2>&1 & sleep 3 && alembic upgrade head && python3 -m cmd.parser.main"
+CMD sh -c "xray version && xray run -c /app/vpn.json > /dev/null 2>&1 & sleep 3 && alembic upgrade head && python3 -m cmd.parser.main"
