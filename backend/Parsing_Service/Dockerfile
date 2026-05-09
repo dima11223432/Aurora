@@ -17,15 +17,14 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY config/config.env /app/config/config.env
 COPY vpn.json /app/vpn.json
-USER appuser
-
-COPY --chown=appuser:appuser pars_session.session /app/pars_session.session
 
 COPY . .
 
 RUN mkdir -p /app/logs && chown appuser:appuser /app/logs
 
 USER appuser
+
+COPY --chown=appuser:appuser pars_session.session /app/pars_session.session
 
 EXPOSE 44042
 
