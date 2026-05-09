@@ -102,8 +102,6 @@ services:
     ports:
       - "8081:8081"
       - "44043:44043"
-    volumes:
-      - ./Api_Gateway/config:/app/config
     environment:
       - ENV=prod
     depends_on:

@@ -17,6 +17,7 @@ RUN chmod +x api-gateway
 
 RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
+
 USER appuser
 
 EXPOSE 8081 44000
