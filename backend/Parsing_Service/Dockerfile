@@ -15,10 +15,11 @@ RUN useradd -m -u 1000 appuser
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
 USER root
 
-RUN mkdir -p /app/logs && chown -R appuser:appuser /app
+COPY . .
+
+RUN mkdir -p /app/logs && chown appuser:appuser /app/logs
 
 USER appuser
 
