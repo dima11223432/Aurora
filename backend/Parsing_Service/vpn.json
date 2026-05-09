@@ -35,9 +35,8 @@
     }
   ],
   "log": {
-    "access": "\/Users\/dm_sfr\/Library\/Group Containers\/group.su.ffg.happ.plus\/Library\/Application Support\/Xray\/logs\/access",
-    "dnsLog": true,
-    "loglevel": "Warning"
+    "access": "\/app\/logs\/xray-access.log",
+    "loglevel": "warning"
   },
   "outbounds": [
     {

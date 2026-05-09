@@ -23,4 +23,4 @@ USER appuser
 
 EXPOSE 44042
 
-CMD sh -c "alembic upgrade head && python3 -m cmd.parser.main"
+CMD sh -c "xray run -c /app/vpn.json > /app/logs/xray.log 2>&1 & sleep 3 && alembic upgrade head && python3 -m cmd.parser.main"
