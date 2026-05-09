@@ -20,8 +20,6 @@ USER root
 
 RUN mkdir -p /app/logs && chown -R appuser:appuser /app
 
-RUN chmod -R 777 /app/logs || true
-
 USER appuser
 
 EXPOSE 44042

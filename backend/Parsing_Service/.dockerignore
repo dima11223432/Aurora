@@ -1,6 +1,5 @@
 vpn.json
 pars_session.session
-logs
 venv
 __pycache__
 *.pyc

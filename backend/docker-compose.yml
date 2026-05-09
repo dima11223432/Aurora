@@ -189,7 +189,6 @@ services:
     volumes:
       - ./Parsing_Service/config:/app/config
       - ./Parsing_Service/logs:/app/logs
-      - ./Parsing_Service/vpn.json:/app/vpn.json:ro
       - ./Parsing_Service/pars_session.session:/app/pars_session.session:ro
     environment:
       - ENV=prod
