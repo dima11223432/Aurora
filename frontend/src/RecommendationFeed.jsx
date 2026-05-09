@@ -27,7 +27,6 @@ export default function RecommendationFeed() {
         });
 
         localStorage.setItem("token", res.data.token);
-        console.log(res.data.token);
         setIsLoggedIn(true);
       } catch (e) {
         console.error("Login error:", e);
