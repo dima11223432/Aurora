@@ -16,6 +16,14 @@ type Storage struct {
 	parserDB *sql.DB
 }
 
+func GetDublicateError(err error) bool {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) {
+		return pqErr.Code == "23505"
+	}
+	return false
+}
+
 // New creates a new instance of the Storage
 func New(storagePath string, parsingServicePath string) (*Storage, error) {
 	const op = "internal.storage.postgres.new"
@@ -111,11 +119,8 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) erro
 	q := `INSERT INTO channels (username) VALUES ($1)`
 	_, err := s.parserDB.ExecContext(ctx, q, channel)
 	if err != nil {
-		var pqErr *pq.Error
-		if errors.As(err, &pqErr) {
-			if pqErr.Code == "23505" {
-				return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
-			}
+		if GetDublicateError(err) {
+			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
 		return fmt.Errorf("%s: %w", op, err)
 	}

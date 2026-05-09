@@ -8,6 +8,7 @@ import (
 	"testing"
 	"time"
 
+	pq "github.com/lib/pq"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -102,4 +103,39 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
+}
+
+func TestGetDublicateErrorPostgresMatch(t *testing.T) {
+	err := &pq.Error{Code: "23505"}
+
+	isDuplicate := GetDublicateError(err)
+
+	if !isDuplicate {
+		t.Fatalf("expected true for postgres duplicate key code 23505")
+	}
+}
+
+func TestGetDublicateErrorOtherError(t *testing.T) {
+	tests := []struct {
+		name string
+		err  error
+	}{
+		{
+			name: "regular error",
+			err:  fmt.Errorf("some error"),
+		},
+		{
+			name: "postgres other code",
+			err:  &pq.Error{Code: "23503"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			isDuplicate := GetDublicateError(tt.err)
+			if isDuplicate {
+				t.Fatalf("expected false for non-duplicate error")
+			}
+		})
+	}
 }
