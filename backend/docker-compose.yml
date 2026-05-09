@@ -120,9 +120,6 @@ services:
     restart: unless-stopped
     ports:
       - "44044:44044"
-    volumes:
-      - ./SSO/config:/app/config
-      - ./SSO/migrations:/app/migrations
     environment:
       - ENV=prod
       - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
@@ -140,8 +137,6 @@ services:
     restart: unless-stopped
     ports:
       - "44040:44040"
-    volumes:
-      - ./Recommendation_Service/config:/app/config
     environment:
       - ENV=prod
     depends_on:
@@ -161,9 +156,6 @@ services:
     ports:
       - "44045:44044"
       - "44046:44045"
-    volumes:
-      - ./Cache_Service/config:/app/config
-      - ./Cache_Service/migrations:/app/migrations
     environment:
       - ENV=prod
     depends_on:
