@@ -2,7 +2,7 @@ from dotenv import load_dotenv
 from pathlib import Path
 import os
 
-env_path = Path(__file__).parent / "config" / "config.env"
+env_path = os.getenv("ENV_PATH", "/app/config/config.env")
 load_dotenv(env_path, override=True)
 
 

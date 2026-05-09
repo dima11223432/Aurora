@@ -188,11 +188,13 @@ services:
       - "44042:44042"
     volumes:
       - ./Parsing_Service/config:/app/config
+      - ./Parsing_Service/logs:/app/logs
       - ./Parsing_Service/vpn.json:/app/vpn.json:ro
       - ./Parsing_Service/pars_session.session:/app/pars_session.session:ro
     environment:
       - ENV=prod
       - PYTHONPATH=/app
+      - ENV_PATH=/app/config/config.env
       - DATABASE_URL=postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=telegram_posts
