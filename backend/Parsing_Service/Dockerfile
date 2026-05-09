@@ -18,6 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY config/config.env /app/config/config.env
 COPY vpn.json /app/vpn.json
 COPY pars_session.session /app/pars_session.session
+RUN chmod 666 /app/pars_session.session
 
 USER root
 
