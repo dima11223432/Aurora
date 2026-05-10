@@ -20,23 +20,6 @@ def setup_logger():
         colorize=True,
     )
 
-    logger.add(
-        "logs/parser_errors.log",
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
-        level="ERROR",
-        rotation="10 MB",
-        retention="30 days",
-        compression="zip",
-    )
-
-    logger.add(
-        "logs/parser.log",
-        format="{time:YYYY-MM-DD HH:mm:ss} | {level: <8} | {name}:{function}:{line} - {message}",
-        level="INFO",
-        rotation="100 MB",
-        retention="7 days",
-    )
-
 
 if __name__ == "__main__":
     setup_logger()
