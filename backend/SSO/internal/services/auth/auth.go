@@ -89,6 +89,7 @@ func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, 
 
 			dbUser, err = a.userProvider.User(ctx, user.Telegram_id)
 			if err != nil {
+				log.Error("failed to get user", slog.String("error", err.Error()))
 				return "", fmt.Errorf("%s: %w", op, err)
 			}
 

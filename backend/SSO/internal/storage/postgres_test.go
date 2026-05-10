@@ -7,6 +7,7 @@ import (
 	"context"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/suite"
 )
@@ -184,4 +185,131 @@ func (p *PostgresTestSuite) TestDeletePriorityChannels() {
 
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
+}
+
+func (p *PostgresTestSuite) TestStorage_IsAdmin() {
+	ctx := context.Background()
+
+	admin := models.User{
+		Telegram_id: 1,
+		First_name:  "A",
+		Last_name:   "A",
+		Username:    "admin",
+		Is_admin:    true,
+	}
+
+	user := models.User{
+		Telegram_id: 2,
+		First_name:  "B",
+		Last_name:   "B",
+		Username:    "user",
+		Is_admin:    false,
+	}
+
+	_, _ = p.storage.SaveUser(ctx, admin)
+	_, _ = p.storage.SaveUser(ctx, user)
+
+	isAdmin, err := p.storage.IsAdmin(ctx, 1)
+	p.NoError(err)
+	p.True(isAdmin)
+
+	isAdmin, err = p.storage.IsAdmin(ctx, 2)
+	p.NoError(err)
+	p.False(isAdmin)
+
+	isAdmin, err = p.storage.IsAdmin(ctx, 999999)
+	p.Error(err)
+	p.ErrorIs(err, storage.ErrUserNotFound)
+	p.False(isAdmin)
+}
+
+func (p *PostgresTestSuite) TestGetUserById_NotFound() {
+	ctx := context.Background()
+
+	_, err := p.storage.GetUserById(ctx, 999999)
+	p.Error(err)
+	p.ErrorIs(err, storage.ErrUserNotFound)
+}
+
+func (p *PostgresTestSuite) TestNew_InvalidConnection() {
+	_, err := postgres.New("invalid-connection-string")
+	p.Error(err)
+}
+
+func (p *PostgresTestSuite) TestUser_NotFound() {
+	ctx := context.Background()
+
+	_, err := p.storage.User(ctx, 999999)
+	p.Error(err)
+	p.ErrorIs(err, storage.ErrUserNotFound)
+}
+
+func (p *PostgresTestSuite) TestDeletePriorityChannels_EmptyList() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	err := p.storage.DeletePriorityChannels(ctx, 1, []string{})
+	p.NoError(err)
+}
+
+func (p *PostgresTestSuite) TestSaveUser_Duplicate() {
+	ctx := context.Background()
+	user := models.User{
+		Telegram_id: 123456789,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+	p.NotZero(id)
+
+	_, err = p.storage.SaveUser(ctx, user)
+	p.Error(err)
+}
+
+func (p *PostgresTestSuite) TestSetPriorityChannels_Existing() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	user := models.User{
+		Telegram_id: 123456799,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+	p.NotZero(id)
+
+	err = p.storage.SetPriorityChannels(ctx, id, []string{"channel1", "channel2"})
+	p.NoError(err)
+
+	err = p.storage.SetPriorityChannels(ctx, id, []string{"channel1", "channel2"})
+	p.NoError(err)
+}
+
+func (p *PostgresTestSuite) TestDeletePriorityChannels_DBError() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+
+	user := models.User{
+		Telegram_id: 123456799,
+		First_name:  "Dima",
+		Last_name:   "Dmitriev",
+		Username:    "dimadmitriev",
+		Is_admin:    false,
+	}
+	id, err := p.storage.SaveUser(ctx, user)
+	p.NoError(err)
+
+	ctx, cancel = context.WithTimeout(ctx, time.Nanosecond)
+	defer cancel()
+	time.Sleep(1 * time.Millisecond)
+
+	err = p.storage.DeletePriorityChannels(ctx, id, []string{"channel1"})
+	p.Error(err)
 }

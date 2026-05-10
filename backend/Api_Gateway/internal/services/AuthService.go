@@ -17,6 +17,7 @@ import (
 type AuthInterceptor interface {
 	SetAuthInterceptor() grpc.UnaryServerInterceptor
 	GetUserIdFromContext(ctx context.Context) (int64, error)
+	GetIsAdminFromContext(ctx context.Context) (bool, error)
 }
 type AuthService struct {
 	log             *slog.Logger
@@ -109,6 +110,33 @@ func (a *AuthService) Login(
 	return resp.Token, nil
 }
 
+func (a *AuthService) ConnectWallet(
+	ctx context.Context,
+	wallet_address string,
+) error {
+	const op = "internal.services.auth.ConnectWallet"
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		a.log.Error("failed to get user id from context",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if wallet_address == "" {
+		return fmt.Errorf("%s: wallet address is empty", op)
+	}
+	a.log.Info("attempting to connect wallet",
+		"op", op,
+		"user_id", userID,
+		"wallet", wallet_address,
+	)
+
+	a.log.Info("wallet connected successfully", "user_id", userID)
+	return nil
+}
+
 func (a *AuthService) IsAdmin(
 	ctx context.Context,
 	telegram_id int64,
@@ -122,4 +150,13 @@ func (a *AuthService) IsAdmin(
 	}
 
 	return resp.IsAdmin, nil
+}
+
+func (a *AuthService) IsAdminByContext(ctx context.Context) (bool, error) {
+	isAdmin, err := a.AuthInterceptor.GetIsAdminFromContext(ctx)
+	if err != nil {
+		a.log.Error("failed to check admin status", slog.String("error", err.Error()))
+		return false, err
+	}
+	return isAdmin, nil
 }

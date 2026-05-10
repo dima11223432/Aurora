@@ -5,7 +5,7 @@ parsing_service_pass: "postgres://postgres:pass@localhost:5432/parser?sslmode=di
 token_ttl: 1h
 
 grpc:
-  port: 44000
+  port: 44040
   timeout: 10h
 redis:
   host: "localhost:6379"

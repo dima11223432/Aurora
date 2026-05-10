@@ -23,10 +23,10 @@ type GRPCConfig struct {
 }
 
 type RedisConfig struct {
-	Host     string `yaml:"host"`
-	Password string `yaml:"password"`
-	DB       int    `yaml:"db"`
-	Port     int    `yaml:"port"`
+	Host     string `yaml:"host" env:"REDIS_HOST" env-default:"localhost"`
+	Password string `yaml:"password" env:"REDIS_PASSWORD"`
+	DB       int    `yaml:"db" env:"REDIS_DB" env-default:"0"`
+	Port     int    `yaml:"port" env:"REDIS_PORT" env-default:"6379"`
 }
 
 func MustLoad() *Config {

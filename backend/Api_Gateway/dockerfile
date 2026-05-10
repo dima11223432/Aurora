@@ -1,5 +1,5 @@
 # ===== Стадия 1: Сборка =====
-FROM golang:1.22-alpine AS builder
+FROM golang:1.25-alpine AS builder
 
 # Установка необходимых системных пакетов
 RUN apk add --no-cache git ca-certificates tzdata && \
@@ -21,7 +21,7 @@ COPY . .
 # Сборка бинарного файла
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build -ldflags="-w -s" \
-    -o /app/bin/api-gateway ./cmd/main.go
+    -o /app/bin/api-gateway ./cmd/API_Service//main.go
 
 # ===== Стадия 2: Финальный образ =====
 FROM alpine:3.19

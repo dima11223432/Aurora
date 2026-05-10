@@ -4,7 +4,6 @@ import (
 	"CacheService/internal/domain/models"
 	"CacheService/internal/storage"
 	"context"
-	"crypto/sha256"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -35,24 +34,11 @@ func (r *RedisController) SetCard(ctx context.Context, value models.AnalysedData
 	const op = "Cache_Service.internal.storage.redis.SetCard"
 	id := uuid.NewString()
 	timestamp := value.Date.Unix()
-	postTextHash := sha256.Sum256([]byte(value.PostText))
-	valueToken := fmt.Sprintf("post:unique:%x", postTextHash)
-
-	created, err := r.redis.SetNX(ctx, valueToken, "unique", r.DefaultTTl).Result()
-
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-
-	if !created {
-		return nil
-	}
 
 	pipeline := r.redis.TxPipeline()
 
 	data, err := json.Marshal(value)
 	if err != nil {
-		r.redis.Del(ctx, valueToken)
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
@@ -74,7 +60,6 @@ func (r *RedisController) SetCard(ctx context.Context, value models.AnalysedData
 
 	_, err = pipeline.Exec(ctx)
 	if err != nil {
-		r.redis.Del(ctx, valueToken)
 		return err
 	}
 	return nil
