@@ -23,7 +23,7 @@ def setup_logger():
 
 if __name__ == "__main__":
     setup_logger()
-    app =  App(logger)
+    app = App(logger)
     try:
         asyncio.run(app.run())
     except KeyboardInterrupt:
