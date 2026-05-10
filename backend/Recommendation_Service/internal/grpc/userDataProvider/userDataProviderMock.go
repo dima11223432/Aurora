@@ -60,8 +60,3 @@ func (m *UserDataProviderMock) GetAllCategories(ctx context.Context) ([]string, 
 	args := m.Called(ctx)
 	return args.Get(0).([]string), args.Error(1)
 }
-
-func (m *UserDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
-	args := m.Called(ctx, userID)
-	return args.Get(0).([]string), args.Error(1)
-}
