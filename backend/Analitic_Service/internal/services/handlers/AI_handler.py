@@ -23,8 +23,8 @@ def AI_handler(context):
     load_dotenv(env_path)
     AI_answer = {
         "ds": {},
-        "ge": {},
-        "st": {},
+        # "ge": {},
+        # "st": {},
         "ya": {},
         "qw": {},
     }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex
