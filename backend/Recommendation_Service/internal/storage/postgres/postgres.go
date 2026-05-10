@@ -16,6 +16,14 @@ type Storage struct {
 	parserDB *sql.DB
 }
 
+func GetDublicateError(err error) bool {
+	var pqErr *pq.Error
+	if errors.As(err, &pqErr) {
+		return pqErr.Code == "23505"
+	}
+	return false
+}
+
 // New creates a new instance of the Storage
 func New(storagePath string, parsingServicePath string) (*Storage, error) {
 	const op = "internal.storage.postgres.new"
@@ -84,9 +92,29 @@ func (s *Storage) GetAllDefaultParsingChannels(ctx context.Context) ([]string, e
 
 }
 
-func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
-	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
-	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
+func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
+	const op = "internal.storage.postgres.GetAllCategories"
+
+	q := `SELECT category_name FROM channel_categories`
+
+	categories := make([]string, 0)
+	query, err := s.parserDB.QueryContext(ctx, q)
+	if err != nil {
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	for query.Next() {
+		var categoryName string
+		if err := query.Scan(&categoryName); err != nil {
+			return nil, fmt.Errorf("%s: %w", op, err)
+		}
+		categories = append(categories, categoryName)
+	}
+	return categories, nil
+}
+
+func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
+	const op = "internal.storage.postgres.AddNewParsingChannel"
 
 	err := s.AddNewParsingChannel(ctx, channel)
 	if err != nil {
