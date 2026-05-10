@@ -192,11 +192,17 @@ func (u *UserDataProvider) DeleteDefaultParsingChannel(ctx context.Context, chan
 	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteParsingChannel"
 	err := u.parsingChannelsProvider.DeleteDefaultParsingChannel(ctx, channel)
 	if err != nil {
-		u.log.Error("failed to delete parsing channel",
+		u.log.Error("failed to delete default parsing channel",
 			slog.String("op", op),
 			slog.Any("err", err),
 		)
 		return fmt.Errorf("%s: %w", op, err)
+	}
+	err = u.parsingChannelsProvider.DeleteParsingChannel(ctx, channel)
+	if err != nil {
+		u.log.Error("Failed to delete parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err))
 	}
 	return nil
 }
