@@ -28,7 +28,7 @@ def AI_handler(context):
         "ya": {},
         "qw": {},
     }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex
-    AI_list = {"ds", "ge", "st", "ya"}
+    AI_list = {"ds", "ge", "ya"}
 
     for i in AI_list:
         try:
