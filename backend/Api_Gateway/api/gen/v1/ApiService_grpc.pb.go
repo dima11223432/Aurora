@@ -33,6 +33,7 @@ const (
 	ApiService_DeleteDefaultParsingChannel_FullMethodName                = "/api.v1.ApiService/DeleteDefaultParsingChannel"
 	ApiService_GetAllDefaultParsingChannelsWithCategories_FullMethodName = "/api.v1.ApiService/GetAllDefaultParsingChannelsWithCategories"
 	ApiService_GetAllCategories_FullMethodName                           = "/api.v1.ApiService/GetAllCategories"
+	ApiService_ConnectWallet_FullMethodName                              = "/api.v1.ApiService/ConnectWallet"
 )
 
 // ApiServiceClient is the client API for ApiService service.
@@ -53,6 +54,7 @@ type ApiServiceClient interface {
 	DeleteDefaultParsingChannel(ctx context.Context, in *DeleteDefaultParsingChannelRequest, opts ...grpc.CallOption) (*DeleteDefaultParsingChannelResponse, error)
 	GetAllDefaultParsingChannelsWithCategories(ctx context.Context, in *GetAllDefaultParsingChannelsWithCategoriesRequest, opts ...grpc.CallOption) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error)
 	GetAllCategories(ctx context.Context, in *GetAllCategoriesRequest, opts ...grpc.CallOption) (*GetAllCategoriesResponse, error)
+	ConnectWallet(ctx context.Context, in *ConnectWalletRequest, opts ...grpc.CallOption) (*ConnectWalletResponse, error)
 }
 
 type apiServiceClient struct {
@@ -203,6 +205,16 @@ func (c *apiServiceClient) GetAllCategories(ctx context.Context, in *GetAllCateg
 	return out, nil
 }
 
+func (c *apiServiceClient) ConnectWallet(ctx context.Context, in *ConnectWalletRequest, opts ...grpc.CallOption) (*ConnectWalletResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ConnectWalletResponse)
+	err := c.cc.Invoke(ctx, ApiService_ConnectWallet_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ApiServiceServer is the server API for ApiService service.
 // All implementations should embed UnimplementedApiServiceServer
 // for forward compatibility.
@@ -221,6 +233,7 @@ type ApiServiceServer interface {
 	DeleteDefaultParsingChannel(context.Context, *DeleteDefaultParsingChannelRequest) (*DeleteDefaultParsingChannelResponse, error)
 	GetAllDefaultParsingChannelsWithCategories(context.Context, *GetAllDefaultParsingChannelsWithCategoriesRequest) (*GetAllDefaultParsingChannelsWithCategoriesResponse, error)
 	GetAllCategories(context.Context, *GetAllCategoriesRequest) (*GetAllCategoriesResponse, error)
+	ConnectWallet(context.Context, *ConnectWalletRequest) (*ConnectWalletResponse, error)
 }
 
 // UnimplementedApiServiceServer should be embedded to have
@@ -271,6 +284,9 @@ func (UnimplementedApiServiceServer) GetAllDefaultParsingChannelsWithCategories(
 }
 func (UnimplementedApiServiceServer) GetAllCategories(context.Context, *GetAllCategoriesRequest) (*GetAllCategoriesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetAllCategories not implemented")
+}
+func (UnimplementedApiServiceServer) ConnectWallet(context.Context, *ConnectWalletRequest) (*ConnectWalletResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ConnectWallet not implemented")
 }
 func (UnimplementedApiServiceServer) testEmbeddedByValue() {}
 
@@ -544,6 +560,24 @@ func _ApiService_GetAllCategories_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApiService_ConnectWallet_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ConnectWalletRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).ConnectWallet(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_ConnectWallet_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).ConnectWallet(ctx, req.(*ConnectWalletRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ApiService_ServiceDesc is the grpc.ServiceDesc for ApiService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -606,6 +640,10 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetAllCategories",
 			Handler:    _ApiService_GetAllCategories_Handler,
+		},
+		{
+			MethodName: "ConnectWallet",
+			Handler:    _ApiService_ConnectWallet_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

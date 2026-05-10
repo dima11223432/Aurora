@@ -80,6 +80,38 @@
         ]
       }
     },
+    "/v1/connect_wallet": {
+      "post": {
+        "operationId": "ApiService_ConnectWallet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ConnectWalletResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ConnectWalletRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/delete_default_parsing_channel": {
       "post": {
         "operationId": "ApiService_DeleteDefaultParsingChannel",
@@ -479,6 +511,23 @@
           }
         }
       }
+    },
+    "v1ConnectWalletRequest": {
+      "type": "object",
+      "properties": {
+        "walletAddress": {
+          "type": "string"
+        },
+        "signature": {
+          "type": "string"
+        },
+        "payload": {
+          "type": "string"
+        }
+      }
+    },
+    "v1ConnectWalletResponse": {
+      "type": "object"
     },
     "v1Cursor": {
       "type": "object",
