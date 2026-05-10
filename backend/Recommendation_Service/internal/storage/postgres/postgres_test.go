@@ -117,6 +117,7 @@ func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
 }
 
+
 func TestGetDublicateErrorPostgresMatch(t *testing.T) {
 	err := &pq.Error{Code: "23505"}
 
@@ -150,4 +151,25 @@ func TestGetDublicateErrorOtherError(t *testing.T) {
 			}
 		})
 	}
+}
+func (p *PostgresTestSuite) TestGetDefaultParsingChannelsByCategory() {
+	ctx := context.Background()
+
+	p.Run("multiple items", func() {
+		channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, "news")
+
+		p.NoError(err)
+		p.Len(channels, 2)
+
+		for _, ch := range channels {
+			p.Equal("news", ch.Category)
+		}
+	})
+
+	p.Run("empty category", func() {
+		channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, "unknown_category")
+
+		p.NoError(err)
+		p.Empty(channels)
+	})
 }
