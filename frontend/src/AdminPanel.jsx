@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
+import { routes } from "./config/api";
 
 export default function AdminPanel() {
   const [parsingChannels, setParsingChannels] = useState([]);
@@ -12,7 +13,7 @@ export default function AdminPanel() {
   useEffect(() => {
     const login = async () => {
       try {
-        const res = await axios.post("http://localhost:8081/v1/login", {
+        const res = await axios.post(routes.login, {
           telegram_id: 123456789,
           username: "john_doe",
           first_name: "John",
@@ -38,7 +39,7 @@ export default function AdminPanel() {
       try {
         const token = localStorage.getItem("token");
         const resp = await axios.get(
-          "http://localhost:8081/v1/get_all_parsing_channels_with_categories",
+          routes.getAllDefaultParsingChannelsWithCategories,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
@@ -62,7 +63,7 @@ export default function AdminPanel() {
     try {
       const token = localStorage.getItem("token");
       axios.post(
-        "http://localhost:8081/v1/add_new_parsing_channel",
+        routes.addNewDefaultParsingChannel,
         { channel_username: addedChannel, category: addedChannelCategory },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -75,7 +76,7 @@ export default function AdminPanel() {
     try {
       const token = localStorage.getItem("token");
       axios.post(
-        "http://localhost:8081/v1/delete_parsing_channel",
+        routes.deleteDefaultParsingChannel,
         { channel_username: deletedChannel },
         { headers: { Authorization: `Bearer ${token}` } },
       );
@@ -125,7 +126,6 @@ export default function AdminPanel() {
               )}
             </div>
           </section>
-
           <hr className="border-white/5" />
 
           <section className="flex flex-col gap-4">

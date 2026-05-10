@@ -38,7 +38,6 @@ pkg/
 *.dll
 
 # Fortran module files
-*.mod
 *.smod
 
 # Compiled Static libraries
@@ -373,3 +372,4 @@ backend/Analitic_Service/internal/services/handlers/config/API_Keys.env
 backend/Parsing_Service/config/config.env
 backend/vpn.json
 backend/Parsing_Service/pars_session.session
+backend/.DS_Store

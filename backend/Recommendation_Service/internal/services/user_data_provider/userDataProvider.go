@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"log/slog"
 	"recommendationService/internal/domain/models"
-	"recommendationService/internal/storage"
 	"time"
 )
 
@@ -23,10 +22,17 @@ type PriorityChannelsProvider interface {
 }
 
 type ParsingChannelsProvider interface {
+	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
+	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
+	DeleteDefaultParsingChannel(ctx context.Context, channel string) error
+	DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
 	GetAllParsingChannels(ctx context.Context) ([]string, error)
 	AddNewParsingChannel(ctx context.Context, channel string) error
 	DeleteParsingChannel(ctx context.Context, channel string) error
+	GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error)
 	GetAllCategories(ctx context.Context) ([]string, error)
+	AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error
+	GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
 	GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error)
 	DeleteParsingChannel(ctx context.Context, channel string) error
 }
@@ -86,7 +92,7 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 		channelNames = append(channelNames, ch.Channel)
 	}
 
-	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 4)
+	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 5)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s: %w", op, err)
 	}
@@ -107,9 +113,23 @@ func (u *UserDataProvider) GetAllParsingChannels(ctx context.Context) ([]string,
 	return channels, nil
 }
 
+func (u *UserDataProvider) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
+	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewUserCustomParsingChannel"
+	if err := u.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channel); err != nil {
+		u.log.Error("failed to add new user custom parsing channel",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s:%w", op, err)
+	}
+	return nil
+}
+
+func (u *UserDataProvider) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 func (u *UserDataProvider) AddNewParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewParsingChannel"
 	err := u.parsingChannelsProvider.AddNewParsingChannel(ctx, channel)
+	err := u.parsingChannelsProvider.AddNewDefaultParsingChannel(ctx, channel, category)
 	if err != nil {
 		if errors.Is(err, storage.ErrChannelExists) {
 			u.log.Error("parsing channel already exists",
@@ -141,6 +161,9 @@ func (u *UserDataProvider) DeleteParsingChannel(ctx context.Context, channel str
 	return nil
 }
 
+func (u *UserDataProvider) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
+	const op = "internal.services.user_dats_provider.userDataProvider.go.GetAllDefaultParsingChannels"
+	channels, err := u.parsingChannelsProvider.GetAllUserCustomParsingChannels(ctx, userID)
 func (u *UserDataProvider) GetParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetParsingChannelsWithCategories"
 
@@ -193,11 +216,4 @@ func (u *UserDataProvider) GetAllCategories(ctx context.Context) ([]string, erro
 	}
 	return categories, nil
 }
-
-func (u *userDataProviderSuite) TestDeleteParsingChannel() {
-	ctx := context.Background()
-	channel := "test_channel"
-	u.mock.On("DeleteParsingChannel", ctx, channel).Return(nil)
-	err := u.service.DeleteParsingChannel(ctx, channel)
-	u.NoError(err)
-}
+>>>>>>>>> Temporary merge branch 2
