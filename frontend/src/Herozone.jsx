@@ -93,7 +93,7 @@ function Herozone() {
     <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6">
       <div className="max-w-3xl w-full bg-[rgba(20,25,50,0.7)] backdrop-blur-md rounded-[3rem] p-6 sm:p-8 md:p-12 shadow-2xl border border-white/5">
         <img
-          src="/Aurora-logo.png"
+          src="./assets/Aurora-logo.png"
           alt="Aurora logo"
           className="w-20 h-20 mb-2 mx-auto"
         />
