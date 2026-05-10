@@ -4,10 +4,20 @@ import pandas as pd
 import os
 import time
 import pickle
+import sys
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential, load_model
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.utils import to_categorical
+from loguru import logger
+
+logger.remove()
+logger.add(
+    sys.stdout,
+    format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+    level="DEBUG",
+    colorize=True,
+)
 
 #настройки начального обучения
 TICKER = 'AAPL'
@@ -52,12 +62,12 @@ def create_model(shape):
     return model
 
 def run(ticker):
-    print(f"Загрузка {ticker}...")
+    logger.info(f"Загрузка {ticker}...")
     start = time.time()
     df = get_data(ticker)
     
     if os.path.exists(MODEL_FILE) and os.path.exists(SCALER_FILE):
-        print("Дообучение")
+        logger.info("Дообучение")
         model = load_model(MODEL_FILE)
         model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
         
@@ -67,7 +77,7 @@ def run(ticker):
         model.fit(X, y, epochs=2, batch_size=32, verbose=0)
         
     else:
-        print("Модели нет")
+        logger.info("Модели нет")
         scaler = MinMaxScaler()
         X, y = sequences(df, scaler, fit=True)
         model = create_model((X.shape[1], X.shape[2]))
@@ -76,7 +86,7 @@ def run(ticker):
             pickle.dump(scaler, f)
 
     model.save(MODEL_FILE)
-    print(f"Готово за {time.time() - start:.2f}\n")
+    logger.info(f"Готово за {time.time() - start:.2f}")
     
     return model, scaler, df
 
@@ -89,14 +99,14 @@ def predict(model, scaler, df):
     idx = np.argmax(pred)
     conf = pred[idx]
 
-    print(f"Направление: {labels[idx]}")
-    print(f"Уверенность: {conf:.1%}")
+    logger.info(f"Направление: {labels[idx]}")
+    logger.info(f"Уверенность: {conf:.1%}")
     # print(f"Вероятности: {pred[0]:.2f} / {pred[1]:.2f} / {pred[2]:.2f}")
     
     if conf > 0.5:
-        print(f"ИТОГ: {labels[idx]}")
+        logger.info(f"ИТОГ: {labels[idx]}")
     else:
-        print("хз")
+        logger.info("хз")
 
 if __name__ == "__main__":  
     while True:
@@ -106,6 +116,6 @@ if __name__ == "__main__":
                 break
             m, s, d = run(ticker_input)
             predict(m, s, d)
-            print("-" * 20)
+            logger.info("-" * 20)
         except Exception as e:
-            print(f"Ошибка: {e}")
+            logger.error(f"Ошибка: {e}")
