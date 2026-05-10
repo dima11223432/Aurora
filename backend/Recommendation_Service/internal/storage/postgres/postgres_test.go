@@ -64,7 +64,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesSuccessReturnsAllRecords() {
 
 	_, err := p.storage.parserDB.ExecContext(
 		ctx,
-		`INSERT INTO channel_categories (category_name) VALUES ($1), ($2)`,
+		`INSERT INTO channel_categories (name) VALUES ($1), ($2)`,
 		cat1,
 		cat2,
 	)
@@ -73,7 +73,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesSuccessReturnsAllRecords() {
 	p.T().Cleanup(func() {
 		_, _ = p.storage.parserDB.ExecContext(
 			context.Background(),
-			`DELETE FROM channel_categories WHERE category_name IN ($1, $2)`,
+			`DELETE FROM channel_categories WHERE name IN ($1, $2)`,
 			cat1,
 			cat2,
 		)
@@ -92,7 +92,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 
 	_, err := p.storage.parserDB.ExecContext(
 		ctx,
-		`INSERT INTO channel_categories (category_name) VALUES ($1)`,
+		`INSERT INTO channel_categories (name) VALUES ($1)`,
 		categoryName,
 	)
 	p.Require().NoError(err)
@@ -100,7 +100,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 	p.T().Cleanup(func() {
 		_, _ = p.storage.parserDB.ExecContext(
 			context.Background(),
-			`DELETE FROM channel_categories WHERE category_name = $1`,
+			`DELETE FROM channel_categories WHERE name = $1`,
 			categoryName,
 		)
 	})

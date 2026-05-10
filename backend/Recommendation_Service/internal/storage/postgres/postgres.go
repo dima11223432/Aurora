@@ -106,7 +106,7 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllCategories"
 
-	q := `SELECT category_name FROM channel_categories`
+	q := `SELECT name FROM channel_categories`
 
 	categories := make([]string, 0)
 	query, err := s.parserDB.QueryContext(ctx, q)
