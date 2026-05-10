@@ -36,7 +36,9 @@ def AI_handler(context):
             part = globals()[i](context, token).split("-%91%8FROG-COD", maxsplit=1)
             AI_answer[i]["answer"] = part[0].replace(" \n", "")
             AI_answer[i]["reason"] = part[1]
-            logger.info(f"AI [{i.upper()}] - Answer: {AI_answer[i]['answer'][:100]}... | Reason: {AI_answer[i]['reason'][:100]}...")
+            logger.info(
+                f"AI [{i.upper()}] - Answer: {AI_answer[i]['answer'][:100]}... | Reason: {AI_answer[i]['reason'][:100]}..."
+            )
         except Exception as e:
             logger.error(f"Error AI handler [{i.upper()}]: {str(e)}")
             AI_answer[i]["answer"] = 0
