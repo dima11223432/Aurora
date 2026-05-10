@@ -22,4 +22,4 @@ USER appuser
 
 EXPOSE 44043
 
-CMD ["python3", "-m", "cmd.analytic.main"]
+CMD ["python3", "-m", "command.analytic.main"]
