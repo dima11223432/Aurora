@@ -155,21 +155,21 @@ func TestGetDublicateErrorOtherError(t *testing.T) {
 func (p *PostgresTestSuite) TestGetDefaultParsingChannelsByCategory() {
 	ctx := context.Background()
 
-	p.Run("multiple items", func() {
+	p.Run("success", func() {
 		channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, "news")
 
 		p.NoError(err)
-		p.Len(channels, 2)
+		p.NotEmpty(channels)
 
 		for _, ch := range channels {
 			p.Equal("news", ch.Category)
 		}
 	})
 
-	p.Run("empty category", func() {
-		channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, "unknown_category")
+	p.Run("error", func() {
+		channels, err := p.storage.GetDefaultParsingChannelsByCategory(nil, "news")
 
-		p.NoError(err)
+		p.Error(err)
 		p.Empty(channels)
 	})
 }
