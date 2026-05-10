@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL_SECURE, routes } from "./config/api";
-import logo from "./assets/Aurora.png";
+import logo from "./assets/Aurora-logo.png";
 
 function Herozone() {
   const [isLoading, setIsLoading] = useState(false);
