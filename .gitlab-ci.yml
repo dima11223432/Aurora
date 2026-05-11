@@ -4,9 +4,17 @@ stages:
 deploy-staging:
   stage: deploy
   image: docker:24.0.5
-  volumes:
-    - /var/run/docker.sock:/var/run/docker.sock
+  services:
+    - name: docker:24.0.5-dind
+      alias: docker
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+    DOCKER_DRIVER: overlay2
+  before_script:
+    - sleep 15
   script:
+    - docker info
     - cd backend
     - docker-compose down --remove-orphans || true
     - docker-compose build
