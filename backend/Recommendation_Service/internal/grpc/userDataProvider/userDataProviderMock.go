@@ -46,6 +46,11 @@ func (m *UserDataProviderMock) DeleteUserCustomParsingChannel(ctx context.Contex
 	return args.Error(0)
 }
 
+func (m *UserDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
+	args := m.Called(ctx, userID)
+	return args.Get(0).([]string), args.Error(1)
+}
+
 func (m *UserDataProviderMock) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
 	args := m.Called(ctx)
 	return args.Get(0).(map[string][]string), args.Error(1)
@@ -53,10 +58,5 @@ func (m *UserDataProviderMock) GetDefaultParsingChannelsWithCategories(ctx conte
 
 func (m *UserDataProviderMock) GetAllCategories(ctx context.Context) ([]string, error) {
 	args := m.Called(ctx)
-	return args.Get(0).([]string), args.Error(1)
-}
-
-func (m *UserDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
-	args := m.Called(ctx, userID)
 	return args.Get(0).([]string), args.Error(1)
 }

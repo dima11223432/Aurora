@@ -5,7 +5,7 @@ import json
 import traceback
 from typing import Any
 
-env_path = os.path.join(os.path.dirname(__file__), "config/config.env")
+env_path = os.path.join(os.path.dirname(__file__), "../../config/config/config.env")
 load_dotenv(env_path)
 
 

@@ -110,6 +110,33 @@ func (a *AuthService) Login(
 	return resp.Token, nil
 }
 
+func (a *AuthService) ConnectWallet(
+	ctx context.Context,
+	wallet_address string,
+) error {
+	const op = "internal.services.auth.ConnectWallet"
+	userID, err := a.AuthInterceptor.GetUserIdFromContext(ctx)
+	if err != nil {
+		a.log.Error("failed to get user id from context",
+			slog.String("op", op),
+			slog.Any("err", err),
+		)
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if wallet_address == "" {
+		return fmt.Errorf("%s: wallet address is empty", op)
+	}
+	a.log.Info("attempting to connect wallet",
+		"op", op,
+		"user_id", userID,
+		"wallet", wallet_address,
+	)
+
+	a.log.Info("wallet connected successfully", "user_id", userID)
+	return nil
+}
+
 func (a *AuthService) IsAdmin(
 	ctx context.Context,
 	telegram_id int64,

@@ -64,7 +64,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesSuccessReturnsAllRecords() {
 
 	_, err := p.storage.parserDB.ExecContext(
 		ctx,
-		`INSERT INTO channel_categories (category_name) VALUES ($1), ($2)`,
+		`INSERT INTO channel_categories (name) VALUES ($1), ($2)`,
 		cat1,
 		cat2,
 	)
@@ -73,7 +73,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesSuccessReturnsAllRecords() {
 	p.T().Cleanup(func() {
 		_, _ = p.storage.parserDB.ExecContext(
 			context.Background(),
-			`DELETE FROM channel_categories WHERE category_name IN ($1, $2)`,
+			`DELETE FROM channel_categories WHERE name IN ($1, $2)`,
 			cat1,
 			cat2,
 		)
@@ -92,7 +92,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 
 	_, err := p.storage.parserDB.ExecContext(
 		ctx,
-		`INSERT INTO channel_categories (category_name) VALUES ($1)`,
+		`INSERT INTO channel_categories (name) VALUES ($1)`,
 		categoryName,
 	)
 	p.Require().NoError(err)
@@ -100,7 +100,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 	p.T().Cleanup(func() {
 		_, _ = p.storage.parserDB.ExecContext(
 			context.Background(),
-			`DELETE FROM channel_categories WHERE category_name = $1`,
+			`DELETE FROM channel_categories WHERE name = $1`,
 			categoryName,
 		)
 	})
@@ -116,6 +116,7 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
 }
+
 
 func TestGetDublicateErrorPostgresMatch(t *testing.T) {
 	err := &pq.Error{Code: "23505"}
@@ -150,4 +151,25 @@ func TestGetDublicateErrorOtherError(t *testing.T) {
 			}
 		})
 	}
+}
+func (p *PostgresTestSuite) TestGetDefaultParsingChannelsByCategory() {
+	ctx := context.Background()
+
+	p.Run("success", func() {
+		channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, "news")
+
+		p.NoError(err)
+		p.NotEmpty(channels)
+
+		for _, ch := range channels {
+			p.Equal("news", ch.Category)
+		}
+	})
+
+	p.Run("error", func() {
+		channels, err := p.storage.GetDefaultParsingChannelsByCategory(nil, "news")
+
+		p.Error(err)
+		p.Empty(channels)
+	})
 }

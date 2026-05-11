@@ -9,6 +9,8 @@ env_path = os.path.join(os.path.dirname(__file__), "../../config/config.env")
 load_dotenv(env_path)
 
 
+
+
 class KafkaController:
     def __init__(self, logger):
         self.log = logger
