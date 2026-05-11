@@ -229,8 +229,8 @@ services:
         - VITE_SSO_URL=http://sso:44044
     container_name: aurora-frontend-prod
     ports:
-      # - "80:80"
-      - "5173:5173"
+      - "80:80"
+      # - "5173:5173"
     depends_on:
       - api-gateway
       - sso
