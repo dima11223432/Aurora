@@ -244,11 +244,5 @@ networks:
 
 volumes:
   postgres_data:
-    external: true
-    name: backend_postgres_data
   postgres_parser_data:
-    external: true
-    name: backend_postgres_parser_data
   redis_master_data:
-    external: true
-    name: backend_redis_master_data
