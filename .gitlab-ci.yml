@@ -6,7 +6,6 @@ deploy-staging:
   script:
     - |
       cd backend
-      # docker-compose down --remove-orphans || true
-      docker-compose down -v || true
+      docker-compose down || true 
       docker-compose build
-      docker-compose up -d
+      docker-compose up -d --remove-orphans
