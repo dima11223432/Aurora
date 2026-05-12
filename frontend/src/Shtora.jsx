@@ -6,7 +6,7 @@ import BaseChannelCard from "./BaseChannelCard";
 import UserCustomChannelCard from "./UserCustomChannelCard";
 
 const Shtora = () => {
-  const [parsingChannels, setParsingChannels] = useState([]);
+  const [parsingChannels, setParsingChannels] = useState({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedChannels, setSelectedChannels] = useState([]);
@@ -206,12 +206,15 @@ const Shtora = () => {
       try {
         if (!isLoggedIn) return;
         const token = localStorage.getItem("token");
-        const resp = await axios.get(routes.getAllDefaultParsingChannels, {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const resp = await axios.get(
+          routes.getAllDefaultParsingChannelsWithCategories,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
-        const channels = resp.data.channels || [];
+        );
+        const channels = resp.data.channels;
         setParsingChannels(channels);
         await getUserPriorityChannels();
       } catch (e) {
@@ -244,21 +247,25 @@ const Shtora = () => {
               Нет доступных каналов
             </li>
           ) : (
-            parsingChannels.map((channel, idx) => {
-              const channelName =
-                typeof channel === "string"
-                  ? channel
-                  : channel?.name || JSON.stringify(channel);
-              const isChecked = selectedChannels.includes(channelName);
-              return (
-                <BaseChannelCard
-                  idx={idx}
-                  isChecked={isChecked}
-                  channelName={channelName}
-                  handleCheckboxChange={handleCheckboxChange}
-                />
-              );
-            })
+            Object.entries(parsingChannels).map(([category, categoryData]) => (
+              <div key={category} className="mb-3">
+                <h4 className="text-xs font-bold text-cyan-500/70 uppercase px-1 mb-1 tracking-wider">
+                  {category}
+                </h4>
+                {categoryData.usernames.map((channelName, idx) => {
+                  const isChecked = selectedChannels.includes(channelName);
+                  return (
+                    <BaseChannelCard
+                      key={channelName}
+                      idx={idx}
+                      isChecked={isChecked}
+                      channelName={channelName}
+                      handleCheckboxChange={handleCheckboxChange}
+                    />
+                  );
+                })}
+              </div>
+            ))
           )}
         </ul>
         <div className="mt-3 pt-3 border-t border-cyan-700/50">
