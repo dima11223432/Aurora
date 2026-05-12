@@ -22,4 +22,4 @@ USER appuser
 
 EXPOSE 44043
 
-CMD ["python3", "-m", "command.analytic.main"]
+CMD ["/bin/sh", "-c", "sleep 5 && python3 -m command.analytic.main"]
