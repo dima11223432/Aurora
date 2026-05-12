@@ -98,7 +98,7 @@ function Herozone() {
         <p className="text-[#95bec7] text-base text-center sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
           Добро пожаловать в{" "}
           <span className="text-[#0fd2f5] font-bold">Aurora</span>
-          <br /> ИИ-поддерживаемые прогнозы TON и T-Investments
+          <br /> ИИ-поддерживаемые прогнозы в реальном времени
         </p>
 
         <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-12">
