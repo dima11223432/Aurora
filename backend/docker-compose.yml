@@ -11,7 +11,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - /var/lib/aurora/postgres_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -31,7 +31,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_parser_data:/var/lib/postgresql/data
+      - /var/lib/aurora/parser_data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -55,7 +55,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - redis_master_data:/data
+      - /var/lib/aurora/redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "1111", "ping"]
       interval: 5s
