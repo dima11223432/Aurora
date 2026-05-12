@@ -69,7 +69,7 @@ class App:
                     else:
                         context_text = str(payload)
                     self.logger.info(f"Received message from {topic}: {context_text}")
-                    result = AI_handler(context_text)
+                    # result = AI_handler(context_text)
                     result = redact_recursive(result)
                     self.logger.info(f"Received AI result: {result}")
                     ai_data = result.get("ds", {})
@@ -98,7 +98,8 @@ class App:
                     final_json = json.dumps(send_payload, ensure_ascii=False)
                     self.logger.info(f"Final payload: {final_json}")
                     # send_payload = {"original_offset": msg.offset(), "result": result}
-                    kafka_controller.send_batch_messages({result_topic: send_payload})
+                    # NOTE: send payload to kafka
+                    # kafka_controller.send_batch_messages({result_topic: send_payload})
                     self.logger.info(f"Sent AI result to {result_topic}")
 
                 except Exception as e:
