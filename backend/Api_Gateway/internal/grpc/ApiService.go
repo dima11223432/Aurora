@@ -20,6 +20,7 @@ type Auth interface {
 	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
 	SetPriorityChannels(ctx context.Context, channels []string) error
+	ConnectWallet(ctx context.Context, wallet string) error
 	DeletePriorityChannels(ctx context.Context, channels []string) error
 	IsAdminByContext(ctx context.Context) (bool, error)
 }
@@ -288,4 +289,15 @@ func (a *ApiService) GetAllDefaultParsingChannelsWithCategories(
 	return &v1.GetAllDefaultParsingChannelsWithCategoriesResponse{
 		Channels: protoChannels,
 	}, nil
+}
+
+func (a *ApiService) ConnectWallet(
+	ctx context.Context,
+	req *v1.ConnectWalletRequest,
+) (*v1.ConnectWalletResponse, error) {
+	err := a.auth.ConnectWallet(ctx, req.WalletAddress)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &v1.ConnectWalletResponse{}, nil
 }

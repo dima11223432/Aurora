@@ -1,18 +1,24 @@
+"""Main entry point for the parser application."""
+import asyncio
+import sys
+
+from loguru import logger
+
 from internal.app.app import App
 from internal.config.config import Config
 from internal.storage.main import ChannelStorage
-from loguru import logger
-import sys
-import asyncio
-import os
 
 
 def setup_logger():
+    """Configure loguru logger with console and file handlers."""
     logger.remove()
 
     logger.add(
         sys.stdout,
-        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level: <8}</level> | <cyan>{name}</cyan>:<cyan>{function}</cyan>:<cyan>{line}</cyan> - <level>{message}</level>",
+        format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | "
+        "<level>{level: <8}</level> | <cyan>{name}</cyan>:"
+        "<cyan>{function}</cyan>:<cyan>{line}</cyan> - "
+        "<level>{message}</level>",
         level="DEBUG",
         colorize=True,
     )

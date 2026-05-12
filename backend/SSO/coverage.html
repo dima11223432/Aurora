@@ -1,0 +1,331 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>postgres: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">authService/internal/storage/postgres/postgres.go (83.7%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package postgres
+
+import (
+        "authService/internal/domain/models"
+        "authService/internal/storage"
+        "context"
+        "database/sql"
+        "errors"
+        "fmt"
+        "strings"
+
+        pq "github.com/lib/pq"
+)
+
+var (
+        emptyValue = 0
+)
+
+type Storage struct {
+        DB *sql.DB
+}
+
+// New creates a new instance of the Storage
+func New(storagePath string) (*Storage, error) <span class="cov8" title="1">{
+        const op = "internal.storage.postgres.new"
+
+        DB, err := sql.Open("postgres", storagePath)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">if err := DB.Ping(); err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("%s: %w", op, err)
+        }</span>
+        <span class="cov8" title="1">return &amp;Storage{
+                DB: DB,
+        }, nil</span>
+}
+
+func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error <span class="cov8" title="1">{
+        const op = "storage.postgres.SetPriorityChannels"
+
+        if len(channels) == 0 </span><span class="cov8" title="1">{
+                return fmt.Errorf("%s: %w", op, storage.ErrChannelsEmpty)
+        }</span>
+
+        <span class="cov8" title="1">query := `
+        INSERT INTO channels (user_id, channel_username) VALUES
+        `
+
+        args := make([]interface{}, 0, len(channels)*2)
+
+        for i, channel := range channels </span><span class="cov8" title="1">{
+                query += fmt.Sprintf("($%d, $%d)", i*2+1, i*2+2)
+                if i != len(channels)-1 </span><span class="cov8" title="1">{
+                        query += ","
+                }</span>
+                <span class="cov8" title="1">args = append(args, user_id, channel)</span>
+        }
+        <span class="cov8" title="1">query += " ON CONFLICT (user_id, channel_username) DO NOTHING"
+        _, err := s.DB.ExecContext(ctx, query, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println(err.Error())
+                if isDuplicateError(err) </span><span class="cov0" title="0">{
+                        return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+                }</span>
+
+                <span class="cov0" title="0">return fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, channels []string) error <span class="cov8" title="1">{
+        const op = "storage.postgres.DeletePriorityChannels"
+
+        if len(channels) == 0 </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">query := `
+        DELETE FROM channels 
+        WHERE user_id = $1 AND channel_username = ANY($2);
+        `
+
+        _, err := s.DB.ExecContext(ctx, query, userID, pq.Array(channels))
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.SaveUser"
+
+        err := checkUserData(user)
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">query := `
+        INSERT INTO users (telegram_id, username, first_name, last_name, is_admin) 
+        VALUES ($1, $2, $3, $4, $5) 
+        RETURNING user_id
+        `
+        var userID int64
+
+        err = s.DB.QueryRowContext(ctx, query,
+                user.Telegram_id,
+                user.Username,
+                user.First_name,
+                user.Last_name,
+                user.Is_admin,
+        ).Scan(&amp;userID)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">return userID, nil</span>
+}
+
+func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.GetUserById"
+
+        query := `
+        SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
+        FROM users 
+        WHERE user_id = $1
+        `
+
+        var user models.User
+        err := s.DB.QueryRowContext(ctx, query, user_id).Scan(
+                &amp;user.ID, &amp;user.Telegram_id, &amp;user.Username, &amp;user.First_name, &amp;user.Last_name, &amp;user.Is_admin,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+
+                        return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+                }</span>
+                <span class="cov0" title="0">return models.User{}, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.User"
+
+        query := `
+        SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
+        FROM users 
+        WHERE telegram_id = $1
+        `
+
+        var user models.User
+        err := s.DB.QueryRowContext(ctx, query, telegram_id).Scan(
+                &amp;user.ID,
+                &amp;user.Telegram_id,
+                &amp;user.Username,
+                &amp;user.First_name,
+                &amp;user.Last_name,
+                &amp;user.Is_admin,
+        )
+
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+                        return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+                }</span>
+                <span class="cov0" title="0">return models.User{}, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (s *Storage) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.IsAdmin"
+
+        query := `
+        SELECT is_admin 
+        FROM users 
+        WHERE telegram_id = $1
+        `
+
+        var isAdmin bool
+
+        err := s.DB.QueryRowContext(ctx, query, telegram_id).Scan(&amp;isAdmin)
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+                        return false, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+                }</span>
+                <span class="cov0" title="0">return false, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return isAdmin, nil</span>
+}
+
+func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.App"
+
+        query := `
+        SELECT id, name, secret 
+        FROM apps 
+        WHERE id = $1
+        `
+
+        var app models.App
+
+        err := s.DB.QueryRowContext(ctx, query, appID).Scan(&amp;app.ID, &amp;app.Name, &amp;app.Secret)
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+                        return models.App{}, fmt.Errorf("%s: %w", op, storage.ErrAppNotFound)
+                }</span>
+                <span class="cov0" title="0">return models.App{}, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return app, nil</span>
+}
+func isDuplicateError(err error) bool <span class="cov0" title="0">{
+        var pqErr *pq.Error
+        if errors.As(err, &amp;pqErr) </span><span class="cov0" title="0">{
+                return pqErr.Code == "23505"
+        }</span>
+        <span class="cov0" title="0">return strings.Contains(err.Error(), "duplicate key value")</span>
+}
+
+func checkUserData(user models.User) error <span class="cov8" title="1">{
+        if user.Telegram_id == int64(emptyValue) || user.First_name == "" || user.Last_name == "" || user.Username == "" </span><span class="cov8" title="1">{
+                return storage.ErrEmptyUserValues
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
