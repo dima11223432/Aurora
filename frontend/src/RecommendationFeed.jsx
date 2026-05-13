@@ -14,27 +14,6 @@ export default function RecommendationFeed() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  useEffect(() => {
-    const login = async () => {
-      try {
-        const res = await axios.post(routes.login, {
-          telegram_id: 123456789,
-          username: "john_doe",
-          first_name: "John",
-          last_name: "Doe",
-          is_admin: true,
-          app_id: 1,
-        });
-
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
-      } catch (e) {
-        console.error("Login error:", e);
-      }
-    };
-
-    login();
-  }, []);
   const fetchPosts = async () => {
     if (isLoading || !hasMore) return;
 
@@ -42,7 +21,8 @@ export default function RecommendationFeed() {
 
     try {
       const token = localStorage.getItem("token");
-
+      if (!token) return;
+      setIsLoggedIn(true);
       const response = await axios.post(
         routes.getRecommendatedPosts,
         { cursor },
