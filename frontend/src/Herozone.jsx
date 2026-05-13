@@ -17,6 +17,8 @@ function Herozone() {
     if (!tg) {
       setTimeout(() => {
         setError("не удалось загруить данные из telegram");
+        document.body.innerHTML = "";
+        document.write("Доступ только через Telegram Mini Apps");
       }, 0);
       return;
     }
@@ -36,7 +38,6 @@ function Herozone() {
       return;
     }
 
-    console.log("Telegram user data:", user);
     setTimeout(() => {
       setIsLoading(true);
     }, 0);
