@@ -16,7 +16,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-      start-period: 30s
+      start_period: 30s
     networks:
       - aurora-network
 
@@ -36,7 +36,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-      start-period: 30s
+      start_period: 30s
     networks:
       - aurora-network
 
@@ -60,7 +60,7 @@ services:
       interval: 10s
       timeout: 10s
       retries: 10
-      start-period: 30s
+      start_period: 30s
     networks:
       - aurora-network
 
