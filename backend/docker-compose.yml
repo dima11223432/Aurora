@@ -233,6 +233,7 @@ services:
     mem_limit: 512m
     ports:
       - "80:80"
+      - "443:443"
       - "5173:5173"
     depends_on:
       - api-gateway
