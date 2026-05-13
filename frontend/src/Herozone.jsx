@@ -58,8 +58,7 @@ function Herozone() {
       .then((res) => res.json())
       .then((data) => {
         console.log("JWT Token получен");
-        alert("JWT Token:" + data.token);
-        localStorage.setItem("jwt", data.token);
+        localStorage.setItem("token", data.token);
       })
       .catch((err) => {
         console.error("Login API error:", err);
