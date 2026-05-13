@@ -54,14 +54,7 @@ services:
     volumes:
       - redis_master_data:/data
     healthcheck:
-      test:
-        [
-          "CMD",
-          "redis-cli",
-          "-a",
-          "1ux35qBk4YgCMsd7eg4ju",
-          "ping",
-        ]
+      test: ["CMD", "redis-cli", "-a", "1ux35qBk4YgCMsd7eg4ju", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -83,6 +76,7 @@ services:
     container_name: kafka
     depends_on:
       - zookeeper
+    command: sh -c "sleep 3 && /etc/confluent/docker/run"
     environment:
       KAFKA_HEAP_OPTS: "-Xms256M -Xmx256M"
       KAFKA_BROKER_ID: 1
