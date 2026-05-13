@@ -17,12 +17,6 @@ function Herozone() {
     if (!tg) {
       setTimeout(() => {
         setError("не удалось загруить данные из telegram");
-        document.body.innerHTML = `
-      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; text-align: center; padding: 20px;">
-        <h1>Доступ закрыт</h1>
-        <p>Это приложение работает только внутри Telegram.</p>
-      </div>
-    `;
       }, 0);
       return;
     }
@@ -34,6 +28,13 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
+
+      document.body.innerHTML = `
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; text-align: center; padding: 20px;">
+        <h1>Доступ закрыт</h1>
+        <p>Это приложение работает только внутри Telegram.</p>
+      </div>
+    `;
       setTimeout(() => {
         setError("Не удалось получить данные пользователя");
 
