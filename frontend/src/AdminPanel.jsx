@@ -11,33 +11,10 @@ export default function AdminPanel() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const login = async () => {
-      try {
-        const res = await axios.post(routes.login, {
-          telegram_id: 123456789,
-          username: "john_doe",
-          first_name: "John",
-          last_name: "Doe",
-          is_admin: true,
-          app_id: 1,
-        });
-
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
-      } catch (e) {
-        console.error("Login error:", e);
-      }
-    };
-
-    login();
-  }, []);
-
-  useEffect(() => {
-    if (!isLoggedIn) return;
-
     const fetchParsingChannels = async () => {
       try {
         const token = localStorage.getItem("token");
+        if (!token) return;
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -62,7 +39,7 @@ export default function AdminPanel() {
   const AddNewParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
-      console.log(token);
+      if (!token) return;
       console.log(
         "Adding new parsing channel as admin",
         addedChannel,
@@ -81,6 +58,7 @@ export default function AdminPanel() {
   const DeleteParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) return;
       axios.post(
         routes.deleteDefaultParsingChannel,
         { channel_username: deletedChannel },
