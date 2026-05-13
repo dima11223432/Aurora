@@ -54,7 +54,14 @@ services:
     volumes:
       - redis_master_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A", "ping"]
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "-a",
+          "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A",
+          "ping",
+        ]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -226,13 +233,13 @@ services:
       context: ../frontend
       dockerfile: Dockerfile.prod
       args:
-        - VITE_API_URL=http://api-gateway:8081
-        - VITE_SSO_URL=http://sso:44044
+        - VITE_API_URL=/v1
+        - VITE_SSO_URL=/v1/sso
     container_name: aurora-frontend-prod
     mem_limit: 512m
     ports:
       - "80:80"
-      # - "5173:5173"
+      - "5173:5173"
     depends_on:
       - api-gateway
       - sso
