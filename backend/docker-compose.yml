@@ -105,9 +105,9 @@ services:
     environment:
       - ENV=prod
     depends_on:
-      postgres:
+      - postgres
         # condition: service_healthy
-      redis-master:
+      - redis-master
         # condition: service_healthy
     networks:
       - aurora-network
@@ -125,8 +125,7 @@ services:
       - ENV=prod
       - DATABASE_URL=postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable
     depends_on:
-      postgres:
-        # condition: service_healthy
+      - postgres
     networks:
       - aurora-network
 
@@ -142,10 +141,8 @@ services:
     environment:
       - ENV=prod
     depends_on:
-      postgres:
-        # condition: service_healthy
-      redis-master:
-        # condition: service_healthy
+      - postgres
+      - redis-master
     networks:
       - aurora-network
 
@@ -162,12 +159,9 @@ services:
     environment:
       - ENV=prod
     depends_on:
-      postgres:
-        # condition: service_healthy
-      redis-master:
-        # condition: service_healthy
-      kafka:
-        condition: service_started
+      - postgres
+      - redis-master
+      - kafka
     networks:
       - aurora-network
 
@@ -197,10 +191,8 @@ services:
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
-      postgres-parser:
-        condition: service_healthy
-      kafka:
-        condition: service_started
+      - postgres-parser
+      - kafka
     networks:
       - aurora-network
 
@@ -220,8 +212,7 @@ services:
       - PYTHONPATH=/app
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
     depends_on:
-      kafka:
-        condition: service_started
+      - kafka
     networks:
       - aurora-network
 
