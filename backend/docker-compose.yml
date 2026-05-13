@@ -7,7 +7,7 @@ services:
     mem_limit: 512m
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Yd^TpK*#)Hfn1{V[LUWs*
+      POSTGRES_PASSWORD: Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A
       POSTGRES_DB: aurora
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -26,7 +26,7 @@ services:
     mem_limit: 512m
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Yd^TpK*#)Hfn1{V[LUWs*
+      POSTGRES_PASSWORD: Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A
       POSTGRES_DB: parser
     volumes:
       - postgres_parser_data:/var/lib/postgresql/data
@@ -47,14 +47,14 @@ services:
       redis-server
       --bind 0.0.0.0
       --protected-mode no
-      --requirepass "Yd^TpK*#)Hfn1{V[LUWs*"
-      --masterauth "Yd^TpK*#)Hfn1{V[LUWs*"
+      --requirepass "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A"
+      --masterauth "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A"
       --appendonly yes
       --appendfsync everysec
     volumes:
       - redis_master_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "Yd^TpK*#)Hfn1{V[LUWs*", "ping"]
+      test: ["CMD", "redis-cli", "-a", "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -119,7 +119,7 @@ services:
       - "44044:44044"
     environment:
       - ENV=prod
-      - DATABASE_URL=postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres:5432/aurora?sslmode=disable
+      - DATABASE_URL=postgres://postgres:Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A@postgres:5432/aurora?sslmode=disable
     depends_on:
       postgres:
         condition: service_healthy
@@ -180,14 +180,14 @@ services:
       - ENV=prod
       - PYTHONPATH=/app
       - ENV_PATH=/app/config/config.env
-      - DATABASE_URL=postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres-parser:5432/parser?sslmode=disable
+      - DATABASE_URL=postgres://postgres:Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A@postgres-parser:5432/parser?sslmode=disable
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=telegram_posts
       - DB_HOST=postgres-parser
       - DB_PORT=5432
       - DB_NAME=parser
       - DB_USER=postgres
-      - DB_PASSWORD=Yd^TpK*#)Hfn1{V[LUWs*
+      - DB_PASSWORD=Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A
       - PROXY_HOST=127.0.0.1
       - PROXY_PORT=10808
     extra_hosts:

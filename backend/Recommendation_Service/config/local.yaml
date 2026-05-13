@@ -1,7 +1,7 @@
 env: "local"
 
-storage_pass: "postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres:5432/aurora?sslmode=disable"
-parsing_service_pass: "postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres-parser:5432/parser?sslmode=disable"
+storage_pass: "postgres://postgres:Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A@postgres:5432/aurora?sslmode=disable"
+parsing_service_pass: "postgres://postgres:Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A@postgres-parser:5432/parser?sslmode=disable"
 token_ttl: 1h
 
 grpc:
@@ -9,6 +9,6 @@ grpc:
   timeout: 10h
 redis:
   host: "redis-master:6379"
-  password: "Yd^TpK*#)Hfn1{V[LUWs*"
+  password: "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A"
   db: 0
   port: 6379
