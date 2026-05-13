@@ -58,6 +58,7 @@ function Herozone() {
       .then((res) => res.json())
       .then((data) => {
         console.log("JWT Token получен");
+        alert("JWT Token:" + data.token);
         localStorage.setItem("jwt", data.token);
       })
       .catch((err) => {
