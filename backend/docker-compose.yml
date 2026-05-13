@@ -7,7 +7,7 @@ services:
     mem_limit: 512m
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A
+      POSTGRES_PASSWORD: 1ux35qBk4YgCMsd7eg4ju
       POSTGRES_DB: aurora
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -26,7 +26,7 @@ services:
     mem_limit: 512m
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A
+      POSTGRES_PASSWORD: 1ux35qBk4YgCMsd7eg4ju
       POSTGRES_DB: parser
     volumes:
       - postgres_parser_data:/var/lib/postgresql/data
@@ -47,8 +47,8 @@ services:
       redis-server
       --bind 0.0.0.0
       --protected-mode no
-      --requirepass "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A"
-      --masterauth "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A"
+      --requirepass "1ux35qBk4YgCMsd7eg4ju"
+      --masterauth "1ux35qBk4YgCMsd7eg4ju"
       --appendonly yes
       --appendfsync everysec
     volumes:
@@ -59,7 +59,7 @@ services:
           "CMD",
           "redis-cli",
           "-a",
-          "Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A",
+          "1ux35qBk4YgCMsd7eg4ju",
           "ping",
         ]
       interval: 5s
@@ -126,7 +126,7 @@ services:
       - "44044:44044"
     environment:
       - ENV=prod
-      - DATABASE_URL=postgres://postgres:Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A@postgres:5432/aurora?sslmode=disable
+      - DATABASE_URL=postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable
     depends_on:
       postgres:
         condition: service_healthy
@@ -187,14 +187,14 @@ services:
       - ENV=prod
       - PYTHONPATH=/app
       - ENV_PATH=/app/config/config.env
-      - DATABASE_URL=postgres://postgres:Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A@postgres-parser:5432/parser?sslmode=disable
+      - DATABASE_URL=postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres-parser:5432/parser?sslmode=disable
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=telegram_posts
       - DB_HOST=postgres-parser
       - DB_PORT=5432
       - DB_NAME=parser
       - DB_USER=postgres
-      - DB_PASSWORD=Yd%5ETpK%2A%23%29Hfn1%7BV%5BLUWs%2A
+      - DB_PASSWORD=1ux35qBk4YgCMsd7eg4ju
       - PROXY_HOST=127.0.0.1
       - PROXY_PORT=10808
     extra_hosts:
