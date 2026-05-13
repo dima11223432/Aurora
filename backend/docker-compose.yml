@@ -14,8 +14,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 10
+      start-period: 30s
     networks:
       - aurora-network
 
@@ -33,8 +34,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
-      timeout: 5s
-      retries: 5
+      timeout: 10s
+      retries: 10
+      start-period: 30s
     networks:
       - aurora-network
 
@@ -55,9 +57,10 @@ services:
       - redis_master_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "-a", "1ux35qBk4YgCMsd7eg4ju", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start-period: 30s
     networks:
       - aurora-network
 
