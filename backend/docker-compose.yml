@@ -7,10 +7,8 @@ services:
     mem_limit: 512m
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: Yd^TpK*#)Hfn1{V[LUWs*
       POSTGRES_DB: aurora
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -28,10 +26,8 @@ services:
     mem_limit: 512m
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: pass
+      POSTGRES_PASSWORD: Yd^TpK*#)Hfn1{V[LUWs*
       POSTGRES_DB: parser
-    ports:
-      - "5433:5432"
     volumes:
       - postgres_parser_data:/var/lib/postgresql/data
     healthcheck:
@@ -51,16 +47,14 @@ services:
       redis-server
       --bind 0.0.0.0
       --protected-mode no
-      --requirepass "1111"
-      --masterauth "1111"
+      --requirepass "Yd^TpK*#)Hfn1{V[LUWs*"
+      --masterauth "Yd^TpK*#)Hfn1{V[LUWs*"
       --appendonly yes
       --appendfsync everysec
-    ports:
-      - "6379:6379"
     volumes:
       - redis_master_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "1111", "ping"]
+      test: ["CMD", "redis-cli", "-a", "Yd^TpK*#)Hfn1{V[LUWs*", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -74,8 +68,6 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    ports:
-      - "2181:2181"
     networks:
       - aurora-network
 
@@ -84,8 +76,6 @@ services:
     container_name: kafka
     depends_on:
       - zookeeper
-    ports:
-      - "9092:9092"
     environment:
       KAFKA_HEAP_OPTS: "-Xms256M -Xmx256M"
       KAFKA_BROKER_ID: 1
@@ -129,7 +119,7 @@ services:
       - "44044:44044"
     environment:
       - ENV=prod
-      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
+      - DATABASE_URL=postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres:5432/aurora?sslmode=disable
     depends_on:
       postgres:
         condition: service_healthy
@@ -190,14 +180,14 @@ services:
       - ENV=prod
       - PYTHONPATH=/app
       - ENV_PATH=/app/config/config.env
-      - DATABASE_URL=postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable
+      - DATABASE_URL=postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres-parser:5432/parser?sslmode=disable
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC=telegram_posts
       - DB_HOST=postgres-parser
       - DB_PORT=5432
       - DB_NAME=parser
       - DB_USER=postgres
-      - DB_PASSWORD=pass
+      - DB_PASSWORD=Yd^TpK*#)Hfn1{V[LUWs*
       - PROXY_HOST=127.0.0.1
       - PROXY_PORT=10808
     extra_hosts:

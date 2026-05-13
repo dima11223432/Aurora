@@ -1,6 +1,6 @@
 env: "local"
 
-storage_pass: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
+storage_pass: "postgres://postgres:Yd^TpK*#)Hfn1{V[LUWs*@postgres:5432/aurora?sslmode=disable"
 test_postgres_dns: "postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable"
 token_ttl: 1h
 
