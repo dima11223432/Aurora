@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { routes } from "./config/api";
 import Channel from "./BaseChannelCard";
@@ -226,30 +226,19 @@ const Shtora = () => {
   }, [isLoggedIn]);
 
   return (
-   <div className="relative z-50" style={{ position: 'relative', top: 0, left: 0 }}>
+    <div className="fixed top-4 left-4 z-50">
       <button
         onClick={() => setIsOpen((prev) => !prev)}
-        className="text-white font-bold py-2 px-5 rounded-xl shadow-2xl focus:outline-none transition-all duration-300 hover:scale-105 hover:shadow-blue-500/40"
-        style={{
-        background: "linear-gradient(to right, #208390, #36DEF4)",
-        backdropFilter: "blur(2px)",
-        border: "none",
-        cursor: "pointer",
-        }}
-        onMouseEnter={(e) =>
-        (e.target.style.background = "linear-gradient(to right, #6bedfeff, #54f1ffff)")
-      }
-      onMouseLeave={(e) =>
-      (e.target.style.background = "linear-gradient(to right, #208390, #36DEF4)")
-    }
-    >
-  {isOpen ? "Скрыть ТГК" : "Показать ТГК"}
-</button>
+        className="bg-gradient-to-r from-cyan-300 via-cyan-400 to-cyan-500 hover:from-cyan-300 hover:to-cyan-600 text-white font-bold py-2 px-5 rounded-xl shadow-2xl focus:outline-none transition-all duration-300 hover:scale-105 hover:shadow-cyan-500/40"
+        style={{ backdropFilter: "blur(2px)" }}
+      >
+        {isOpen ? "Скрыть" : "Каналы"}
+      </button>
       <div
-        className={`mt-2 w-72 max-w-xs ${isOpen ? "shtora-animate-in" : "shtora-animate-out pointer-events-none opacity-0"} bg-gray-900/90 rounded-2xl shadow-2xl border border-blue-700 p-5 absolute left-0 top-14 transition-all duration-500 backdrop-blur-xl`}
+        className={`mt-2 w-72 max-w-xs ${isOpen ? "shtora-animate-in" : "shtora-animate-out pointer-events-none opacity-0"} bg-gray-900/90 rounded-2xl shadow-2xl border border-cyan-400 p-5 absolute left-0 top-14 transition-all duration-500 backdrop-blur-xl`}
         style={{ boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)" }}
       >
-        <h3 className="text-xl font-bold text-blue-400 mb-3 drop-shadow">
+        <h3 className="text-xl font-bold text-cyan-400 mb-3 drop-shadow">
           Каналы для парсинга
         </h3>
         <ul className="max-h-60 overflow-y-auto space-y-1">
@@ -329,21 +318,21 @@ const Shtora = () => {
         )} */}
       </div>
       <style>{`
-				.shtora-animate-in {
-					opacity: 1;
-					pointer-events: auto;
-					transform: translateY(0) scale(1);
-					filter: drop-shadow(0 8px 32px rgba(31,38,135,0.37));
-					transition: opacity 0.5s cubic-bezier(.4,2,.6,1), transform 0.5s cubic-bezier(.4,2,.6,1);
-				}
-				.shtora-animate-out {
-					opacity: 0;
-					pointer-events: none;
-					transform: translateY(-30px) scale(0.95);
-					filter: blur(2px);
-					transition: opacity 0.4s, transform 0.4s, filter 0.4s;
-				}
-			`}</style>
+        .shtora-animate-in {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0) scale(1);
+          filter: drop-shadow(0 8px 32px rgba(31,38,135,0.37));
+          transition: opacity 0.5s cubic-bezier(.4,2,.6,1), transform 0.5s cubic-bezier(.4,2,.6,1);
+        }
+        .shtora-animate-out {
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(-30px) scale(0.95);
+          filter: blur(2px);
+          transition: opacity 0.4s, transform 0.4s, filter 0.4s;
+        }
+      `}</style>
     </div>
   );
 };
