@@ -4,6 +4,7 @@ import { routes } from "./config/api";
 import Channel from "./BaseChannelCard";
 import BaseChannelCard from "./BaseChannelCard";
 import UserCustomChannelCard from "./UserCustomChannelCard";
+import { useNavigate } from "react-router-dom";
 
 const Shtora = () => {
   const [parsingChannels, setParsingChannels] = useState({});
@@ -15,11 +16,15 @@ const Shtora = () => {
     [],
   );
   const [isAddingChannel, setIsAddingChannel] = useState(false);
+  const navigate = useNavigate();
 
   const getAllUserCustomParsingChannels = async () => {
     const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) return;
-    setIsLoggedIn(true);
+    if (!TOKEN) {
+      navigate("/404");
+      return;
+    }
+
     try {
       const responce = await axios.get(routes.getAllUserCustomParsingChannels, {
         headers: {
@@ -36,8 +41,10 @@ const Shtora = () => {
 
   const addNewUserCustomParsingChannelRequest = async (channelUsername) => {
     const TOKEN = localStorage.getItem("token");
-    if (!TOKEN || !channelUsername.trim()) return;
-    setIsLoggedIn(true);
+    if (!TOKEN || !channelUsername.trim()) {
+      navigate("/404");
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -106,8 +113,11 @@ const Shtora = () => {
 
   const deleteUserCustomParsingChannelRequest = async (channelUsername) => {
     const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) return;
-    setIsLoggedIn(true);
+    if (!TOKEN) {
+      navigate("/404");
+      return;
+    }
+
     try {
       const resp = axios.post(
         routes.deleteUserCustomParsingChannel,
@@ -130,8 +140,11 @@ const Shtora = () => {
 
   const deletePriorityChannelsRequest = async (channels) => {
     const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) return;
-    setIsLoggedIn(true);
+    if (!TOKEN) {
+      navigate("/404");
+      return;
+    }
+
     try {
       const responce = await axios.post(
         routes.deletePriorityChannels,
@@ -149,8 +162,11 @@ const Shtora = () => {
 
   const setPriorityChannelsRequest = async (channels) => {
     const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) return;
-    setIsLoggedIn(true);
+    if (!TOKEN) {
+      navigate("/404");
+      return;
+    }
+
     try {
       const response = await fetch(routes.setPriorityChannels, {
         method: "POST",
@@ -186,7 +202,10 @@ const Shtora = () => {
   useEffect(() => {
     const fetchParsingChannels = async () => {
       try {
-        if (!isLoggedIn) return;
+        if (!isLoggedIn) {
+          navigate("/404");
+          return;
+        }
         const token = localStorage.getItem("token");
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,

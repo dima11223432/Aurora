@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
 import { routes } from "./config/api";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
   const [parsingChannels, setParsingChannels] = useState([]);
@@ -9,12 +10,41 @@ export default function AdminPanel() {
   const [addedChannelCategory, setAddedChannelCategory] = useState("");
   const [deletedChannel, setDeletedChannel] = useState("");
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isAdmin = () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/404");
+          return;
+        }
+        const resp = axios.post(routes.isAdmin, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        if (resp.data.is_admin === true) {
+          setIsLoggedIn(true);
+        } else {
+          navigate("/404");
+          return;
+        }
+        return resp;
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    isAdmin();
+  }, []);
 
   useEffect(() => {
     const fetchParsingChannels = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) return;
+        if (!token) {
+          navigate("/404");
+          return;
+        }
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -39,7 +69,10 @@ export default function AdminPanel() {
   const AddNewParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        navigate("/404");
+        return;
+      }
       console.log(
         "Adding new parsing channel as admin",
         addedChannel,
@@ -58,7 +91,10 @@ export default function AdminPanel() {
   const DeleteParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        navigate("/404");
+        return;
+      }
       axios.post(
         routes.deleteDefaultParsingChannel,
         { channel_username: deletedChannel },

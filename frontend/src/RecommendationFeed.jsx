@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Shtora from "./Shtora";
 import { routes } from "./config/api";
 import { TonConnectButton } from "@tonconnect/ui-react";
+import { useNavigate } from "react-router-dom";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -14,6 +15,7 @@ export default function RecommendationFeed() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
   const fetchPosts = async () => {
     if (isLoading || !hasMore) return;
 
@@ -21,7 +23,10 @@ export default function RecommendationFeed() {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        navigate("/404");
+        return;
+      }
       setIsLoggedIn(true);
       const response = await axios.post(
         routes.getRecommendatedPosts,
