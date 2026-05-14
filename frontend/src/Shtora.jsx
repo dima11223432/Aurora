@@ -206,7 +206,7 @@ const Shtora = () => {
     const fetchParsingChannels = async () => {
       try {
         if (!isLoggedIn) {
-          navigate("/404");
+          // navigate("/404");
           return;
         }
         const token = localStorage.getItem("token");
