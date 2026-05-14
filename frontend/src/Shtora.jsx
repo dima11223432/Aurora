@@ -24,7 +24,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const responce = await axios.get(routes.getAllUserCustomParsingChannels, {
         headers: {
@@ -45,7 +45,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const response = await axios.post(
         routes.addNewUserCustomParsingChannel,
@@ -89,7 +89,10 @@ const Shtora = () => {
   };
   const getUserPriorityChannels = async () => {
     const TOKEN = localStorage.getItem("token");
-    if (!TOKEN) return;
+    if (!TOKEN) {
+      navigate("/404");
+      return;
+    }
     setIsLoggedIn(true);
     try {
       const response = await fetch(routes.getUserPriorityChannels, {
@@ -117,7 +120,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const resp = axios.post(
         routes.deleteUserCustomParsingChannel,
@@ -144,7 +147,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const responce = await axios.post(
         routes.deletePriorityChannels,
@@ -166,7 +169,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const response = await fetch(routes.setPriorityChannels, {
         method: "POST",
