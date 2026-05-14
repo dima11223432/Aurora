@@ -82,7 +82,7 @@ const Shtora = () => {
   }, [isLoggedIn]);
 
   return (
-    <div className="fixed top-4 left-4 z-50">
+   <div className="relative z-50" style={{ position: 'relative', top: 0, left: 0 }}>
       <button
         onClick={() => setIsOpen((prev) => !prev)}
         className="text-white font-bold py-2 px-5 rounded-xl shadow-2xl focus:outline-none transition-all duration-300 hover:scale-105 hover:shadow-blue-500/40"
