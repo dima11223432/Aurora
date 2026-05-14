@@ -15,7 +15,7 @@ export default function RecommendationFeed() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const fetchPosts = async () => {
     if (isLoading || !hasMore) return;
 
@@ -24,7 +24,7 @@ export default function RecommendationFeed() {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        // navigate("/404");
+        navigate("/404");
         return;
       }
       setIsLoggedIn(true);

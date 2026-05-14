@@ -205,11 +205,11 @@ const Shtora = () => {
   useEffect(() => {
     const fetchParsingChannels = async () => {
       try {
-        if (!isLoggedIn) {
-          // navigate("/404");
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("404");
           return;
         }
-        const token = localStorage.getItem("token");
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           {
