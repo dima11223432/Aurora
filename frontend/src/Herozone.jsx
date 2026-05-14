@@ -28,6 +28,7 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
+      navigate("/404");
       setTimeout(() => {
         setError("Не удалось получить данные пользователя");
 
@@ -36,7 +37,6 @@ function Herozone() {
       return;
     }
 
-    console.log("Telegram user data:", user);
     setTimeout(() => {
       setIsLoading(true);
     }, 0);
@@ -58,8 +58,7 @@ function Herozone() {
       .then((res) => res.json())
       .then((data) => {
         console.log("JWT Token получен");
-        alert("JWT Token:" + data.token);
-        localStorage.setItem("jwt", data.token);
+        localStorage.setItem("token", data.token);
       })
       .catch((err) => {
         console.error("Login API error:", err);

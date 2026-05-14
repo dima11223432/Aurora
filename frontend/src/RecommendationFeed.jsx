@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import Shtora from "./Shtora";
 import { routes } from "./config/api";
 import { TonConnectButton } from "@tonconnect/ui-react";
+import { useNavigate } from "react-router-dom";
 export default function RecommendationFeed() {
   const [recommendatedPosts, setRecommendedPosts] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
