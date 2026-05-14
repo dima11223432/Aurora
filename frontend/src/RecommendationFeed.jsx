@@ -15,6 +15,7 @@ export default function RecommendationFeed() {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
+  const navigate = useNavigate();
   const fetchPosts = async () => {
     if (isLoading || !hasMore) return;
 
@@ -22,7 +23,10 @@ export default function RecommendationFeed() {
 
     try {
       const token = localStorage.getItem("token");
-      if (!token) return;
+      if (!token) {
+        navigate("/404");
+        return;
+      }
       setIsLoggedIn(true);
       const response = await axios.post(
         routes.getRecommendatedPosts,
