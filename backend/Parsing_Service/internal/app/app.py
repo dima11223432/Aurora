@@ -1,21 +1,18 @@
-# app.py
-import asyncio
-from dotenv import load_dotenv
-import os
+"""Main application entry point."""
 from pathlib import Path
 
-from internal.storage.main import ChannelStorage
+from dotenv import load_dotenv
 
-from ..domains.domains import Telegram_Post
-from ..brokers.kafka import KafkaController
-from ..services.parse_service import ParserService
-from ..config.config import Config
+from internal.config.config import Config
+from internal.services.parse_service import ParserService
+from internal.storage.main import ChannelStorage
 
 env_path = Path(__file__).parent / "config" / "config.env"
 load_dotenv(env_path)
 
 
 class App:
+    """Main application orchestrator."""
 
     def __init__(self, logger, config: Config, storage: ChannelStorage):
         self.log = logger
@@ -28,17 +25,20 @@ class App:
         self.storage = storage
 
     async def initialize(self):
-        self.parser_service = ParserService(self.log, self.config)
+        """Initialize parser service and connect to Telegram."""
+        channels = list(self.storage.get_all_channels())
+        self.parser_service = ParserService(self.log, self.config, channels)
         self.log.debug("ParserService initialized")
         self.log.debug("Connectiong to telegram...")
 
         await self.parser_service.connect()
 
     async def run_monitoring(self):
-        self.log.info(f"run monitoring")
-        channels = list(self.storage.get_all_channels())
-        await self.parser_service.start_monitoring(channels)
+        """Run channel monitoring."""
+        self.log.info("run monitoring")
+        await self.parser_service.start_monitoring()
 
     async def run(self):
+        """Run the application."""
         await self.initialize()
         await self.run_monitoring()

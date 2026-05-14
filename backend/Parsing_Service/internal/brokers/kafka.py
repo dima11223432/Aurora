@@ -1,15 +1,19 @@
-from confluent_kafka import Producer, Consumer, TopicPartition
-from ..domains.domains import Telegram_Post
-from dotenv import load_dotenv
-import os
+"""Kafka producer and consumer controller."""
 import json
-import traceback
+import os
+
+from confluent_kafka import Consumer, Producer, TopicPartition
+from dotenv import load_dotenv
+
+from internal.domains.domains import TelegramPost
 
 env_path = os.path.join(os.path.dirname(__file__), "../../config/config.env")
 load_dotenv(env_path)
 
 
 class KafkaController:
+    """Kafka controller for producing and consuming messages."""
+
     def __init__(self, logger):
         self.log = logger
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
@@ -37,14 +41,16 @@ class KafkaController:
             raise
 
     def _delivery_report(self, err, msg):
+        """Callback for message delivery reports."""
         if err is not None:
             self.log.error(f"Message delivery failed: {err}")
         else:
             self.log.debug(f"Message delivered to {msg.topic()} [{msg.partition()}]")
 
     def send_message(
-        self, topic: str, message: Telegram_Post, immediate: bool = False
+        self, topic: str, message: TelegramPost, immediate: bool = False
     ) -> None:
+        """Send message to Kafka topic."""
         try:
             data = message.to_dict() if hasattr(message, "to_dict") else message
             self.producer.produce(
@@ -61,6 +67,7 @@ class KafkaController:
             raise
 
     def _fetch_from_offsets(self, topic: str, target_type: str = "last") -> dict:
+        """Fetch messages from first or last offsets."""
         result = {}
         try:
             metadata = self.consumer.list_topics(topic, timeout=10.0)
@@ -84,7 +91,7 @@ class KafkaController:
                         val = msg.value().decode("utf-8")
                         try:
                             val = json.loads(val)
-                        except:
+                        except Exception:
                             pass
 
                         result[tp.partition] = {
@@ -97,7 +104,9 @@ class KafkaController:
             self.consumer.unassign()
 
     def get_last_message(self, topic: str) -> dict:
+        """Get last message from topic."""
         return self._fetch_from_offsets(topic, "last")
 
     def get_first_message(self, topic: str) -> dict:
+        """Get first message from topic."""
         return self._fetch_from_offsets(topic, "first")

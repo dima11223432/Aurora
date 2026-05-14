@@ -4,6 +4,7 @@ import "errors"
 
 var (
 	ErrUserExists      = errors.New("user already exists")
+	ErrIsEmpty         = errors.New("data is empty")
 	ErrUserNotFound    = errors.New("user not found")
 	ErrAppNotFound     = errors.New("app not found")
 	ErrCacheMiss       = errors.New("cache miss")
