@@ -53,6 +53,8 @@ class App:
                 if msg.error():
                     self.logger.error(f"Error: {msg.error()}")
                     continue
+                result = None
+                payload = None
                 try:
                     raw = msg.value().decode("utf-8") if msg.value() else ""
                     try:
@@ -69,8 +71,8 @@ class App:
                     else:
                         context_text = str(payload)
                     self.logger.info(f"Received message from {topic}: {context_text}")
-                    result_raw = AI_handler(context_text)
-                    result = redact_recursive(result_raw)
+                    result = AI_handler(context_text)
+                    result = redact_recursive(result)
                     self.logger.info(f"Received AI result: {result}")
                     ai_data = result.get("ds", {})
                     ai_answer = ai_data.get("answer", "")
@@ -98,7 +100,6 @@ class App:
                     final_json = json.dumps(send_payload, ensure_ascii=False)
                     self.logger.info(f"Final payload: {final_json}")
                     # send_payload = {"original_offset": msg.offset(), "result": result}
-                    # NOTE: send payload to kafka
                     kafka_controller.send_batch_messages({result_topic: send_payload})
                     self.logger.info(f"Sent AI result to {result_topic}")
 
