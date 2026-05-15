@@ -69,8 +69,8 @@ class App:
                     else:
                         context_text = str(payload)
                     self.logger.info(f"Received message from {topic}: {context_text}")
-                    result = AI_handler(context_text)
-                    result = redact_recursive(result)
+                    result_raw = AI_handler(context_text)
+                    result = redact_recursive(result_raw)
                     self.logger.info(f"Received AI result: {result}")
                     ai_data = result.get("ds", {})
                     ai_answer = ai_data.get("answer", "")
