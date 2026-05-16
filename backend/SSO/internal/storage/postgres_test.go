@@ -19,13 +19,11 @@ type PostgresTestSuite struct {
 
 func (p *PostgresTestSuite) SetupTest() {
 
-	s, err := postgres.New("postgres://postgres:pass@localhost:5432/test_auth?sslmode=disable")
+	s, err := postgres.New("postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
 	p.storage = s
-
-	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
 
 }
 
