@@ -6,6 +6,7 @@ import ErrorPage from "./ErrorPage";
 import Herozone from "./Herozone";
 import RecommendationFeed from "./RecommendationFeed";
 import AdminPanel from "./AdminPanel";
+import Settings from "./Settings";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/" element={<Herozone />} />
         <Route path="/analytics" element={<Analytics />} />
         <Route path="/feed" element={<RecommendationFeed />} />
+        <Route path="/settings" element={<Settings />}></Route>
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/404" element={<ErrorPage />}></Route>
       </Routes>
