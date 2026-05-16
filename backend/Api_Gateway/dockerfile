@@ -1,5 +1,7 @@
 FROM golang:1.25-alpine
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirror.yandex.ru/g' /etc/apk/repositories
+
 RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
