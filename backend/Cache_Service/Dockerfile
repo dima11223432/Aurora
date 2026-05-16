@@ -1,6 +1,6 @@
 FROM golang:1.25-alpine AS builder
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/dl-cdn.alpinelinux.org/g' /etc/apk/repositories || true
+RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
 RUN apk add --no-cache git ca-certificates tzdata && \
     update-ca-certificates
