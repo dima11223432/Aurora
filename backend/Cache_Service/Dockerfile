@@ -23,6 +23,7 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 
 # ===== Stage 2: Final image =====
 FROM alpine:3.19
+RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
 RUN apk add --no-cache ca-certificates tzdata postgresql-client
 
