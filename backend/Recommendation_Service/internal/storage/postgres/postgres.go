@@ -91,6 +91,9 @@ func (s *Storage) IsChannelExistsInDefaultParsingChannels(ctx context.Context, c
 	var channelName string
 	err := s.parserDB.QueryRowContext(ctx, q, channel).Scan(&channelName)
 	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return false, nil
+		}
 		return false, fmt.Errorf("%s: %w", op, err)
 	}
 	return true, nil
