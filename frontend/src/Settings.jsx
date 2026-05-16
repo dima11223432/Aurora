@@ -4,17 +4,18 @@ import { routes } from "./config/api";
 import Footer from "./Footer";
 import UserCustomChannelCard from "./UserCustomChannelCard";
 import BaseChannelCard from "./BaseChannelCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Settings() {
+  const navigate = useNavigate();
   const [addedChannel, setAddedChannel] = useState("");
-  const [deletedChannel, setDeletedChannel] = useState("");
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const [parsingChannels, setParsingChannels] = useState({});
   const [selectedChannels, setSelectedChannels] = useState([]);
   const [userCustomParsingChannels, setUserCustomParsingChannels] = useState(
     [],
   );
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const getAllUserCustomParsingChannels = async () => {
     const TOKEN = localStorage.getItem("token");
@@ -44,7 +45,7 @@ export default function Settings() {
           "Content-Type": "application/json",
         },
       });
-      const data = response.json ? await response.json() : [];
+      const data = await response.json();
       const userPriorityChannels = data.channels || [];
       setSelectedChannels(userPriorityChannels);
       return data;
@@ -59,22 +60,19 @@ export default function Settings() {
     if (!TOKEN) return;
 
     try {
-      const resp = axios.post(
+      const resp = await axios.post(
         routes.deleteUserCustomParsingChannel,
         { channel_username: channelUsername },
-
-        {
-          headers: {
-            Authorization: `Bearer ${TOKEN}`,
-          },
-        },
+        { headers: { Authorization: `Bearer ${TOKEN}` } },
       );
 
-      const data = await resp.data;
+      const data = resp.data;
       console.log("Успешно удален канал", data);
+
+      await getAllUserCustomParsingChannels();
       return data;
     } catch (e) {
-      console.log(e);
+      console.log("Ошибка при удалении кастомного канала:", e);
     }
   };
 
@@ -92,23 +90,6 @@ export default function Settings() {
       await getAllUserCustomParsingChannels();
     } catch (e) {
       console.error("Ошибка при добавлении канала:", e);
-    }
-  };
-
-  const DeleteParsingChannel = async () => {
-    const TOKEN = localStorage.getItem("token");
-    if (!TOKEN || !deletedChannel) return;
-
-    try {
-      await axios.post(
-        routes.deleteUserCustomParsingChannel,
-        { channel_username: deletedChannel },
-        { headers: { Authorization: `Bearer ${TOKEN}` } },
-      );
-      setDeletedChannel("");
-      await getAllUserCustomParsingChannels();
-    } catch (e) {
-      console.error("Ошибка при удалении канала:", e);
     }
   };
 
@@ -166,16 +147,21 @@ export default function Settings() {
 
     const fetchAllData = async () => {
       try {
+        setIsLoading(true);
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           { headers: { Authorization: `Bearer ${token}` } },
         );
         setParsingChannels(resp.data.channels || {});
 
-        await getUserPriorityChannels();
-        await getAllUserCustomParsingChannels();
+        await Promise.all([
+          getUserPriorityChannels(),
+          getAllUserCustomParsingChannels(),
+        ]);
       } catch (e) {
         console.error("Ошибка инициализации данных:", e);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -183,6 +169,16 @@ export default function Settings() {
   }, []);
 
   const hasParsingChannels = Object.keys(parsingChannels).length > 0;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#0A0F1F] flex items-center justify-center">
+        <p className="text-cyan-400 text-lg animate-pulse">
+          Загрузка настроек...
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6 pb-24 sm:pb-32 font-sans">
@@ -243,11 +239,11 @@ export default function Settings() {
             userCustomParsingChannels.length > 0 ? (
               <ul
                 className="grid grid-cols-1 gap-3 max-h-52 overflow-y-auto pr-2 
-                   scrollbar-thin scrollbar-thumb-[#0fd2f5]/20 scrollbar-track-transparent 
-                   [&::-webkit-scrollbar]:w-1.5
-                   [&::-webkit-scrollbar-thumb]:bg-[#0fd2f5]/30 
-                   [&::-webkit-scrollbar-thumb]:rounded-full
-                   [&::-webkit-scrollbar-track]:bg-transparent"
+                           scrollbar-thin scrollbar-thumb-[#0fd2f5]/20 scrollbar-track-transparent 
+                           [&::-webkit-scrollbar]:w-1.5
+                           [&::-webkit-scrollbar-thumb]:bg-[#0fd2f5]/30 
+                           [&::-webkit-scrollbar-thumb]:rounded-full
+                           [&::-webkit-scrollbar-track]:bg-transparent"
               >
                 {userCustomParsingChannels.map((channel, idx) => {
                   const channelName =
