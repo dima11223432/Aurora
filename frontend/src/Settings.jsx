@@ -157,26 +157,6 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    const login = async () => {
-      try {
-        const res = await axios.post(routes.login, {
-          telegram_id: 123456789,
-          username: "john_doe",
-          first_name: "John",
-          last_name: "Doe",
-          is_admin: false,
-          app_id: 1,
-        });
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
-      } catch (e) {
-        console.error("Login error:", e);
-      }
-    };
-    login();
-  }, []);
-
-  useEffect(() => {
     if (!isLoggedIn) return;
 
     const fetchAllData = async () => {
