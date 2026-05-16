@@ -157,17 +157,18 @@ export default function Settings() {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) return;
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/404");
+      return;
+    }
 
     const fetchAllData = async () => {
       try {
-        const token = localStorage.getItem("token");
-
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
+          { headers: { Authorization: `Bearer ${token}` } },
         );
         setParsingChannels(resp.data.channels || {});
 
@@ -179,7 +180,7 @@ export default function Settings() {
     };
 
     fetchAllData();
-  }, [isLoggedIn]);
+  }, []);
 
   const hasParsingChannels = Object.keys(parsingChannels).length > 0;
 
