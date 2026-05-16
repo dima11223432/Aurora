@@ -84,11 +84,31 @@ func (s *Storage) GetAllDefaultParsingChannels(ctx context.Context) ([]string, e
 
 }
 
+func (s *Storage) IsChannelExistsInDefaultParsingChannels(ctx context.Context, channel string) (bool, error) {
+	const op = "internal.storage.postgres.IsChannelExistsInDefaultParsingChannels"
+
+	q := `SELECT channel_username FROM default_channels WHERE channel_username = $1`
+	var channelName string
+	err := s.parserDB.QueryRowContext(ctx, q, channel).Scan(&channelName)
+	if err != nil {
+		return false, fmt.Errorf("%s: %w", op, err)
+	}
+	return true, nil
+}
+
 func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
 	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
 
-	err := s.AddNewParsingChannelWithoutDublicate(ctx, channel)
+	isExists, err := s.IsChannelExistsInDefaultParsingChannels(ctx, channel)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	if isExists {
+		return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+	}
+
+	err = s.AddNewParsingChannelWithoutDublicate(ctx, channel)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
