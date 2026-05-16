@@ -10,12 +10,12 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
 type AuthTestSuite struct {
 	suite.Suite
+
 	storage *postgres.Storage
 	service *auth.Auth
 }
@@ -142,18 +142,18 @@ func (s *AuthTestSuite) TestIsAdmin() {
 	}
 
 	_, err := s.service.Login(ctx, adminUser, 1)
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
 	_, err = s.service.Login(ctx, regularUser, 1)
-	assert.NoError(s.T(), err)
+	s.NoError(err)
 
 	isAdmin, err := s.service.IsAdmin(ctx, adminUser.Telegram_id)
-	assert.NoError(s.T(), err)
-	assert.True(s.T(), isAdmin)
+	s.NoError(err)
+	s.True(isAdmin)
 
 	isAdmin, err = s.service.IsAdmin(ctx, regularUser.Telegram_id)
-	assert.NoError(s.T(), err)
-	assert.False(s.T(), isAdmin)
+	s.NoError(err)
+	s.False(isAdmin)
 }
 
 func TestAuthSuite(t *testing.T) {
