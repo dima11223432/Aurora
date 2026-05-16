@@ -88,7 +88,7 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
 	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
 
-	err := s.AddNewParsingChannel(ctx, channel)
+	err := s.AddNewParsingChannelWithoutDublicate(ctx, channel)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
@@ -122,6 +122,19 @@ func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 		categories = append(categories, categoryName)
 	}
 	return categories, nil
+}
+
+func (s *Storage) AddNewParsingChannelWithoutDublicate(ctx context.Context, channel string) error {
+	const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
+	q := `INSERT INTO channels (username) VALUES ($1)`
+	_, err := s.parserDB.ExecContext(ctx, q, channel)
+	if err != nil {
+		if GetDublicateError(err) {
+			return nil
+		}
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
 }
 
 func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
