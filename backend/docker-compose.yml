@@ -172,7 +172,6 @@ services:
     build:
       context: ./Parsing_Service
       dockerfile: Dockerfile
-      network: host
     container_name: parsing-service
     restart: unless-stopped
     mem_limit: 512m

@@ -1,5 +1,10 @@
 FROM python:3.11-slim
 
+RUN echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4
+
+RUN sed -i 's/deb.debian.org/mirror.yandex.ru/g' /etc/apt/sources.list.d/debian.sources || \
+    sed -i 's/deb.debian.org/mirror.yandex.ru/g' /etc/apt/sources.list
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc libpq-dev wget unzip \
     && rm -rf /var/lib/apt/lists/* \
