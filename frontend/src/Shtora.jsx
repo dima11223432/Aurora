@@ -24,7 +24,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const responce = await axios.get(routes.getAllUserCustomParsingChannels, {
         headers: {
@@ -45,7 +45,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const response = await axios.post(
         routes.addNewUserCustomParsingChannel,
@@ -89,7 +89,11 @@ const Shtora = () => {
   };
   const getUserPriorityChannels = async () => {
     const TOKEN = localStorage.getItem("token");
-
+    if (!TOKEN) {
+      navigate("/404");
+      return;
+    }
+    setIsLoggedIn(true);
     try {
       const response = await fetch(routes.getUserPriorityChannels, {
         method: "GET",
@@ -116,7 +120,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const resp = axios.post(
         routes.deleteUserCustomParsingChannel,
@@ -143,7 +147,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const responce = await axios.post(
         routes.deletePriorityChannels,
@@ -165,7 +169,7 @@ const Shtora = () => {
       navigate("/404");
       return;
     }
-
+    setIsLoggedIn(true);
     try {
       const response = await fetch(routes.setPriorityChannels, {
         method: "POST",
@@ -199,33 +203,13 @@ const Shtora = () => {
   };
 
   useEffect(() => {
-    const login = async () => {
-      try {
-        const res = await axios.post(routes.login, {
-          telegram_id: 123456789,
-          username: "john_doe",
-          first_name: "John",
-          last_name: "Doe",
-          is_admin: false,
-          app_id: 1,
-        });
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
-      } catch (e) {
-        console.error("Login error:", e);
-      }
-    };
-    login();
-  }, []);
-
-  useEffect(() => {
     const fetchParsingChannels = async () => {
       try {
-        if (!isLoggedIn) {
-          navigate("/404");
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("404");
           return;
         }
-        const token = localStorage.getItem("token");
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           {
