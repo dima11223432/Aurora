@@ -1,6 +1,6 @@
-const API_BASE_URL = "http://localhost:8081";
-const API_BASE_URL_SECURE = "https://localhost:8081";
-const API_BASE_URL_NGROK = "https://27dc-213-176-17-134.ngrok-free.app";
+const API_BASE_URL = "";
+const API_BASE_URL_SECURE = "";
+const API_BASE_URL_NGROK = "";
 
 const routes = {
   login: `${API_BASE_URL}/v1/login`,
@@ -21,6 +21,8 @@ const routes = {
 
   addNewUserCustomParsingChannel: `${API_BASE_URL}/v1/add_new_user_custom_parsing_channel`,
   getAllUserCustomParsingChannels: `${API_BASE_URL}/v1/get_all_user_custom_parsing_channels`,
+
+  isAdmin: `${API_BASE_URL}/v1/is_admin`,
 };
 
 export { routes, API_BASE_URL, API_BASE_URL_SECURE, API_BASE_URL_NGROK };

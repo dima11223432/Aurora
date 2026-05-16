@@ -24,5 +24,4 @@ func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Durat
 	return &App{
 		GRPCapp: grpcapp,
 	}
-
 }

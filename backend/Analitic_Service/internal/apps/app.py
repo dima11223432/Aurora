@@ -53,6 +53,8 @@ class App:
                 if msg.error():
                     self.logger.error(f"Error: {msg.error()}")
                     continue
+                result = None
+                payload = None
                 try:
                     raw = msg.value().decode("utf-8") if msg.value() else ""
                     try:

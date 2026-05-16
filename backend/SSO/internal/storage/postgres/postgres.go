@@ -12,15 +12,15 @@ import (
 	pq "github.com/lib/pq"
 )
 
-var (
-	emptyValue = 0
-)
+const channelsArgMultiplier = 2
+
+var emptyValue = 0 //nolint:gochecknoglobals // sentinel value for zero check
 
 type Storage struct {
 	DB *sql.DB
 }
 
-// New creates a new instance of the Storage
+// New creates a new instance of the Storage.
 func New(storagePath string) (*Storage, error) {
 	const op = "internal.storage.postgres.new"
 
@@ -37,30 +37,29 @@ func New(storagePath string) (*Storage, error) {
 	}, nil
 }
 
-func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
+func (s *Storage) SetPriorityChannels(ctx context.Context, userID int64, channels []string) error {
 	const op = "storage.postgres.SetPriorityChannels"
 
 	if len(channels) == 0 {
 		return fmt.Errorf("%s: %w", op, storage.ErrChannelsEmpty)
 	}
 
-	query := `
-	INSERT INTO channels (user_id, channel_username) VALUES
-	`
+	var query strings.Builder
+	query.WriteString("INSERT INTO channels (user_id, channel_username) VALUES ")
 
-	args := make([]interface{}, 0, len(channels)*2)
+	args := make([]any, 0, len(channels)*channelsArgMultiplier)
 
 	for i, channel := range channels {
-		query += fmt.Sprintf("($%d, $%d)", i*2+1, i*2+2)
-		if i != len(channels)-1 {
-			query += ","
+		if i > 0 {
+			query.WriteString(",")
 		}
-		args = append(args, user_id, channel)
+		fmt.Fprintf(&query, "($%d, $%d)", i*channelsArgMultiplier+1, i*channelsArgMultiplier+channelsArgMultiplier)
+		args = append(args, userID, channel)
 	}
-	query += " ON CONFLICT (user_id, channel_username) DO NOTHING"
-	_, err := s.DB.ExecContext(ctx, query, args...)
+
+	query.WriteString(" ON CONFLICT (user_id, channel_username) DO NOTHING")
+	_, err := s.DB.ExecContext(ctx, query.String(), args...)
 	if err != nil {
-		fmt.Println(err.Error())
 		if isDuplicateError(err) {
 			return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
 		}
@@ -135,7 +134,6 @@ func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, 
 	)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-
 			return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
 		}
 		return models.User{}, fmt.Errorf("%s: %w", op, err)

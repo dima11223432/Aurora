@@ -5,8 +5,8 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-env_path = Path(__file__).parent.parent.parent / "config" / "config.env"
-load_dotenv(env_path)
+env_path = os.getenv("ENV_PATH", "/app/config/config.env")
+load_dotenv(env_path, override=True)
 
 
 class Config:

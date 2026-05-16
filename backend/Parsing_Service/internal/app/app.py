@@ -1,4 +1,5 @@
 """Main application entry point."""
+
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -30,8 +31,6 @@ class App:
         self.parser_service = ParserService(self.log, self.config, channels)
         self.log.debug("ParserService initialized")
         self.log.debug("Connectiong to telegram...")
-
-        await self.parser_service.connect()
 
     async def run_monitoring(self):
         """Run channel monitoring."""

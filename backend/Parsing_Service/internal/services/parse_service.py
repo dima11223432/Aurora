@@ -1,5 +1,8 @@
 """Telegram parser service for monitoring channels and sending posts to Kafka."""
+
 import os
+from asyncpg import TransactionIntegrityConstraintViolationError
+from asyncpg.connection import asyncio
 import socks
 
 from telethon import TelegramClient, events
@@ -34,11 +37,42 @@ class ParserService:
         """Connect to Telegram client."""
         if not self.client.is_connected():
             try:
+                self.client.flood_sleep_threshold = 24 * 3600
                 await self.client.start(self.phone_number)
                 self.log.success("Successfully connected to Telegram")
+                if not hasattr(self, "watchdog_task") or self.watchdog_task.done():
+                    self.watchdog_task = asyncio.create_task(self.watchdog())
             except Exception as e:
                 self.log.error(f"Connection failed: {e}")
                 raise
+
+    async def watchdog(self):
+        self.log.info("Starting watchdog...")
+        while True:
+            try:
+                if not self.client.is_connected():
+                    self.log.warning("Client disconnected, reconnecting...")
+                    await self.connect()
+                else:
+                    await asyncio.wait_for(self.client.get_me(), timeout=30)
+                    self.log.info("Client connected")
+            except asyncio.TimeoutError:
+                self.log.warning("Client disconnected, reconnecting...")
+                await self.reconnect()
+            except Exception as e:
+                self.log.error(f"Watchdog have founded error with connection: {e}")
+                await self.reconnect()
+            await asyncio.sleep(120)
+
+    async def reconnect(self):
+        try:
+            await self.client.disconnect()
+            await asyncio.sleep(5)
+            await self.connect()
+            self.log.success("Successfully reconnected to Telegram")
+        except Exception as e:
+            self.log.error(f"Reconnect failed: {e}")
+            raise
 
     async def _ensure_subscribed(self, channels):
         """Ensure account is subscribed to all channels."""

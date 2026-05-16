@@ -1,5 +1,7 @@
 FROM golang:1.25-alpine
 
+RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
+
 RUN apk add --no-cache git ca-certificates postgresql-client
 
 WORKDIR /app
@@ -11,11 +13,10 @@ COPY . .
 COPY ./config ./config
 COPY ./migrations ./migrations
 
-RUN go build -o main ./cmd/sso
+RUN go build -o sso ./cmd/sso
 RUN go build -o migrator ./cmd/migrator
 
-RUN chmod +x main migrator
-
+RUN chmod +x sso migrator
 
 RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
@@ -29,5 +30,5 @@ CMD ["sh", "-c", "\
   echo 'Running migrations...' && \
   ./migrator -db-dsn \"$DATABASE_URL\" -migrations-path ./migrations -migrations-table schema_migrations up && \
   echo 'Starting app...' && \
-  ./main --config ./config/local.yaml \
+  ./sso --config ./config/local.yaml \
 "]
