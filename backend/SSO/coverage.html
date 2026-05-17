@@ -1,0 +1,904 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>app: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">authService/internal/app/app.go (0.0%)</option>
+				
+				<option value="file1">authService/internal/app/grpc/app.go (0.0%)</option>
+				
+				<option value="file2">authService/internal/config/config.go (0.0%)</option>
+				
+				<option value="file3">authService/internal/grpc/auth/server.go (91.9%)</option>
+				
+				<option value="file4">authService/internal/grpc/grpcAuthMock.go (100.0%)</option>
+				
+				<option value="file5">authService/internal/lib/jwt/jwt.go (92.9%)</option>
+				
+				<option value="file6">authService/internal/services/auth/auth.go (70.8%)</option>
+				
+				<option value="file7">authService/internal/storage/postgres/postgres.go (84.9%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package app
+
+import (
+        grpcApp "authService/internal/app/grpc"
+        "authService/internal/services/auth"
+        "authService/internal/storage/postgres"
+        "log/slog"
+        "time"
+)
+
+type App struct {
+        GRPCapp *grpcApp.App
+}
+
+func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Duration) *App <span class="cov0" title="0">{
+        // TODO: implement
+        storage, err := postgres.New(storagePath)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov0" title="0">authService := auth.New(log, storage, storage, storage, tokenTTL)
+
+        grpcapp := grpcApp.New(log, authService, grpcPort)
+        return &amp;App{
+                GRPCapp: grpcapp,
+        }</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package grpcApp
+
+import (
+        grpcauth "authService/internal/grpc/auth"
+        "fmt"
+        "log/slog"
+        "net"
+
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/reflection"
+)
+
+type App struct {
+        log        *slog.Logger
+        gRPCServer *grpc.Server
+        port       int
+}
+
+func New(log *slog.Logger, authService grpcauth.Auth, port int) *App <span class="cov0" title="0">{
+        gRPCServer := grpc.NewServer()
+        grpcauth.Register(gRPCServer, authService)
+        reflection.Register(gRPCServer)
+
+        return &amp;App{
+                log:        log,
+                gRPCServer: gRPCServer,
+                port:       port,
+        }
+}</span>
+
+func (a *App) MustRun() <span class="cov0" title="0">{
+        if err := a.Run(); err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+}
+
+func (a *App) Run() error <span class="cov0" title="0">{
+        const op = "grpcApp.Run"
+        log := a.log.With(
+                slog.String("op", op),
+                slog.Int("port", a.port),
+        )
+
+        log.Info("starting gRPC server")
+
+        l, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to listen:%s, %w", op, err)
+        }</span>
+        <span class="cov0" title="0">log.Info("gRPC server listening", slog.String("addr", l.Addr().String()))
+
+        if err := a.gRPCServer.Serve(l); err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("%s, %w", op, err)
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (a *App) Stop() <span class="cov0" title="0">{
+        const op = "grpcApp"
+
+        a.log.With(slog.String("op", op),
+                slog.Int("port", a.port),
+        )
+        a.gRPCServer.GracefulStop()
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package config
+
+import (
+        "flag"
+        "os"
+        "time"
+
+        "github.com/ilyakaznacheev/cleanenv"
+)
+
+type Config struct {
+        Env             string        `yaml:"env" env-default:"local"`
+        StoragePass     string        `yaml:"storage_pass" env-required:"true"`
+        TestPostgresDNS string        `yaml:"test_postgres_dns" env-required:"true"`
+        TokenTTL        time.Duration `yaml:"token_ttl" env-required:"true"`
+        GRPC            GRPCConfig    `yaml:"grpc"`
+}
+
+type GRPCConfig struct {
+        Port    int           `yaml:"port"`
+        TimeOut time.Duration `yaml:"timeout"`
+}
+
+func MustLoad() *Config <span class="cov0" title="0">{
+        path := fetchConfigPath()
+        if path == "" </span><span class="cov0" title="0">{
+                panic("config path is empty")</span>
+        }
+        <span class="cov0" title="0">return MustLoadByPath(path)</span>
+}
+
+func MustLoadByPath(configPath string) *Config <span class="cov0" title="0">{
+        if _, err := os.Stat(configPath); os.IsNotExist(err) </span><span class="cov0" title="0">{
+                panic("config does not exists" + configPath)</span>
+        }
+        <span class="cov0" title="0">var cfg Config
+        if err := cleanenv.ReadConfig(configPath, &amp;cfg); err != nil </span><span class="cov0" title="0">{
+                panic("cant read config" + err.Error())</span>
+        }
+        <span class="cov0" title="0">return &amp;cfg</span>
+}
+
+func fetchConfigPath() string <span class="cov0" title="0">{
+        var res string
+        flag.StringVar(&amp;res, "config", "", "path-to-config")
+        flag.Parse()
+        if res == "" </span><span class="cov0" title="0">{
+                res = os.Getenv("CONFIG_PATH")
+        }</span>
+        <span class="cov0" title="0">return res</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package grpcauth
+
+import (
+        "authService/internal/domain/models"
+        "authService/internal/services/auth"
+        "authService/internal/storage"
+        "context"
+        "errors"
+
+        ssov1 "authService/api/gen/v1"
+
+        "google.golang.org/grpc"
+        "google.golang.org/grpc/codes"
+        "google.golang.org/grpc/status"
+)
+
+type Auth interface {
+        Login(ctx context.Context, user models.User, appId int) (token string, err error)
+        IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
+        SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error
+        DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error
+}
+
+type serverAPI struct {
+        ssov1.UnimplementedAuthServiceServer
+        auth Auth
+}
+
+const (
+        emptyValue = 0
+)
+
+func Register(gRPC *grpc.Server, auth Auth) <span class="cov0" title="0">{
+        ssov1.RegisterAuthServiceServer(gRPC, &amp;serverAPI{
+                auth: auth,
+        })
+}</span>
+
+func NewServerAPI(auth Auth) *serverAPI <span class="cov8" title="1">{
+        return &amp;serverAPI{
+                auth: auth,
+        }
+}</span>
+
+func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.LoginResponse, error) <span class="cov8" title="1">{
+
+        if err := validatelogin(req); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">token, err := s.auth.Login(ctx, models.User{
+                Telegram_id: req.GetTelegramId(),
+                Username:    req.GetUsername(),
+                First_name:  req.GetFirstName(),
+                Last_name:   req.GetLastName(),
+        }, int(req.GetAppId()))
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, auth.ErrInvalidCredentials) </span><span class="cov8" title="1">{
+
+                        return nil, status.Error(codes.InvalidArgument, "invalid credentials")
+                }</span>
+                <span class="cov0" title="0">return nil, status.Error(codes.Internal, "internal error")</span>
+        }
+        <span class="cov8" title="1">return &amp;ssov1.LoginResponse{
+                Token: token,
+        }, nil</span>
+
+}
+
+func (s *serverAPI) SetPriorityChannels(
+        ctx context.Context,
+        req *ssov1.SetPriorityChannelsRequest) (
+        *ssov1.SetPriorityChannelsResponse, error) <span class="cov8" title="1">{
+
+        err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
+
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, storage.ErrChannelNotFound) </span><span class="cov8" title="1">{
+                        return nil, status.Error(codes.AlreadyExists, "channel already exists")
+                }</span>
+                <span class="cov0" title="0">return nil, err</span>
+        }
+        <span class="cov8" title="1">return &amp;ssov1.SetPriorityChannelsResponse{}, nil</span>
+
+}
+
+func (s *serverAPI) DeletePriorityChannels(ctx context.Context, req *ssov1.DeletePriorityChannelsRequest) (*ssov1.DeletePriorityChannelsResponse, error) <span class="cov8" title="1">{
+        err := s.auth.DeletePriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, storage.ErrChannelNotFound) </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+        }
+        <span class="cov8" title="1">return &amp;ssov1.DeletePriorityChannelsResponse{}, nil</span>
+}
+
+func (s *serverAPI) IsAdmin(ctx context.Context, req *ssov1.IsAdminRequest) (*ssov1.IsAdminResponse, error) <span class="cov8" title="1">{
+        if err := validateIsAdmin(req); err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">isAdmin, err := s.auth.IsAdmin(ctx, req.GetTelegramId())
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, storage.ErrUserNotFound) </span><span class="cov8" title="1">{
+                        return nil, status.Error(codes.NotFound, "user not found")
+                }</span>
+                <span class="cov8" title="1">return nil, status.Error(codes.Internal, "internal error")</span>
+        }
+        <span class="cov8" title="1">return &amp;ssov1.IsAdminResponse{
+                IsAdmin: isAdmin,
+        }, nil</span>
+}
+
+func validatelogin(req *ssov1.LoginRequest) error <span class="cov8" title="1">{
+        if req.GetTelegramId() == emptyValue </span><span class="cov8" title="1">{
+                return status.Error(codes.InvalidArgument, "telegram_id is invalid")
+        }</span>
+
+        <span class="cov8" title="1">if req.GetAppId() == emptyValue </span><span class="cov8" title="1">{
+                return status.Error(codes.InvalidArgument, "app_id is required")
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func validateIsAdmin(req *ssov1.IsAdminRequest) error <span class="cov8" title="1">{
+        if req.GetTelegramId() == emptyValue </span><span class="cov8" title="1">{
+                return status.Error(codes.InvalidArgument, "user is required")
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package grpcauth_test
+
+import (
+        "authService/internal/domain/models"
+        "context"
+
+        "github.com/stretchr/testify/mock"
+)
+
+type GrpcAuthMock struct {
+        mock.Mock
+}
+
+func (g *GrpcAuthMock) Login(ctx context.Context, user models.User, appId int) (token string, err error) <span class="cov8" title="1">{
+        args := g.Called(ctx, user, appId)
+        return args.String(0), args.Error(1)
+}</span>
+
+func (g *GrpcAuthMock) DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error <span class="cov8" title="1">{
+        args := g.Called(ctx, user_id, channels)
+        return args.Error(0)
+}</span>
+
+func (g *GrpcAuthMock) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error <span class="cov8" title="1">{
+        args := g.Called(ctx, user_id, channels)
+        return args.Error(0)
+}</span>
+
+func (g *GrpcAuthMock) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) <span class="cov8" title="1">{
+        args := g.Called(ctx, telegram_id)
+        return args.Bool(0), args.Error(1)
+}</span>
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package jwt
+
+import (
+        "authService/internal/domain/models"
+        "time"
+
+        "github.com/golang-jwt/jwt/v5"
+)
+
+// TODO: write test for this func
+func NewToken(user models.User, app models.App, duration time.Duration) (string, error) <span class="cov8" title="1">{
+        token := jwt.New(jwt.SigningMethodHS256)
+
+        claims := token.Claims.(jwt.MapClaims)
+        claims["id"] = user.ID
+        claims["telegram_id"] = user.Telegram_id
+        claims["is_admin"] = user.Is_admin
+        claims["username"] = user.Username
+        claims["first_name"] = user.First_name
+        claims["last_name"] = user.Last_name
+        claims["app_id"] = app.ID
+        claims["exp"] = time.Now().Add(duration).Unix()
+
+        tokenString, err := token.SignedString([]byte(app.Secret))
+
+        if err != nil </span><span class="cov0" title="0">{
+                return "", err
+        }</span>
+
+        <span class="cov8" title="1">return tokenString, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package auth
+
+import (
+        "authService/internal/domain/models"
+        "authService/internal/lib/jwt"
+        "authService/internal/storage"
+        "context"
+        "errors"
+        "fmt"
+        "log/slog"
+        "time"
+)
+
+var (
+        emptyValue = 0
+)
+
+type Auth struct {
+        log          *slog.Logger
+        userSaver    UserSaver
+        userProvider UserProvider
+        appProvider  AppProvider
+        TokenTTL     time.Duration
+}
+
+type UserSaver interface {
+        SaveUser(ctx context.Context, user models.User) (uid int64, err error)
+}
+
+type UserProvider interface {
+        User(ctx context.Context, telegram_id int64) (models.User, error)
+        IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
+        SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error
+        DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error
+}
+
+type AppProvider interface {
+        App(ctx context.Context, appID int64) (models.App, error)
+}
+
+var (
+        ErrInvalidCredentials = errors.New("invalid credentials")
+        ErrInvalidAppID       = errors.New("invalid app id")
+        ErrUserExists         = errors.New("user already exists")
+)
+
+// New returns a new instance of Auth service
+func New(
+        log *slog.Logger,
+        userSaver UserSaver,
+        userProvider UserProvider,
+        appProvider AppProvider,
+        tokenTTL time.Duration,
+) *Auth <span class="cov8" title="1">{
+        return &amp;Auth{
+                log:          log,
+                userProvider: userProvider,
+                userSaver:    userSaver,
+                appProvider:  appProvider,
+                TokenTTL:     tokenTTL,
+        }
+}</span>
+
+func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, error) <span class="cov8" title="1">{
+        const op = "auth.Login"
+
+        err := checkUserData(user)
+        if err != nil </span><span class="cov8" title="1">{
+                return "", fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">log := a.log.With(
+                slog.String("op", op),
+                slog.Int64("telegram_id", user.Telegram_id),
+                slog.String("username", user.Username),
+                slog.String("first_name", user.First_name),
+        )
+        log.Info("attempting to login user")
+
+        dbUser, err := a.userProvider.User(ctx, user.Telegram_id)
+        if err != nil </span><span class="cov0" title="0">{
+                if errors.Is(err, storage.ErrUserNotFound) </span><span class="cov0" title="0">{
+                        log.Info("user not found, registering new user")
+
+                        id, regErr := a.RegisterNewUser(ctx, user)
+                        if regErr != nil </span><span class="cov0" title="0">{
+                                return "", fmt.Errorf("%s: %w", op, regErr)
+                        }</span>
+
+                        <span class="cov0" title="0">dbUser, err = a.userProvider.User(ctx, user.Telegram_id)
+                        if err != nil </span><span class="cov0" title="0">{
+                                log.Error("failed to get user", slog.String("error", err.Error()))
+                                return "", fmt.Errorf("%s: %w", op, err)
+                        }</span>
+
+                        <span class="cov0" title="0">log.Info("user registered successfully",
+                                slog.Int64("user_id", id),
+                                slog.Int64("telegram_id", dbUser.Telegram_id),
+                        )</span>
+                } else<span class="cov0" title="0"> {
+                        log.Error("failed to get user", slog.String("error", err.Error()))
+                        return "", fmt.Errorf("%s: %w", op, err)
+                }</span>
+        }
+
+        <span class="cov8" title="1">app, err := a.appProvider.App(ctx, int64(appID))
+        if err != nil </span><span class="cov8" title="1">{
+                log.Error("failed to get app", slog.String("error", err.Error()))
+                return "", fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">token, err := jwt.NewToken(dbUser, app, a.TokenTTL)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Error("failed to create token", slog.String("error", err.Error()))
+                return "", fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">log.Info("user logged in successfully",
+                slog.Int64("user_id", dbUser.ID),
+                slog.Int64("telegram_id", dbUser.Telegram_id),
+        )
+        return token, nil</span>
+}
+
+func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error <span class="cov8" title="1">{
+        const op = "auth.SetPriorityChannels"
+
+        err := a.userProvider.SetPriorityChannels(ctx, user_id, channels)
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("%s: %w", op, err)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+
+}
+
+func (a *Auth) DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error <span class="cov8" title="1">{
+        const op = "auth.DeletePriorityChannels"
+
+        err := a.userProvider.DeletePriorityChannels(ctx, user_id, channels)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("%s: %w", op, err)
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, error) <span class="cov8" title="1">{
+        const op = "auth.RegisterNewUser"
+
+        log := a.log.With(
+                slog.String("op", op),
+                slog.Int64("telegram_id", user.Telegram_id),
+                slog.String("username", user.Username),
+                slog.String("first_name", user.First_name),
+        )
+
+        log.Info("attempting to register new user")
+
+        existingUser, err := a.userProvider.User(ctx, user.Telegram_id)
+        if err == nil </span><span class="cov8" title="1">{
+                log.Warn("user already exists", slog.Int64("existing_id", existingUser.ID))
+                return existingUser.ID, fmt.Errorf("%s: %w", op, ErrUserExists)
+        }</span>
+        <span class="cov8" title="1">if !errors.Is(err, storage.ErrUserNotFound) </span><span class="cov0" title="0">{
+                log.Error("failed to check user existence", slog.String("error", err.Error()))
+                return 0, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">id, err := a.userSaver.SaveUser(ctx, user)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Error("failed to save user", slog.String("error", err.Error()))
+                return 0, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">log.Info("user registered successfully",
+                slog.Int64("user_id", id),
+                slog.Int64("telegram_id", user.Telegram_id),
+        )
+        return id, nil</span>
+}
+
+func (a *Auth) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) <span class="cov8" title="1">{
+        const op = "auth.IsAdmin"
+
+        log := a.log.With(
+                slog.String("op", op),
+                slog.Int64("telegram_id", telegram_id),
+        )
+        log.Info("checking if user is admin")
+
+        isAdmin, err := a.userProvider.IsAdmin(ctx, telegram_id)
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, storage.ErrUserNotFound) </span><span class="cov0" title="0">{
+                        log.Warn("user not found")
+                        return false, fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+                }</span>
+                <span class="cov8" title="1">log.Error("failed to check admin status", slog.String("error", err.Error()))
+                return false, fmt.Errorf("%s: %w", op, err)</span>
+        }
+
+        <span class="cov8" title="1">log.Info("checked if user is admin", slog.Bool("is_admin", isAdmin))
+        return isAdmin, nil</span>
+}
+
+func checkUserData(user models.User) error <span class="cov8" title="1">{
+        if user.Telegram_id == int64(emptyValue) || user.First_name == "" || user.Last_name == "" || user.Username == "" </span><span class="cov8" title="1">{
+                return storage.ErrEmptyUserValues
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package postgres
+
+import (
+        "authService/internal/domain/models"
+        "authService/internal/storage"
+        "context"
+        "database/sql"
+        "errors"
+        "fmt"
+        "strings"
+
+        pq "github.com/lib/pq"
+)
+
+var (
+        emptyValue = 0
+)
+
+type Storage struct {
+        DB *sql.DB
+}
+
+// New creates a new instance of the Storage
+func New(storagePath string) (*Storage, error) <span class="cov8" title="1">{
+        const op = "internal.storage.postgres.new"
+
+        DB, err := sql.Open("postgres", storagePath)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">if err := DB.Ping(); err != nil </span><span class="cov8" title="1">{
+                return nil, fmt.Errorf("%s: %w", op, err)
+        }</span>
+        <span class="cov8" title="1">return &amp;Storage{
+                DB: DB,
+        }, nil</span>
+}
+
+func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error <span class="cov8" title="1">{
+        const op = "storage.postgres.SetPriorityChannels"
+
+        if len(channels) == 0 </span><span class="cov8" title="1">{
+                return fmt.Errorf("%s: %w", op, storage.ErrChannelsEmpty)
+        }</span>
+
+        <span class="cov8" title="1">query := `
+        INSERT INTO channels (user_id, channel_username) VALUES
+        `
+
+        args := make([]interface{}, 0, len(channels)*2)
+
+        for i, channel := range channels </span><span class="cov8" title="1">{
+                query += fmt.Sprintf("($%d, $%d)", i*2+1, i*2+2)
+                if i != len(channels)-1 </span><span class="cov8" title="1">{
+                        query += ","
+                }</span>
+                <span class="cov8" title="1">args = append(args, user_id, channel)</span>
+        }
+        <span class="cov8" title="1">query += " ON CONFLICT (user_id, channel_username) DO NOTHING"
+        _, err := s.DB.ExecContext(ctx, query, args...)
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Println(err.Error())
+                if isDuplicateError(err) </span><span class="cov0" title="0">{
+                        return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
+                }</span>
+
+                <span class="cov0" title="0">return fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, channels []string) error <span class="cov8" title="1">{
+        const op = "storage.postgres.DeletePriorityChannels"
+
+        if len(channels) == 0 </span><span class="cov8" title="1">{
+                return nil
+        }</span>
+
+        <span class="cov8" title="1">query := `
+        DELETE FROM channels 
+        WHERE user_id = $1 AND channel_username = ANY($2);
+        `
+
+        _, err := s.DB.ExecContext(ctx, query, userID, pq.Array(channels))
+        if err != nil </span><span class="cov8" title="1">{
+                return fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.SaveUser"
+
+        err := checkUserData(user)
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">query := `
+        INSERT INTO users (telegram_id, username, first_name, last_name, is_admin) 
+        VALUES ($1, $2, $3, $4, $5) 
+        RETURNING user_id
+        `
+        var userID int64
+
+        err = s.DB.QueryRowContext(ctx, query,
+                user.Telegram_id,
+                user.Username,
+                user.First_name,
+                user.Last_name,
+                user.Is_admin,
+        ).Scan(&amp;userID)
+
+        if err != nil </span><span class="cov8" title="1">{
+                return 0, fmt.Errorf("%s: %w", op, err)
+        }</span>
+
+        <span class="cov8" title="1">return userID, nil</span>
+}
+
+func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.GetUserById"
+
+        query := `
+        SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
+        FROM users 
+        WHERE user_id = $1
+        `
+
+        var user models.User
+        err := s.DB.QueryRowContext(ctx, query, user_id).Scan(
+                &amp;user.ID, &amp;user.Telegram_id, &amp;user.Username, &amp;user.First_name, &amp;user.Last_name, &amp;user.Is_admin,
+        )
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+
+                        return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+                }</span>
+                <span class="cov0" title="0">return models.User{}, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.User"
+
+        query := `
+        SELECT user_id, telegram_id, username, first_name, last_name, is_admin 
+        FROM users 
+        WHERE telegram_id = $1
+        `
+
+        var user models.User
+        err := s.DB.QueryRowContext(ctx, query, telegram_id).Scan(
+                &amp;user.ID,
+                &amp;user.Telegram_id,
+                &amp;user.Username,
+                &amp;user.First_name,
+                &amp;user.Last_name,
+                &amp;user.Is_admin,
+        )
+
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+                        return models.User{}, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+                }</span>
+                <span class="cov0" title="0">return models.User{}, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (s *Storage) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.IsAdmin"
+
+        query := `
+        SELECT is_admin 
+        FROM users 
+        WHERE telegram_id = $1
+        `
+
+        var isAdmin bool
+
+        err := s.DB.QueryRowContext(ctx, query, telegram_id).Scan(&amp;isAdmin)
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+                        return false, fmt.Errorf("%s: %w", op, storage.ErrUserNotFound)
+                }</span>
+                <span class="cov0" title="0">return false, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return isAdmin, nil</span>
+}
+
+func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) <span class="cov8" title="1">{
+        const op = "storage.postgres.App"
+
+        query := `
+        SELECT id, name, secret 
+        FROM apps 
+        WHERE id = $1
+        `
+
+        var app models.App
+
+        err := s.DB.QueryRowContext(ctx, query, appID).Scan(&amp;app.ID, &amp;app.Name, &amp;app.Secret)
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
+                        return models.App{}, fmt.Errorf("%s: %w", op, storage.ErrAppNotFound)
+                }</span>
+                <span class="cov0" title="0">return models.App{}, fmt.Errorf("%s: %w", op, err)</span>
+        }
+        <span class="cov8" title="1">return app, nil</span>
+}
+func isDuplicateError(err error) bool <span class="cov0" title="0">{
+        var pqErr *pq.Error
+        if errors.As(err, &amp;pqErr) </span><span class="cov0" title="0">{
+                return pqErr.Code == "23505"
+        }</span>
+        <span class="cov0" title="0">return strings.Contains(err.Error(), "duplicate key value")</span>
+}
+
+func checkUserData(user models.User) error <span class="cov8" title="1">{
+        if user.Telegram_id == int64(emptyValue) || user.First_name == "" || user.Last_name == "" || user.Username == "" </span><span class="cov8" title="1">{
+                return storage.ErrEmptyUserValues
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

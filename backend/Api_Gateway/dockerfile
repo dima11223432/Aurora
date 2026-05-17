@@ -1,59 +1,27 @@
-# ===== Стадия 1: Сборка =====
-FROM golang:1.22-alpine AS builder
+FROM golang:1.25-alpine
 
-# Установка необходимых системных пакетов
-RUN apk add --no-cache git ca-certificates tzdata && \
-    update-ca-certificates
+RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
-# Создание рабочей директории
+RUN apk add --no-cache git ca-certificates
+
 WORKDIR /app
 
-# Копирование go.mod и go.sum для кэширования зависимостей
 COPY go.mod go.sum ./
+RUN go mod download
 
-# Скачивание зависимостей (с учетом конкретной версии protos)
-RUN go mod download && \
-    go mod verify
-
-# Копирование исходного кода
 COPY . .
 
-# Сборка бинарного файла
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -ldflags="-w -s" \
-    -o /app/bin/api-gateway ./cmd/main.go
+COPY ./config ./config
 
-# ===== Стадия 2: Финальный образ =====
-FROM alpine:3.19
+RUN go build -o api-gateway ./cmd/API_Service/main.go
 
-# Установка минимальных зависимостей
-RUN apk add --no-cache ca-certificates tzdata
+RUN chmod +x api-gateway
 
-# Создание непривилегированного пользователя
 RUN adduser -D -g '' appuser
+RUN chown -R appuser:appuser /app
 
-# Копирование бинарного файла из стадии сборки
-COPY --from=builder --chown=appuser:appuser /app/bin/api-gateway /app/api-gateway
-
-# Копирование конфигов (если нужно)
-COPY --from=builder --chown=appuser:appuser /app/config /app/config
-
-# Копирование миграций (если нужно)
-COPY --from=builder --chown=appuser:appuser /app/migrations /app/migrations
-
-# Переключение на непривилегированного пользователя
 USER appuser
 
-# Рабочая директория
-WORKDIR /app
+EXPOSE 8081 44000
 
-# Открытие порта
-EXPOSE 8080
-
-# Проверка здоровья
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD ["/app/api-gateway", "health"] || exit 1
-
-# Запуск приложения
-ENTRYPOINT ["/app/api-gateway"]
-CMD ["--config=./config/local.yaml"]
+CMD ["./api-gateway", "--config", "./config/local.yaml"]

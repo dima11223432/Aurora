@@ -1,9 +1,11 @@
 env: "local"
 
-storage_pass: "postgres://postgres:pass@localhost:5432/aurora?sslmode=disable"
+storage_pass: "postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable"
 
 auth:
   jwt_secret: "test-secret"
+  cors_urls:
+    - "http://aurora-fintech.ru"
   public_methods:
     - "/api.v1.ApiService/Register"
     - "/api.v1.ApiService/Login"
@@ -12,15 +14,26 @@ auth:
 token_ttl: 1h
 
 redis:
-  host: "localhost:6379"
-  password: "1111"
+  host: "redis-master:6379"
+  password: "1ux35qBk4YgCMsd7eg4ju"
   db: 0
   port: 6379
-
+# redis:
+#   host: "redis-master:6379"
+#   password: "1111"
+#   db: 0
 grpc:
-  port: 44000
+  port: 44043
   timeout: 10h
 
 grpc-gateway:
   port: 8081
   timeout: 10h
+
+services:
+  sso:
+    host: "sso"
+    port: 44044
+  recs:
+    host: "recommendation-service"
+    port: 44040
