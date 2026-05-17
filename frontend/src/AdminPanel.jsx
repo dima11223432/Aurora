@@ -214,7 +214,7 @@ export default function AdminPanel() {
     </div>
     <button
         onClick={() => setIsShtoraOpen(!isShtoraOpen)}
-        className="fixed top-4 right-4 z-50 text-white font-bold py-2 px-5 rounded-xl shadow-2xl"
+        className="fixed top-4 right-4 z-50 text-white font-bold py-2 px-5 rounded-xl"
         style={{ background: "linear-gradient(to right, #208390, #36DEF4)" }}
       >
         {isShtoraOpen ? "Скрыть ТГК" : "Показать ТГК"}
