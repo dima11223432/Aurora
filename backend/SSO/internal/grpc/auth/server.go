@@ -23,6 +23,7 @@ type Auth interface {
 
 type serverAPI struct {
 	ssov1.UnimplementedAuthServiceServer
+
 	auth Auth
 }
 
@@ -43,7 +44,6 @@ func NewServerAPI(auth Auth) *serverAPI {
 }
 
 func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.LoginResponse, error) {
-
 	if err := validatelogin(req); err != nil {
 		return nil, err
 	}
@@ -56,7 +56,6 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 	}, int(req.GetAppId()))
 	if err != nil {
 		if errors.Is(err, auth.ErrInvalidCredentials) {
-
 			return nil, status.Error(codes.InvalidArgument, "invalid credentials")
 		}
 		return nil, status.Error(codes.Internal, "internal error")
@@ -64,14 +63,12 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 	return &ssov1.LoginResponse{
 		Token: token,
 	}, nil
-
 }
 
 func (s *serverAPI) SetPriorityChannels(
 	ctx context.Context,
 	req *ssov1.SetPriorityChannelsRequest) (
 	*ssov1.SetPriorityChannelsResponse, error) {
-
 	err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 
 	if err != nil {
@@ -81,10 +78,12 @@ func (s *serverAPI) SetPriorityChannels(
 		return nil, err
 	}
 	return &ssov1.SetPriorityChannelsResponse{}, nil
-
 }
 
-func (s *serverAPI) DeletePriorityChannels(ctx context.Context, req *ssov1.DeletePriorityChannelsRequest) (*ssov1.DeletePriorityChannelsResponse, error) {
+func (s *serverAPI) DeletePriorityChannels(
+	ctx context.Context,
+	req *ssov1.DeletePriorityChannelsRequest,
+) (*ssov1.DeletePriorityChannelsResponse, error) {
 	err := s.auth.DeletePriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 	if err != nil {
 		if errors.Is(err, storage.ErrChannelNotFound) {

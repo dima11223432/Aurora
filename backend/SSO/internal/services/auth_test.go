@@ -10,8 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -59,10 +58,9 @@ func (m *MockAppProvider) App(ctx context.Context, appID int64) (models.App, err
 
 type AuthTestSuite struct {
 	suite.Suite
-	mockUserSaver   *MockUserSaver
-	mockUserProvider *MockUserProvider
-	mockAppProvider *MockAppProvider
-	service         *auth.Auth
+
+	storage *postgres.Storage
+	service *auth.Auth
 }
 
 func (s *AuthTestSuite) SetupTest() {
@@ -100,8 +98,31 @@ func (s *AuthTestSuite) TestLogin_InvalidTelegramID() {
 		First_name:  "Dima",
 	}
 
-	_, err := s.service.Login(context.Background(), user, 1)
-	s.Error(err)
+	regularUser := models.User{
+		Telegram_id: 222222222,
+		First_name:  "Regular",
+		Last_name:   "User",
+		Username:    "regular_user",
+		Is_admin:    false,
+	}
+
+	_, err := s.service.Login(ctx, adminUser, 1)
+	s.NoError(err)
+
+	_, err = s.service.Login(ctx, regularUser, 1)
+	s.NoError(err)
+
+	isAdmin, err := s.service.IsAdmin(ctx, adminUser.Telegram_id)
+	s.NoError(err)
+	s.True(isAdmin)
+
+	isAdmin, err = s.service.IsAdmin(ctx, regularUser.Telegram_id)
+	s.NoError(err)
+	s.False(isAdmin)
+}
+
+func TestAuthSuite(t *testing.T) {
+	suite.Run(t, new(AuthTestSuite))
 }
 
 func (s *AuthTestSuite) TestLogin_AppNotFound() {

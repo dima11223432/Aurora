@@ -3,7 +3,7 @@ package grpcauth_test
 import (
 	ssov1 "authService/api/gen/v1"
 	"authService/internal/domain/models"
-	"authService/internal/grpc/auth"
+	grpcauth "authService/internal/grpc/auth"
 	servicesauth "authService/internal/services/auth"
 	"authService/internal/storage"
 	"context"
@@ -18,6 +18,7 @@ import (
 
 type AuthServerTestSuite struct {
 	suite.Suite
+
 	authMock *GrpcAuthMock
 	server   ssov1.AuthServiceServer
 }

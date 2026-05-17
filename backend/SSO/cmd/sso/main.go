@@ -33,7 +33,6 @@ func main() {
 	log.Info("stopping application", slog.String("Signal", sign.String()))
 	application.GRPCapp.Stop()
 	log.Info("application stoppped")
-
 }
 
 func setupLogger(env string) *slog.Logger {

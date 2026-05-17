@@ -14,27 +14,26 @@ import (
 
 type PostgresTestSuite struct {
 	suite.Suite
+
 	storage *postgres.Storage
 }
 
 func (p *PostgresTestSuite) SetupTest() {
-
-	s, err := postgres.New("postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable")
+	s, err := postgres.New("postgres://postgres:pass@localhost:5432/test_auth?sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}
 	p.storage = s
 
+	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
 }
 
 func (p *PostgresTestSuite) TearDownTest() {
-
 	p.storage.DB.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
 	p.storage.DB.Close()
 }
 
 func (p *PostgresTestSuite) TestStorage_SaveUser_and_User() {
-
 	ctx := context.Background()
 	user := models.User{
 		Telegram_id: 123456789,
@@ -56,7 +55,6 @@ func (p *PostgresTestSuite) TestStorage_SaveUser_and_User() {
 }
 
 func (p *PostgresTestSuite) TestStorage_SaveUser_and_User_empty() {
-
 	ctx := context.Background()
 	user := models.User{
 		Telegram_id: 123456789,
@@ -81,7 +79,6 @@ func (p *PostgresTestSuite) TestStorage_SaveUser_and_User_empty() {
 }
 
 func (p *PostgresTestSuite) Test_storage_get_user_by_id() {
-
 	user := models.User{
 		Telegram_id: 123456789,
 		First_name:  "Dima",
@@ -102,18 +99,17 @@ func (p *PostgresTestSuite) Test_storage_get_user_by_id() {
 }
 
 func (p *PostgresTestSuite) TestApp() {
-
 	ctx := context.Background()
 	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
 
 	app, err := p.storage.App(ctx, 1)
 	p.NoError(err)
-	p.Equal(app, models.App{ID: 1, Name: "test", Secret: "secret"})
+	p.Equal(models.App{ID: 1, Name: "test", Secret: "secret"}, app)
 
 	app, err = p.storage.App(ctx, 2)
 	p.Error(err)
 	p.ErrorIs(err, storage.ErrAppNotFound)
-	p.Equal(app, models.App{})
+	p.Equal(models.App{}, app)
 }
 
 func (p *PostgresTestSuite) TestSetPriorityChannels() {
@@ -137,7 +133,6 @@ func (p *PostgresTestSuite) TestSetPriorityChannels() {
 }
 
 func (p *PostgresTestSuite) TestSetPriorityChannelsEmptyChannels() {
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
@@ -159,7 +154,6 @@ func (p *PostgresTestSuite) TestSetPriorityChannelsEmptyChannels() {
 }
 
 func (p *PostgresTestSuite) TestDeletePriorityChannels() {
-
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
