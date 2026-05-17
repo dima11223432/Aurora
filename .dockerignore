@@ -11,25 +11,14 @@
 Thumbs.db
 
 # Config files with secrets
-config/
-*.env
-*.env.local
-*.env.*.local
 credentials.json
 *.key
 *.pem
 *.crt
 
 # Local config overrides
-local.yaml
-local.yml
-*_local.yaml
-*_local.yml
-*.local.yaml
-*.local.yml
 
 # Sensitive configs
-vpn.json
 redis-sentinel.conf
 
 # Logs
