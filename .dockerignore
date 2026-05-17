@@ -1,0 +1,58 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Config files with secrets
+config/
+*.env
+*.env.local
+*.env.*.local
+credentials.json
+*.key
+*.pem
+*.crt
+
+# Local config overrides
+local.yaml
+local.yml
+*_local.yaml
+*_local.yml
+*.local.yaml
+*.local.yml
+
+# Sensitive configs
+vpn.json
+redis-sentinel.conf
+
+# Logs
+logs/
+*.log
+
+# Go workspace
+go.work
+go.work.sum
+
+# Coverage
+coverage.out
+coverage-all.out
+
+# Session files
+*.session
+
+# Build artifacts
+*.tar.gz
+
+# Test files
+*_test.go
+
+# Documentation
+*.md
+README*
