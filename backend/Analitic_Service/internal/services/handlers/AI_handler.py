@@ -14,7 +14,7 @@ from ..AI_API.YandexAI import answer as ya
 from ..LSTM_Laura.AnalysAI import answer as ticker_id
 from ..AI_API.QwenAnalis import answer as qw
 from ..LSTM_Laura.Laura_LSTM_savepredict import run, predict
-
+from ..AI_API.QwenAI import answer as qws
 # from AnaliticKafka import getMessage
 
 
@@ -27,8 +27,9 @@ def AI_handler(context):
         "st": {},
         "ya": {},
         "qw": {},
-    }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex
-    AI_list = {"ds", "ge", "ya"}
+        "qws": {},
+    }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex, qws - qwenSecond
+    AI_list = {"ds", "ya", "qws"}
 
     for i in AI_list:
         try:
