@@ -11,3 +11,4 @@ deploy-staging:
     - docker image prune -f
   only:
     - PROD
+    - main
