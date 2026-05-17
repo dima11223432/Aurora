@@ -151,3 +151,31 @@ func TestGetDublicateErrorOtherError(t *testing.T) {
 		})
 	}
 }
+
+func (p *PostgresTestSuite) TestDeleteDefaultParsingChannel() {
+	ctx := context.Background()
+	channelName := "test_channel_delete"
+
+	p.Run("success", func() {
+		err := p.storage.AddNewParsingChannel(ctx, channelName)
+		p.NoError(err)
+
+		err = p.storage.DeleteDefaultParsingChannel(ctx, channelName)
+		p.NoError(err)
+	})
+
+	p.Run("referential integrity", func() {
+		err := p.storage.AddNewParsingChannel(ctx, channelName)
+		p.NoError(err)
+
+		_, err = p.storage.parserDB.ExecContext(
+			ctx,
+			`INSERT INTO channels_info (channel_name) VALUES ($1)`,
+			channelName,
+		)
+		p.NoError(err)
+
+		err = p.storage.DeleteDefaultParsingChannel(ctx, channelName)
+		p.NoError(err)
+	})
+}
