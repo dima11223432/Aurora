@@ -43,8 +43,12 @@ def AI_handler(context):
         except Exception as e:
             logger.error(f"Error AI handler [{i.upper()}]: {str(e)}")
             AI_answer[i]["answer"] = 0
-    m, s, d = run(ticker_id(context, str(getenv("AN"))))
-    AI_answer["qw"]["graphic_analis"] = predict(m, s, d)
+    try:
+        m, s, d = run(ticker_id(context, str(getenv("AN"))))
+        AI_answer["qw"]["graphic_analis"] = predict(m, s, d)
+    except Exception as e:
+        logger.error(f"Ошибка в В LSTM Laura: {str(e)}")
+        AI_answer["qw"]["graphic_analis"] = "error"
 
     parts_final = qw(str(AI_answer), str(getenv("QW"))).split(
         "-%91%8FROG-COD", maxsplit=1
