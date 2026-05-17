@@ -179,3 +179,37 @@ func (p *PostgresTestSuite) TestDeleteDefaultParsingChannel() {
 		p.NoError(err)
 	})
 }
+
+func (p *PostgresTestSuite) TestDeleteUserCustomParsingChannel() {
+ ctx := context.Background()
+
+ userID := int64(1)
+ channelName := "test_channel_user"
+
+ p.Run("success", func() {
+    err := p.storage.AddNewParsingChannel(ctx, channelName)
+    p.NoError(err)
+
+  _, err = p.storage.parserDB.ExecContext(
+    ctx,
+    INSERT INTO user_custom_parsing_channels (user_id, channel_name)
+    VALUES ($1, $2),
+    userID,
+    channelName,
+  )
+  p.NoError(err)
+
+  err = p.storage.DeleteUserCustomParsingChannel(ctx, userID, channelName)
+  p.NoError(err)
+ })
+
+ p.Run("cascade", func() {
+    err := p.storage.DeleteUserCustomParsingChannel(ctx, userID, channelName)
+    p.NoError(err)
+ })
+
+ p.Run("not found", func() {
+    err := p.storage.DeleteUserCustomParsingChannel(ctx, 99999, "unknown")
+    p.NoError(err)
+ })
+}
