@@ -304,12 +304,12 @@ const Shtora = () => {
               onChange={(e) => setCustomChannel(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleAddCustomChannel()}
               placeholder="Новый канал (username)"
-              className="flex-1 bg-gray-800/80 text-white text-sm px-3 py-2 rounded-lg border border-cyan-700/50 focus:border-cyan-400 focus:outline-none placeholder-gray-500"
+              className="flex-1 bg-grey-800/80 text-white text-sm px-3 py-2 rounded-lg border border-cyan-700/50 focus:border-cyan-400 focus:outline-none placeholder-cyan-500"
             />
             <button
               onClick={handleAddCustomChannel}
               disabled={isAddingChannel || !customChannel.trim()}
-              className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-gray-600 disabled:cursor-not-allowed text-white text-sm px-3 py-2 rounded-lg transition-colors duration-200"
+              className="bg-cyan-600 hover:bg-cyan-500 disabled:bg-yellow-400 disabled:cursor-not-allowed text-white text-sm px-3 py-2 rounded-lg transition-colors duration-200"
             >
               {isAddingChannel ? "..." : "➕"}
             </button>
@@ -326,7 +326,6 @@ const Shtora = () => {
           opacity: 1;
           pointer-events: auto;
           transform: translateY(0) scale(1);
-          filter: drop-shadow(0 8px 32px rgba(31,38,135,0.37));
           transition: opacity 0.5s cubic-bezier(.4,2,.6,1), transform 0.5s cubic-bezier(.4,2,.6,1);
         }
         .shtora-animate-out {
