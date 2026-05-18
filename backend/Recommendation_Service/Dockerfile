@@ -10,7 +10,6 @@ RUN go mod download
 
 COPY . .
 
-COPY ./config ./config
 
 RUN go build -o recommendation_service ./cmd/recomendation_service/main.go
 
