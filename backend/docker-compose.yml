@@ -166,7 +166,7 @@ services:
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${RECS_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
-      - REDIS_HOST=redis-master
+      - REDIS_HOST=redis-master:6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
       - REDIS_PORT=6379
       - REDIS_DB=${REDIS_DB}
