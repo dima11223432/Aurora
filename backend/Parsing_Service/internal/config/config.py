@@ -5,8 +5,9 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-env_path = os.getenv("ENV_PATH", "/app/config/config.env")
-load_dotenv(env_path, override=True)
+env_path = os.getenv("ENV_PATH")
+if env_path and Path(env_path).exists():
+    load_dotenv(env_path, override=True)
 
 
 class Config:
@@ -24,7 +25,7 @@ class Config:
         self.DB_URL = None
         self.DB_HOST = None
         self.DB_PORT = None
-        self.PROXY_URL = None
+        self.PROXY_HOST = None
         self.PROXY_PORT = None
 
     def load_config(self):
@@ -40,5 +41,5 @@ class Config:
         self.DB_URL = os.getenv("DB_URL", "")
         self.DB_HOST = os.getenv("DB_HOST", "")
         self.DB_PORT = os.getenv("DB_PORT", "")
-        self.PROXY_URL = os.getenv("PROXY_URL", "")
+        self.PROXY_HOST = os.getenv("PROXY_HOST", "")
         self.PROXY_PORT = os.getenv("PROXY_PORT", "")

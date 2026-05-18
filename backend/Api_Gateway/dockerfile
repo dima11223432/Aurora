@@ -11,8 +11,6 @@ RUN go mod download
 
 COPY . .
 
-COPY ./config ./config
-
 RUN go build -o api-gateway ./cmd/API_Service/main.go
 
 RUN chmod +x api-gateway
@@ -24,4 +22,4 @@ USER appuser
 
 EXPOSE 8081 44000
 
-CMD ["./api-gateway", "--config", "./config/local.yaml"]
+CMD ["./api-gateway"]

@@ -9,54 +9,67 @@ import (
 )
 
 type Config struct {
-	Env                string              `yaml:"env" env-default:"local"`
-	StoragePass        string              `yaml:"storage_pass" env-required:"true"`
-	TokenTTL           time.Duration       `yaml:"token_ttl" env-required:"true"`
-	GRPC               GRPCConfig          `yaml:"grpc"`
-	GRPC_GatewayConfig GRPC_Gateway_Config `yaml:"grpc-gateway"`
-	Auth               Auth                `yaml:"auth"`
-	RedisConfig        RedisConfig         `yaml:"redis"`
-	Services          ServicesConfig      `yaml:"services"`
+	Env                string              `yaml:"env" env:"ENV" env-default:"local"`
+	StoragePass        string              `yaml:"storage_pass" env:"STORAGE_PASS" env-required:"true"`
+	TokenTTL           time.Duration       `yaml:"token_ttl" env:"TOKEN_TTL" env-default:"1h"`
+	GRPC               GRPCConfig          `yaml:"grpc" env:"GRPC"`
+	GRPC_GatewayConfig GRPC_Gateway_Config `yaml:"grpc-gateway" env:"GRPC_GATEWAY"`
+	Auth               Auth                `yaml:"auth" env:"AUTH"`
+	RedisConfig        RedisConfig         `yaml:"redis" env:"REDIS"`
+	Services           ServicesConfig      `yaml:"services" env:"SERVICES"`
 }
 
 type Auth struct {
-	JwtSecret     string   `yaml:"jwt_secret" env-required:"true"`
-	PublicMethods []string `yaml:"public_methods" env-required:"true"`
-	Cors_urls     []string `yaml:"cors_urls" env-required:"true"`
+	JwtSecret     string   `yaml:"jwt_secret" env:"JWT_SECRET" env-required:"true"`
+	PublicMethods []string `yaml:"public_methods" env:"PUBLIC_METHODS" env-required:"true"`
+	Cors_urls     []string `yaml:"cors_urls" env:"CORS_URLS" env-required:"true"`
 }
 
 type GRPCConfig struct {
-	Port    int           `yaml:"port"`
-	TimeOut time.Duration `yaml:"timeout"`
+	Port    int           `yaml:"port" env:"GRPC_PORT" env-default:"44043"`
+	TimeOut time.Duration `yaml:"timeout" env:"GRPC_TIMEOUT" env-default:"10h"`
 }
 type GRPC_Gateway_Config struct {
-	Port    int           `yaml:"port"`
-	TimeOut time.Duration `yaml:"timeout"`
+	Port    int           `yaml:"port" env:"GRPC_GATEWAY_PORT" env-default:"8081"`
+	TimeOut time.Duration `yaml:"timeout" env:"GRPC_GATEWAY_TIMEOUT" env-default:"10h"`
 }
 
 type RedisConfig struct {
-	Host     string `yaml:"host"`
-	Password string `yaml:"password"`
-	Port     int    `yaml:"port"`
-	DB       int    `yaml:"db"`
+	Host     string `yaml:"host" env:"REDIS_HOST" env-default:"localhost"`
+	Password string `yaml:"password" env:"REDIS_PASSWORD"`
+	Port     int    `yaml:"port" env:"REDIS_PORT" env-default:"6379"`
+	DB       int    `yaml:"db" env:"REDIS_DB" env-default:"0"`
 }
 
 type ServicesConfig struct {
-	SSO     ServiceConfig `yaml:"sso"`
-	RECS    ServiceConfig `yaml:"recs"`
+	SSO  SSOConfig  `yaml:"sso"`
+	RECS RECSConfig `yaml:"recs"`
 }
 
-type ServiceConfig struct {
-	Host string `yaml:"host"`
-	Port int    `yaml:"port"`
+type SSOConfig struct {
+	Host string `yaml:"host" env:"SSO_HOST"`
+	Port int    `yaml:"port" env:"SSO_PORT"`
+}
+
+type RECSConfig struct {
+	Host string `yaml:"host" env:"RECS_HOST"`
+	Port int    `yaml:"port" env:"RECS_PORT"`
 }
 
 func MustLoad() *Config {
 	path := fetchConfigPath()
 	if path == "" {
-		panic("config path is empty")
+		return MustLoadFromEnv()
 	}
 	return MustLoadByPath(path)
+}
+
+func MustLoadFromEnv() *Config {
+	var cfg Config
+	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		panic("cant read config from env: " + err.Error())
+	}
+	return &cfg
 }
 
 func MustLoadByPath(configPath string) *Config {
