@@ -264,9 +264,9 @@ services:
       dockerfile: Dockerfile
     container_name: analytic-service
     healthcheck:
-      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      test: ["CMD", "nc", "-z", "kafka", "9092"]
       interval: 10s
-      timeout: 5s
+      timeout: 10s
       retries: 5
     restart: unless-stopped
     mem_limit: 512m
