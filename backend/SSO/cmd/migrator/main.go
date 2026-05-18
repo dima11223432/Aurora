@@ -4,6 +4,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"os"
 
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
@@ -24,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	if dsn == "" {
-		panic("db-dsn is required")
+		dsn = os.Getenv("STORAGE_PASS")
 	}
 	if migrationPath == "" {
 		panic("migrations-path is required")

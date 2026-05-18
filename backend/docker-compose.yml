@@ -256,6 +256,11 @@ services:
       context: ./Analitic_Service
       dockerfile: Dockerfile
     container_name: analytic-service
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     mem_limit: 512m
     ports:
@@ -269,7 +274,7 @@ services:
       - LOG_LEVEL=INFO
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - aurora-network
 
