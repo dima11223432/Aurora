@@ -20,21 +20,14 @@ RUN useradd -m -u 1000 appuser
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY config/config.env /app/config/config.env
 COPY vpn.json /app/vpn.json
 
 COPY . .
 
 RUN chown -R appuser:appuser /app
 
-RUN mkdir -p /app/logs && chown appuser:appuser /app/logs
-
 USER appuser
 
-COPY --chown=appuser:appuser pars_session.session /app/pars_session.session
-
 EXPOSE 44042
-
-WORKDIR /app
 
 CMD sh -c "xray version && xray run -c /app/vpn.json > /dev/null 2>&1 & sleep 3 && alembic upgrade head && python3 -m cmd.parser.main"

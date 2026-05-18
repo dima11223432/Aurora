@@ -10,7 +10,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-COPY ./config ./config
 COPY ./migrations ./migrations
 
 RUN go build -o sso ./cmd/sso
@@ -26,9 +25,8 @@ EXPOSE 44044
 
 CMD ["sh", "-c", "\
   echo 'Waiting for database...' && \
-  until pg_isready -h ${DB_HOST:-aurora-db} -p ${DB_PORT:-5432} -U ${DB_USER:-postgres}; do sleep 2; done && \
+  until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done && \
   echo 'Running migrations...' && \
-  ./migrator -db-dsn \"$DATABASE_URL\" -migrations-path ./migrations -migrations-table schema_migrations up && \
+  ./migrator -db-dsn=$STORAGE_PASS -migrations-path=./migrations -migrations-table=schema_migrations up && \
   echo 'Starting app...' && \
-  ./sso --config ./config/local.yaml \
-"]
+  ./sso"]

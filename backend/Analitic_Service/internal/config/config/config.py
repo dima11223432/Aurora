@@ -1,5 +1,6 @@
 from dotenv import load_dotenv
 import os
+from pathlib import Path
 
 
 def load_config():
@@ -7,9 +8,9 @@ def load_config():
 	api_keys_path = os.path.join(base, "API_keys.env")
 	config_path = os.path.join(base, "config.env")
 
-	if os.path.exists(api_keys_path):
+	if Path(api_keys_path).exists():
 		load_dotenv(api_keys_path)
-	if os.path.exists(config_path):
+	if Path(config_path).exists():
 		load_dotenv(config_path)
 
 	return {

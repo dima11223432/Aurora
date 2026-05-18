@@ -22,12 +22,25 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 		time.Duration(1)*time.Hour,
 	)
 
+	log.Info(
+		cfg.RedisConfig.Host,
+		cfg.RedisConfig.Password,
+		cfg.RedisConfig.DB,
+		cfg.RedisConfig.Port,
+	)
+
 	err := redisCache.Ping(context.Background())
 	if err != nil {
 		panic(err)
 	}
 
-	grpcApp := grpcApp.New(cfg.GRPC.Port, log, cfg.Auth.JwtSecret, cfg.Auth.PublicMethods, cfg.Services.SSO, cfg.Services.RECS)
+	grpcApp := grpcApp.New(cfg.GRPC.Port,
+		log,
+		cfg.Auth.JwtSecret,
+		cfg.Auth.PublicMethods,
+		cfg.Services,
+		cfg.Services,
+	)
 
 	return &App{
 		GRPCApp: grpcApp,

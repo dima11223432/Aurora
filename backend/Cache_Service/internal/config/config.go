@@ -9,39 +9,47 @@ import (
 )
 
 type Config struct {
-	Env         string        `yaml:"env" env-default:"local"`
-	StoragePass string        `yaml:"storage_pass" env-required:"true"`
-	TokenTTL    time.Duration `yaml:"token_ttl" env-required:"true"`
-	GRPC        GRPCConfig    `yaml:"grpc"`
-	RedisConfig RedisConfig   `yaml:"redis"`
-	KafkaConfig KafkaConfig   `yaml:"kafka"`
+	Env         string        `yaml:"env" env:"ENV" env-default:"local"`
+	StoragePass string        `yaml:"storage_pass" env:"STORAGE_PASS" env-required:"true"`
+	TokenTTL    time.Duration `yaml:"token_ttl" env:"TOKEN_TTL_CACHE" env-default:"720h"`
+	GRPC        GRPCConfig    `yaml:"grpc" env:"GRPC"`
+	RedisConfig RedisConfig   `yaml:"redis" env:"REDIS"`
+	KafkaConfig KafkaConfig   `yaml:"kafka" env:"KAFKA"`
 }
 
 type GRPCConfig struct {
-	Port    int           `yaml:"port"`
-	TimeOut time.Duration `yaml:"timeout"`
+	Port    int           `yaml:"port" env:"GRPC_PORT" env-default:"44044"`
+	TimeOut time.Duration `yaml:"timeout" env:"GRPC_TIMEOUT" env-default:"10h"`
 }
 
 type RedisConfig struct {
-	Host     string `yaml:"host"`
-	Password string `yaml:"password"`
-	DB       int    `yaml:"db"`
-	Port     int    `yaml:"port"`
+	Host     string `yaml:"host" env:"REDIS_HOST" env-default:"localhost"`
+	Password string `yaml:"password" env:"REDIS_PASSWORD"`
+	DB       int    `yaml:"db" env:"REDIS_DB" env-default:"0"`
+	Port     int    `yaml:"port" env:"REDIS_PORT" env-default:"6379"`
 }
 
 type KafkaConfig struct {
-	Host          string `yaml:"host"`
-	Topic         string `yaml:"topic"`
-	ConsumerGroup string `yaml:"consumer_group"`
-	MaxPulls      int    `yaml:"max_pulls"`
+	Host          string `yaml:"host" env:"KAFKA_HOST" env-default:"kafka"`
+	Topic         string `yaml:"topic" env:"KAFKA_TOPIC" env-default:"news_data"`
+	ConsumerGroup string `yaml:"consumer_group" env:"KAFKA_CONSUMER_GROUP" env-default:"news_consumer_group"`
+	MaxPulls      int    `yaml:"max_pulls" env:"KAFKA_MAX_PULLS" env-default:"10"`
 }
 
 func MustLoad() *Config {
 	path := fetchConfigPath()
 	if path == "" {
-		panic("config path is empty")
+		return MustLoadFromEnv()
 	}
 	return MustLoadByPath(path)
+}
+
+func MustLoadFromEnv() *Config {
+	var cfg Config
+	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		panic("cant read config from env: " + err.Error())
+	}
+	return &cfg
 }
 
 func MustLoadByPath(configPath string) *Config {

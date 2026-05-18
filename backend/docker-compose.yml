@@ -6,13 +6,13 @@ services:
     restart: unless-stopped
     mem_limit: 512m
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1ux35qBk4YgCMsd7eg4ju
-      POSTGRES_DB: aurora
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME_AURORA:-aurora}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -25,13 +25,13 @@ services:
     restart: unless-stopped
     mem_limit: 512m
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 1ux35qBk4YgCMsd7eg4ju
-      POSTGRES_DB: parser
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME_PARSER:-parser}
     volumes:
       - postgres_parser_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -47,14 +47,14 @@ services:
       redis-server
       --bind 0.0.0.0
       --protected-mode no
-      --requirepass "1ux35qBk4YgCMsd7eg4ju"
-      --masterauth "1ux35qBk4YgCMsd7eg4ju"
+      --requirepass "${REDIS_PASSWORD}"
+      --masterauth "${REDIS_PASSWORD}"
       --appendonly yes
       --appendfsync everysec
     volumes:
       - redis_master_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "-a", "1ux35qBk4YgCMsd7eg4ju", "ping"]
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD}", "ping"]
       interval: 5s
       timeout: 3s
       retries: 5
@@ -74,6 +74,11 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9092'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - zookeeper
     command: sh -c "sleep 3 && /etc/confluent/docker/run"
@@ -100,7 +105,23 @@ services:
       - "8081:8081"
       - "44043:44043"
     environment:
-      - ENV=prod
+      - ENV=${ENV}
+      - STORAGE_PASS=${STORAGE_PASS}
+      - TOKEN_TTL=${TOKEN_TTL}
+      - GRPC_PORT=${GRPC_PORT}
+      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+      - GRPC_GATEWAY_PORT=${GRPC_GATEWAY_PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_URLS=${CORS_URLS}
+      - PUBLIC_METHODS=${PUBLIC_METHODS}
+      - REDIS_HOST=redis-master:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB}
+      - SSO_HOST=sso
+      - SSO_PORT=${SSO_PORT}
+      - RECS_HOST=recommendation-service
+      - RECS_PORT=${RECS_PORT}
     depends_on:
       postgres:
         condition: service_healthy
@@ -119,8 +140,13 @@ services:
     ports:
       - "44044:44044"
     environment:
-      - ENV=prod
-      - DATABASE_URL=postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable
+      - ENV=${ENV}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora?sslmode=disable
+      - TEST_POSTGRES_DNS=${TEST_POSTGRES_DNS}
+      - TOKEN_TTL=${TOKEN_TTL}
+      - GRPC_PORT=${SSO_PORT}
+      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
     depends_on:
       postgres:
         condition: service_healthy
@@ -137,7 +163,19 @@ services:
     ports:
       - "44040:44040"
     environment:
-      - ENV=prod
+      - ENV=${ENV}
+      - API_ID=${TELEGRAM_API_ID}
+      - API_HASH=${TELEGRAM_API_HASH}
+      - PHONE_NUMBER=${TELEGRAM_PHONE}
+      - STORAGE_PASS=${STORAGE_PASS}
+      - PARSING_SERVICE_PASS=${PARSING_SERVICE_PASS}
+      - TOKEN_TTL=${TOKEN_TTL}
+      - GRPC_PORT=${RECS_PORT}
+      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+      - REDIS_HOST=redis-master:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB}
     depends_on:
       postgres:
         condition: service_healthy
@@ -155,9 +193,20 @@ services:
     mem_limit: 512m
     ports:
       - "44045:44044"
-      - "44046:44045"
     environment:
-      - ENV=prod
+      - ENV=${ENV}
+      - STORAGE_PASS=${DB_PASSWORD}
+      - TOKEN_TTL_CACHE=${TOKEN_TTL_CACHE}
+      - GRPC_PORT=${CACHE_GRPC_PORT}
+      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+      - REDIS_HOST=redis-master
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB}
+      - KAFKA_HOST=kafka:9092
+      - KAFKA_TOPIC=${KAFKA_TOPIC}
+      - KAFKA_CONSUMER_GROUP=${KAFKA_CONSUMER_GROUP}
+      - KAFKA_MAX_PULLS=${KAFKA_MAX_PULLS}
     depends_on:
       postgres:
         condition: service_healthy
@@ -178,19 +227,26 @@ services:
     ports:
       - "44042:44042"
     environment:
-      - ENV=prod
+      - ENV=${ENV}
       - PYTHONPATH=/app
-      - ENV_PATH=/app/config/config.env
-      - DATABASE_URL=postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres-parser:5432/parser?sslmode=disable
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KAFKA_TOPIC=telegram_posts
+      - API_ID=${API_ID}
+      - API_HASH=${API_HASH}
+      - PHONE_NUMBER=${PHONE_NUMBER}
+      - KAFKA_TOPIC=${KAFKA_TOPIC_INPUT:-${KAFKA_TOPIC}}
       - DB_HOST=postgres-parser
+      - DB_URL=${PARSING_SERVICE_PASS}
       - DB_PORT=5432
-      - DB_NAME=parser
-      - DB_USER=postgres
-      - DB_PASSWORD=1ux35qBk4YgCMsd7eg4ju
-      - PROXY_HOST=127.0.0.1
-      - PROXY_PORT=10808
+      - DB_NAME=${DB_NAME_PARSER:-parser}
+      - DB_USER=${DB_USER:-postgres}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD}@postgres-parser:5432/${DB_NAME_PARSER:-parser}
+      - PROXY_HOST=${PROXY_HOST}
+      - PROXY_PORT=${PROXY_PORT}
+    volumes:
+      - ./gazp.session:/app/gazp.session
+      - ./temp_check.session:/app/temp_check.session
+      - ./temp_session.session:/app/temp_session.session
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
@@ -206,6 +262,11 @@ services:
       context: ./Analitic_Service
       dockerfile: Dockerfile
     container_name: analytic-service
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "9092"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     mem_limit: 512m
     ports:
@@ -213,12 +274,13 @@ services:
     volumes:
       - ./Analitic_Service/logs:/app/logs
     environment:
-      - ENV=prod
+      - ENV=${ENV}
       - PYTHONPATH=/app
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - LOG_LEVEL=INFO
     depends_on:
       kafka:
-        condition: service_started
+        condition: service_healthy
     networks:
       - aurora-network
 

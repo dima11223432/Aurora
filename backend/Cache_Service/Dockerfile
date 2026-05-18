@@ -31,7 +31,6 @@ RUN adduser -D -g '' appuser
 
 COPY --from=builder --chown=appuser:appuser /app/bin/cache-service /app/cache-service
 COPY --from=builder --chown=appuser:appuser /app/bin/migrator /app/migrator
-COPY --from=builder --chown=appuser:appuser /app/config /app/config
 COPY --from=builder --chown=appuser:appuser /app/migrations /app/migrations
 
 USER appuser
@@ -44,4 +43,3 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD ["/app/cache-service", "health"] || exit 1
 
 ENTRYPOINT ["/app/cache-service"]
-CMD ["--config=./config/local.yaml"]
