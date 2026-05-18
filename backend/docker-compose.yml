@@ -234,7 +234,7 @@ services:
       - API_ID=${API_ID}
       - API_HASH=${API_HASH}
       - PHONE_NUMBER=${PHONE_NUMBER}
-      - KAFKA_TOPIC=${KAFKA_TOPIC_INPUT}
+      - KAFKA_TOPIC=${KAFKA_TOPIC}
       - DB_HOST=postgres-parser
       - DB_URL=${PARSING_SERVICE_PASS}
       - DB_PORT=5432
