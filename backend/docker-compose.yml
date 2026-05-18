@@ -235,7 +235,6 @@ services:
       - PROXY_PORT=${PROXY_PORT}
     volumes:
       - ./gazp.session:/app/gazp.session
-      - ./pars_session.session:/app/pars_session.session
       - ./temp_check.session:/app/temp_check.session
       - ./temp_session.session:/app/temp_session.session
     extra_hosts:
