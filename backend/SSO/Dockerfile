@@ -30,5 +30,4 @@ CMD ["sh", "-c", "\
   echo 'Running migrations...' && \
   ./migrator -db-dsn \"$DATABASE_URL\" -migrations-path ./migrations -migrations-table schema_migrations up && \
   echo 'Starting app...' && \
-  ./sso --config ./config/local.yaml \
-"]
+  ./sso"]

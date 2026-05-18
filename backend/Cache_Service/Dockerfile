@@ -44,4 +44,3 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD ["/app/cache-service", "health"] || exit 1
 
 ENTRYPOINT ["/app/cache-service"]
-CMD ["--config=./config/local.yaml"]
