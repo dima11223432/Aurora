@@ -10,7 +10,6 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 
-COPY ./config ./config
 COPY ./migrations ./migrations
 
 RUN go build -o sso ./cmd/sso

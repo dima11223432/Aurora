@@ -31,7 +31,6 @@ RUN adduser -D -g '' appuser
 
 COPY --from=builder --chown=appuser:appuser /app/bin/cache-service /app/cache-service
 COPY --from=builder --chown=appuser:appuser /app/bin/migrator /app/migrator
-COPY --from=builder --chown=appuser:appuser /app/config /app/config
 COPY --from=builder --chown=appuser:appuser /app/migrations /app/migrations
 
 USER appuser
