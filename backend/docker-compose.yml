@@ -74,6 +74,11 @@ services:
   kafka:
     image: confluentinc/cp-kafka:7.4.0
     container_name: kafka
+    healthcheck:
+      test: ["CMD-SHELL", "bash -c '</dev/tcp/127.0.0.1/9092'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       - zookeeper
     command: sh -c "sleep 3 && /etc/confluent/docker/run"
