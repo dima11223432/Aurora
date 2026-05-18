@@ -25,7 +25,7 @@ func main() {
 	flag.Parse()
 
 	if dsn == "" {
-		dsn = os.Getenv("STORAGE_PASS")
+		panic("db-dsn is required")
 	}
 	if migrationPath == "" {
 		panic("migrations-path is required")

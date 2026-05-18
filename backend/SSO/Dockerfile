@@ -27,6 +27,6 @@ CMD ["sh", "-c", "\
   echo 'Waiting for database...' && \
   until pg_isready -h ${DB_HOST:-aurora-db} -p ${DB_PORT:-5432} -U ${DB_USER:-postgres}; do sleep 2; done && \
   echo 'Running migrations...' && \
-  ./migrator -migrations-path=./migrations -migrations-table=schema_migrations up && \
+  ./migrator -db-dsn=\"$STORAGE_PASS\" -migrations-path=./migrations -migrations-table=schema_migrations up && \
   echo 'Starting app...' && \
   ./sso"]
