@@ -106,7 +106,7 @@ services:
       - "44043:44043"
     environment:
       - ENV=${ENV}
-      - STORAGE_PASS=${DB_PASSWORD}
+      - STORAGE_PASS=${STORAGE_PASS}
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${GRPC_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
