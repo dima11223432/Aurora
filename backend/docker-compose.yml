@@ -161,7 +161,7 @@ services:
       - API_ID=${TELEGRAM_API_ID}
       - API_HASH=${TELEGRAM_API_HASH}
       - PHONE_NUMBER=${TELEGRAM_PHONE}
-      - STORAGE_PASS=${DB_PASSWORD}
+      - STORAGE_PASS=${STORAGE_PASS}
       - PARSING_SERVICE_PASS=${PARSING_SERVICE_PASS}
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${RECS_PORT}
@@ -224,6 +224,9 @@ services:
       - ENV=${ENV}
       - PYTHONPATH=/app
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - API_ID=${API_ID}
+      - API_HASH=${API_HASH}
+      - PHONE_NUMBER=${PHONE_NUMBER}
       - KAFKA_TOPIC=${KAFKA_TOPIC_INPUT:-${KAFKA_TOPIC}}
       - DB_HOST=postgres-parser
       - DB_PORT=5432
