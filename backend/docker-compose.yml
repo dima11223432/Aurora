@@ -229,6 +229,7 @@ services:
       - PHONE_NUMBER=${PHONE_NUMBER}
       - KAFKA_TOPIC=${KAFKA_TOPIC_INPUT:-${KAFKA_TOPIC}}
       - DB_HOST=postgres-parser
+      - DB_URL=${PARSING_SERVICE_PASS}
       - DB_PORT=5432
       - DB_NAME=${DB_NAME_PARSER:-parser}
       - DB_USER=${DB_USER:-postgres}
