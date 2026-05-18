@@ -5,6 +5,7 @@ RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repo
 RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
+COPY go.mod go.sum ./
 
 RUN go mod download
 
