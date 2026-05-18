@@ -106,7 +106,7 @@ class App:
 
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
-        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "telegram_posts")
+        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "news_data")
 
         try:
             kafka_controller = KafkaController(self.logger)

@@ -263,11 +263,6 @@ services:
       context: ./Analitic_Service
       dockerfile: Dockerfile
     container_name: analytic-service
-    healthcheck:
-      test: ["CMD", "nc", "-z", "kafka", "9092"]
-      interval: 10s
-      timeout: 10s
-      retries: 5
     restart: unless-stopped
     mem_limit: 512m
     ports:
