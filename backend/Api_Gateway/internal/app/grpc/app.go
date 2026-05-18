@@ -36,8 +36,8 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string,
 		),
 	)
 
-	authAddr := fmt.Sprintf("%s:%d", ssoConfig.Host, ssoConfig.Port)
-	recsAddr := fmt.Sprintf("%s:%d", recsConfig.Host, recsConfig.Port)
+	authAddr := fmt.Sprintf("%s:%d", ssoConfig.SSO.Host, ssoConfig.SSO.Port)
+	recsAddr := fmt.Sprintf("%s:%d", recsConfig.RECS.Host, recsConfig.RECS.Port)
 
 	authConn, err := grpc.NewClient(authAddr, grpc.WithTransportCredentials(insecure.NewCredentials()))
 

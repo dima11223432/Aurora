@@ -27,7 +27,13 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 		panic(err)
 	}
 
-	grpcApp := grpcApp.New(cfg.GRPC.Port, log, cfg.Auth.JwtSecret, cfg.Auth.PublicMethods, cfg.Services.SSO, cfg.Services.RECS)
+	grpcApp := grpcApp.New(cfg.GRPC.Port,
+		log,
+		cfg.Auth.JwtSecret,
+		cfg.Auth.PublicMethods,
+		cfg.Services,
+		cfg.Services,
+	)
 
 	return &App{
 		GRPCApp: grpcApp,
