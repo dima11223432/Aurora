@@ -15,8 +15,8 @@ type Config struct {
 	GRPC               GRPCConfig          `yaml:"grpc" env:"GRPC"`
 	GRPC_GatewayConfig GRPC_Gateway_Config `yaml:"grpc-gateway" env:"GRPC_GATEWAY"`
 	Auth               Auth                `yaml:"auth" env:"AUTH"`
-	RedisConfig        RedisConfig         `yaml:"redis"`
-	Services           ServiceConfig       `yaml:"services"`
+	RedisConfig        RedisConfig         `yaml:"redis" env-layout:"prefix"`
+	Services           ServiceConfig       `yaml:"services" env-layout:"prefix"`
 }
 
 type Auth struct {
@@ -42,8 +42,8 @@ type RedisConfig struct {
 }
 
 type ServiceConfig struct {
-	SSO  SSOConfig  `yaml:"sso"`
-	RECS RECSConfig `yaml:"recs"`
+	SSO  SSOConfig  `yaml:"sso" env-layout:"prefix"`
+	RECS RECSConfig `yaml:"recs" env-layout:"prefix"`
 }
 
 type SSOConfig struct {
