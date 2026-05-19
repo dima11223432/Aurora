@@ -50,7 +50,7 @@ def AI_handler(context):
         logger.error(f"Ошибка в В LSTM Laura: {str(e)}")
         AI_answer["qw"]["graphic_analis"] = "error"
 
-    parts_final = qw(str(AI_answer), str(getenv("QW"))).split(
+    parts_final = qw(str(AI_answer), str(getenv("YA"))).split(
         "-%91%8FROG-COD", maxsplit=1
     )
 
