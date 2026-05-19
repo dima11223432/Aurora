@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"recommendationService/internal/config"
+	"os"
 	"testing"
 	"time"
 
@@ -18,8 +18,12 @@ type PostgresTestSuite struct {
 }
 
 func (p *PostgresTestSuite) SetupTest() {
-	cfg := config.MustLoadByPath("../../../config/local.yaml")
-	s, err := New(cfg.StoragePass, cfg.ParsingServiceStoragePass)
+	storagePass := os.Getenv("STORAGE_PASS")
+	parsingServicePass := os.Getenv("PARSING_SERVICE_PASS")
+	if storagePass == "" || parsingServicePass == "" {
+		log.Fatal("STORAGE_PASS and PARSING_SERVICE_PASS environment variables are required")
+	}
+	s, err := New(storagePass, parsingServicePass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -29,6 +33,15 @@ func (p *PostgresTestSuite) SetupTest() {
 
 func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_channel_%d", suffix)
+
+	_, err := p.storage.parserDB.ExecContext(ctx, `INSERT INTO default_channels (channel_username) VALUES ($1)`, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+	})
 
 	channels, err := p.storage.GetAllDefaultParsingChannels(ctx)
 	p.NoError(err)
@@ -36,9 +49,9 @@ func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 }
 
 func (p *PostgresTestSuite) TestDeleteParsingChannel() {
-
 	ctx := context.Background()
-	channelName := "test_channel"
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_delete_channel_%d", suffix)
 
 	err := p.storage.AddNewParsingChannel(ctx, channelName)
 	p.NoError(err)
@@ -48,10 +61,26 @@ func (p *PostgresTestSuite) TestDeleteParsingChannel() {
 }
 
 func (p *PostgresTestSuite) TestGetPriorityChannelsByUserID() {
-	userID := int64(1)
+	telegramID := int64(999999)
 	ctx := context.Background()
-	channels, err := p.storage.GetPriorityChannelsByUserID(ctx, userID)
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_priority_channel_%d", suffix)
 
+	_, err := p.storage.db.ExecContext(ctx, `INSERT INTO users (telegram_id, first_name) VALUES ($1, $2)`, telegramID, "test")
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.db.ExecContext(context.Background(), `DELETE FROM users WHERE telegram_id = $1`, telegramID)
+	})
+
+	var userID int64
+	err = p.storage.db.QueryRowContext(ctx, `SELECT user_id FROM users WHERE telegram_id = $1`, telegramID).Scan(&userID)
+	p.NoError(err)
+
+	_, err = p.storage.db.ExecContext(ctx, `INSERT INTO channels (user_id, channel_username) VALUES ($1, $2)`, userID, channelName)
+	p.NoError(err)
+
+	channels, err := p.storage.GetPriorityChannelsByUserID(ctx, userID)
 	p.NoError(err)
 	p.NotEmpty(channels)
 }

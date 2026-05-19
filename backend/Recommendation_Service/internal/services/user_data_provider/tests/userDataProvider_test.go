@@ -56,6 +56,7 @@ func (u *userDataProviderSuite) TestDeleteParsingChannel() {
 	ctx := context.Background()
 	channel := "test_channel"
 	u.mock.On("DeleteDefaultParsingChannel", ctx, channel).Return(nil)
+	u.mock.On("DeleteParsingChannel", ctx, channel).Return(nil)
 	err := u.service.DeleteDefaultParsingChannel(ctx, channel)
 	u.NoError(err)
 }

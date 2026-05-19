@@ -78,3 +78,13 @@ func (u *userDataProviderMock) GetRecommendatedPosts(ctx context.Context, userID
 	}
 	return posts, nextCursor, args.Error(2)
 }
+
+func (u *userDataProviderMock) AddNewParsingChannel(ctx context.Context, channel string) error {
+	args := u.Called(ctx, channel)
+	return args.Error(0)
+}
+
+func (u *userDataProviderMock) SetChannelCategory(ctx context.Context, channel string, category string) error {
+	args := u.Called(ctx, channel, category)
+	return args.Error(0)
+}
