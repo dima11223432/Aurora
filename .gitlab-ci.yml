@@ -4,13 +4,12 @@ stages:
 
 test-sso:
   stage: test
-  image: docker:24-dind
-  services:
-    - docker:24-dind
+  image: docker:cli
   variables:
     DOCKER_HOST: unix:///var/run/docker.sock
   script:
     - cp "$ENV_FILE" backend/SSO/.env
+    - sed -i 's/ *= */=/g' backend/SSO/.env
     - cd backend/SSO
     - docker build -t sso-test .
     - docker run --rm --network aurora_aurora-network --env-file .env sso-test go test -coverprofile=coverage.out ./...
@@ -24,13 +23,12 @@ test-sso:
 
 test-recommendation-service:
   stage: test
-  image: docker:24-dind
-  services:
-    - docker:24-dind
+  image: docker:cli
   variables:
     DOCKER_HOST: unix:///var/run/docker.sock
   script:
     - cp "$ENV_FILE" backend/Recommendation_Service/.env
+    - sed -i 's/ *= */=/g' backend/Recommendation_Service/.env
     - cd backend/Recommendation_Service
     - docker build -t recommendation-service-test .
     - docker run --rm --network aurora_aurora-network --env-file .env recommendation-service-test go test -coverprofile=coverage.out ./...
