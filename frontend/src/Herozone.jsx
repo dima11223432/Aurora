@@ -28,7 +28,7 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
-      navigate("/404");
+      // navigate("/404");
       setTimeout(() => {
         setError("Не удалось получить данные пользователя");
 
