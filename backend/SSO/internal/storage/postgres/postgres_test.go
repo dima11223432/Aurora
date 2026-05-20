@@ -1,9 +1,8 @@
-package storage_test
+package postgres
 
 import (
 	"authService/internal/domain/models"
 	"authService/internal/storage"
-	"authService/internal/storage/postgres"
 	"context"
 	"log"
 	"os"
@@ -15,7 +14,7 @@ import (
 
 type PostgresTestSuite struct {
 	suite.Suite
-	storage *postgres.Storage
+	storage *Storage
 }
 
 func (p *PostgresTestSuite) SetupTest() {
@@ -27,7 +26,7 @@ func (p *PostgresTestSuite) SetupTest() {
 		log.Fatal("TEST_POSTGRES_DNS or STORAGE_PASS environment variable is required")
 	}
 
-	s, err := postgres.New(testDsn)
+	s, err := New(testDsn)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -238,7 +237,7 @@ func (p *PostgresTestSuite) TestGetUserById_NotFound() {
 }
 
 func (p *PostgresTestSuite) TestNew_InvalidConnection() {
-	_, err := postgres.New("invalid-connection-string")
+	_, err := New("invalid-connection-string")
 	p.Error(err)
 }
 

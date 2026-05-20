@@ -79,7 +79,7 @@
 				
 				<option value="file11">recommendationService/internal/services/user_data_provider/userDataProviderMock.go (77.8%)</option>
 				
-				<option value="file12">recommendationService/internal/storage/postgres/postgres.go (34.7%)</option>
+				<option value="file12">recommendationService/internal/storage/postgres/postgres.go (69.3%)</option>
 				
 				<option value="file13">recommendationService/internal/storage/redis/redis.go (91.3%)</option>
 				
@@ -3525,19 +3525,19 @@ func (s *Storage) GetAllDefaultParsingChannels(ctx context.Context) ([]string, e
 
 }
 
-func (s *Storage) IsChannelExistsInDefaultParsingChannels(ctx context.Context, channel string) (bool, error) <span class="cov0" title="0">{
+func (s *Storage) IsChannelExistsInDefaultParsingChannels(ctx context.Context, channel string) (bool, error) <span class="cov8" title="1">{
         const op = "internal.storage.postgres.IsChannelExistsInDefaultParsingChannels"
 
         q := `SELECT channel_username FROM default_channels WHERE channel_username = $1`
         var channelName string
         err := s.parserDB.QueryRowContext(ctx, q, channel).Scan(&amp;channelName)
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, sql.ErrNoRows) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, sql.ErrNoRows) </span><span class="cov8" title="1">{
                         return false, nil
                 }</span>
                 <span class="cov0" title="0">return false, fmt.Errorf("%s: %w", op, err)</span>
         }
-        <span class="cov0" title="0">return true, nil</span>
+        <span class="cov8" title="1">return true, nil</span>
 }
 
 func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov0" title="0">{
@@ -3588,7 +3588,7 @@ func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) <span 
         <span class="cov8" title="1">return categories, nil</span>
 }
 
-func (s *Storage) AddNewParsingChannelWithoutDublicate(ctx context.Context, channel string) error <span class="cov0" title="0">{
+func (s *Storage) AddNewParsingChannelWithoutDublicate(ctx context.Context, channel string) error <span class="cov8" title="1">{
         const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
         q := `INSERT INTO channels (username) VALUES ($1)`
         _, err := s.parserDB.ExecContext(ctx, q, channel)
@@ -3598,15 +3598,15 @@ func (s *Storage) AddNewParsingChannelWithoutDublicate(ctx context.Context, chan
                 }</span>
                 <span class="cov0" title="0">return fmt.Errorf("%s: %w", op, err)</span>
         }
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error <span class="cov8" title="1">{
         const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
         q := `INSERT INTO channels (username) VALUES ($1)`
         _, err := s.parserDB.ExecContext(ctx, q, channel)
-        if err != nil </span><span class="cov0" title="0">{
-                if GetDublicateError(err) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
+                if GetDublicateError(err) </span><span class="cov8" title="1">{
                         return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
                 }</span>
                 <span class="cov0" title="0">return fmt.Errorf("%s: %w", op, err)</span>
@@ -3614,22 +3614,22 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) erro
         <span class="cov8" title="1">return nil</span>
 }
 
-func (s *Storage) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error <span class="cov0" title="0">{
+func (s *Storage) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error <span class="cov8" title="1">{
         const op = "internal.storage.postgres.AddNewParsingChannel"
 
         q := `INSERT INTO default_channels (channel_username) VALUES ($1)`
         _, err := s.parserDB.ExecContext(ctx, q, channel)
-        if err != nil </span><span class="cov0" title="0">{
-                if GetDublicateError(err) </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
+                if GetDublicateError(err) </span><span class="cov8" title="1">{
                         return fmt.Errorf("%s: %w", op, storage.ErrChannelExists)
                 }</span>
                 <span class="cov0" title="0">return fmt.Errorf("%s: %w", op, err)</span>
         }
 
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
-func (s *Storage) SetChannelCategory(ctx context.Context, channel string, category string) error <span class="cov0" title="0">{
+func (s *Storage) SetChannelCategory(ctx context.Context, channel string, category string) error <span class="cov8" title="1">{
         const op = "internal.storage.postgres.SetChannelCategory"
 
         q := `INSERT INTO channels_info (channel_id, category) VALUES ((SELECT id FROM default_channels WHERE channel_username = $1), $2)`
@@ -3638,7 +3638,7 @@ func (s *Storage) SetChannelCategory(ctx context.Context, channel string, catego
         if err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("%s:%w", op, err)
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 func (s *Storage) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov0" title="0">{
@@ -3655,7 +3655,7 @@ func (s *Storage) DeleteUserCustomParsingChannel(ctx context.Context, userID int
         <span class="cov0" title="0">return nil</span>
 }
 
-func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) error <span class="cov0" title="0">{
+func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) error <span class="cov8" title="1">{
         const op = "internal.storage.postgres.DeleteParsingChannel"
 
         q := `DELETE FROM channels WHERE username = $1`
@@ -3664,7 +3664,7 @@ func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) erro
         if err != nil </span><span class="cov0" title="0">{
                 return fmt.Errorf("%s: %w", op, err)
         }</span>
-        <span class="cov0" title="0">return nil</span>
+        <span class="cov8" title="1">return nil</span>
 }
 
 func (s *Storage) DeleteDefaultParsingChannel(ctx context.Context, channel string) error <span class="cov8" title="1">{
@@ -3678,7 +3678,7 @@ func (s *Storage) DeleteDefaultParsingChannel(ctx context.Context, channel strin
         <span class="cov8" title="1">return nil</span>
 }
 
-func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) <span class="cov0" title="0">{
+func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) <span class="cov8" title="1">{
         const op = "internal.storage.postgres.GetParsingChannelsByCategory"
 
         q := `SELECT c.channel_username FROM default_channels c INNER JOIN channels_info ci ON c.id = ci.channel_id WHERE ci.category = $1`
@@ -3686,18 +3686,18 @@ func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, categ
         if err != nil </span><span class="cov0" title="0">{
                 return nil, fmt.Errorf("%s: %w", op, err)
         }</span>
-        <span class="cov0" title="0">channelsUsernames := make([]string, 0)
-        for query.Next() </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">channelsUsernames := make([]string, 0)
+        for query.Next() </span><span class="cov8" title="1">{
                 var channel string
                 if err := query.Scan(&amp;channel); err != nil </span><span class="cov0" title="0">{
                         return nil, fmt.Errorf("%s: %w", op, err)
                 }</span>
-                <span class="cov0" title="0">channelsUsernames = append(channelsUsernames, channel)</span>
+                <span class="cov8" title="1">channelsUsernames = append(channelsUsernames, channel)</span>
         }
-        <span class="cov0" title="0">return channelsUsernames, nil</span>
+        <span class="cov8" title="1">return channelsUsernames, nil</span>
 }
 
-func (s *Storage) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) <span class="cov0" title="0">{
+func (s *Storage) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) <span class="cov8" title="1">{
         const op = "internal.storage.postgres.GetAllUserCustomParsingChannels"
 
         q := `SELECT channel_username FROM user_custom_parsing_channels WHERE user_id = $1`
@@ -3707,15 +3707,15 @@ func (s *Storage) GetAllUserCustomParsingChannels(ctx context.Context, userID in
                 return nil, fmt.Errorf("%s: %w", op, err)
         }</span>
 
-        <span class="cov0" title="0">for query.Next() </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for query.Next() </span><span class="cov8" title="1">{
                 var channel string
                 if err := query.Scan(&amp;channel); err != nil </span><span class="cov0" title="0">{
                         return nil, fmt.Errorf("%s: %w", op, err)
                 }</span>
-                <span class="cov0" title="0">channels = append(channels, channel)</span>
+                <span class="cov8" title="1">channels = append(channels, channel)</span>
         }
 
-        <span class="cov0" title="0">return channels, nil</span>
+        <span class="cov8" title="1">return channels, nil</span>
 }
 
 func GetDublicateError(err error) bool <span class="cov8" title="1">{
