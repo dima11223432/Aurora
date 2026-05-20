@@ -32,7 +32,7 @@ func (p *PostgresTestSuite) SetupTest() {
 	}
 	p.storage = s
 
-	_, _ = p.storage.DB.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
+	_, _ = p.storage.DB.Exec("TRUNCATE TABLE users, channels RESTART IDENTITY CASCADE")
 }
 
 func (p *PostgresTestSuite) TearDownTest() {
