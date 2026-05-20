@@ -10,7 +10,11 @@ test-sso:
   script:
     - cp "$ENV_FILE" backend/SSO/.env
     - sed -i 's/ *= */=/g' backend/SSO/.env
-    - cd backend/SSO
+    - cd backend
+    - cp "$ENV_FILE" .env
+    - docker compose up -d postgres postgres-parser redis-master
+    - sleep 10
+    - cd ../backend/SSO
     - docker build -t sso-test .
     - docker run --rm --network aurora_aurora-network --env-file .env sso-test go test -coverprofile=coverage.out ./...
     - docker run --rm -v $(pwd):/workspace sso-test go tool cover -html=coverage.out -o coverage.html
@@ -20,6 +24,8 @@ test-sso:
       - backend/SSO/coverage.html
       - backend/SSO/coverage.out
     expire_in: 7 days
+  after_script:
+    - cd backend && docker compose down
 
 test-recommendation-service:
   stage: test
@@ -29,7 +35,11 @@ test-recommendation-service:
   script:
     - cp "$ENV_FILE" backend/Recommendation_Service/.env
     - sed -i 's/ *= */=/g' backend/Recommendation_Service/.env
-    - cd backend/Recommendation_Service
+    - cd backend
+    - cp "$ENV_FILE" .env
+    - docker compose up -d postgres postgres-parser redis-master
+    - sleep 10
+    - cd ../backend/Recommendation_Service
     - docker build -t recommendation-service-test .
     - docker run --rm --network aurora_aurora-network --env-file .env recommendation-service-test go test -coverprofile=coverage.out ./...
     - docker run --rm -v $(pwd):/workspace recommendation-service-test go tool cover -html=coverage.out -o coverage.html
@@ -39,6 +49,8 @@ test-recommendation-service:
       - backend/Recommendation_Service/coverage.html
       - backend/Recommendation_Service/coverage.out
     expire_in: 7 days
+  after_script:
+    - cd backend && docker compose down
 
 deploy-staging:
   stage: deploy
