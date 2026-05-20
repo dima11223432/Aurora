@@ -142,7 +142,7 @@ services:
     environment:
       - ENV=${ENV}
       - DB_PASSWORD=${DB_PASSWORD}
-      - STORAGE_PASS=${STORAGE_PASS}
+      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/${DB_NAME_AURORA:-aurora}?sslmode=disable
       - TEST_POSTGRES_DNS=${TEST_POSTGRES_DNS}
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${SSO_PORT}
