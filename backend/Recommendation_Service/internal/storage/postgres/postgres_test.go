@@ -61,9 +61,9 @@ func (p *PostgresTestSuite) TestDeleteParsingChannel() {
 }
 
 func (p *PostgresTestSuite) TestGetPriorityChannelsByUserID() {
-	telegramID := int64(999999)
 	ctx := context.Background()
 	suffix := time.Now().UnixNano()
+	telegramID := int64(9000000000 + suffix)
 	channelName := fmt.Sprintf("test_priority_channel_%d", suffix)
 
 	_, err := p.storage.db.ExecContext(ctx, `INSERT INTO users (telegram_id, first_name) VALUES ($1, $2)`, telegramID, "test")
