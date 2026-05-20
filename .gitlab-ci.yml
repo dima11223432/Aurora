@@ -4,9 +4,9 @@ stages:
 
 test-sso:
   stage: test
-  image: docker:24-cli
+  image: docker:24-dind
   services:
-    - docker:24-cli-dind
+    - docker:24-dind
   variables:
     DOCKER_HOST: tcp://docker:2376
     DOCKER_TLS_CERTDIR: ""
@@ -25,9 +25,9 @@ test-sso:
 
 test-recommendation-service:
   stage: test
-  image: docker:24-cli
+  image: docker:24-dind
   services:
-    - docker:24-cli-dind
+    - docker:24-dind
   variables:
     DOCKER_HOST: tcp://docker:2376
     DOCKER_TLS_CERTDIR: ""
