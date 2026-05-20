@@ -279,6 +279,7 @@ services:
       - ENV=${ENV}
       - PYTHONPATH=/app
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_TOPIC_RESULT=${KAFKA_TOPIC}
       - LOG_LEVEL=INFO
     depends_on:
       kafka:
