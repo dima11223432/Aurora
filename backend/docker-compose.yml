@@ -177,6 +177,8 @@ services:
       - REDIS_PORT=6379
       - REDIS_DB=${REDIS_DB}
     depends_on:
+      postgres-parser:
+        condition: service_healthy
       postgres:
         condition: service_healthy
       redis-master:
