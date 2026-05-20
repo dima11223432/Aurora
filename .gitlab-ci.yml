@@ -41,7 +41,7 @@ test-recommendation-service:
     - sleep 10
     - cd ../backend/Recommendation_Service
     - docker build -t recommendation-service-test .
-    - docker run --rm --network backend_aurora-network --env-file .env recommendation-service-test go test -coverprofile=coverage.out ./...
+    - docker run --rm --network backend_aurora-network --env-file .env -v $(pwd):/workspace recommendation-service-test go test -coverprofile=coverage.out ./...
     - docker run --rm -v $(pwd):/workspace recommendation-service-test go tool cover -html=coverage.out -o coverage.html
   coverage: '/coverage: \d+\.\d+%/'
   artifacts:
