@@ -71,9 +71,9 @@
 				
 				<option value="file7">recommendationService/internal/config/config.go (0.0%)</option>
 				
-				<option value="file8">recommendationService/internal/grpc/userDataProvider/server.go (38.6%)</option>
+				<option value="file8">recommendationService/internal/grpc/userDataProvider/server.go (95.7%)</option>
 				
-				<option value="file9">recommendationService/internal/grpc/userDataProvider/userDataProviderMock.go (40.0%)</option>
+				<option value="file9">recommendationService/internal/grpc/userDataProvider/userDataProviderMock.go (94.1%)</option>
 				
 				<option value="file10">recommendationService/internal/services/user_data_provider/userDataProvider.go (93.0%)</option>
 				
@@ -2792,7 +2792,7 @@ func NewServerAPI(userDataProvider UserDataProvider, parsingChannelsProvider Par
 
 func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *recv1.GetUserPriorityChannelsRequest) (*recv1.GetUserPriorityChannelsResponse, error) <span class="cov8" title="1">{
         channels, err := s.userDataProvider.GetUserPriorityChannels(ctx, req.GetUserId())
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "internal error")
         }</span>
         <span class="cov8" title="1">return &amp;recv1.GetUserPriorityChannelsResponse{
@@ -2806,7 +2806,7 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRec
         const op = "Recommendation_Service.internal.grpc.UserDataProvider.server.GetRecommendatedPosts"
 
         var cursor *models.Cursor
-        if req.GetCursor() != nil &amp;&amp; (req.GetCursor().GetScore() != 0 || req.GetCursor().GetId() != "") </span><span class="cov0" title="0">{
+        if req.GetCursor() != nil &amp;&amp; (req.GetCursor().GetScore() != 0 || req.GetCursor().GetId() != "") </span><span class="cov8" title="1">{
                 cursor = &amp;models.Cursor{
                         Score: float64(req.GetCursor().GetScore()),
                         ID:    req.GetCursor().GetId(),
@@ -2817,7 +2817,7 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRec
         if nextCursor == nil </span><span class="cov0" title="0">{
                 return nil, status.New(codes.OK, "no more posts").Err()
         }</span>
-        <span class="cov8" title="1">if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "failed to get recommended posts")
         }</span>
         <span class="cov8" title="1">protoPosts := make([]*recv1.Post, 0)
@@ -2851,7 +2851,7 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRec
 
 func (s *serverAPI) GetAllDefaultParsingChannels(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsRequest) (*recv1.GetAllDefaultParsingChannelsResponse, error) <span class="cov8" title="1">{
         channels, err := s.parsingChannelsProvider.GetAllDefaultParsingChannels(ctx)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "internal error")
         }</span>
         <span class="cov8" title="1">return &amp;recv1.GetAllDefaultParsingChannelsResponse{
@@ -2862,14 +2862,14 @@ func (s *serverAPI) GetAllDefaultParsingChannels(ctx context.Context, req *recv1
 func (s *serverAPI) GetAllUserCustomParsingChannels(
         ctx context.Context,
         req *recv1.GetAllUserCustomParsingChannelsRequest,
-) (*recv1.GetAllUserCustomParsingChannelsResponse, error) <span class="cov0" title="0">{
+) (*recv1.GetAllUserCustomParsingChannelsResponse, error) <span class="cov8" title="1">{
         userID := req.GetUserId()
 
         channels, err := s.parsingChannelsProvider.GetAllUserCustomParsingChannels(ctx, userID)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "internal error")
         }</span>
-        <span class="cov0" title="0">return &amp;recv1.GetAllUserCustomParsingChannelsResponse{
+        <span class="cov8" title="1">return &amp;recv1.GetAllUserCustomParsingChannelsResponse{
                 Channels: channels,
         }, nil</span>
 }
@@ -2877,47 +2877,47 @@ func (s *serverAPI) GetAllUserCustomParsingChannels(
 func (s *serverAPI) AddNewUserCustomParsingChannel(
         ctx context.Context,
         req *recv1.AddNewUserCustomParsingChannelRequest,
-) (*recv1.AddNewUserCustomParsingChannelResponse, error) <span class="cov0" title="0">{
+) (*recv1.AddNewUserCustomParsingChannelResponse, error) <span class="cov8" title="1">{
         userID := req.GetUserId()
         channelUsername := req.GetChannelUsername()
 
-        if err := s.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channelUsername); err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, storage.ErrChannelExists) </span><span class="cov0" title="0">{
+        if err := s.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channelUsername); err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, storage.ErrChannelExists) </span><span class="cov8" title="1">{
                         return nil, status.Error(codes.AlreadyExists, "channel already exists")
                 }</span>
-                <span class="cov0" title="0">return nil, status.Error(codes.Internal, "internal error")</span>
+                <span class="cov8" title="1">return nil, status.Error(codes.Internal, "internal error")</span>
         }
 
-        <span class="cov0" title="0">return &amp;recv1.AddNewUserCustomParsingChannelResponse{}, nil</span>
+        <span class="cov8" title="1">return &amp;recv1.AddNewUserCustomParsingChannelResponse{}, nil</span>
 }
 
-func (s *serverAPI) AddNewDefaultParsingChannel(ctx context.Context, req *recv1.AddNewDefaultParsingChannelRequest) (*recv1.AddNewDefaultParsingChannelResponse, error) <span class="cov0" title="0">{
+func (s *serverAPI) AddNewDefaultParsingChannel(ctx context.Context, req *recv1.AddNewDefaultParsingChannelRequest) (*recv1.AddNewDefaultParsingChannelResponse, error) <span class="cov8" title="1">{
         channelUsername := req.GetChannelUsername()
         channelCategory := req.GetCategory()
-        if channelUsername == "" </span><span class="cov0" title="0">{
+        if channelUsername == "" </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.InvalidArgument, "channel username is empty")
         }</span>
-        <span class="cov0" title="0">err := s.parsingChannelsProvider.AddNewDefaultParsingChannel(ctx, channelUsername, channelCategory)
-        if err != nil </span><span class="cov0" title="0">{
-                if errors.Is(err, storage.ErrChannelExists) </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">err := s.parsingChannelsProvider.AddNewDefaultParsingChannel(ctx, channelUsername, channelCategory)
+        if err != nil </span><span class="cov8" title="1">{
+                if errors.Is(err, storage.ErrChannelExists) </span><span class="cov8" title="1">{
                         return nil, status.Error(codes.AlreadyExists, "channel already exists")
                 }</span>
-                <span class="cov0" title="0">return nil, status.Error(codes.Internal, "internal error")</span>
+                <span class="cov8" title="1">return nil, status.Error(codes.Internal, "internal error")</span>
         }
-        <span class="cov0" title="0">return &amp;recv1.AddNewDefaultParsingChannelResponse{}, nil</span>
+        <span class="cov8" title="1">return &amp;recv1.AddNewDefaultParsingChannelResponse{}, nil</span>
 }
 
 func (s *serverAPI) DeleteUserCustomParsingChannel(
         ctx context.Context,
         req *recv1.DeleteUserCustomParsingChannelRequest,
-) (*recv1.DeleteUserCustomParsingChannelResponse, error) <span class="cov0" title="0">{
+) (*recv1.DeleteUserCustomParsingChannelResponse, error) <span class="cov8" title="1">{
         channelUsername := req.GetChannelUsername()
         userID := req.GetUserId()
         err := s.parsingChannelsProvider.DeleteUserCustomParsingChannel(ctx, userID, channelUsername)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "internal error")
         }</span>
-        <span class="cov0" title="0">return &amp;recv1.DeleteUserCustomParsingChannelResponse{}, nil</span>
+        <span class="cov8" title="1">return &amp;recv1.DeleteUserCustomParsingChannelResponse{}, nil</span>
 }
 
 func (s *serverAPI) DeleteDefaultParsingChannel(ctx context.Context, req *recv1.DeleteDefaultParsingChannelRequest) (*recv1.DeleteDefaultParsingChannelResponse, error) <span class="cov8" title="1">{
@@ -2926,26 +2926,26 @@ func (s *serverAPI) DeleteDefaultParsingChannel(ctx context.Context, req *recv1.
                 return nil, status.Error(codes.InvalidArgument, "channel username is empty")
         }</span>
         <span class="cov8" title="1">err := s.parsingChannelsProvider.DeleteDefaultParsingChannel(ctx, channelUsername)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "internal error")
         }</span>
         <span class="cov8" title="1">return &amp;recv1.DeleteDefaultParsingChannelResponse{}, nil</span>
 }
 
-func (s *serverAPI) GetAllDefaultParsingChannelsWithCategories(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsWithCategoriesRequest) (*recv1.GetAllDefaultParsingChannelsWithCategoriesResponse, error) <span class="cov0" title="0">{
+func (s *serverAPI) GetAllDefaultParsingChannelsWithCategories(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsWithCategoriesRequest) (*recv1.GetAllDefaultParsingChannelsWithCategoriesResponse, error) <span class="cov8" title="1">{
         channelsWithCategories, err := s.parsingChannelsProvider.GetDefaultParsingChannelsWithCategories(ctx)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, status.Error(codes.Internal, "internal error")
         }</span>
-        <span class="cov0" title="0">protoChannels := make(map[string]*recv1.ChannelList)
+        <span class="cov8" title="1">protoChannels := make(map[string]*recv1.ChannelList)
 
-        for category, channels := range channelsWithCategories </span><span class="cov0" title="0">{
+        for category, channels := range channelsWithCategories </span><span class="cov8" title="1">{
                 protoChannels[category] = &amp;recv1.ChannelList{
                         Usernames: channels,
                 }
         }</span>
 
-        <span class="cov0" title="0">return &amp;recv1.GetAllDefaultParsingChannelsWithCategoriesResponse{
+        <span class="cov8" title="1">return &amp;recv1.GetAllDefaultParsingChannelsWithCategoriesResponse{
                 Channels: protoChannels,
         }, nil</span>
 }
@@ -2966,25 +2966,39 @@ type UserDataProviderMock struct {
 
 func (m *UserDataProviderMock) GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error) <span class="cov8" title="1">{
         args := m.Called(ctx, userID)
-        return args.Get(0).([]models.PriorityChannel), args.Error(1)
-}</span>
+        if args.Get(0) == nil </span><span class="cov8" title="1">{
+                return nil, args.Error(1)
+        }</span>
+        <span class="cov8" title="1">return args.Get(0).([]models.PriorityChannel), args.Error(1)</span>
+}
 
 func (m *UserDataProviderMock) GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) <span class="cov8" title="1">{
         args := m.Called(ctx, userID, cursor)
-        return args.Get(0).([]models.Post), args.Get(1).(*models.Cursor), args.Error(2)
-}</span>
+        var posts []models.Post
+        var nextCursor *models.Cursor
+        if args.Get(0) != nil </span><span class="cov8" title="1">{
+                posts = args.Get(0).([]models.Post)
+        }</span>
+        <span class="cov8" title="1">if args.Get(1) != nil </span><span class="cov8" title="1">{
+                nextCursor = args.Get(1).(*models.Cursor)
+        }</span>
+        <span class="cov8" title="1">return posts, nextCursor, args.Error(2)</span>
+}
 
 func (m *UserDataProviderMock) GetAllDefaultParsingChannels(ctx context.Context) ([]string, error) <span class="cov8" title="1">{
         args := m.Called(ctx)
-        return args.Get(0).([]string), args.Error(1)
-}</span>
+        if args.Get(0) == nil </span><span class="cov8" title="1">{
+                return nil, args.Error(1)
+        }</span>
+        <span class="cov8" title="1">return args.Get(0).([]string), args.Error(1)</span>
+}
 
-func (m *UserDataProviderMock) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error <span class="cov0" title="0">{
+func (m *UserDataProviderMock) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error <span class="cov8" title="1">{
         args := m.Called(ctx, channel, category)
         return args.Error(0)
 }</span>
 
-func (m *UserDataProviderMock) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov0" title="0">{
+func (m *UserDataProviderMock) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov8" title="1">{
         args := m.Called(ctx, userID, channel)
         return args.Error(0)
 }</span>
@@ -2994,20 +3008,26 @@ func (m *UserDataProviderMock) DeleteDefaultParsingChannel(ctx context.Context, 
         return args.Error(0)
 }</span>
 
-func (m *UserDataProviderMock) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov0" title="0">{
+func (m *UserDataProviderMock) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov8" title="1">{
         args := m.Called(ctx, userID, channel)
         return args.Error(0)
 }</span>
 
-func (m *UserDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) <span class="cov0" title="0">{
+func (m *UserDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) <span class="cov8" title="1">{
         args := m.Called(ctx, userID)
-        return args.Get(0).([]string), args.Error(1)
-}</span>
+        if args.Get(0) == nil </span><span class="cov8" title="1">{
+                return nil, args.Error(1)
+        }</span>
+        <span class="cov8" title="1">return args.Get(0).([]string), args.Error(1)</span>
+}
 
-func (m *UserDataProviderMock) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) <span class="cov0" title="0">{
+func (m *UserDataProviderMock) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) <span class="cov8" title="1">{
         args := m.Called(ctx)
-        return args.Get(0).(map[string][]string), args.Error(1)
-}</span>
+        if args.Get(0) == nil </span><span class="cov8" title="1">{
+                return nil, args.Error(1)
+        }</span>
+        <span class="cov8" title="1">return args.Get(0).(map[string][]string), args.Error(1)</span>
+}
 
 func (m *UserDataProviderMock) GetAllCategories(ctx context.Context) ([]string, error) <span class="cov0" title="0">{
         args := m.Called(ctx)
