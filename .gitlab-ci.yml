@@ -23,7 +23,7 @@ test-sso:
   #   paths:
   #     - backend/SSO/coverage.html
   #     - backend/SSO/coverage.out
-    expire_in: 7 days
+  #   expire_in: 7 days
   after_script:
     - cd backend && docker compose down
 
