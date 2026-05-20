@@ -18,7 +18,7 @@ test-sso:
     - docker build -t sso-test .
     - docker run --rm --network backend_aurora-network --env-file .env -v $(pwd):/workspace sso-test go test -coverprofile=coverage.out ./...
     - docker run --rm -v $(pwd):/workspace sso-test go tool cover -html=coverage.out -o coverage.html
-  coverage: '/coverage: \d+\.\d+%/'
+  # coverage: '/coverage: \d+\.\d+%/'
   artifacts:
     paths:
       - backend/SSO/coverage.html
@@ -43,7 +43,7 @@ test-recommendation-service:
     - docker build -t recommendation-service-test .
     - docker run --rm --network backend_aurora-network --env-file .env -v $(pwd):/workspace recommendation-service-test go test -coverprofile=coverage.out ./...
     - docker run --rm -v $(pwd):/workspace recommendation-service-test go tool cover -html=coverage.out -o coverage.html
-  coverage: '/coverage: \d+\.\d+%/'
+  # coverage: '/coverage: \d+\.\d+%/'
   artifacts:
     paths:
       - backend/Recommendation_Service/coverage.html
