@@ -1,4 +1,4 @@
-package auth_test
+package auth
 
 import (
 	"context"
@@ -87,4 +87,14 @@ func (u *userDataProviderMock) AddNewParsingChannel(ctx context.Context, channel
 func (u *userDataProviderMock) SetChannelCategory(ctx context.Context, channel string, category string) error {
 	args := u.Called(ctx, channel, category)
 	return args.Error(0)
+}
+
+func (u *userDataProviderMock) GetAllParsingChannels(ctx context.Context) ([]string, error) {
+	args := u.Called(ctx)
+	return args.Get(0).([]string), args.Error(1)
+}
+
+func (u *userDataProviderMock) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
+	args := u.Called(ctx, category)
+	return args.Get(0).([]string), args.Error(1)
 }

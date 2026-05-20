@@ -1,10 +1,9 @@
-package auth_test
+package auth
 
 import (
 	"context"
 	"log/slog"
 	"recommendationService/internal/domain/models"
-	auth "recommendationService/internal/services/user_data_provider"
 	"testing"
 	"time"
 
@@ -15,12 +14,12 @@ import (
 type userDataProviderSuite struct {
 	suite.Suite
 	mock    *userDataProviderMock
-	service *auth.UserDataProvider
+	service *UserDataProvider
 }
 
 func (u *userDataProviderSuite) SetupTest() {
 	u.mock = new(userDataProviderMock)
-	u.service = auth.New(slog.Default(), u.mock, u.mock, u.mock, 5*time.Minute)
+	u.service = New(slog.Default(), u.mock, u.mock, u.mock, 5*time.Minute)
 }
 
 func (u *userDataProviderSuite) TestGetUserPriorityChannels() {

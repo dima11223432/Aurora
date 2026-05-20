@@ -75,13 +75,13 @@
 				
 				<option value="file9">recommendationService/internal/grpc/userDataProvider/userDataProviderMock.go (40.0%)</option>
 				
-				<option value="file10">recommendationService/internal/services/user_data_provider/tests/userDataProviderMock.go (29.4%)</option>
+				<option value="file10">recommendationService/internal/services/user_data_provider/tests/userDataProviderMock.go (52.6%)</option>
 				
 				<option value="file11">recommendationService/internal/services/user_data_provider/userDataProvider.go (0.0%)</option>
 				
 				<option value="file12">recommendationService/internal/storage/postgres/postgres.go (34.7%)</option>
 				
-				<option value="file13">recommendationService/internal/storage/redis/redis.go (0.0%)</option>
+				<option value="file13">recommendationService/internal/storage/redis/redis.go (91.3%)</option>
 				
 				</select>
 			</div>
@@ -3053,7 +3053,7 @@ func (u *userDataProviderMock) DeleteDefaultParsingChannel(ctx context.Context, 
         return args.Error(0)
 }</span>
 
-func (u *userDataProviderMock) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov0" title="0">{
+func (u *userDataProviderMock) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov8" title="1">{
         args := u.Called(ctx, userID, channel)
         return args.Error(0)
 }</span>
@@ -3063,22 +3063,22 @@ func (u *userDataProviderMock) DeleteParsingChannel(ctx context.Context, channel
         return args.Error(0)
 }</span>
 
-func (u *userDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) <span class="cov0" title="0">{
+func (u *userDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) <span class="cov8" title="1">{
         args := u.Called(ctx, userID)
         return args.Get(0).([]string), args.Error(1)
 }</span>
 
-func (u *userDataProviderMock) GetAllCategories(ctx context.Context) ([]string, error) <span class="cov0" title="0">{
+func (u *userDataProviderMock) GetAllCategories(ctx context.Context) ([]string, error) <span class="cov8" title="1">{
         args := u.Called(ctx)
         return args.Get(0).([]string), args.Error(1)
 }</span>
 
-func (u *userDataProviderMock) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov0" title="0">{
+func (u *userDataProviderMock) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error <span class="cov8" title="1">{
         args := u.Called(ctx, userID, channel)
         return args.Error(0)
 }</span>
 
-func (u *userDataProviderMock) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) <span class="cov0" title="0">{
+func (u *userDataProviderMock) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) <span class="cov8" title="1">{
         args := u.Called(ctx, category)
         return args.Get(0).([]string), args.Error(1)
 }</span>
@@ -3104,6 +3104,16 @@ func (u *userDataProviderMock) AddNewParsingChannel(ctx context.Context, channel
 func (u *userDataProviderMock) SetChannelCategory(ctx context.Context, channel string, category string) error <span class="cov0" title="0">{
         args := u.Called(ctx, channel, category)
         return args.Error(0)
+}</span>
+
+func (u *userDataProviderMock) GetAllParsingChannels(ctx context.Context) ([]string, error) <span class="cov0" title="0">{
+        args := u.Called(ctx)
+        return args.Get(0).([]string), args.Error(1)
+}</span>
+
+func (u *userDataProviderMock) GetParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) <span class="cov0" title="0">{
+        args := u.Called(ctx, category)
+        return args.Get(0).([]string), args.Error(1)
 }</span>
 </pre>
 		
@@ -3696,7 +3706,7 @@ type RedisController struct {
         DefaultTTl time.Duration
 }
 
-func NewRedisController(addr string, password string, db int, protocol int, ttl time.Duration) *RedisController <span class="cov0" title="0">{
+func NewRedisController(addr string, password string, db int, protocol int, ttl time.Duration) *RedisController <span class="cov8" title="1">{
         return &amp;RedisController{
                 redis: redis.NewClient(&amp;redis.Options{
                         Addr:     addr,
@@ -3708,42 +3718,42 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
         }
 }</span>
 
-func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error) <span class="cov0" title="0">{
+func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error) <span class="cov8" title="1">{
         const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannels"
         hash := getChannelsHash(channels)
         tmpKey := fmt.Sprintf("tmp:feed:%d:%s", userID, hash)
 
-        if exists, _ := r.redis.Exists(ctx, tmpKey).Result(); exists == 0 </span><span class="cov0" title="0">{
+        if exists, _ := r.redis.Exists(ctx, tmpKey).Result(); exists == 0 </span><span class="cov8" title="1">{
                 if err := r.initilizeNewZUnion(ctx, tmpKey, channels); err != nil </span><span class="cov0" title="0">{
                         return nil, nil, fmt.Errorf("%s: %w", op, err)
                 }</span>
         }
 
-        <span class="cov0" title="0">maxScore := "+inf"
-        if cursor != nil &amp;&amp; cursor.Score != 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">maxScore := "+inf"
+        if cursor != nil &amp;&amp; cursor.Score != 0 </span><span class="cov8" title="1">{
                 maxScore = fmt.Sprintf("(%.0f", cursor.Score)
         }</span>
 
-        <span class="cov0" title="0">zPosts, err := r.getSortedPosts(ctx, tmpKey, maxScore, 0, limit)
+        <span class="cov8" title="1">zPosts, err := r.getSortedPosts(ctx, tmpKey, maxScore, 0, limit)
         if err != nil </span><span class="cov0" title="0">{
                 return nil, nil, fmt.Errorf("%s: %w", op, err)
         }</span>
 
-        <span class="cov0" title="0">if len(zPosts) == 0 </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">if len(zPosts) == 0 </span><span class="cov8" title="1">{
                 return []models.Post{}, nil, nil
         }</span>
 
-        <span class="cov0" title="0">postKeys := make([]string, len(zPosts))
-        for i, zp := range zPosts </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">postKeys := make([]string, len(zPosts))
+        for i, zp := range zPosts </span><span class="cov8" title="1">{
                 postKeys[i] = "post:" + zp.Member.(string)
         }</span>
 
-        <span class="cov0" title="0">vals, err := r.redis.MGet(ctx, postKeys...).Result()
+        <span class="cov8" title="1">vals, err := r.redis.MGet(ctx, postKeys...).Result()
         if err != nil </span><span class="cov0" title="0">{
                 return nil, nil, fmt.Errorf("%s: %w", op, err)
         }</span>
 
-        <span class="cov0" title="0">posts := unmarshalToPosts(vals)
+        <span class="cov8" title="1">posts := unmarshalToPosts(vals)
 
         lastZ := zPosts[len(zPosts)-1]
         nextCursor := &amp;models.Cursor{
@@ -3754,34 +3764,34 @@ func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []str
         return posts, nextCursor, nil</span>
 }
 
-func unmarshalToPosts(vals []any) []models.Post <span class="cov0" title="0">{
+func unmarshalToPosts(vals []any) []models.Post <span class="cov8" title="1">{
         posts := make([]models.Post, 0, len(vals))
-        for _, val := range vals </span><span class="cov0" title="0">{
-                if val == nil </span><span class="cov0" title="0">{
+        for _, val := range vals </span><span class="cov8" title="1">{
+                if val == nil </span><span class="cov8" title="1">{
                         continue</span>
                 }
-                <span class="cov0" title="0">strId, ok := val.(string)
-                if !ok </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">strId, ok := val.(string)
+                if !ok </span><span class="cov8" title="1">{
                         continue</span>
                 }
-                <span class="cov0" title="0">var post models.Post
-                if err := json.Unmarshal([]byte(strId), &amp;post); err != nil </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">var post models.Post
+                if err := json.Unmarshal([]byte(strId), &amp;post); err != nil </span><span class="cov8" title="1">{
                         continue</span>
                 }
-                <span class="cov0" title="0">posts = append(posts, post)</span>
+                <span class="cov8" title="1">posts = append(posts, post)</span>
 
         }
-        <span class="cov0" title="0">return posts</span>
+        <span class="cov8" title="1">return posts</span>
 }
 
-func (r *RedisController) initilizeNewZUnion(ctx context.Context, tmpKey string, channels []string) error <span class="cov0" title="0">{
+func (r *RedisController) initilizeNewZUnion(ctx context.Context, tmpKey string, channels []string) error <span class="cov8" title="1">{
         const op = "Recommendation_Service.internal.storage.redis.inicilizeNewZUnion"
         channelKeys := make([]string, 0, len(channels))
-        for _, ch := range channels </span><span class="cov0" title="0">{
+        for _, ch := range channels </span><span class="cov8" title="1">{
                 channelKeys = append(channelKeys, fmt.Sprintf("post:channel:%s", ch))
         }</span>
 
-        <span class="cov0" title="0">if err := r.redis.ZUnionStore(
+        <span class="cov8" title="1">if err := r.redis.ZUnionStore(
                 ctx,
                 tmpKey,
                 &amp;redis.ZStore{
@@ -3792,41 +3802,41 @@ func (r *RedisController) initilizeNewZUnion(ctx context.Context, tmpKey string,
                 return fmt.Errorf("%s: %w", op, err)
         }</span>
 
-        <span class="cov0" title="0">r.redis.Expire(ctx, tmpKey, 60*time.Second)
+        <span class="cov8" title="1">r.redis.Expire(ctx, tmpKey, 60*time.Second)
         return nil</span>
 }
 
-func configureNewCursor(zPosts []redis.Z) (*models.Cursor, error) <span class="cov0" title="0">{
+func configureNewCursor(zPosts []redis.Z) (*models.Cursor, error) <span class="cov8" title="1">{
         const op = "Recommendation_Service.internal.storage.redis.configureNewCursor"
 
         last := zPosts[len(zPosts)-1]
         lastID, ok := last.Member.(string)
-        if !ok </span><span class="cov0" title="0">{
+        if !ok </span><span class="cov8" title="1">{
                 return nil, fmt.Errorf("%s: can not get new Cursor", op)
         }</span>
-        <span class="cov0" title="0">nextCursor := &amp;models.Cursor{
+        <span class="cov8" title="1">nextCursor := &amp;models.Cursor{
                 Score: last.Score,
                 ID:    lastID,
         }
         return nextCursor, nil</span>
 }
 
-func preparePostKeys(zPosts []redis.Z, cursor *models.Cursor) []string <span class="cov0" title="0">{
+func preparePostKeys(zPosts []redis.Z, cursor *models.Cursor) []string <span class="cov8" title="1">{
         postKeys := make([]string, 0, len(zPosts))
-        for _, post := range zPosts </span><span class="cov0" title="0">{
+        for _, post := range zPosts </span><span class="cov8" title="1">{
                 strId, ok := post.Member.(string)
                 if !ok </span><span class="cov0" title="0">{
                         continue</span>
                 }
-                <span class="cov0" title="0">if cursor != nil &amp;&amp; post.Score == cursor.Score &amp;&amp; strId == cursor.ID </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if cursor != nil &amp;&amp; post.Score == cursor.Score &amp;&amp; strId == cursor.ID </span><span class="cov8" title="1">{
                         continue</span>
                 }
-                <span class="cov0" title="0">postKeys = append(postKeys, "post:"+strId)</span>
+                <span class="cov8" title="1">postKeys = append(postKeys, "post:"+strId)</span>
         }
-        <span class="cov0" title="0">return postKeys</span>
+        <span class="cov8" title="1">return postKeys</span>
 }
 
-func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, maxScore string, offset int64, count int64) ([]redis.Z, error) <span class="cov0" title="0">{
+func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, maxScore string, offset int64, count int64) ([]redis.Z, error) <span class="cov8" title="1">{
         posts, err := r.redis.ZRevRangeByScoreWithScores(
                 ctx,
                 tmpKey,
@@ -3840,16 +3850,16 @@ func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, max
         if err != nil </span><span class="cov0" title="0">{
                 return nil, err
         }</span>
-        <span class="cov0" title="0">return posts, nil</span>
+        <span class="cov8" title="1">return posts, nil</span>
 }
 
-func getChannelsHash(channels []string) string <span class="cov0" title="0">{
+func getChannelsHash(channels []string) string <span class="cov8" title="1">{
         sort.Strings(channels)
         data := strings.Join(channels, ",")
         return fmt.Sprintf("%x", md5.Sum([]byte(data)))
 }</span>
 
-func (r *RedisController) Ping(ctx context.Context) error <span class="cov0" title="0">{
+func (r *RedisController) Ping(ctx context.Context) error <span class="cov8" title="1">{
         return r.redis.Ping(ctx).Err()
 }</span>
 </pre>
