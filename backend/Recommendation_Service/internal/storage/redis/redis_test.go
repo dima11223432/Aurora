@@ -88,7 +88,6 @@ func (r *RedisTestSuite) cleanupTestData() {
 }
 
 func (r *RedisTestSuite) TearDownTest() {
-	r.cleanupTestData()
 }
 
 func (r *RedisTestSuite) TestPing_Success() {
