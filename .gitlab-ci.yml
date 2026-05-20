@@ -16,14 +16,14 @@ test-sso:
     - sleep 10
     - cd ../backend/SSO
     - docker build -t sso-test .
-    - docker run --rm --network backend_aurora-network --env-file .env -v $(pwd):/workspace sso-test go test -coverprofile=coverage.out ./...
-    - docker run --rm -v $(pwd):/workspace sso-test go tool cover -html=coverage.out -o coverage.html
-  # coverage: '/coverage: \d+\.\d+%/'
-  # artifacts:
-  #   paths:
-  #     - backend/SSO/coverage.html
-  #     - backend/SSO/coverage.out
-  #   expire_in: 7 days
+    - docker run --rm --network backend_aurora-network --env-file .env -v $PWD:/workspace sso-test go test -coverprofile=coverage.out ./...
+    - docker run --rm -v $PWD:/workspace sso-test go tool cover -html=coverage.out -o coverage.html
+  coverage: '/coverage: \d+\.\d+%/'
+  artifacts:
+    paths:
+      - backend/SSO/coverage.html
+      - backend/SSO/coverage.out
+    expire_in: 7 days
   after_script:
     - cd backend && docker compose down
 
@@ -41,14 +41,14 @@ test-recommendation-service:
     - sleep 10
     - cd ../backend/Recommendation_Service
     - docker build -t recommendation-service-test .
-    - docker run --rm --network backend_aurora-network --env-file .env -v $(pwd):/workspace recommendation-service-test go test -coverprofile=coverage.out ./...
-    - docker run --rm -v $(pwd):/workspace recommendation-service-test go tool cover -html=coverage.out -o coverage.html
-  # coverage: '/coverage: \d+\.\d+%/'
-  # artifacts:
-  #   paths:
-  #     - backend/Recommendation_Service/coverage.html
-  #     - backend/Recommendation_Service/coverage.out
-  #   expire_in: 7 days
+    - docker run --rm --network backend_aurora-network --env-file .env -v $PWD:/workspace recommendation-service-test go test -coverprofile=coverage.out ./...
+    - docker run --rm -v $PWD:/workspace recommendation-service-test go tool cover -html=coverage.out -o coverage.html
+  coverage: '/coverage: \d+\.\d+%/'
+  artifacts:
+    paths:
+      - backend/Recommendation_Service/coverage.html
+      - backend/Recommendation_Service/coverage.out
+    expire_in: 7 days
   after_script:
     - cd backend && docker compose down
 
