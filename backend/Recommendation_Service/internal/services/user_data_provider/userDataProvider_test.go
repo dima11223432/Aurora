@@ -60,6 +60,91 @@ func (u *userDataProviderSuite) TestDeleteParsingChannel() {
 	u.NoError(err)
 }
 
+func (u *userDataProviderSuite) TestAddNewUserCustomParsingChannel() {
+	ctx := context.Background()
+	userID := int64(1)
+	channel := "custom_channel"
+	u.mock.On("AddNewUserCustomParsingChannel", ctx, userID, channel).Return(nil)
+	err := u.service.AddNewUserCustomParsingChannel(ctx, userID, channel)
+	u.NoError(err)
+}
+
+func (u *userDataProviderSuite) TestAddNewDefaultParsingChannel() {
+	ctx := context.Background()
+	channel := "new_channel"
+	category := "tech"
+	u.mock.On("AddNewDefaultParsingChannel", ctx, channel, category).Return(nil)
+	u.mock.On("AddNewParsingChannel", ctx, channel).Return(nil)
+	u.mock.On("SetChannelCategory", ctx, channel, category).Return(nil)
+	err := u.service.AddNewDefaultParsingChannel(ctx, channel, category)
+	u.NoError(err)
+}
+
+func (u *userDataProviderSuite) TestAddNewDefaultParsingChannelChannelExistsError() {
+	ctx := context.Background()
+	channel := "existing_channel"
+	category := "tech"
+	u.mock.On("AddNewDefaultParsingChannel", ctx, channel, category).Return(nil)
+	u.mock.On("AddNewParsingChannel", ctx, channel).Return(nil)
+	u.mock.On("SetChannelCategory", ctx, channel, category).Return(nil)
+	err := u.service.AddNewDefaultParsingChannel(ctx, channel, category)
+	u.NoError(err)
+}
+
+func (u *userDataProviderSuite) TestDeleteUserCustomParsingChannel() {
+	ctx := context.Background()
+	userID := int64(1)
+	channel := "user_channel"
+	u.mock.On("DeleteUserCustomParsingChannel", ctx, userID, channel).Return(nil)
+	u.mock.On("DeleteParsingChannel", ctx, channel).Return(nil)
+	err := u.service.DeleteUserCustomParsingChannel(ctx, userID, channel)
+	u.NoError(err)
+}
+
+func (u *userDataProviderSuite) TestGetAllUserCustomParsingChannels() {
+	ctx := context.Background()
+	userID := int64(1)
+	u.mock.On("GetAllUserCustomParsingChannels", ctx, userID).Return([]string{"ch1", "ch2"}, nil)
+	channels, err := u.service.GetAllUserCustomParsingChannels(ctx, userID)
+	u.NoError(err)
+	u.Equal([]string{"ch1", "ch2"}, channels)
+}
+
+func (u *userDataProviderSuite) TestGetDefaultParsingChannelsWithCategories() {
+	ctx := context.Background()
+	u.mock.On("GetAllCategories", ctx).Return([]string{"tech", "news"}, nil)
+	u.mock.On("GetDefaultParsingChannelsByCategory", ctx, "tech").Return([]string{"ch1", "ch2"}, nil)
+	u.mock.On("GetDefaultParsingChannelsByCategory", ctx, "news").Return([]string{"ch3"}, nil)
+	result, err := u.service.GetDefaultParsingChannelsWithCategories(ctx)
+	u.NoError(err)
+	u.Equal(map[string][]string{"tech": {"ch1", "ch2"}, "news": {"ch3"}}, result)
+}
+
+func (u *userDataProviderSuite) TestGetDefaultParsingChannelsWithCategoriesEmpty() {
+	ctx := context.Background()
+	u.mock.On("GetAllCategories", ctx).Return([]string{}, nil)
+	result, err := u.service.GetDefaultParsingChannelsWithCategories(ctx)
+	u.NoError(err)
+	u.Equal(map[string][]string{}, result)
+}
+
+func (u *userDataProviderSuite) TestGetDefaultParsingChannelsByCategory() {
+	ctx := context.Background()
+	category := "tech"
+	u.mock.On("GetDefaultParsingChannelsByCategory", ctx, category).Return([]string{"ch1", "ch2"}, nil)
+	channels, err := u.service.GetDefaultParsingChannelsByCategory(ctx, category)
+	u.NoError(err)
+	u.Equal([]string{"ch1", "ch2"}, channels)
+}
+
+func (u *userDataProviderSuite) TestGetAllCategories() {
+	ctx := context.Background()
+	u.mock.On("GetAllCategories", ctx).Return([]string{"tech", "news", "sports"}, nil)
+	categories, err := u.service.GetAllCategories(ctx)
+	u.NoError(err)
+	u.Equal([]string{"tech", "news", "sports"}, categories)
+}
+
 func TestUserDataProviderTestSuite(t *testing.T) {
 	suite.Run(t, new(userDataProviderSuite))
 }
