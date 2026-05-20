@@ -8,8 +8,7 @@ test-sso:
   services:
     - docker:24-dind
   variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: unix:///var/run/docker.sock
   script:
     - cp "$ENV_FILE" backend/SSO/.env
     - cd backend/SSO
@@ -29,8 +28,7 @@ test-recommendation-service:
   services:
     - docker:24-dind
   variables:
-    DOCKER_HOST: tcp://docker:2376
-    DOCKER_TLS_CERTDIR: ""
+    DOCKER_HOST: unix:///var/run/docker.sock
   script:
     - cp "$ENV_FILE" backend/Recommendation_Service/.env
     - cd backend/Recommendation_Service
