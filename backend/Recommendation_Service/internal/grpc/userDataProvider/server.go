@@ -32,6 +32,7 @@ type ParsingChannelsProvider interface {
 	GetAllCategories(ctx context.Context) ([]string, error)
 }
 
+// check
 type NewsDataProvider interface {
 	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
