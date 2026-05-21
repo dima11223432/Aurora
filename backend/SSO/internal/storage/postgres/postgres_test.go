@@ -126,7 +126,7 @@ func (p *PostgresTestSuite) TestApp() {
 	p.NoError(err)
 	p.Equal(app, models.App{ID: 3, Name: "bla bla bla ble ble ble blu blu bluuu", Secret: "67"})
 
-	app, err = p.storage.App(ctx, 3)
+	app, err = p.storage.App(ctx, 444)
 	p.Error(err)
 	p.ErrorIs(err, storage.ErrAppNotFound)
 	p.Equal(app, models.App{})
