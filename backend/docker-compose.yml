@@ -225,9 +225,6 @@ services:
     container_name: cache-service-tests
     build:
       context: ./Cache_Service
-    volumes:
-      - ./Cache_Service:/app
-    working_dir: /app
     environment:
       - REDIS_HOST=redis-master:6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
@@ -309,9 +306,6 @@ services:
     container_name: sso-tests
     build:
       context: ./SSO
-    volumes:
-      - ./SSO:/app
-    working_dir: /app
     environment:
       - ENV=test
       - DB_PASSWORD=${DB_PASSWORD}
@@ -331,9 +325,6 @@ services:
     container_name: recommendation-service-tests
     build:
       context: ./Recommendation_Service
-    volumes:
-      - ./Recommendation_Service:/app
-    working_dir: /app
     environment:
       - ENV=test
       - STORAGE_PASS=${STORAGE_PASS}
