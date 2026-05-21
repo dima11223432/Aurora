@@ -219,6 +219,22 @@ services:
         condition: service_started
     networks:
       - aurora-network
+  cache-service-tests:
+    image: golang:1.25-alpine
+    container_name: cache-service-tests
+    volumes:
+      - ./Cache_Service:/app
+    working_dir: /app
+    environment:
+      - REDIS_HOST=redis-master:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=${REDIS_DB:-0}
+    depends_on:
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+    command: go test ./internal/storage/redis -cover -v
 
   parsing-service:
     build:
@@ -282,6 +298,55 @@ services:
         condition: service_healthy
     networks:
       - aurora-network
+
+  # NOTE: testing
+  sso-tests:
+    image: golang:1.25-alpine
+    container_name: sso-tests
+    volumes:
+      - ./SSO:/app
+    working_dir: /app
+    environment:
+      - ENV=test
+      - DB_PASSWORD=${DB_PASSWORD}
+      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/${DB_NAME_AURORA:-aurora}?sslmode=disable
+      - TOKEN_TTL=${TOKEN_TTL}
+      - GRPC_PORT=${SSO_PORT}
+      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - aurora-network
+    command: go test ./... -cover -v
+
+  recommendation-service-tests:
+    image: golang:1.25-alpine
+    container_name: recommendation-service-tests
+    volumes:
+      - ./Recommendation_Service:/app
+    working_dir: /app
+    environment:
+      - ENV=test
+      - STORAGE_PASS=${STORAGE_PASS}
+      - PARSING_SERVICE_PASS=${PARSING_SERVICE_PASS}
+      - TOKEN_TTL=${TOKEN_TTL}
+      - GRPC_PORT=${RECS_PORT}
+      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+      - REDIS_HOST=redis-master:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PORT=6379
+      - REDIS_DB=${REDIS_DB:-0}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      postgres-parser:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+    command: go test ./... -cover -v
 
   frontend-prod:
     build:
