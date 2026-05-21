@@ -25,7 +25,7 @@ class ParserService:
         self.parsing_channels = set(parsing_channels)
         self.api_id = cfg.API_ID
         self.api_hash = cfg.API_HASH
-        self.proxy = (socks.SOCKS5, cfg.PROXY_URL, int(cfg.PROXY_PORT))
+        self.proxy = (socks.SOCKS5, cfg.PROXY_HOST, int(cfg.PROXY_PORT))
         self.topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
 
         self.client = TelegramClient(

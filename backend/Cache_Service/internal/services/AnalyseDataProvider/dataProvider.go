@@ -29,7 +29,7 @@ func NewRedisService(log *slog.Logger, analyseDataProvider AnasyledDataProvider,
 }
 
 func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, analysedData models.AnalysedData) error {
-	const op = "Cache_Service.internal.services.auth.SetAnalysedData"
+	const op = "Cache_Service.internal.services.analyseDataProvider.SetAnalysedData"
 
 	err := r.provider.SetCard(ctx, analysedData)
 	if err != nil {
@@ -37,7 +37,6 @@ func (r *RedisService) SetAnalysedData(ctx context.Context, dataTitle string, an
 	}
 	r.log.Info("SetAnalysedData", slog.String("dataTitle", dataTitle))
 	return nil
-
 }
 
 func (r *RedisService) GetAnalysedData(ctx context.Context, dataTitle string) (interface{}, error) {

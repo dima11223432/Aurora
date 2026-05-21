@@ -17,6 +17,7 @@ const (
 	envDev   = "dev"
 )
 
+// main
 func main() {
 	cfg := config.MustLoad()
 	fmt.Println(cfg)

@@ -1,11 +1,11 @@
-package storage_test
+package postgres
 
 import (
 	"authService/internal/domain/models"
 	"authService/internal/storage"
-	"authService/internal/storage/postgres"
 	"context"
 	"log"
+	"os"
 	"testing"
 	"time"
 
@@ -14,22 +14,28 @@ import (
 
 type PostgresTestSuite struct {
 	suite.Suite
-
-	storage *postgres.Storage
+	storage *Storage
 }
 
 func (p *PostgresTestSuite) SetupTest() {
-	s, err := postgres.New("postgres://postgres:pass@localhost:5432/test_auth?sslmode=disable")
+	testDsn := os.Getenv("TEST_POSTGRES_DNS")
+	if testDsn == "" {
+		testDsn = os.Getenv("STORAGE_PASS")
+	}
+	if testDsn == "" {
+		log.Fatal("TEST_POSTGRES_DNS or STORAGE_PASS environment variable is required")
+	}
+
+	s, err := New(testDsn)
 	if err != nil {
 		log.Fatal(err)
 	}
 	p.storage = s
 
-	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
+	_, _ = p.storage.DB.Exec("TRUNCATE TABLE users, channels RESTART IDENTITY CASCADE")
 }
 
 func (p *PostgresTestSuite) TearDownTest() {
-	p.storage.DB.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
 	p.storage.DB.Close()
 }
 
@@ -100,13 +106,23 @@ func (p *PostgresTestSuite) Test_storage_get_user_by_id() {
 
 func (p *PostgresTestSuite) TestApp() {
 	ctx := context.Background()
-	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
+	defer func() {
+		_, err := p.storage.DB.Exec("DELETE FROM apps WHERE id = 3")
+		p.NoError(err)
+	}()
+	query := `
+        INSERT INTO apps (id, name, secret) 
+        VALUES (3, 'bla bla bla ble ble ble blu blu bluuu', '67')
+    `
+	_, err := p.storage.DB.Exec(query)
 
-	app, err := p.storage.App(ctx, 1)
 	p.NoError(err)
-	p.Equal(models.App{ID: 1, Name: "test", Secret: "secret"}, app)
 
-	app, err = p.storage.App(ctx, 2)
+	app, err := p.storage.App(ctx, 3)
+	p.NoError(err)
+	p.Equal(app, models.App{ID: 3, Name: "bla bla bla ble ble ble blu blu bluuu", Secret: "67"})
+
+	app, err = p.storage.App(ctx, 444)
 	p.Error(err)
 	p.ErrorIs(err, storage.ErrAppNotFound)
 	p.Equal(models.App{}, app)
@@ -224,7 +240,7 @@ func (p *PostgresTestSuite) TestGetUserById_NotFound() {
 }
 
 func (p *PostgresTestSuite) TestNew_InvalidConnection() {
-	_, err := postgres.New("invalid-connection-string")
+	_, err := New("invalid-connection-string")
 	p.Error(err)
 }
 

@@ -1,4 +1,5 @@
 """Kafka producer and consumer controller."""
+
 import json
 import os
 
