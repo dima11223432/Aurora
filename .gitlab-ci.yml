@@ -35,7 +35,7 @@ deploy-staging:
     - cd backend
     - cp "$ENV_FILE" .env
     - docker-compose down --remove-orphans
-    - docker-compose build --no-cache
+    - docker-compose build
     - docker-compose up -d
     - docker image prune -f
   only:
