@@ -219,9 +219,12 @@ services:
         condition: service_started
     networks:
       - aurora-network
+
   cache-service-tests:
     image: golang:1.25-alpine
     container_name: cache-service-tests
+    build:
+      context: ./Cache_Service
     volumes:
       - ./Cache_Service:/app
     working_dir: /app
@@ -304,6 +307,8 @@ services:
   sso-tests:
     image: golang:1.25-alpine
     container_name: sso-tests
+    build:
+      context: ./SSO
     volumes:
       - ./SSO:/app
     working_dir: /app
@@ -324,6 +329,8 @@ services:
   recommendation-service-tests:
     image: golang:1.25-alpine
     container_name: recommendation-service-tests
+    build:
+      context: ./Recommendation_Service
     volumes:
       - ./Recommendation_Service:/app
     working_dir: /app
