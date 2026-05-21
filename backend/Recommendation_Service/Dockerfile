@@ -17,7 +17,7 @@ RUN go build -o recommendation_service ./cmd/recomendation_service/main.go
 
 RUN chmod +x recommendation_service
 
-RUN adduser -D -g '' appuser
+# RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 

@@ -17,7 +17,7 @@ RUN go build -o api-gateway ./cmd/API_Service/main.go
 
 RUN chmod +x api-gateway
 
-RUN adduser -D -g '' appuser
+# RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 
 USER appuser
