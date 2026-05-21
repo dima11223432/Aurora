@@ -5,7 +5,7 @@ USER root
 RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
 RUN apk add --no-cache git ca-certificates
-
+RUN groupadd -r appuser && useradd -r -g appuser -d /app -s /sbin/nologin appuser
 WORKDIR /app.api_gateway
 
 COPY go.mod go.sum ./
