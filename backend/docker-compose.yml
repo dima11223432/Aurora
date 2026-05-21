@@ -300,6 +300,7 @@ services:
       - aurora-network
 
   # NOTE: testing
+
   sso-tests:
     image: golang:1.25-alpine
     container_name: sso-tests
