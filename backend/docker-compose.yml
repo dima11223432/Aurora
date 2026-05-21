@@ -284,11 +284,12 @@ services:
       - aurora-network
 
   # NOTE: testing
+
   sso-tests:
-    image: golang:1.25-alpine
     container_name: sso-tests
     build:
       context: ./SSO
+      dockerfile: Dockerfile.test
     environment:
       - ENV=test
       - DB_PASSWORD=${DB_PASSWORD}
@@ -301,13 +302,13 @@ services:
         condition: service_healthy
     networks:
       - aurora-network
-    command: go test ./... -cover -v
+    entrypoint: ["go", "test", "./...", "-cover", "-v"]
 
   recommendation-service-tests:
-    image: golang:1.25-alpine
     container_name: recommendation-service-tests
     build:
       context: ./Recommendation_Service
+      dockerfile: Dockerfile.test
     environment:
       - ENV=test
       - STORAGE_PASS=${STORAGE_PASS}
@@ -328,13 +329,13 @@ services:
         condition: service_healthy
     networks:
       - aurora-network
-    command: go test ./... -cover -v
+    entrypoint: ["go", "test", "./...", "-cover", "-v"]
 
   cache-service-tests:
     container_name: cache-service-tests
     build:
       context: ./Cache_Service
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.test
     environment:
       - REDIS_HOST=redis-master:6379
       - REDIS_PASSWORD=${REDIS_PASSWORD}
