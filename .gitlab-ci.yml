@@ -1,5 +1,52 @@
 stages:
+  # - test
   - deploy
+
+# test-sso:
+#   stage: test
+#   image: docker:cli
+#   variables:
+#     DOCKER_HOST: unix:///var/run/docker.sock
+#   script:
+#     - cp "$ENV_FILE" backend/SSO/.env
+#     - sed -i 's/ *= */=/g' backend/SSO/.env
+#     - cd backend
+#     - cp "$ENV_FILE" .env
+#     - docker compose up -d postgres postgres-parser redis-master
+#     - sleep 10
+#     - cd ../backend/SSO
+#     - docker build -t sso-test .
+#     - docker run --rm --network backend_aurora-network --env-file .env -v $PWD:/workspace sso-test go test -coverprofile=coverage.out ./...
+#   coverage: '/coverage: \d+\.\d+%/'
+#   artifacts:
+#     paths:
+#       - backend/SSO/coverage.out
+#     expire_in: 7 days
+#   after_script:
+#     - cd backend && docker compose down
+#
+# test-recommendation-service:
+#   stage: test
+#   image: docker:cli
+#   variables:
+#     DOCKER_HOST: unix:///var/run/docker.sock
+#   script:
+#     - cp "$ENV_FILE" backend/Recommendation_Service/.env
+#     - sed -i 's/ *= */=/g' backend/Recommendation_Service/.env
+#     - cd backend
+#     - cp "$ENV_FILE" .env
+#     - docker compose up -d postgres postgres-parser redis-master
+#     - sleep 10
+#     - cd ../backend/Recommendation_Service
+#     - docker build -t recommendation-service-test .
+#     - docker run --rm --network backend_aurora-network --env-file .env -v $PWD:/workspace recommendation-service-test go test -coverprofile=coverage.out ./...
+#   coverage: '/coverage: \d+\.\d+%/'
+#   artifacts:
+#     paths:
+#       - backend/Recommendation_Service/coverage.out
+#     expire_in: 7 days
+#   after_script:
+#     - cd backend && docker compose down
 
 deploy-staging:
   stage: deploy

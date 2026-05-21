@@ -1,11 +1,11 @@
-package storage_test
+package postgres
 
 import (
 	"authService/internal/domain/models"
 	"authService/internal/storage"
-	"authService/internal/storage/postgres"
 	"context"
 	"log"
+	"os"
 	"testing"
 	"time"
 
@@ -14,22 +14,28 @@ import (
 
 type PostgresTestSuite struct {
 	suite.Suite
-	storage *postgres.Storage
+	storage *Storage
 }
 
 func (p *PostgresTestSuite) SetupTest() {
+	testDsn := os.Getenv("TEST_POSTGRES_DNS")
+	if testDsn == "" {
+		testDsn = os.Getenv("STORAGE_PASS")
+	}
+	if testDsn == "" {
+		log.Fatal("TEST_POSTGRES_DNS or STORAGE_PASS environment variable is required")
+	}
 
-	s, err := postgres.New("postgres://postgres:1ux35qBk4YgCMsd7eg4ju@postgres:5432/aurora?sslmode=disable")
+	s, err := New(testDsn)
 	if err != nil {
 		log.Fatal(err)
 	}
 	p.storage = s
 
+	_, _ = p.storage.DB.Exec("TRUNCATE TABLE users, channels RESTART IDENTITY CASCADE")
 }
 
 func (p *PostgresTestSuite) TearDownTest() {
-
-	p.storage.DB.Exec("TRUNCATE TABLE users, channels, apps RESTART IDENTITY CASCADE")
 	p.storage.DB.Close()
 }
 
@@ -230,7 +236,7 @@ func (p *PostgresTestSuite) TestGetUserById_NotFound() {
 }
 
 func (p *PostgresTestSuite) TestNew_InvalidConnection() {
-	_, err := postgres.New("invalid-connection-string")
+	_, err := New("invalid-connection-string")
 	p.Error(err)
 }
 

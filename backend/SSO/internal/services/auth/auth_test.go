@@ -1,8 +1,7 @@
-package auth_test
+package auth
 
 import (
 	"authService/internal/domain/models"
-	"authService/internal/services/auth"
 	"authService/internal/storage"
 	"context"
 	"fmt"
@@ -62,14 +61,14 @@ type AuthTestSuite struct {
 	mockUserSaver   *MockUserSaver
 	mockUserProvider *MockUserProvider
 	mockAppProvider *MockAppProvider
-	service         *auth.Auth
+	service         *Auth
 }
 
 func (s *AuthTestSuite) SetupTest() {
 	s.mockUserSaver = new(MockUserSaver)
 	s.mockUserProvider = new(MockUserProvider)
 	s.mockAppProvider = new(MockAppProvider)
-	s.service = auth.New(slog.Default(), s.mockUserSaver, s.mockUserProvider, s.mockAppProvider, 5*time.Minute)
+	s.service = New(slog.Default(), s.mockUserSaver, s.mockUserProvider, s.mockAppProvider, 5*time.Minute)
 }
 
 func (s *AuthTestSuite) TestLogin_Success() {
@@ -155,7 +154,7 @@ func (s *AuthTestSuite) TestRegisterNewUser_AlreadyExists() {
 
 	_, err := s.service.RegisterNewUser(context.Background(), user)
 	s.Error(err)
-	s.ErrorIs(err, auth.ErrUserExists)
+	s.ErrorIs(err, ErrUserExists)
 }
 
 func (s *AuthTestSuite) TestDeletePriorityChannels() {
@@ -196,11 +195,11 @@ func (s *AuthTestSuite) TestIsAdmin_Success() {
 }
 
 func (s *AuthTestSuite) TestIsAdmin_UserNotFound() {
-	s.mockUserProvider.On("IsAdmin", mock.Anything, int64(999999999)).Return(false, auth.ErrInvalidCredentials)
+	s.mockUserProvider.On("IsAdmin", mock.Anything, int64(999999999)).Return(false, ErrInvalidCredentials)
 
 	_, err := s.service.IsAdmin(context.Background(), 999999999)
 	s.Error(err)
-	s.ErrorIs(err, auth.ErrInvalidCredentials)
+	s.ErrorIs(err, ErrInvalidCredentials)
 
 	s.mockUserProvider.AssertExpectations(s.T())
 }

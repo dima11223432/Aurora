@@ -1,4 +1,5 @@
 # import globals
+import os
 import threading
 
 from os import getenv
@@ -15,12 +16,11 @@ from ..LSTM_Laura.AnalysAI import answer as ticker_id
 from ..AI_API.QwenAnalis import answer as qw
 from ..LSTM_Laura.Laura_LSTM_savepredict import run, predict
 from ..AI_API.QwenAI import answer as qws
+
 # from AnaliticKafka import getMessage
 
 
 def AI_handler(context):
-    env_path = Path(__file__).parent / "config" / "API_Keys.env"
-    load_dotenv(env_path)
     AI_answer = {
         "ds": {},
         "ge": {},
@@ -29,11 +29,11 @@ def AI_handler(context):
         "qw": {},
         "qws": {},
     }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex, qws - qwenSecond
-    AI_list = {"ds", "ya", "qws"}
+    AI_list = {"ds", "ya"}
 
     for i in AI_list:
         try:
-            token = getenv(i.upper())
+            token = os.getenv(i.upper())
             part = globals()[i](context, token).split("-%91%8FROG-COD", maxsplit=1)
             AI_answer[i]["answer"] = part[0].replace(" \n", "")
             AI_answer[i]["reason"] = part[1]
@@ -50,7 +50,7 @@ def AI_handler(context):
         logger.error(f"Ошибка в В LSTM Laura: {str(e)}")
         AI_answer["qw"]["graphic_analis"] = "error"
 
-    parts_final = qw(str(AI_answer), str(getenv("QW"))).split(
+    parts_final = qw(str(AI_answer), str(getenv("YA"))).split(
         "-%91%8FROG-COD", maxsplit=1
     )
 
