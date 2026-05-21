@@ -20,8 +20,10 @@ test-sso:
 test-recommendation:
   <<: *test-template
   script:
-    - docker-compose down -v --remove-orphans
-    - docker-compose build --no-cache recommendation-service-tests
+    - docker-compose build --no-cache
+
+    - docker-compose run --rm parsing-service alembic upgrade head
+
     - docker-compose run --rm recommendation-service-tests
 
 test-cache-service:
