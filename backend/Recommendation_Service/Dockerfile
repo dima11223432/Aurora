@@ -1,4 +1,5 @@
 FROM golang:1.25-alpine
+USER root
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
