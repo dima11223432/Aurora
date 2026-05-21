@@ -110,13 +110,19 @@ func (p *PostgresTestSuite) Test_storage_get_user_by_id() {
 func (p *PostgresTestSuite) TestApp() {
 
 	ctx := context.Background()
-	p.storage.DB.Exec("INSERT INTO apps (id, name, secret) VALUES (1, 'test', 'secret')")
+	query := `
+        INSERT INTO apps (id, name, secret) 
+        VALUES (2, 'bla bla bla ble ble ble blu blu blu', '52')
+    `
+	_, err := p.storage.DB.Exec(query)
 
-	app, err := p.storage.App(ctx, 1)
 	p.NoError(err)
-	p.Equal(app, models.App{ID: 1, Name: "test", Secret: "secret"})
 
-	app, err = p.storage.App(ctx, 2)
+	app, err := p.storage.App(ctx, 2)
+	p.NoError(err)
+	p.Equal(app, models.App{ID: 2, Name: "bla bla bla ble ble ble blu blu blu", Secret: "52"})
+
+	app, err = p.storage.App(ctx, 53)
 	p.Error(err)
 	p.ErrorIs(err, storage.ErrAppNotFound)
 	p.Equal(app, models.App{})
