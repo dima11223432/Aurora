@@ -19,7 +19,7 @@ RUN go build -o migrator ./cmd/migrator
 
 RUN chmod +x sso migrator
 
-# RUN adduser -D -g '' appuser
+RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 

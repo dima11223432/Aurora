@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-# RUN useradd -m -u 1000 appuser
+RUN useradd -m -u 1000 appuser
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
