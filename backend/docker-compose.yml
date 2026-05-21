@@ -143,8 +143,8 @@ services:
     environment:
       - ENV=${ENV}
       - DB_PASSWORD=${DB_PASSWORD}
-      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora?sslmode=disable
-      - TEST_POSTGRES_DNS=postgres://postgres:${DB_PASSWORD}@postgres:5432/aurora?sslmode=disable
+      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/${DB_NAME_AURORA:-aurora}?sslmode=disable
+      - TEST_POSTGRES_DNS=${TEST_POSTGRES_DNS}
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${SSO_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
@@ -178,6 +178,8 @@ services:
       - REDIS_PORT=6379
       - REDIS_DB=${REDIS_DB}
     depends_on:
+      postgres-parser:
+        condition: service_healthy
       postgres:
         condition: service_healthy
       redis-master:
@@ -273,11 +275,7 @@ services:
       - ENV=${ENV}
       - PYTHONPATH=/app
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
-      - KAFKA_TOPIC=${KAFKA_TOPIC_INPUT}
       - KAFKA_TOPIC_RESULT=${KAFKA_TOPIC}
-      - DS=${DS}
-      - YA=${YA}
-      - QWS=${QWS}
       - LOG_LEVEL=INFO
     depends_on:
       kafka:
