@@ -330,6 +330,22 @@ services:
       - aurora-network
     command: go test ./... -cover -v
 
+  cache-service-tests:
+    container_name: cache-service-tests
+    build:
+      context: ./Cache_Service
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_HOST=redis-master:6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DB=${REDIS_DB:-0}
+      - STORAGE_PASS=${DB_PASSWORD}
+    depends_on:
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+    entrypoint: ["go", "test", "./internal/storage/redis", "-cover", "-v"]
   frontend-prod:
     build:
       context: ../frontend
