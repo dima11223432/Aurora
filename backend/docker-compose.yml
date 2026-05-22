@@ -165,6 +165,9 @@ services:
       context: ./Telegram_bot
       dockerfile: Dockerfile
     container_name: telegram-bot
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
     restart: unless-stopped
     mem_limit: 512m
     ports:
