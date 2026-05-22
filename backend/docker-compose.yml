@@ -148,6 +148,12 @@ services:
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${SSO_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "44044"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     depends_on:
       postgres:
         condition: service_healthy
