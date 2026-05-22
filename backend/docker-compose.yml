@@ -156,7 +156,7 @@ services:
 
   telegram-bot:
     build:
-      contetx: ./Telegram_Bot
+      context: ./Telegram_Bot
       dockerfile: Dockerfile
     container_name: telegram-bot
     restart: unless-stopped
