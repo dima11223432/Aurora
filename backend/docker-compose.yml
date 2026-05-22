@@ -168,7 +168,7 @@ services:
     restart: unless-stopped
     mem_limit: 512m
     ports:
-      - "44045:44045"
+      - "44046:44046"
     environment:
       - ENV=${ENV}
       - BOT_TOKEN=${BOT_TOKEN}
