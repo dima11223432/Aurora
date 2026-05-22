@@ -91,7 +91,7 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 		channelNames = append(channelNames, ch.Channel)
 	}
 
-	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 5)
+	posts, nextCursor, err := u.priorityNewsProvider.GetPostsByChannels(ctx, channelNames, userID, cursor, 15)
 	if err != nil {
 		return nil, nil, fmt.Errorf("%s: %w", op, err)
 	}
