@@ -154,6 +154,24 @@ services:
     networks:
       - aurora-network
 
+  telegram-bot:
+    build:
+      contetx: ./Telegram_Bot
+      dockerfile: Dockerfile
+    container_name: telegram-bot
+    restart: unless-stopped
+    mem_limit: 512m
+    ports:
+      - "44045:44045"
+    environment:
+      - ENV=${ENV}
+      - BOT_TOKEN=${BOT_TOKEN}
+    depends_on:
+      sso:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
   recommendation-service:
     build:
       context: ./Recommendation_Service
