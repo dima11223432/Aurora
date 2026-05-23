@@ -11,6 +11,7 @@ export default function AdminPanel() {
   const [deletedChannel, setDeletedChannel] = useState("");
   const [categories, setCategories] = useState([]);
   сonst [isShtoraOpen, setIsShtoraOpen] = useState(false);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const isAdmin = () => {
