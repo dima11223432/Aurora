@@ -9,17 +9,17 @@ import (
 )
 
 type Config struct {
-	Env                       string        `yaml:"env" env-default:"local"`
-	StoragePass               string        `yaml:"storage_pass" env-required:"true"`
-	ParsingServiceStoragePass string        `yaml:"parsing_service_pass" env-required:"true"`
-	TokenTTL                  time.Duration `yaml:"token_ttl" env-required:"true"`
-	GRPC                      GRPCConfig    `yaml:"grpc"`
-	Redis                     RedisConfig   `yaml:"redis"`
+	Env                       string        `yaml:"env" env:"ENV" env-default:"local"`
+	StoragePass               string        `yaml:"storage_pass" env:"STORAGE_PASS" env-required:"true"`
+	ParsingServiceStoragePass string        `yaml:"parsing_service_pass" env:"PARSING_SERVICE_PASS" env-required:"true"`
+	TokenTTL                  time.Duration `yaml:"token_ttl" env:"TOKEN_TTL" env-default:"1h"`
+	GRPC                      GRPCConfig    `yaml:"grpc" env:"GRPC"`
+	Redis                     RedisConfig   `yaml:"redis" env:"REDIS"`
 }
 
 type GRPCConfig struct {
-	Port    int           `yaml:"port"`
-	TimeOut time.Duration `yaml:"timeout"`
+	Port    int           `yaml:"port" env:"GRPC_PORT" env-default:"44040"`
+	TimeOut time.Duration `yaml:"timeout" env:"GRPC_TIMEOUT" env-default:"10h"`
 }
 
 type RedisConfig struct {
@@ -32,9 +32,17 @@ type RedisConfig struct {
 func MustLoad() *Config {
 	path := fetchConfigPath()
 	if path == "" {
-		panic("config path is empty")
+		return MustLoadFromEnv()
 	}
 	return MustLoadByPath(path)
+}
+
+func MustLoadFromEnv() *Config {
+	var cfg Config
+	if err := cleanenv.ReadEnv(&cfg); err != nil {
+		panic("cant read config from env: " + err.Error())
+	}
+	return &cfg
 }
 
 func MustLoadByPath(configPath string) *Config {

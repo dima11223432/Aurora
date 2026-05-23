@@ -30,7 +30,7 @@ export default function RecommendationFeed() {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/404");
+        // navigate("/404");
         return;
       }
 

@@ -1,5 +1,7 @@
 FROM python:3.11-slim
 
+USER root
+
 RUN echo 'Acquire::ForceIPv4 "true";' > /etc/apt/apt.conf.d/99force-ipv4 && \
     (sed -i 's/deb.debian.org/mirror.yandex.ru/g' /etc/apt/sources.list.d/debian.sources || \
      sed -i 's/deb.debian.org/mirror.yandex.ru/g' /etc/apt/sources.list)

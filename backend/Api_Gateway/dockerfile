@@ -1,27 +1,29 @@
 FROM golang:1.25-alpine
 
+USER root
+
 RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
 RUN apk add --no-cache git ca-certificates
-
-WORKDIR /app
+RUN adduser -D -h /app -s /sbin/nologin appuser
+WORKDIR /app.api_gateway
 
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
-COPY ./config ./config
+RUN go mod tidy
 
 RUN go build -o api-gateway ./cmd/API_Service/main.go
 
 RUN chmod +x api-gateway
 
-RUN adduser -D -g '' appuser
+# RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 
 USER appuser
 
 EXPOSE 8081 44000
 
-CMD ["./api-gateway", "--config", "./config/local.yaml"]
+CMD ["./api-gateway"]
