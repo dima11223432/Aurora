@@ -40,7 +40,14 @@ async def command_start_handler(message: Message) -> None:
 
 
 async def main() -> None:
-    bot = Bot(token=TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+    connector = ProxyConnector.from_url("socks5://127.0.0.1:10808")
+    session = AiohttpSession(connector=connector)
+
+    bot = Bot(
+        token=TOKEN,
+        session=session,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
 
     await dp.start_polling(bot)
 
