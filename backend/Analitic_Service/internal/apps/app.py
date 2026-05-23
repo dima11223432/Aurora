@@ -1,3 +1,9 @@
+"""Application orchestrator for the Analytic Service.
+
+Consumes raw Telegram posts from Kafka, processes them through AI models
+for stock analysis, and produces structured results back to Kafka.
+"""
+
 import asyncio
 import threading
 import os
@@ -11,6 +17,14 @@ from internal.services.handlers.AI_handler import AI_handler
 
 
 def redact_recursive(obj):
+    """Recursively sanitize sensitive data from a nested structure.
+
+    Args:
+        obj: Dict, list, or string to sanitize.
+
+    Returns:
+        Sanitized copy of the input.
+    """
     if isinstance(obj, dict):
         return {k: redact_recursive(v) for k, v in obj.items()}
     if isinstance(obj, list):
@@ -21,7 +35,21 @@ def redact_recursive(obj):
 
 
 class App:
+    """Main application that orchestrates Kafka consumption and AI analysis.
+
+    Attributes:
+        logger: Loguru logger instance.
+        _running: Whether the app loop is active.
+        _consumer_thread: Background thread for Kafka consumer.
+        _stop_event: Event signal for graceful shutdown.
+    """
+
     def __init__(self, logger=logger):
+        """Initialize the App.
+
+        Args:
+            logger: Loguru logger instance. Defaults to the module logger.
+        """
         self.logger = logger
         self._running = False
         self._consumer_thread = None
@@ -30,6 +58,17 @@ class App:
     def _start_kafka_consumer(
         self, kafka_controller: KafkaController, topic: str, result_topic: str
     ):
+        """Run the Kafka consumer loop in a background thread.
+
+        Polls for messages, runs AI analysis on each post, and sends
+        the structured result (stock ticker, signal, reasoning) to the
+        result topic.
+
+        Args:
+            kafka_controller: Initialized KafkaController instance.
+            topic: Input Kafka topic to consume from.
+            result_topic: Output Kafka topic to produce results to.
+        """
         consumer = kafka_controller.consumer
         try:
             consumer.subscribe([topic])
@@ -88,7 +127,6 @@ class App:
 
                     final_json = json.dumps(send_payload, ensure_ascii=False)
                     self.logger.info(f"Final payload: {final_json}")
-                    # send_payload = {"original_offset": msg.offset(), "result": result}
                     kafka_controller.send_batch_messages({result_topic: send_payload})
                     self.logger.info(f"Sent AI result to {result_topic}")
 
@@ -99,6 +137,10 @@ class App:
             self.logger.exception(f"Kafka consumer loop terminated: {e}")
 
     async def run(self):
+        """Start the application: load config, connect Kafka, begin consuming.
+
+        Runs until cancelled or interrupted.
+        """
         self.logger.info("Analitic Service запущен")
         self._running = True
         env_path = os.path.join(os.path.dirname(__file__), "config/config.env")
@@ -132,5 +174,6 @@ class App:
             self.logger.info("Analitic Service остановлен")
 
     def stop(self):
+        """Signal the application to stop gracefully."""
         self._running = False
         self._stop_event.set()

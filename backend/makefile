@@ -29,7 +29,7 @@ AURORA_MIGRATIONS_PATH := ./migrations/aurora
         migrate-sso-up migrate-sso-down migrate-sso-force migrate-sso-create \
         migrate-gateway-up migrate-gateway-down migrate-gateway-force migrate-gateway-create \
         migrate-aurora-up migrate-aurora-down migrate-aurora-force migrate-aurora-create \
-        db-create db-drop db-list docker-up docker-down test clean
+        db-create db-drop db-list docker-up docker-down test clean doc-gen doc-gen-parsing doc-gen-analitic
 
 # ===== Помощь =====
 help:
@@ -69,6 +69,17 @@ help:
 	@echo "  make docker-up         - Запустить все сервисы в Docker"
 	@echo "  make docker-down       - Остановить все сервисы в Docker"
 	@echo "  make docker-logs       - Просмотр логов Docker"
+	@echo ""
+	@echo "$(YELLOW)Документация (Python — Sphinx):$(NC)"
+	@echo "  make doc-gen-parsing   - Сгенерировать HTML-документацию Parsing_Service"
+	@echo "  make doc-gen-analitic  - Сгенерировать HTML-документацию Analitic_Service"
+	@echo ""
+	@echo "$(YELLOW)Документация (Go — golds):$(NC)"
+	@echo "  make doc-gen-sso       - Сгенерировать документацию SSO"
+	@echo "  make doc-gen-api       - Сгенерировать документацию API Gateway"
+	@echo "  make doc-gen-recs      - Сгенерировать документацию Recommendation Service"
+	@echo "  make doc-gen-cache     - Сгенерировать документацию Cache Service"
+	@echo "  make doc-gen           - Сгенерировать документацию всех сервисов"
 	@echo ""
 	@echo "$(YELLOW)Прочее:$(NC)"
 	@echo "  make test              - Запустить все тесты"
@@ -274,9 +285,21 @@ doc-all: doc-sso doc-api doc-recs doc-cache
 # ===== Документация (HTML — Sphinx-like) =====
 DOCS_DIR := docs
 
-doc-gen: doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache
+doc-gen: doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache doc-gen-parsing doc-gen-analitic
 	@echo "$(GREEN)Генерация HTML-документации завершена.$(NC)"
-	@echo "$(GREEN)Откройте docs/index.html в браузере.$(NC)"
+	@echo "$(GREEN)Откройте docs_build/index.html в браузере.$(NC)"
+
+PYTHON := /Users/dm_sfr/.pyenv/shims/python3
+
+doc-gen-parsing:
+	@echo "$(GREEN)Генерация документации Parsing Service...$(NC)"
+	$(PYTHON) -m sphinx.ext.apidoc -o docs_src/parsing/_autogen Parsing_Service/ --force --separate || true
+	$(PYTHON) -m sphinx -b html docs_src/parsing/ docs_build/parsing/ -q
+
+doc-gen-analitic:
+	@echo "$(GREEN)Генерация документации Analitic Service...$(NC)"
+	$(PYTHON) -m sphinx.ext.apidoc -o docs_src/analitic/_autogen Analitic_Service/ --force --separate || true
+	$(PYTHON) -m sphinx -b html docs_src/analitic/ docs_build/analitic/ -q
 
 doc-gen-sso:
 	@echo "$(GREEN)Генерация документации SSO...$(NC)"
