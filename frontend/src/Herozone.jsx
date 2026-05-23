@@ -98,7 +98,6 @@ function Herozone() {
             alt="Aurora logo"
             className="w-20 h-20 mb-2 mx-auto"
           />
-
           <p className="text-[#95bec7] text-base text-center sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
             Добро пожаловать в{" "}
             <span className="text-[#0fd2f5] font-bold">Aurora</span>
@@ -112,8 +111,6 @@ function Herozone() {
                 className="flex gap-3 sm:gap-4 items-start group"
               >
                 <div className="flex-1 bg-white/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl border border-[#0fd2f5]/20 hover:border-[#0fd2f5]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#0fd2f5]/10">
-                  <div className="flex gap-3 sm:gap-4 items-center">
-                    <div className="w-10 h-10 sm:w-10 sm:h-10 rounded bg-[#0fd2f5]/20 border border-[#0fd2f5]/50 flex-shrink-0"></div>
                     <div className="flex-1">
                       <h3 className="text-left text-white text-lg sm:text-xl md:text-2xl font-semibold mb-1">
                         {item.title}
@@ -123,7 +120,6 @@ function Herozone() {
                       </p>
                     </div>
                   </div>
-                </div>
               </div>
             ))}
           </div>
@@ -139,24 +135,24 @@ function Herozone() {
       </div>
 
       <div className="fixed right-8 top-1/2 -translate-y-1/2 hidden xl:block z-50">
-        <div className="bg-white/5 backdrop-blur-md rounded-2xl p-6 border border-[#0fd2f5]/20 w-64">
-          <h4 className="text-[#0fd2f5] text-sm uppercase tracking-wider mb-4">Текущие метрики</h4>
-          <div className="space-y-3">
-            <div>
-              <p className="text-gray-400 text-xs">TON цена</p>
-              <p className="text-white text-xl font-bold">$5.42 <span className="text-green-400 text-sm">+2.3%</span></p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs">Объём 24ч</p>
-              <p className="text-white text-xl font-bold">$124M</p>
-            </div>
-            <div>
-              <p className="text-gray-400 text-xs">Активные пользователи</p>
-              <p className="text-white text-xl font-bold">2,847</p>
-            </div>
-          </div>
-        </div>
+  <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-[#0fd2f5]/20 w-80">
+    <h4 className="text-[#0fd2f5] text-base uppercase tracking-wider mb-5">Текущие метрики</h4>
+    <div className="space-y-4">
+      <div>
+        <p className="text-gray-400 text-sm">TON цена</p>
+        <p className="text-white text-2xl font-bold">$5.42 <span className="text-green-400 text-base">+2.3%</span></p>
       </div>
+      <div>
+        <p className="text-gray-400 text-sm">Объём 24ч</p>
+        <p className="text-white text-2xl font-bold">$124M</p>
+      </div>
+      <div>
+        <p className="text-gray-400 text-sm">Активные пользователи</p>
+        <p className="text-white text-2xl font-bold">2,847</p>
+      </div>
+    </div>
+  </div>
+</div>
     </>
   );
 }
