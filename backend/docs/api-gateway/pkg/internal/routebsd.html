@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: internal/routebsd</title>
+<link href="../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>routebsd</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../index.html#pkg-internal/routebsd">internal/routebsd</a><i> (on <a href="https://pkg.go.dev/internal/routebsd" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../dep/internal/routebsd.html">6 packages</a>, and imported by <a href="../../dep/internal/routebsd.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../src/internal/routebsd/address.go.html">address.go</a></span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/binary.go.html">binary.go</a></span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/interface.go.html">interface.go</a></span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/interface_classic.go.html">interface_classic.go</a></span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/interface_multicast.go.html">interface_multicast.go</a></span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/message.go.html">message.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-6-fold-content"><label for="file-6-fold-content">  <a href="../../src/internal/routebsd/route.go.html#doc">d</a> <a href="../../src/internal/routebsd/route.go.html">route.go</a></label><span id='file-6-fold-content-items' class="fold-items">
+<span class="md-text">		Package routebsd supports reading interface addresses on BSD systems.
+		This is a very stripped down version of x/net/route,
+		for use by the net package in the standard library.</span>
+</span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/sys.go.html">sys.go</a></span>
+	<span class="nodocs">    <a href="../../src/internal/routebsd/sys_darwin.go.html">sys_darwin.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 11, in which 7 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Addr" data-popularity="725">	<input type='checkbox' class="fold" id="Addr-fold-content"><label for="Addr-fold-content"> type <a href="../../src/internal/routebsd/address.go.html#line-16">Addr</a> <b><i>(interface)</i></b></label><span id='Addr-fold-content-docs' class="fold-docs">
+<span class="md-text">		An Addr represents an address associated with packet routing.</span>
+
+		<input type='checkbox' class="fold" id="Addr-fold-methods"><label for="Addr-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='Addr-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Addr-fold-method-Family"><label for="Addr-fold-method-Family">( Addr) <a href="../../src/internal/routebsd/address.go.html#line-18">Family</a>() <a href="../builtin.html#name-int">int</a></label><span id='Addr-fold-method-Family-docs' class="fold-docs">
+<span class="md-text">				Family returns an address family.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Addr-fold-impledby"><label for="Addr-fold-impledby">Implemented By (<i>at least 2, both are exported</i>)</label><span id='Addr-fold-impledby-items' class="fold-items"><span>
+			*<a href="#name-InetAddr">InetAddr</a></span><span>
+			*<a href="#name-LinkAddr">LinkAddr</a></span></span>
+		<input type='checkbox' class="fold" id="Addr-fold-results"><label for="Addr-fold-results">As Outputs Of (<i>at least 5, none are exported</i>)</label><span id='Addr-fold-results-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Addr-showhide-inputofs"><i><label for="Addr-showhide-inputofs" class="show-inline">/* 5+ unexporteds ... */</label><label for="Addr-showhide-inputofs" class="hide-inline">/* 5+ unexporteds: */</label></i><span class="hidden"><i>
+			func <a href="#name-parseAddrs">parseAddrs</a>(attrs <a href="../builtin.html#name-uint">uint</a>, b []<a href="../builtin.html#name-byte">byte</a>) ([]<b>Addr</b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-parseInetAddr">parseInetAddr</a>(af <a href="../builtin.html#name-int">int</a>, b []<a href="../builtin.html#name-byte">byte</a>) (<b>Addr</b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-parseKernelInetAddr">parseKernelInetAddr</a>(af <a href="../builtin.html#name-int">int</a>, b []<a href="../builtin.html#name-byte">byte</a>) (<a href="../builtin.html#name-int">int</a>, <b>Addr</b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-parseKernelLinkAddr">parseKernelLinkAddr</a>(_ <a href="../builtin.html#name-int">int</a>, b []<a href="../builtin.html#name-byte">byte</a>) (<a href="../builtin.html#name-int">int</a>, <b>Addr</b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-parseLinkAddr">parseLinkAddr</a>(b []<a href="../builtin.html#name-byte">byte</a>) (<b>Addr</b>, <a href="../builtin.html#name-error">error</a>)</i></span></span>
+
+</span></div><div class="anchor type-res" id="name-InetAddr" data-popularity="100">	<input type='checkbox' class="fold" id="InetAddr-fold-content"><label for="InetAddr-fold-content"> type <a href="../../src/internal/routebsd/address.go.html#line-90">InetAddr</a> <i>(struct)</i></label><span id='InetAddr-fold-content-docs' class="fold-docs">
+<span class="md-text">		An InetAddr represent an internet address using IPv4 or IPv6.</span>
+
+		<input type='checkbox' class="fold" id="InetAddr-fold-fields"><label for="InetAddr-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='InetAddr-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../src/internal/routebsd/address.go.html#line-91">IP</a> <i><a href="../net/netip.html">netip</a>.<a href="../net/netip.html#name-Addr">Addr</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="InetAddr-fold-methods"><label for="InetAddr-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='InetAddr-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*InetAddr) <a href="../../src/internal/routebsd/address.go.html#line-94">Family</a>() <a href="../builtin.html#name-int">int</a></span></span></span>
+		<input type='checkbox' class="fold" id="InetAddr-fold-impls"><label for="InetAddr-fold-impls">Implements (<i>at least one exported</i>)</label><span id='InetAddr-fold-impls-items' class="fold-items"><span>
+			*InetAddr : <a href="#name-Addr">Addr</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-InterfaceAddrMessage" data-popularity="100">	<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-content"><label for="InterfaceAddrMessage-fold-content"> type <a href="../../src/internal/routebsd/interface.go.html#line-23">InterfaceAddrMessage</a> <i>(struct)</i></label><span id='InterfaceAddrMessage-fold-content-docs' class="fold-docs">
+<span class="md-text">		An InterfaceAddrMessage represents an interface address message.</span>
+
+		<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-fields"><label for="InterfaceAddrMessage-fold-fields">Fields (<i>total 6, in which 5 are exported</i>)</label><span id='InterfaceAddrMessage-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-field-Addrs"><label for="InterfaceAddrMessage-fold-field-Addrs"><a href="../../src/internal/routebsd/interface.go.html#line-28">Addrs</a> <i>[]<a href="#name-Addr">Addr</a></i></label><span id='InterfaceAddrMessage-fold-field-Addrs-docs' class="fold-docs">
+<span class="md-text">				// addresses</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-field-Flags"><label for="InterfaceAddrMessage-fold-field-Flags"><a href="../../src/internal/routebsd/interface.go.html#line-26">Flags</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceAddrMessage-fold-field-Flags-docs' class="fold-docs">
+<span class="md-text">				// interface flags</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-field-Index"><label for="InterfaceAddrMessage-fold-field-Index"><a href="../../src/internal/routebsd/interface.go.html#line-27">Index</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceAddrMessage-fold-field-Index-docs' class="fold-docs">
+<span class="md-text">				// interface index</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-field-Type"><label for="InterfaceAddrMessage-fold-field-Type"><a href="../../src/internal/routebsd/interface.go.html#line-25">Type</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceAddrMessage-fold-field-Type-docs' class="fold-docs">
+<span class="md-text">				// message type</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-field-Version"><label for="InterfaceAddrMessage-fold-field-Version"><a href="../../src/internal/routebsd/interface.go.html#line-24">Version</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceAddrMessage-fold-field-Version-docs' class="fold-docs">
+<span class="md-text">				// message version</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="InterfaceAddrMessage-showhide-fields"><i><label for="InterfaceAddrMessage-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="InterfaceAddrMessage-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-field-raw"><label for="InterfaceAddrMessage-fold-field-raw"><a href="../../src/internal/routebsd/interface.go.html#line-30">raw</a> <i>[]<a href="../builtin.html#name-byte">byte</a></i></label><span id='InterfaceAddrMessage-fold-field-raw-docs' class="fold-docs">
+<span class="md-text">				// raw message</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-methods"><label for="InterfaceAddrMessage-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='InterfaceAddrMessage-fold-methods-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="InterfaceAddrMessage-showhide-methods"><i><label for="InterfaceAddrMessage-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="InterfaceAddrMessage-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( InterfaceAddrMessage) <a href="../../src/internal/routebsd/interface.go.html#line-48">message</a>()</span></i></span></span>
+		<input type='checkbox' class="fold" id="InterfaceAddrMessage-fold-impls"><label for="InterfaceAddrMessage-fold-impls">Implements (<i>at least one exported</i>)</label><span id='InterfaceAddrMessage-fold-impls-items' class="fold-items"><span>
+			 InterfaceAddrMessage : <a href="#name-Message">Message</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-InterfaceMessage" data-popularity="150">	<input type='checkbox' class="fold" id="InterfaceMessage-fold-content"><label for="InterfaceMessage-fold-content"> type <a href="../../src/internal/routebsd/interface.go.html#line-10">InterfaceMessage</a> <i>(struct)</i></label><span id='InterfaceMessage-fold-content-docs' class="fold-docs">
+<span class="md-text">		An InterfaceMessage represents an interface message.</span>
+
+		<input type='checkbox' class="fold" id="InterfaceMessage-fold-fields"><label for="InterfaceMessage-fold-fields">Fields (<i>total 8, in which 6 are exported</i>)</label><span id='InterfaceMessage-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-Addrs"><label for="InterfaceMessage-fold-field-Addrs"><a href="../../src/internal/routebsd/interface.go.html#line-16">Addrs</a> <i>[]<a href="#name-Addr">Addr</a></i></label><span id='InterfaceMessage-fold-field-Addrs-docs' class="fold-docs">
+<span class="md-text">				// addresses</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-Flags"><label for="InterfaceMessage-fold-field-Flags"><a href="../../src/internal/routebsd/interface.go.html#line-13">Flags</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMessage-fold-field-Flags-docs' class="fold-docs">
+<span class="md-text">				// interface flags</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-Index"><label for="InterfaceMessage-fold-field-Index"><a href="../../src/internal/routebsd/interface.go.html#line-14">Index</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMessage-fold-field-Index-docs' class="fold-docs">
+<span class="md-text">				// interface index</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-Name"><label for="InterfaceMessage-fold-field-Name"><a href="../../src/internal/routebsd/interface.go.html#line-15">Name</a> <i><a href="../builtin.html#name-string">string</a></i></label><span id='InterfaceMessage-fold-field-Name-docs' class="fold-docs">
+<span class="md-text">				// interface name</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-Type"><label for="InterfaceMessage-fold-field-Type"><a href="../../src/internal/routebsd/interface.go.html#line-12">Type</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMessage-fold-field-Type-docs' class="fold-docs">
+<span class="md-text">				// message type</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-Version"><label for="InterfaceMessage-fold-field-Version"><a href="../../src/internal/routebsd/interface.go.html#line-11">Version</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMessage-fold-field-Version-docs' class="fold-docs">
+<span class="md-text">				// message version</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="InterfaceMessage-showhide-fields"><i><label for="InterfaceMessage-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="InterfaceMessage-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-extOff"><label for="InterfaceMessage-fold-field-extOff"><a href="../../src/internal/routebsd/interface.go.html#line-18">extOff</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMessage-fold-field-extOff-docs' class="fold-docs">
+<span class="md-text">				// offset of header extension</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-field-raw"><label for="InterfaceMessage-fold-field-raw"><a href="../../src/internal/routebsd/interface.go.html#line-19">raw</a> <i>[]<a href="../builtin.html#name-byte">byte</a></i></label><span id='InterfaceMessage-fold-field-raw-docs' class="fold-docs">
+<span class="md-text">				// raw message</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="InterfaceMessage-fold-methods"><label for="InterfaceMessage-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='InterfaceMessage-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="InterfaceMessage-fold-method-MTU"><label for="InterfaceMessage-fold-method-MTU">(*InterfaceMessage) <a href="../../src/internal/routebsd/sys_darwin.go.html#line-10">MTU</a>() <a href="../builtin.html#name-int">int</a></label><span id='InterfaceMessage-fold-method-MTU-docs' class="fold-docs">
+<span class="md-text">				MTU returns the interface MTU.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="InterfaceMessage-showhide-methods"><i><label for="InterfaceMessage-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="InterfaceMessage-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( InterfaceMessage) <a href="../../src/internal/routebsd/interface.go.html#line-47">message</a>()</span></i></span></span>
+		<input type='checkbox' class="fold" id="InterfaceMessage-fold-impls"><label for="InterfaceMessage-fold-impls">Implements (<i>at least one exported</i>)</label><span id='InterfaceMessage-fold-impls-items' class="fold-items"><span>
+			 InterfaceMessage : <a href="#name-Message">Message</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-InterfaceMulticastAddrMessage" data-popularity="100">	<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-content"><label for="InterfaceMulticastAddrMessage-fold-content"> type <a href="../../src/internal/routebsd/interface.go.html#line-35">InterfaceMulticastAddrMessage</a> <i>(struct)</i></label><span id='InterfaceMulticastAddrMessage-fold-content-docs' class="fold-docs">
+<span class="md-text">		An InterfaceMulticastAddrMessage represents an interface multicast
+		address message.</span>
+
+		<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-fields"><label for="InterfaceMulticastAddrMessage-fold-fields">Fields (<i>total 6, in which 5 are exported</i>)</label><span id='InterfaceMulticastAddrMessage-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-field-Addrs"><label for="InterfaceMulticastAddrMessage-fold-field-Addrs"><a href="../../src/internal/routebsd/interface.go.html#line-28">Addrs</a> <i>[]<a href="#name-Addr">Addr</a></i></label><span id='InterfaceMulticastAddrMessage-fold-field-Addrs-docs' class="fold-docs">
+<span class="md-text">				// addresses</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-field-Flags"><label for="InterfaceMulticastAddrMessage-fold-field-Flags"><a href="../../src/internal/routebsd/interface.go.html#line-26">Flags</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMulticastAddrMessage-fold-field-Flags-docs' class="fold-docs">
+<span class="md-text">				// interface flags</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-field-Index"><label for="InterfaceMulticastAddrMessage-fold-field-Index"><a href="../../src/internal/routebsd/interface.go.html#line-27">Index</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMulticastAddrMessage-fold-field-Index-docs' class="fold-docs">
+<span class="md-text">				// interface index</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-field-Type"><label for="InterfaceMulticastAddrMessage-fold-field-Type"><a href="../../src/internal/routebsd/interface.go.html#line-25">Type</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMulticastAddrMessage-fold-field-Type-docs' class="fold-docs">
+<span class="md-text">				// message type</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-field-Version"><label for="InterfaceMulticastAddrMessage-fold-field-Version"><a href="../../src/internal/routebsd/interface.go.html#line-24">Version</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='InterfaceMulticastAddrMessage-fold-field-Version-docs' class="fold-docs">
+<span class="md-text">				// message version</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="InterfaceMulticastAddrMessage-showhide-fields"><i><label for="InterfaceMulticastAddrMessage-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="InterfaceMulticastAddrMessage-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-field-raw"><label for="InterfaceMulticastAddrMessage-fold-field-raw"><a href="../../src/internal/routebsd/interface.go.html#line-30">raw</a> <i>[]<a href="../builtin.html#name-byte">byte</a></i></label><span id='InterfaceMulticastAddrMessage-fold-field-raw-docs' class="fold-docs">
+<span class="md-text">				// raw message</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-methods"><label for="InterfaceMulticastAddrMessage-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='InterfaceMulticastAddrMessage-fold-methods-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="InterfaceMulticastAddrMessage-showhide-methods"><i><label for="InterfaceMulticastAddrMessage-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="InterfaceMulticastAddrMessage-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( InterfaceMulticastAddrMessage) <a href="../../src/internal/routebsd/interface.go.html#line-49">message</a>()</span></i></span></span>
+		<input type='checkbox' class="fold" id="InterfaceMulticastAddrMessage-fold-impls"><label for="InterfaceMulticastAddrMessage-fold-impls">Implements (<i>at least one exported</i>)</label><span id='InterfaceMulticastAddrMessage-fold-impls-items' class="fold-items"><span>
+			 InterfaceMulticastAddrMessage : <a href="#name-Message">Message</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-LinkAddr" data-popularity="100">	<input type='checkbox' class="fold" id="LinkAddr-fold-content"><label for="LinkAddr-fold-content"> type <a href="../../src/internal/routebsd/address.go.html#line-22">LinkAddr</a> <i>(struct)</i></label><span id='LinkAddr-fold-content-docs' class="fold-docs">
+<span class="md-text">		A LinkAddr represents a link-layer address.</span>
+
+		<input type='checkbox' class="fold" id="LinkAddr-fold-fields"><label for="LinkAddr-fold-fields">Fields (<i>total 3, all are exported</i>)</label><span id='LinkAddr-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="LinkAddr-fold-field-Addr"><label for="LinkAddr-fold-field-Addr"><a href="../../src/internal/routebsd/address.go.html#line-25">Addr</a> <i>[]<a href="../builtin.html#name-byte">byte</a></i></label><span id='LinkAddr-fold-field-Addr-docs' class="fold-docs">
+<span class="md-text">				// link-layer address when attached</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="LinkAddr-fold-field-Index"><label for="LinkAddr-fold-field-Index"><a href="../../src/internal/routebsd/address.go.html#line-23">Index</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='LinkAddr-fold-field-Index-docs' class="fold-docs">
+<span class="md-text">				// interface index when attached</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="LinkAddr-fold-field-Name"><label for="LinkAddr-fold-field-Name"><a href="../../src/internal/routebsd/address.go.html#line-24">Name</a> <i><a href="../builtin.html#name-string">string</a></i></label><span id='LinkAddr-fold-field-Name-docs' class="fold-docs">
+<span class="md-text">				// interface name when attached</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="LinkAddr-fold-methods"><label for="LinkAddr-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='LinkAddr-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="LinkAddr-fold-method-Family"><label for="LinkAddr-fold-method-Family">(*LinkAddr) <a href="../../src/internal/routebsd/address.go.html#line-29">Family</a>() <a href="../builtin.html#name-int">int</a></label><span id='LinkAddr-fold-method-Family-docs' class="fold-docs">
+<span class="md-text">				Family implements the Family method of Addr interface.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="LinkAddr-fold-impls"><label for="LinkAddr-fold-impls">Implements (<i>at least one exported</i>)</label><span id='LinkAddr-fold-impls-items' class="fold-items"><span>
+			*LinkAddr : <a href="#name-Addr">Addr</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Message" data-popularity="725">	<input type='checkbox' class="fold" id="Message-fold-content"><label for="Message-fold-content"> type <a href="../../src/internal/routebsd/message.go.html#line-10">Message</a> <b><i>(interface)</i></b></label><span id='Message-fold-content-docs' class="fold-docs">
+<span class="md-text">		A Message represents a routing message.</span>
+
+		<input type='checkbox' class="fold" id="Message-fold-methods"><label for="Message-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='Message-fold-methods-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Message-showhide-methods"><i><label for="Message-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="Message-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( Message) <a href="../../src/internal/routebsd/message.go.html#line-11">message</a>()</span></i></span></span>
+		<input type='checkbox' class="fold" id="Message-fold-impledby"><label for="Message-fold-impledby">Implemented By (<i>at least 3, all are exported</i>)</label><span id='Message-fold-impledby-items' class="fold-items"><span>
+			 <a href="#name-InterfaceAddrMessage">InterfaceAddrMessage</a></span><span>
+			 <a href="#name-InterfaceMessage">InterfaceMessage</a></span><span>
+			 <a href="#name-InterfaceMulticastAddrMessage">InterfaceMulticastAddrMessage</a></span></span>
+		<input type='checkbox' class="fold" id="Message-fold-results"><label for="Message-fold-results">As Outputs Of (<i>at least 3, in which 1 is exported</i>)</label><span id='Message-fold-results-items' class="fold-items"><span>
+			func <a href="#name-FetchRIBMessages">FetchRIBMessages</a>(typ, arg <a href="../builtin.html#name-int">int</a>) ([]<b>Message</b>, <a href="../builtin.html#name-error">error</a>)</span>
+			<input type='checkbox' class="showhide" id="Message-showhide-inputofs"><i><label for="Message-showhide-inputofs" class="show-inline">/* 2+ unexporteds ... */</label><label for="Message-showhide-inputofs" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			func <a href="#name-parseRIB">parseRIB</a>(b []<a href="../builtin.html#name-byte">byte</a>) ([]<b>Message</b>, <a href="../builtin.html#name-error">error</a>)</i></span><span class="hidden"><i>
+			func net.<a href="../net.html#name-interfaceMessages">interfaceMessages</a>(ifindex <a href="../builtin.html#name-int">int</a>) ([]<b>Message</b>, <a href="../builtin.html#name-error">error</a>)</i></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-binaryBigEndian" data-popularity="205">	<input type='checkbox' class="fold" id="binaryBigEndian-fold-content"><label for="binaryBigEndian-fold-content"> type <a href="../../src/internal/routebsd/binary.go.html#line-42">binaryBigEndian</a> <i>(struct)</i></label><span id='binaryBigEndian-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="binaryBigEndian-fold-methods"><label for="binaryBigEndian-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='binaryBigEndian-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( binaryBigEndian) <a href="../../src/internal/routebsd/binary.go.html#line-44">Uint16</a>(b []<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint16">uint16</a></span></span><span>
+			<span class="nodocs">( binaryBigEndian) <a href="../../src/internal/routebsd/binary.go.html#line-48">Uint32</a>(b []<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint32">uint32</a></span></span><span>
+			<span class="nodocs">( binaryBigEndian) <a href="../../src/internal/routebsd/binary.go.html#line-52">Uint64</a>(b []<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint64">uint64</a></span></span></span>
+		<input type='checkbox' class="fold" id="binaryBigEndian-fold-impls"><label for="binaryBigEndian-fold-impls">Implements (<i>at least one unexported</i>)</label><span id='binaryBigEndian-fold-impls-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="binaryBigEndian-showhide-impls"><i><label for="binaryBigEndian-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="binaryBigEndian-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 binaryBigEndian : <a href="#name-binaryByteOrder">binaryByteOrder</a></i></span></span>
+		<input type='checkbox' class="fold" id="binaryBigEndian-fold-values"><label for="binaryBigEndian-fold-values">As Types Of (<i>only one, which is unexported</i>)</label><span id='binaryBigEndian-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="binaryBigEndian-showhide-values"><i><label for="binaryBigEndian-showhide-values" class="show-inline">/* one unexported ... */</label><label for="binaryBigEndian-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			  var <a href="#name-bigEndian">bigEndian</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-binaryByteOrder" data-popularity="1055">	<input type='checkbox' class="fold" id="binaryByteOrder-fold-content"><label for="binaryByteOrder-fold-content"> type <a href="../../src/internal/routebsd/binary.go.html#line-22">binaryByteOrder</a> <b><i>(interface)</i></b></label><span id='binaryByteOrder-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="binaryByteOrder-fold-methods"><label for="binaryByteOrder-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='binaryByteOrder-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( binaryByteOrder) <a href="../../src/internal/routebsd/binary.go.html#line-23">Uint16</a>([]<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint16">uint16</a></span></span><span>
+			<span class="nodocs">( binaryByteOrder) <a href="../../src/internal/routebsd/binary.go.html#line-24">Uint32</a>([]<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint32">uint32</a></span></span><span>
+			<span class="nodocs">( binaryByteOrder) <a href="../../src/internal/routebsd/binary.go.html#line-25">Uint64</a>([]<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint64">uint64</a></span></span></span>
+		<input type='checkbox' class="fold" id="binaryByteOrder-fold-impledby"><label for="binaryByteOrder-fold-impledby">Implemented By (<i>at least 6, in which 1 is exported</i>)</label><span id='binaryByteOrder-fold-impledby-items' class="fold-items"><span>
+			 encoding/binary.<a href="../encoding/binary.html#name-ByteOrder">ByteOrder</a> <i>(interface)</i></span>
+			<input type='checkbox' checked class="showhide" id="binaryByteOrder-showhide-impedBys"><i><label for="binaryByteOrder-showhide-impedBys" class="show-inline">/* 5+ unexporteds ... */</label><label for="binaryByteOrder-showhide-impedBys" class="hide-inline">/* 5+ unexporteds: */</label></i><span class="hidden"><i>
+			 <a href="#name-binaryBigEndian">binaryBigEndian</a></i></span><span class="hidden"><i>
+			 <a href="#name-binaryLittleEndian">binaryLittleEndian</a></i></span><span class="hidden"><i>
+			 encoding/binary.<a href="../encoding/binary.html#name-bigEndian">bigEndian</a></i></span><span class="hidden"><i>
+			 encoding/binary.<a href="../encoding/binary.html#name-littleEndian">littleEndian</a></i></span><span class="hidden"><i>
+			 encoding/binary.<a href="../encoding/binary.html#name-nativeEndian">nativeEndian</a></i></span></span>
+		<input type='checkbox' class="fold" id="binaryByteOrder-fold-values"><label for="binaryByteOrder-fold-values">As Types Of (<i>only one, which is unexported</i>)</label><span id='binaryByteOrder-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="binaryByteOrder-showhide-values"><i><label for="binaryByteOrder-showhide-values" class="show-inline">/* one unexported ... */</label><label for="binaryByteOrder-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			  var <a href="#name-nativeEndian">nativeEndian</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-binaryLittleEndian" data-popularity="205">	<input type='checkbox' class="fold" id="binaryLittleEndian-fold-content"><label for="binaryLittleEndian-fold-content"> type <a href="../../src/internal/routebsd/binary.go.html#line-28">binaryLittleEndian</a> <i>(struct)</i></label><span id='binaryLittleEndian-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="binaryLittleEndian-fold-methods"><label for="binaryLittleEndian-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='binaryLittleEndian-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( binaryLittleEndian) <a href="../../src/internal/routebsd/binary.go.html#line-30">Uint16</a>(b []<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint16">uint16</a></span></span><span>
+			<span class="nodocs">( binaryLittleEndian) <a href="../../src/internal/routebsd/binary.go.html#line-34">Uint32</a>(b []<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint32">uint32</a></span></span><span>
+			<span class="nodocs">( binaryLittleEndian) <a href="../../src/internal/routebsd/binary.go.html#line-38">Uint64</a>(b []<a href="../builtin.html#name-byte">byte</a>) <a href="../builtin.html#name-uint64">uint64</a></span></span></span>
+		<input type='checkbox' class="fold" id="binaryLittleEndian-fold-impls"><label for="binaryLittleEndian-fold-impls">Implements (<i>at least one unexported</i>)</label><span id='binaryLittleEndian-fold-impls-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="binaryLittleEndian-showhide-impls"><i><label for="binaryLittleEndian-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="binaryLittleEndian-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 binaryLittleEndian : <a href="#name-binaryByteOrder">binaryByteOrder</a></i></span></span>
+		<input type='checkbox' class="fold" id="binaryLittleEndian-fold-values"><label for="binaryLittleEndian-fold-values">As Types Of (<i>only one, which is unexported</i>)</label><span id='binaryLittleEndian-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="binaryLittleEndian-showhide-values"><i><label for="binaryLittleEndian-showhide-values" class="show-inline">/* one unexported ... */</label><label for="binaryLittleEndian-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			  var <a href="#name-littleEndian">littleEndian</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-wireFormat" data-popularity="225">	<input type='checkbox' class="fold" id="wireFormat-fold-content"><label for="wireFormat-fold-content"> type <a href="../../src/internal/routebsd/sys.go.html#line-41">wireFormat</a> <i>(struct)</i></label><span id='wireFormat-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="wireFormat-fold-fields"><label for="wireFormat-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='wireFormat-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="wireFormat-showhide-fields"><i><label for="wireFormat-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="wireFormat-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="wireFormat-fold-field-bodyOff"><label for="wireFormat-fold-field-bodyOff"><a href="../../src/internal/routebsd/sys.go.html#line-43">bodyOff</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='wireFormat-fold-field-bodyOff-docs' class="fold-docs">
+<span class="md-text">				// offset of message body</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="wireFormat-fold-field-extOff"><label for="wireFormat-fold-field-extOff"><a href="../../src/internal/routebsd/sys.go.html#line-42">extOff</a> <i><a href="../builtin.html#name-int">int</a></i></label><span id='wireFormat-fold-field-extOff-docs' class="fold-docs">
+<span class="md-text">				// offset of header extension</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../src/internal/routebsd/sys.go.html#line-44">parse</a> <i>func([]<a href="../builtin.html#name-byte">byte</a>) (<a href="#name-Message">Message</a>, <a href="../builtin.html#name-error">error</a>)</i></span></i></span></span>
+		<input type='checkbox' class="fold" id="wireFormat-fold-methods"><label for="wireFormat-fold-methods">Methods (<i>total 3, none are exported</i>)</label><span id='wireFormat-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="wireFormat-showhide-methods"><i><label for="wireFormat-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="wireFormat-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*wireFormat) <a href="../../src/internal/routebsd/interface_classic.go.html#line-55">parseInterfaceAddrMessage</a>(b []<a href="../builtin.html#name-byte">byte</a>) (<a href="#name-Message">Message</a>, <a href="../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*wireFormat) <a href="../../src/internal/routebsd/interface_classic.go.html#line-14">parseInterfaceMessage</a>(b []<a href="../builtin.html#name-byte">byte</a>) (<a href="#name-Message">Message</a>, <a href="../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*wireFormat) <a href="../../src/internal/routebsd/interface_multicast.go.html#line-9">parseInterfaceMulticastAddrMessage</a>(b []<a href="../builtin.html#name-byte">byte</a>) (<a href="#name-Message">Message</a>, <a href="../builtin.html#name-error">error</a>)</span></i></span></span>
+		<input type='checkbox' class="fold" id="wireFormat-fold-results"><label for="wireFormat-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='wireFormat-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="wireFormat-showhide-inputofs"><i><label for="wireFormat-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="wireFormat-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-probeRoutingStack">probeRoutingStack</a>() (<a href="../builtin.html#name-int">int</a>, map[<a href="../builtin.html#name-int">int</a>]*<b>wireFormat</b>)</i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 11, in which 1 is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-FetchRIBMessages">	<input type='checkbox' class="fold" id="FetchRIBMessages-fold-content"><label for="FetchRIBMessages-fold-content"> func <a href="../../src/internal/routebsd/route.go.html#line-49">FetchRIBMessages</a>(typ, arg <a href="../builtin.html#name-int">int</a>) ([]<a href="#name-Message">Message</a>, <a href="../builtin.html#name-error">error</a>)</label><span id='FetchRIBMessages-fold-content-docs' class="fold-docs">
+<span class="md-text">		FetchRIBMessages fetches a list of addressing messages for an interface.
+		The typ argument is something like syscall.NET_RT_IFLIST.
+		The argument is an interface index or 0 for all.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 10 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 10 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-fetchRIB"><i>	<input type='checkbox' class="fold" id="fetchRIB-fold-content"><label for="fetchRIB-fold-content"> func <a href="../../src/internal/routebsd/route.go.html#line-28">fetchRIB</a>(typ, arg <a href="../builtin.html#name-int">int</a>) ([]<a href="../builtin.html#name-byte">byte</a>, <a href="../builtin.html#name-error">error</a>)</label><span id='fetchRIB-fold-content-docs' class="fold-docs">
+<span class="md-text">		fetchRIB fetches a routing information base from the operating
+		system.
+		
+		The arg is an interface index or 0 for all.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../../src/internal/routebsd/sys.go.html#line-21">init</a>()</span></i></div><div class="anchor value-res hidden" id="name-parseAddrs"><i>	<span class="nodocs"> func <a href="../../src/internal/routebsd/address.go.html#line-241">parseAddrs</a>(attrs <a href="../builtin.html#name-uint">uint</a>, b []<a href="../builtin.html#name-byte">byte</a>) ([]<a href="#name-Addr">Addr</a>, <a href="../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-parseInetAddr"><i>	<input type='checkbox' class="fold" id="parseInetAddr-fold-content"><label for="parseInetAddr-fold-content"> func <a href="../../src/internal/routebsd/address.go.html#line-103">parseInetAddr</a>(af <a href="../builtin.html#name-int">int</a>, b []<a href="../builtin.html#name-byte">byte</a>) (<a href="#name-Addr">Addr</a>, <a href="../builtin.html#name-error">error</a>)</label><span id='parseInetAddr-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseInetAddr parses b as an internet address for IPv4 or IPv6.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseKernelInetAddr"><i>	<input type='checkbox' class="fold" id="parseKernelInetAddr-fold-content"><label for="parseKernelInetAddr-fold-content"> func <a href="../../src/internal/routebsd/address.go.html#line-166">parseKernelInetAddr</a>(af <a href="../builtin.html#name-int">int</a>, b []<a href="../builtin.html#name-byte">byte</a>) (<a href="../builtin.html#name-int">int</a>, <a href="#name-Addr">Addr</a>, <a href="../builtin.html#name-error">error</a>)</label><span id='parseKernelInetAddr-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseKernelInetAddr parses b as an internet address in conventional
+		BSD kernel form.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseKernelLinkAddr"><i>	<input type='checkbox' class="fold" id="parseKernelLinkAddr-fold-content"><label for="parseKernelLinkAddr-fold-content"> func <a href="../../src/internal/routebsd/address.go.html#line-45">parseKernelLinkAddr</a>(_ <a href="../builtin.html#name-int">int</a>, b []<a href="../builtin.html#name-byte">byte</a>) (<a href="../builtin.html#name-int">int</a>, <a href="#name-Addr">Addr</a>, <a href="../builtin.html#name-error">error</a>)</label><span id='parseKernelLinkAddr-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseKernelLinkAddr parses b as a link-layer address in
+		conventional BSD kernel form.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseLinkAddr"><i>	<span class="nodocs"> func <a href="../../src/internal/routebsd/address.go.html#line-31">parseLinkAddr</a>(b []<a href="../builtin.html#name-byte">byte</a>) (<a href="#name-Addr">Addr</a>, <a href="../builtin.html#name-error">error</a>)</span></i></div><div class="anchor value-res hidden" id="name-parseRIB"><i>	<input type='checkbox' class="fold" id="parseRIB-fold-content"><label for="parseRIB-fold-content"> func <a href="../../src/internal/routebsd/message.go.html#line-16">parseRIB</a>(b []<a href="../builtin.html#name-byte">byte</a>) ([]<a href="#name-Message">Message</a>, <a href="../builtin.html#name-error">error</a>)</label><span id='parseRIB-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseRIB parses b as a routing information base and returns a list
+		of routing messages.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-probeRoutingStack"><i>	<span class="nodocs"> func <a href="../../src/internal/routebsd/sys_darwin.go.html#line-17">probeRoutingStack</a>() (<a href="../builtin.html#name-int">int</a>, map[<a href="../builtin.html#name-int">int</a>]*<a href="#name-wireFormat">wireFormat</a>)</span></i></div><div class="anchor value-res hidden" id="name-roundup"><i>	<span class="nodocs"> func <a href="../../src/internal/routebsd/sys.go.html#line-34">roundup</a>(l <a href="../builtin.html#name-int">int</a>) <a href="../builtin.html#name-int">int</a></span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 10, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 10 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 10 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-bigEndian"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/binary.go.html#line-19">bigEndian</a> <a href="#name-binaryBigEndian">binaryBigEndian</a></span></i></div><div class="anchor value-res hidden" id="name-errInvalidAddr"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/route.go.html#line-21">errInvalidAddr</a> <a href="../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-errInvalidMessage"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/route.go.html#line-20">errInvalidMessage</a> <a href="../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-errMessageMismatch"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/route.go.html#line-18">errMessageMismatch</a> <a href="../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-errMessageTooShort"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/route.go.html#line-19">errMessageTooShort</a> <a href="../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-kernelAlign"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/sys.go.html#line-16">kernelAlign</a> <a href="../builtin.html#name-int">int</a></span></i></div><div class="anchor value-res hidden" id="name-littleEndian"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/binary.go.html#line-18">littleEndian</a> <a href="#name-binaryLittleEndian">binaryLittleEndian</a></span></i></div><div class="anchor value-res hidden" id="name-nativeEndian"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/sys.go.html#line-15">nativeEndian</a> <a href="#name-binaryByteOrder">binaryByteOrder</a></span></i></div><div class="anchor value-res hidden" id="name-rtmVersion"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/sys.go.html#line-17">rtmVersion</a> <a href="../builtin.html#name-byte">byte</a></span></i></div><div class="anchor value-res hidden" id="name-wireFormats"><i>	<span class="nodocs">  var <a href="../../src/internal/routebsd/sys.go.html#line-18">wireFormats</a> map[<a href="../builtin.html#name-int">int</a>]*<a href="#name-wireFormat">wireFormat</a></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (only one, which is unexported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-sizeofIfMsghdr2"><i>	<input type='checkbox' class="fold" id="sizeofIfMsghdr2-fold-content"><label for="sizeofIfMsghdr2-fold-content">const <a href="../../src/internal/routebsd/sys_darwin.go.html#line-15">sizeofIfMsghdr2</a> = 160</label><span id='sizeofIfMsghdr2-fold-content-docs' class="fold-docs">
+<span class="md-text">		sizeofIfMsghdr2 is copied from x/sys/unix.</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

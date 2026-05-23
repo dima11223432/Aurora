@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: golang.org/x/net/internal/httpsfv</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>httpsfv</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-golang.org/x/net/internal/httpsfv">golang.org/x/net/internal/httpsfv</a><i> (on <a href="https://pkg.go.dev/golang.org/x/net/internal/httpsfv" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/golang.org/x/net/internal/httpsfv.html">5 packages</a>, and imported by <a href="../../../../../dep/golang.org/x/net/internal/httpsfv.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#doc">d</a> <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html">httpsfv.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package httpsfv provides functionality for dealing with HTTP Structured
+		Field Values.</span></span></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 33, in which 13 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ParseBareInnerList">	<input type='checkbox' class="fold" id="ParseBareInnerList-fold-content"><label for="ParseBareInnerList-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-170">ParseBareInnerList</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(bareItem, param <a href="../../../../builtin.html#name-string">string</a>)) (ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseBareInnerList-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseBareInnerList parses a bare inner list from a given HTTP Structured
+		Field Values.
+		
+		We define a bare inner list as an inner list
+		(https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-inner-list),
+		without the top-most parameter of the inner list. For example, given the
+		inner list `(a;b c;d);e`, the bare inner list would be `(a;b c;d)`.
+		
+		Given an HTTP SFV string that represents a bare inner list, it will call the
+		given function using each of the bare item and parameter within the bare
+		inner list. This allows the caller to extract information out of the bare
+		inner list.
+		
+		This function will return once it encounters the end of the bare inner list,
+		or something that is not a bare inner list. If it cannot consume the entire
+		given string, the ok value returned will be false.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseBoolean">	<input type='checkbox' class="fold" id="ParseBoolean-fold-content"><label for="ParseBoolean-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-513">ParseBoolean</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../builtin.html#name-bool">bool</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseBoolean-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseBoolean parses a boolean from a given HTTP Structured Field Values.
+		
+		The entire HTTP SFV string must consist of a valid boolean. It returns the
+		parsed boolean and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-boolean.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseByteSequence">	<input type='checkbox' class="fold" id="ParseByteSequence-fold-content"><label for="ParseByteSequence-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-492">ParseByteSequence</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed []<a href="../../../../builtin.html#name-byte">byte</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseByteSequence-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseByteSequence parses a byte sequence from a given HTTP Structured Field
+		Values.
+		
+		The entire HTTP SFV string must consist of a valid byte sequence. It returns
+		the parsed byte sequence and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-byte-sequence.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseDate">	<input type='checkbox' class="fold" id="ParseDate-fold-content"><label for="ParseDate-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-541">ParseDate</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseDate-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseDate parses a date from a given HTTP Structured Field Values.
+		
+		The entire HTTP SFV string must consist of a valid date. It returns the
+		parsed date and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-date.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseDecimal">	<input type='checkbox' class="fold" id="ParseDecimal-fold-content"><label for="ParseDecimal-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-389">ParseDecimal</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../builtin.html#name-float64">float64</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseDecimal-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseDecimal parses a decimal from a given HTTP Structured Field Values.
+		
+		The entire HTTP SFV string must consist of a valid decimal. It returns the
+		parsed decimal and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-integer-or-decim.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseDictionary">	<input type='checkbox' class="fold" id="ParseDictionary-fold-content"><label for="ParseDictionary-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-219">ParseDictionary</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(key, val, param <a href="../../../../builtin.html#name-string">string</a>)) (ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseDictionary-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseDictionary parses a dictionary from a given HTTP Structured Field
+		Values.
+		
+		Given an HTTP SFV string that represents a dictionary, it will call the
+		given function using each of the keys, values, and parameters contained in
+		the dictionary. This allows the caller to extract information out of the
+		dictionary.
+		
+		This function will return once it encounters the end of the string, or
+		something that is not a dictionary. If it cannot consume the entire given
+		string, the ok value returned will be false.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-dictionary.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseDisplayString">	<input type='checkbox' class="fold" id="ParseDisplayString-fold-content"><label for="ParseDisplayString-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-619">ParseDisplayString</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseDisplayString-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseDisplayString parses a display string from a given HTTP Structured
+		Field Values.
+		
+		The entire HTTP SFV string must consist of a valid display string. It
+		returns the parsed display string and an ok boolean value, indicating
+		success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-display-string.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseInteger">	<input type='checkbox' class="fold" id="ParseInteger-fold-content"><label for="ParseInteger-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-373">ParseInteger</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../builtin.html#name-int64">int64</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseInteger-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseInteger parses an integer from a given HTTP Structured Field Values.
+		
+		The entire HTTP SFV string must consist of a valid integer. It returns the
+		parsed integer and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-integer-or-decim.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseItem">	<input type='checkbox' class="fold" id="ParseItem-fold-content"><label for="ParseItem-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-201">ParseItem</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(bareItem, param <a href="../../../../builtin.html#name-string">string</a>)) (ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseItem-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseItem parses an item from a given HTTP Structured Field Values.
+		
+		Given an HTTP SFV string that represents an item, it will call the given
+		function once, with the bare item and the parameter of the item. This allows
+		the caller to extract information out of the item.
+		
+		This function will return once it encounters the end of the string, or
+		something that is not an item. If it cannot consume the entire given
+		string, the ok value returned will be false.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-item.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseList">	<input type='checkbox' class="fold" id="ParseList-fold-content"><label for="ParseList-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-87">ParseList</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(member, param <a href="../../../../builtin.html#name-string">string</a>)) (ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseList-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseList parses a list from a given HTTP Structured Field Values.
+		
+		Given an HTTP SFV string that represents a list, it will call the given
+		function using each of the members and parameters contained in the list.
+		This allows the caller to extract information out of the list.
+		
+		This function will return once it encounters the end of the string, or
+		something that is not a list. If it cannot consume the entire given
+		string, the ok value returned will be false.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-list.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseParameter">	<input type='checkbox' class="fold" id="ParseParameter-fold-content"><label for="ParseParameter-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-299">ParseParameter</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(key, val <a href="../../../../builtin.html#name-string">string</a>)) (ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseParameter-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseParameter parses a parameter from a given HTTP Structured Field Values.
+		
+		Given an HTTP SFV string that represents a parameter, it will call the given
+		function using each of the keys and values contained in the parameter. This
+		allows the caller to extract information out of the parameter.
+		
+		This function will return once it encounters the end of the string, or
+		something that is not a parameter. If it cannot consume the entire given
+		string, the ok value returned will be false.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#parse-param.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseString">	<input type='checkbox' class="fold" id="ParseString-fold-content"><label for="ParseString-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-434">ParseString</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseString-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseString parses a Go string from a given HTTP Structured Field Values.
+		
+		The entire HTTP SFV string must consist of a valid string. It returns the
+		parsed string and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-string.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseToken">	<input type='checkbox' class="fold" id="ParseToken-fold-content"><label for="ParseToken-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-462">ParseToken</a>(s <a href="../../../../builtin.html#name-string">string</a>) (parsed <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='ParseToken-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseToken parses a token from a given HTTP Structured Field Values.
+		
+		The entire HTTP SFV string must consist of a valid token. It returns the
+		parsed token and an ok boolean value, indicating success or not.
+		
+		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-token</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 20 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 20 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-consumeBareInnerList"><i>	<input type='checkbox' class="fold" id="consumeBareInnerList-fold-content"><label for="consumeBareInnerList-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-126">consumeBareInnerList</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(bareItem, param <a href="../../../../builtin.html#name-string">string</a>)) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeBareInnerList-fold-content-docs' class="fold-docs">
+<span class="md-text">		consumeBareInnerList consumes an inner list
+		(https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-inner-list),
+		except for the inner list's top-most parameter.
+		For example, given `(a;b c;d);e`, it will consume only `(a;b c;d)`.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeBareItem"><i>	<input type='checkbox' class="fold" id="consumeBareItem-fold-content"><label for="consumeBareItem-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-642">consumeBareItem</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeBareItem-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#parse-bare-item.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeBoolean"><i>	<input type='checkbox' class="fold" id="consumeBoolean-fold-content"><label for="consumeBoolean-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-500">consumeBoolean</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeBoolean-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-boolean.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeByteSequence"><i>	<input type='checkbox' class="fold" id="consumeByteSequence-fold-content"><label for="consumeByteSequence-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-470">consumeByteSequence</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeByteSequence-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-byte-sequence.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeDate"><i>	<input type='checkbox' class="fold" id="consumeDate-fold-content"><label for="consumeDate-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-521">consumeDate</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeDate-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-date.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeDisplayString"><i>	<input type='checkbox' class="fold" id="consumeDisplayString-fold-content"><label for="consumeDisplayString-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-553">consumeDisplayString</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeDisplayString-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-display-string.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeIntegerOrDecimal"><i>	<input type='checkbox' class="fold" id="consumeIntegerOrDecimal-fold-content"><label for="consumeIntegerOrDecimal-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-320">consumeIntegerOrDecimal</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeIntegerOrDecimal-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-integer-or-decim.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeItem"><i>	<input type='checkbox' class="fold" id="consumeItem-fold-content"><label for="consumeItem-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-176">consumeItem</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(bareItem, param <a href="../../../../builtin.html#name-string">string</a>)) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeItem-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-an-item.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeKey"><i>	<input type='checkbox' class="fold" id="consumeKey-fold-content"><label for="consumeKey-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-305">consumeKey</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeKey-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-key.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeParameter"><i>	<input type='checkbox' class="fold" id="consumeParameter-fold-content"><label for="consumeParameter-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-260">consumeParameter</a>(s <a href="../../../../builtin.html#name-string">string</a>, f func(key, val <a href="../../../../builtin.html#name-string">string</a>)) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeParameter-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#parse-param.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeString"><i>	<input type='checkbox' class="fold" id="consumeString-fold-content"><label for="consumeString-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-403">consumeString</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeString-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-string.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-consumeToken"><i>	<input type='checkbox' class="fold" id="consumeToken-fold-content"><label for="consumeToken-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-442">consumeToken</a>(s <a href="../../../../builtin.html#name-string">string</a>) (consumed, rest <a href="../../../../builtin.html#name-string">string</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='consumeToken-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc9651.html#name-parsing-a-token</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-countLeftWhitespace"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-44">countLeftWhitespace</a>(s <a href="../../../../builtin.html#name-string">string</a>) <a href="../../../../builtin.html#name-int">int</a></span></i></div><div class="anchor value-res hidden" id="name-decOctetHex"><i>	<input type='checkbox' class="fold" id="decOctetHex-fold-content"><label for="decOctetHex-fold-content"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-56">decOctetHex</a>(ch1, ch2 <a href="../../../../builtin.html#name-byte">byte</a>) (ch <a href="../../../../builtin.html#name-byte">byte</a>, ok <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='decOctetHex-fold-content-docs' class="fold-docs">
+<span class="md-text">		https://www.rfc-editor.org/rfc/rfc4648#section-8.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-isAlpha"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-21">isAlpha</a>(b <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isDigit"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-25">isDigit</a>(b <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isLCAlpha"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-17">isLCAlpha</a>(b <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isSP"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-33">isSP</a>(b <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isTChar"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-37">isTChar</a>(b <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isVChar"><i>	<span class="nodocs"> func <a href="../../../../../src/golang.org/x/net/internal/httpsfv/httpsfv.go.html#line-29">isVChar</a>(b <a href="../../../../builtin.html#name-byte">byte</a>) <a href="../../../../builtin.html#name-bool">bool</a></span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

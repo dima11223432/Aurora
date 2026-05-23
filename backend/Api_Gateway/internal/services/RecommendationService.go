@@ -12,12 +12,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// RecommendationService handles recommendation and parsing channel operations.
+// It communicates with the Recommendation Service via gRPC to fetch
+// recommended posts and manage parsing channels (default and user-custom).
 type RecommendationService struct {
 	RecommendationClient rsv1.RecommendationServiceClient
 	log                  *slog.Logger
 	authinterceptor      AuthInterceptor
 }
 
+// NewRecommendationService creates a new RecommendationService instance.
 func NewRecommendationService(recommendationClient rsv1.RecommendationServiceClient, log *slog.Logger, authinterceptor AuthInterceptor) *RecommendationService {
 	return &RecommendationService{
 		RecommendationClient: recommendationClient,
@@ -26,6 +30,7 @@ func NewRecommendationService(recommendationClient rsv1.RecommendationServiceCli
 	}
 }
 
+// GetAllDefaultParsingChannels returns the list of all system-wide default parsing channels.
 func (r *RecommendationService) GetAllDefaultParsingChannels(
 	ctx context.Context,
 ) ([]string, error) {
@@ -42,6 +47,7 @@ func (r *RecommendationService) GetAllDefaultParsingChannels(
 	return parsingChannels.Channels, nil
 }
 
+// AddNewUserCustomParsingChannels adds a custom parsing channel for the authenticated user.
 func (r *RecommendationService) AddNewUserCustomParsingChannels(ctx context.Context, channel string) error {
 	const op = "Api_Service.internal.services.RecommendationService.AddUserCustomParsingChannels"
 	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
@@ -69,6 +75,7 @@ func (r *RecommendationService) AddNewUserCustomParsingChannels(ctx context.Cont
 	return nil
 }
 
+// AddNewDefaultParsingChannel adds a new system-wide default parsing channel with a category.
 func (r *RecommendationService) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
@@ -92,6 +99,7 @@ func (r *RecommendationService) AddNewDefaultParsingChannel(ctx context.Context,
 	return nil
 }
 
+// DeleteUserCustomParsingChannel removes a user's custom parsing channel.
 func (r *RecommendationService) DeleteUserCustomParsingChannel(
 	ctx context.Context,
 	channel string,
@@ -121,6 +129,7 @@ func (r *RecommendationService) DeleteUserCustomParsingChannel(
 	return nil
 }
 
+// DeleteDefaultParsingChannel removes a system-wide default parsing channel.
 func (r *RecommendationService) DeleteDefaultParsingChannel(ctx context.Context, channel string) error {
 	if channel == "" {
 		r.log.Error("channelUsername is empty")
@@ -137,6 +146,8 @@ func (r *RecommendationService) DeleteDefaultParsingChannel(ctx context.Context,
 	return nil
 }
 
+// GetUserRecommendatedPosts fetches recommended posts for the authenticated user
+// with cursor-based pagination. Returns posts, next cursor, and error.
 func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetUserPriorityPosts"
 	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
@@ -190,6 +201,7 @@ func (r *RecommendationService) GetUserRecommendatedPosts(ctx context.Context, c
 	return posts, nextCursor, nil
 }
 
+// GetUserPriorityChannels returns the priority channels for the authenticated user.
 func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]string, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetUserPriorityChannels"
 
@@ -214,6 +226,7 @@ func (s *RecommendationService) GetUserPriorityChannels(ctx context.Context) ([]
 	return channels, nil
 }
 
+// GetAllUserCustomParsingChannels returns all custom parsing channels for the authenticated user.
 func (r *RecommendationService) GetAllUserCustomParsingChannels(ctx context.Context) ([]string, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetAllUserCustomParsingChannel"
 	userID, err := r.authinterceptor.GetUserIdFromContext(ctx)
@@ -237,6 +250,8 @@ func (r *RecommendationService) GetAllUserCustomParsingChannels(ctx context.Cont
 	return channels, nil
 }
 
+// GetAllDefaultParsingChannelsWithCategories returns default parsing channels
+// grouped by their categories.
 func (r *RecommendationService) GetAllDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
 	const op = "Api_Service.internal.services.RecommendationService.GetAllDefaultParsingChannelsWithCategories"
 	res, err := r.RecommendationClient.GetAllDefaultParsingChannelsWithCategories(

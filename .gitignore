@@ -6,31 +6,8 @@
 *.tar.*
 *.jar
 *.exe
-*.msi
-*.zip
-*.tgz
-*.log
-*.log.*
-*.sig
-
-
-pkg/
-
-### C++ ###
-# Prerequisites
-*.d
-
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
+*.exe~
+*.dll
 *.so
 *.dylib
 *.dll
@@ -57,31 +34,38 @@ pkg/
 
 # Test binary, built with `go test -c`
 
-# Output of the go coverage tool, specifically when used with LiteIDE
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
-
-# Go workspace file
+# Go workspace
 go.work
+go.work.sum
 
-### Linux ###
+# Go build
+/bin/
+/build/
+/dist/
+
+# Config files with secrets
+config/
+credentials.json
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+
+# Local config overrides
+
+# Sensitive configs
+vpn.json
+redis-sentinel.conf
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 *~
 
-# temporary files which can be created if a process still has a handle open of a deleted file
-.fuse_hidden*
-
-# KDE directory preferences
-.directory
-
-# Linux trash folder which might appear on any partition or disk
-.Trash-*
-
-# .nfs files are created when an open file is removed but is still being accessed
-.nfs*
-
-### macOS ###
-# General
+# OS
 .DS_Store
 .AppleDouble
 .LSOverride
@@ -341,27 +325,20 @@ tags
 ### Windows ###
 # Windows thumbnail cache files
 Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
 
-# Dump file
-*.stackdump
+# Logs
+logs/
+*.log
 
-# Folder config file
-[Dd]esktop.ini
+# Coverage
+coverage.out
+coverage-all.out
 
-# Recycle Bin used on file shares
-$RECYCLE.BIN/
+# Session files
+*.session
 
-# Windows Installer files
-*.cab
-*.msix
-*.msm
-*.msp
+# Docker
+.docker/
 
-# Windows shortcuts
-*.lnk
-
-# End of https://www.toptal.com/developers/gitignore/api/go,python,visualstudiocode,vim,react,macos,windows,archlinuxpackages,linux,c++
-backend/.DS_Store
+# Build artifacts
+*.tar.gz

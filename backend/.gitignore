@@ -1,0 +1,59 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace
+go.work
+go.work.sum
+
+# Go build
+/bin/
+/build/
+/dist/
+
+# Config files with secrets
+credentials.json
+*.key
+*.pem
+*.crt
+*.p12
+*.jks
+
+# Local config overrides
+
+# Sensitive configs
+vpn.json
+redis-sentinel.conf
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage.out
+coverage-all.out
+
+# Session files
+*.session
+
+# Docker
+.docker/
+
+# Build artifacts
+*.tar.gz

@@ -1,0 +1,1464 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/klauspost/compress/s2</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>s2</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-github.com/klauspost/compress/s2">github.com/klauspost/compress/s2</a><i> (on <a href="https://pkg.go.dev/github.com/klauspost/compress/s2" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/github.com/klauspost/compress/s2.html">17 packages</a>, and imported by <a href="../../../../dep/github.com/klauspost/compress/s2.html#imported-by">2 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html">decode.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/decode_asm.go.html">decode_asm.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html">dict.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html">encode.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html">encode_all.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/encode_best.go.html">encode_best.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html">encode_better.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html">encode_go.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html">index.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html">lz4convert.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/lz4sconvert.go.html">lz4sconvert.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html">reader.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-12-fold-content"><label for="file-12-fold-content">  <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#doc">d</a> <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html">s2.go</a></label><span id='file-12-fold-content-items' class="fold-items">
+<span class="md-text">		Package s2 implements the S2 compression format.
+		
+		S2 is an extension of Snappy. Similar to Snappy S2 is aimed for high throughput,
+		which is why it features concurrent compression for bigger payloads.
+		
+		Decoding is compatible with Snappy compressed content,
+		but content compressed with S2 cannot be decompressed by Snappy.
+		
+		For more information on Snappy/S2 differences see README in: https://github.com/klauspost/compress/tree/master/s2
+		
+		There are actually two S2 formats: block and stream. They are related,
+		but different: trying to decompress block-compressed data as a S2 stream
+		will fail, and vice versa. The block format is the Decode and Encode
+		functions and the stream format is the Reader and Writer types.
+		
+		A "better" compression option is available. This will trade some compression
+		speed
+		
+		The block format, the more common case, is used when the complete size (the
+		number of bytes) of the original data is known upfront, at the time
+		compression starts. The stream format, also known as the framing format, is
+		for when that isn't always true.
+		
+		Blocks to not offer much data protection, so it is up to you to
+		add data validation of decompressed blocks.
+		
+		Streams perform CRC validation of the decompressed data.
+		Stream compression will also be performed on multiple CPU cores concurrently
+		significantly improving throughput.</span>
+</span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html">writer.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/s2/decode_arm64.s.html">decode_arm64.s</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 12, in which 10 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Dict" data-popularity="865">	<input type='checkbox' class="fold" id="Dict-fold-content"><label for="Dict-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-25">Dict</a> <i>(struct)</i></label><span id='Dict-fold-content-docs' class="fold-docs">
+<span class="md-text">		Dict contains a dictionary that can be used for encoding and decoding s2</span>
+
+		<input type='checkbox' class="fold" id="Dict-fold-fields"><label for="Dict-fold-fields">Fields (<i>total 10, none are exported</i>)</label><span id='Dict-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Dict-showhide-fields"><i><label for="Dict-showhide-fields" class="show-inline">/* 10 unexporteds ... */</label><label for="Dict-showhide-fields" class="hide-inline">/* 10 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-29">best</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Once">Once</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-36">bestTableLong</a> <i>*[524288]<a href="../../../builtin.html#name-uint32">uint32</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-35">bestTableShort</a> <i>*[65536]<a href="../../../builtin.html#name-uint32">uint32</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-29">better</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Once">Once</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-33">betterTableLong</a> <i>*[131072]<a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-32">betterTableShort</a> <i>*[16384]<a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-26">dict</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-29">fast</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Once">Once</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-30">fastTable</a> <i>*[16384]<a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Dict-fold-field-repeat"><label for="Dict-fold-field-repeat"><a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-27">repeat</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Dict-fold-field-repeat-docs' class="fold-docs">
+<span class="md-text">				// Repeat as index of dict</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Dict-fold-methods"><label for="Dict-fold-methods">Methods (<i>total 8, in which 5 are exported</i>)</label><span id='Dict-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Dict-fold-method-Bytes"><label for="Dict-fold-method-Bytes">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-68">Bytes</a>() []<a href="../../../builtin.html#name-byte">byte</a></label><span id='Dict-fold-method-Bytes-docs' class="fold-docs">
+<span class="md-text">				Bytes will return a serialized version of the dictionary.
+				The output can be sent to NewDict.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Dict-fold-method-Decode"><label for="Dict-fold-method-Decode">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-258">Decode</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Dict-fold-method-Decode-docs' class="fold-docs">
+<span class="md-text">				Decode returns the decoded form of src. The returned slice may be a sub-
+				slice of dst if dst was large enough to hold the entire decoded block.
+				Otherwise, a newly allocated slice will be returned.
+				
+				The dst and src must not overlap. It is valid to pass a nil dst.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Dict-fold-method-Encode"><label for="Dict-fold-method-Encode">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-140">Encode</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='Dict-fold-method-Encode-docs' class="fold-docs">
+<span class="md-text">				Encode returns the encoded form of src. The returned slice may be a sub-
+				slice of dst if dst was large enough to hold the entire encoded block.
+				Otherwise, a newly allocated slice will be returned.
+				
+				The dst and src must not overlap. It is valid to pass a nil dst.
+				
+				The blocks will require the same amount of memory to decode as encoding,
+				and does not make for concurrent decoding.
+				Also note that blocks do not contain CRC information, so corruption may be undetected.
+				
+				If you need to encode larger amounts of data, consider using
+				the streaming interface which gives all of these features.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Dict-fold-method-EncodeBest"><label for="Dict-fold-method-EncodeBest">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-226">EncodeBest</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='Dict-fold-method-EncodeBest-docs' class="fold-docs">
+<span class="md-text">				EncodeBest returns the encoded form of src. The returned slice may be a sub-
+				slice of dst if dst was large enough to hold the entire encoded block.
+				Otherwise, a newly allocated slice will be returned.
+				
+				EncodeBest compresses as good as reasonably possible but with a
+				big speed decrease.
+				
+				The dst and src must not overlap. It is valid to pass a nil dst.
+				
+				The blocks will require the same amount of memory to decode as encoding,
+				and does not make for concurrent decoding.
+				Also note that blocks do not contain CRC information, so corruption may be undetected.
+				
+				If you need to encode larger amounts of data, consider using
+				the streaming interface which gives all of these features.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Dict-fold-method-EncodeBetter"><label for="Dict-fold-method-EncodeBetter">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-184">EncodeBetter</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='Dict-fold-method-EncodeBetter-docs' class="fold-docs">
+<span class="md-text">				EncodeBetter returns the encoded form of src. The returned slice may be a sub-
+				slice of dst if dst was large enough to hold the entire encoded block.
+				Otherwise, a newly allocated slice will be returned.
+				
+				EncodeBetter compresses better than Encode but typically with a
+				10-40% speed decrease on both compression and decompression.
+				
+				The dst and src must not overlap. It is valid to pass a nil dst.
+				
+				The blocks will require the same amount of memory to decode as encoding,
+				and does not make for concurrent decoding.
+				Also note that blocks do not contain CRC information, so corruption may be undetected.
+				
+				If you need to encode larger amounts of data, consider using
+				the streaming interface which gives all of these features.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Dict-showhide-methods"><i><label for="Dict-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="Dict-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-322">initBest</a>()</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-296">initBetter</a>()</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Dict) <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-274">initFast</a>()</span></i></span></span>
+		<input type='checkbox' class="fold" id="Dict-fold-impls"><label for="Dict-fold-impls">Implements (<i>at least 2, neither is exported</i>)</label><span id='Dict-fold-impls-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Dict-showhide-impls"><i><label for="Dict-showhide-impls" class="show-inline">/* 2+ unexporteds ... */</label><label for="Dict-showhide-impls" class="hide-inline">/* 2+ unexporteds: */</label></i><span class="hidden"><i>
+			*Dict : <a href="#name-byter">byter</a></i></span><span class="hidden"><i>
+			*Dict : github.com/segmentio/kafka-go/protocol.<a href="../../segmentio/kafka-go/protocol.html#name-bytesBuffer">bytesBuffer</a></i></span></span>
+		<input type='checkbox' class="fold" id="Dict-fold-results"><label for="Dict-fold-results">As Outputs Of (<i>at least 3, all are exported</i>)</label><span id='Dict-fold-results-items' class="fold-items"><span>
+			func <a href="#name-MakeDict">MakeDict</a>(data []<a href="../../../builtin.html#name-byte">byte</a>, searchStart []<a href="../../../builtin.html#name-byte">byte</a>) *<b>Dict</b></span><span>
+			func <a href="#name-MakeDictManual">MakeDictManual</a>(data []<a href="../../../builtin.html#name-byte">byte</a>, firstIdx <a href="../../../builtin.html#name-uint16">uint16</a>) *<b>Dict</b></span><span>
+			func <a href="#name-NewDict">NewDict</a>(dict []<a href="../../../builtin.html#name-byte">byte</a>) *<b>Dict</b></span></span>
+		<input type='checkbox' class="fold" id="Dict-fold-params"><label for="Dict-fold-params">As Inputs Of (<i>at least 4, none are exported</i>)</label><span id='Dict-fold-params-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Dict-showhide-outputofs"><i><label for="Dict-showhide-outputofs" class="show-inline">/* 4+ unexporteds ... */</label><label for="Dict-showhide-outputofs" class="hide-inline">/* 4+ unexporteds: */</label></i><span class="hidden"><i>
+			func <a href="#name-encodeBlockBest">encodeBlockBest</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<b>Dict</b>) (d <a href="../../../builtin.html#name-int">int</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-encodeBlockBetterDict">encodeBlockBetterDict</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<b>Dict</b>) (d <a href="../../../builtin.html#name-int">int</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-encodeBlockDictGo">encodeBlockDictGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<b>Dict</b>) (d <a href="../../../builtin.html#name-int">int</a>)</i></span><span class="hidden"><i>
+			func <a href="#name-s2DecodeDict">s2DecodeDict</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<b>Dict</b>) <a href="../../../builtin.html#name-int">int</a></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-ErrCantSeek" data-popularity="100">	<input type='checkbox' class="fold" id="ErrCantSeek-fold-content"><label for="ErrCantSeek-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-19">ErrCantSeek</a> <i>(struct)</i></label><span id='ErrCantSeek-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrCantSeek is returned if the stream cannot be seeked.</span>
+
+		<input type='checkbox' class="fold" id="ErrCantSeek-fold-fields"><label for="ErrCantSeek-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='ErrCantSeek-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-20">Reason</a> <i><a href="../../../builtin.html#name-string">string</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="ErrCantSeek-fold-methods"><label for="ErrCantSeek-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='ErrCantSeek-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="ErrCantSeek-fold-method-Error"><label for="ErrCantSeek-fold-method-Error">( ErrCantSeek) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-24">Error</a>() <a href="../../../builtin.html#name-string">string</a></label><span id='ErrCantSeek-fold-method-Error-docs' class="fold-docs">
+<span class="md-text">				Error returns the error as string.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="ErrCantSeek-fold-impls"><label for="ErrCantSeek-fold-impls">Implements (<i>at least one exported</i>)</label><span id='ErrCantSeek-fold-impls-items' class="fold-items"><span>
+			 ErrCantSeek : <a href="../../../builtin.html#name-error">error</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Index" data-popularity="450">	<input type='checkbox' class="fold" id="Index-fold-content"><label for="Index-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-25">Index</a> <i>(struct)</i></label><span id='Index-fold-content-docs' class="fold-docs">
+<span class="md-text">		Index represents an S2/Snappy index.</span>
+
+		<input type='checkbox' class="fold" id="Index-fold-fields"><label for="Index-fold-fields">Fields (<i>total 4, in which 2 are exported</i>)</label><span id='Index-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Index-fold-field-TotalCompressed"><label for="Index-fold-field-TotalCompressed"><a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-27">TotalCompressed</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></label><span id='Index-fold-field-TotalCompressed-docs' class="fold-docs">
+<span class="md-text">				// Total Compressed size if known. Will be -1 if unknown.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Index-fold-field-TotalUncompressed"><label for="Index-fold-field-TotalUncompressed"><a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-26">TotalUncompressed</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></label><span id='Index-fold-field-TotalUncompressed-docs' class="fold-docs">
+<span class="md-text">				// Total Uncompressed size if known. Will be -1 if unknown.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Index-showhide-fields"><i><label for="Index-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="Index-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-32">estBlockUncomp</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-28">info</a> <i>[]struct{compressedOffset <a href="../../../builtin.html#name-int64">int64</a>; uncompressedOffset <a href="../../../builtin.html#name-int64">int64</a>}</i></span></i></span></span>
+		<input type='checkbox' class="fold" id="Index-fold-methods"><label for="Index-fold-methods">Methods (<i>total 9, in which 4 are exported</i>)</label><span id='Index-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Index-fold-method-Find"><label for="Index-fold-method-Find">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-97">Find</a>(offset <a href="../../../builtin.html#name-int64">int64</a>) (compressedOff, uncompressedOff <a href="../../../builtin.html#name-int64">int64</a>, err <a href="../../../builtin.html#name-error">error</a>)</label><span id='Index-fold-method-Find-docs' class="fold-docs">
+<span class="md-text">				Find the offset at or before the wanted (uncompressed) offset.
+				If offset is 0 or positive it is the offset from the beginning of the file.
+				If the uncompressed size is known, the offset must be within the file.
+				If an offset outside the file is requested io.ErrUnexpectedEOF is returned.
+				If the offset is negative, it is interpreted as the distance from the end of the file,
+				where -1 represents the last byte.
+				If offset from the end of the file is requested, but size is unknown,
+				ErrUnsupported will be returned.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Index-fold-method-JSON"><label for="Index-fold-method-JSON">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-519">JSON</a>() []<a href="../../../builtin.html#name-byte">byte</a></label><span id='Index-fold-method-JSON-docs' class="fold-docs">
+<span class="md-text">				JSON returns the index as JSON text.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Index-fold-method-Load"><label for="Index-fold-method-Load">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-238">Load</a>(b []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Index-fold-method-Load-docs' class="fold-docs">
+<span class="md-text">				Load a binary index.
+				A zero value Index can be used or a previous one can be reused.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Index-fold-method-LoadStream"><label for="Index-fold-method-LoadStream">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-381">LoadStream</a>(rs <a href="../../../io.html">io</a>.<a href="../../../io.html#name-ReadSeeker">ReadSeeker</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='Index-fold-method-LoadStream-docs' class="fold-docs">
+<span class="md-text">				LoadStream will load an index from the end of the supplied stream.
+				ErrUnsupported will be returned if the signature cannot be found.
+				ErrCorrupt will be returned if unexpected values are found.
+				io.ErrUnexpectedEOF is returned if there are too few bytes.
+				IO errors are returned as-is.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Index-showhide-methods"><i><label for="Index-showhide-methods" class="show-inline">/* 5 unexporteds ... */</label><label for="Index-showhide-methods" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Index-fold-method-add"><label for="Index-fold-method-add">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-57">add</a>(compressedOffset, uncompressedOffset <a href="../../../builtin.html#name-int64">int64</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='Index-fold-method-add-docs' class="fold-docs">
+<span class="md-text">				add an uncompressed and compressed pair.
+				Entries must be sent in order.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Index-fold-method-allocInfos"><label for="Index-fold-method-allocInfos">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-45">allocInfos</a>(n <a href="../../../builtin.html#name-int">int</a>)</label><span id='Index-fold-method-allocInfos-docs' class="fold-docs">
+<span class="md-text">				allocInfos will allocate an empty slice of infos.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-154">appendTo</a>(b []<a href="../../../builtin.html#name-byte">byte</a>, uncompTotal, compTotal <a href="../../../builtin.html#name-int64">int64</a>) []<a href="../../../builtin.html#name-byte">byte</a></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Index-fold-method-reduce"><label for="Index-fold-method-reduce">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-130">reduce</a>()</label><span id='Index-fold-method-reduce-docs' class="fold-docs">
+<span class="md-text">				reduce to stay below maxIndexEntries</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Index) <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-35">reset</a>(maxBlock <a href="../../../builtin.html#name-int">int</a>)</span></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-LZ4Converter" data-popularity="100">	<input type='checkbox' class="fold" id="LZ4Converter-fold-content"><label for="LZ4Converter-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-15">LZ4Converter</a> <i>(struct)</i></label><span id='LZ4Converter-fold-content-docs' class="fold-docs">
+<span class="md-text">		LZ4Converter provides conversion from LZ4 blocks as defined here:
+		https://github.com/lz4/lz4/blob/dev/doc/lz4_Block_format.md</span>
+
+		<input type='checkbox' class="fold" id="LZ4Converter-fold-methods"><label for="LZ4Converter-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='LZ4Converter-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="LZ4Converter-fold-method-ConvertBlock"><label for="LZ4Converter-fold-method-ConvertBlock">(*LZ4Converter) <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-25">ConvertBlock</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='LZ4Converter-fold-method-ConvertBlock-docs' class="fold-docs">
+<span class="md-text">				ConvertBlock will convert an LZ4 block and append it as an S2
+				block without block length to dst.
+				The uncompressed size is returned as well.
+				dst must have capacity to contain the entire compressed block.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="LZ4Converter-fold-method-ConvertBlockSnappy"><label for="LZ4Converter-fold-method-ConvertBlockSnappy">(*LZ4Converter) <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-281">ConvertBlockSnappy</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='LZ4Converter-fold-method-ConvertBlockSnappy-docs' class="fold-docs">
+<span class="md-text">				ConvertBlockSnappy will convert an LZ4 block and append it
+				as a Snappy block without block length to dst.
+				The uncompressed size is returned as well.
+				dst must have capacity to contain the entire compressed block.</span>
+</span></span></span>
+
+</span></div><div class="anchor type-res" id="name-LZ4sConverter" data-popularity="100">	<input type='checkbox' class="fold" id="LZ4sConverter-fold-content"><label for="LZ4sConverter-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/lz4sconvert.go.html#line-23">LZ4sConverter</a> <i>(struct)</i></label><span id='LZ4sConverter-fold-content-docs' class="fold-docs">
+<span class="md-text">		LZ4sConverter provides conversion from LZ4s.
+		(Intel modified LZ4 Blocks)
+		https://cdrdv2-public.intel.com/743912/743912-qat-programmers-guide-v2.0.pdf
+		LZ4s is a variant of LZ4 block format. LZ4s should be considered as an intermediate compressed block format.
+		The LZ4s format is selected when the application sets the compType to CPA_DC_LZ4S in CpaDcSessionSetupData.
+		The LZ4s block returned by the Intel® QAT hardware can be used by an external
+		software post-processing to generate other compressed data formats.
+		The following table lists the differences between LZ4 and LZ4s block format. LZ4s block format uses
+		the same high-level formatting as LZ4 block format with the following encoding changes:
+		For Min Match of 4 bytes, Copy length value 1-15 means length 4-18 with 18 bytes adding an extra byte.
+		ONLY "Min match of 4 bytes" is supported.</span>
+
+		<input type='checkbox' class="fold" id="LZ4sConverter-fold-methods"><label for="LZ4sConverter-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='LZ4sConverter-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="LZ4sConverter-fold-method-ConvertBlock"><label for="LZ4sConverter-fold-method-ConvertBlock">(*LZ4sConverter) <a href="../../../../src/github.com/klauspost/compress/s2/lz4sconvert.go.html#line-30">ConvertBlock</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='LZ4sConverter-fold-method-ConvertBlock-docs' class="fold-docs">
+<span class="md-text">				ConvertBlock will convert an LZ4s block and append it as an S2
+				block without block length to dst.
+				The uncompressed size is returned as well.
+				dst must have capacity to contain the entire compressed block.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="LZ4sConverter-fold-method-ConvertBlockSnappy"><label for="LZ4sConverter-fold-method-ConvertBlockSnappy">(*LZ4sConverter) <a href="../../../../src/github.com/klauspost/compress/s2/lz4sconvert.go.html#line-290">ConvertBlockSnappy</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='LZ4sConverter-fold-method-ConvertBlockSnappy-docs' class="fold-docs">
+<span class="md-text">				ConvertBlockSnappy will convert an LZ4s block and append it
+				as a Snappy block without block length to dst.
+				The uncompressed size is returned as well.
+				dst must have capacity to contain the entire compressed block.</span>
+</span></span></span>
+
+</span></div><div class="anchor type-res" id="name-Reader" data-popularity="875">	<input type='checkbox' class="fold" id="Reader-fold-content"><label for="Reader-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-128">Reader</a> <i>(struct)</i></label><span id='Reader-fold-content-docs' class="fold-docs">
+<span class="md-text">		Reader is an io.Reader that can read Snappy-compressed bytes.</span>
+
+		<input type='checkbox' class="fold" id="Reader-fold-fields"><label for="Reader-fold-fields">Fields (<i>total 17, none are exported</i>)</label><span id='Reader-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Reader-showhide-fields"><i><label for="Reader-showhide-fields" class="show-inline">/* 17 unexporteds ... */</label><label for="Reader-showhide-fields" class="hide-inline">/* 17 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-field-blockStart"><label for="Reader-fold-field-blockStart"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-134">blockStart</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></label><span id='Reader-fold-field-blockStart-docs' class="fold-docs">
+<span class="md-text">				// Uncompressed offset at start of current.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-132">buf</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-131">decoded</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-130">err</a> <i><a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-field-i"><label for="Reader-fold-field-i"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-138">i</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Reader-fold-field-i-docs' class="fold-docs">
+<span class="md-text">				decoded[i:j] contains decoded bytes that have not yet been passed on.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-149">ignoreCRC</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-148">ignoreStreamID</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-135">index</a> <i>*<a href="#name-Index">Index</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-field-j"><label for="Reader-fold-field-j"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-138">j</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Reader-fold-field-j-docs' class="fold-docs">
+<span class="md-text">				decoded[i:j] contains decoded bytes that have not yet been passed on.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-field-lazyBuf"><label for="Reader-fold-field-lazyBuf"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-144">lazyBuf</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Reader-fold-field-lazyBuf-docs' class="fold-docs">
+<span class="md-text">				alloc a buffer this size if &gt; 0.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-field-maxBlock"><label for="Reader-fold-field-maxBlock"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-140">maxBlock</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Reader-fold-field-maxBlock-docs' class="fold-docs">
+<span class="md-text">				maximum block size allowed.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-field-maxBufSize"><label for="Reader-fold-field-maxBufSize"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-142">maxBufSize</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Reader-fold-field-maxBufSize-docs' class="fold-docs">
+<span class="md-text">				maximum expected buffer size.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-146">paramsOK</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-129">r</a> <i><a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-145">readHeader</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-133">skippableCB</a> <i>[127]func(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-147">snappyFrame</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="Reader-fold-methods"><label for="Reader-fold-methods">Methods (<i>total 11, in which 8 are exported</i>)</label><span id='Reader-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-DecodeConcurrent"><label for="Reader-fold-method-DecodeConcurrent">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-408">DecodeConcurrent</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, concurrent <a href="../../../builtin.html#name-int">int</a>) (written <a href="../../../builtin.html#name-int64">int64</a>, err <a href="../../../builtin.html#name-error">error</a>)</label><span id='Reader-fold-method-DecodeConcurrent-docs' class="fold-docs">
+<span class="md-text">				DecodeConcurrent will decode the full stream to w.
+				This function should not be combined with reading, seeking or other operations.
+				Up to 'concurrent' goroutines will be used.
+				If &lt;= 0, runtime.NumCPU will be used.
+				On success the number of bytes decompressed nil and is returned.
+				This is mainly intended for bigger streams.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-GetBufferCapacity"><label for="Reader-fold-method-GetBufferCapacity">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-155">GetBufferCapacity</a>() <a href="../../../builtin.html#name-int">int</a></label><span id='Reader-fold-method-GetBufferCapacity-docs' class="fold-docs">
+<span class="md-text">				GetBufferCapacity returns the capacity of the internal buffer.
+				This might be useful to know when reusing the same reader in combination
+				with the lazy buffer option.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-Read"><label for="Reader-fold-method-Read">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-244">Read</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Reader-fold-method-Read-docs' class="fold-docs">
+<span class="md-text">				Read satisfies the io.Reader interface.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-ReadByte"><label for="Reader-fold-method-ReadByte">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-1039">ReadByte</a>() (<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Reader-fold-method-ReadByte-docs' class="fold-docs">
+<span class="md-text">				ReadByte satisfies the io.ByteReader interface.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-ReadSeeker"><label for="Reader-fold-method-ReadSeeker">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-859">ReadSeeker</a>(random <a href="../../../builtin.html#name-bool">bool</a>, index []<a href="../../../builtin.html#name-byte">byte</a>) (*<a href="#name-ReadSeeker">ReadSeeker</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Reader-fold-method-ReadSeeker-docs' class="fold-docs">
+<span class="md-text">				ReadSeeker will return an io.ReadSeeker and io.ReaderAt
+				compatible version of the reader.
+				If 'random' is specified the returned io.Seeker can be used for
+				random seeking, otherwise only forward seeking is supported.
+				Enabling random seeking requires the original input to support
+				the io.Seeker interface.
+				A custom index can be specified which will be used if supplied.
+				When using a custom index, it will not be read from the input stream.
+				The ReadAt position will affect regular reads and the current position of Seek.
+				So using Read after ReadAt will continue from where the ReadAt stopped.
+				No functions should be used concurrently.
+				The returned ReadSeeker contains a shallow reference to the existing Reader,
+				meaning changes performed to one is reflected in the other.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-Reset"><label for="Reader-fold-method-Reset">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-177">Reset</a>(reader <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>)</label><span id='Reader-fold-method-Reset-docs' class="fold-docs">
+<span class="md-text">				Reset discards any buffered data, resets all state, and switches the Snappy
+				reader to read from r. This permits reusing a Reader rather than allocating
+				a new one.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-Skip"><label for="Reader-fold-method-Skip">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-669">Skip</a>(n <a href="../../../builtin.html#name-int64">int64</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='Reader-fold-method-Skip-docs' class="fold-docs">
+<span class="md-text">				Skip will skip n bytes forward in the decompressed output.
+				For larger skips this consumes less CPU and is faster than reading output and discarding it.
+				CRC is not checked on skipped blocks.
+				io.ErrUnexpectedEOF is returned if the stream ends before all bytes have been skipped.
+				If a decoding error is encountered subsequent calls to Read will also fail.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Reader-fold-method-SkippableCB"><label for="Reader-fold-method-SkippableCB">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-1069">SkippableCB</a>(id <a href="../../../builtin.html#name-uint8">uint8</a>, fn func(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="../../../builtin.html#name-error">error</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='Reader-fold-method-SkippableCB-docs' class="fold-docs">
+<span class="md-text">				SkippableCB will register a callback for chunks with the specified ID.
+				ID must be a Reserved skippable chunks ID, 0x80-0xfd (inclusive).
+				For each chunk with the ID, the callback is called with the content.
+				Any returned non-nil error will abort decompression.
+				Only one callback per ID is supported, latest sent will be used.
+				Sending a nil function will disable previous callbacks.
+				You can peek the stream, triggering the callback, by doing a Read with a 0
+				byte buffer.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Reader-showhide-methods"><i><label for="Reader-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="Reader-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-method-ensureBufferSize"><label for="Reader-fold-method-ensureBufferSize">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-161">ensureBufferSize</a>(n <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-bool">bool</a></label><span id='Reader-fold-method-ensureBufferSize-docs' class="fold-docs">
+<span class="md-text">				ensureBufferSize will ensure that the buffer can take at least n bytes.
+				If false is returned the buffer exceeds maximum allowed size.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-190">readFull</a>(p []<a href="../../../builtin.html#name-byte">byte</a>, allowEOF <a href="../../../builtin.html#name-bool">bool</a>) (ok <a href="../../../builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Reader-fold-method-skippable"><label for="Reader-fold-method-skippable">(*Reader) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-204">skippable</a>(tmp []<a href="../../../builtin.html#name-byte">byte</a>, n <a href="../../../builtin.html#name-int">int</a>, allowEOF <a href="../../../builtin.html#name-bool">bool</a>, id <a href="../../../builtin.html#name-uint8">uint8</a>) (ok <a href="../../../builtin.html#name-bool">bool</a>)</label><span id='Reader-fold-method-skippable-docs' class="fold-docs">
+<span class="md-text">				skippable will skip n bytes.
+				If the supplied reader supports seeking that is used.
+				tmp is used as a temporary buffer for reading.
+				The supplied slice does not need to be the size of the read.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Reader-fold-impls"><label for="Reader-fold-impls">Implements (<i>at least 5, all are exported</i>)</label><span id='Reader-fold-impls-items' class="fold-items"><span>
+			*Reader : github.com/klauspost/compress/flate.<a href="flate.html#name-Reader">Reader</a></span><span>
+			*Reader : compress/flate.<a href="../../../compress/flate.html#name-Reader">Reader</a></span><span>
+			*Reader : google.golang.org/protobuf/encoding/protodelim.<a href="../../../google.golang.org/protobuf/encoding/protodelim.html#name-Reader">Reader</a></span><span>
+			*Reader : io.<a href="../../../io.html#name-ByteReader">ByteReader</a></span><span>
+			*Reader : io.<a href="../../../io.html#name-Reader">Reader</a></span></span>
+		<input type='checkbox' class="fold" id="Reader-fold-results"><label for="Reader-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Reader-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewReader">NewReader</a>(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>, opts ...<a href="#name-ReaderOption">ReaderOption</a>) *<b>Reader</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-ReaderOption" data-popularity="410">	<input type='checkbox' class="fold" id="ReaderOption-fold-content"><label for="ReaderOption-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-54">ReaderOption</a> <i>(func)</i></label><span id='ReaderOption-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReaderOption is an option for creating a decoder.</span>
+
+		<input type='checkbox' class="fold" id="ReaderOption-fold-results"><label for="ReaderOption-fold-results">As Outputs Of (<i>at least 5, all are exported</i>)</label><span id='ReaderOption-fold-results-items' class="fold-items"><span>
+			func <a href="#name-ReaderAllocBlock">ReaderAllocBlock</a>(blockSize <a href="../../../builtin.html#name-int">int</a>) <b>ReaderOption</b></span><span>
+			func <a href="#name-ReaderIgnoreCRC">ReaderIgnoreCRC</a>() <b>ReaderOption</b></span><span>
+			func <a href="#name-ReaderIgnoreStreamIdentifier">ReaderIgnoreStreamIdentifier</a>() <b>ReaderOption</b></span><span>
+			func <a href="#name-ReaderMaxBlockSize">ReaderMaxBlockSize</a>(blockSize <a href="../../../builtin.html#name-int">int</a>) <b>ReaderOption</b></span><span>
+			func <a href="#name-ReaderSkippableCB">ReaderSkippableCB</a>(id <a href="../../../builtin.html#name-uint8">uint8</a>, fn func(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="../../../builtin.html#name-error">error</a>) <b>ReaderOption</b></span></span>
+		<input type='checkbox' class="fold" id="ReaderOption-fold-params"><label for="ReaderOption-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='ReaderOption-fold-params-items' class="fold-items"><span>
+			func <a href="#name-NewReader">NewReader</a>(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>, opts ...<b>ReaderOption</b>) *<a href="#name-Reader">Reader</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-ReadSeeker" data-popularity="1125">	<input type='checkbox' class="fold" id="ReadSeeker-fold-content"><label for="ReadSeeker-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-841">ReadSeeker</a> <i>(struct)</i></label><span id='ReadSeeker-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReadSeeker provides random or forward seeking in compressed content.
+		See Reader.ReadSeeker</span>
+
+		<input type='checkbox' class="fold" id="ReadSeeker-fold-fields"><label for="ReadSeeker-fold-fields">Fields (<i>total 19, in which 1 is exported</i>)</label><span id='ReadSeeker-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842">Reader</a> <i>*<a href="#name-Reader">Reader</a></i></span></span>
+			<input type='checkbox' class="showhide" id="ReadSeeker-showhide-fields"><i><label for="ReadSeeker-showhide-fields" class="show-inline">/* 18 unexporteds ... */</label><label for="ReadSeeker-showhide-fields" class="hide-inline">/* 18 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-843">readAtMu</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Mutex">Mutex</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-field-blockStart"><label for="ReadSeeker-fold-field-blockStart"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-134">blockStart</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></label><span id='ReadSeeker-fold-field-blockStart-docs' class="fold-docs">
+<span class="md-text">				// Uncompressed offset at start of current.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-132">buf</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-131">decoded</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-130">err</a> <i><a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-field-i"><label for="ReadSeeker-fold-field-i"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-138">i</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='ReadSeeker-fold-field-i-docs' class="fold-docs">
+<span class="md-text">				decoded[i:j] contains decoded bytes that have not yet been passed on.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-149">ignoreCRC</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-148">ignoreStreamID</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-135">index</a> <i>*<a href="#name-Index">Index</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-field-j"><label for="ReadSeeker-fold-field-j"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-138">j</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='ReadSeeker-fold-field-j-docs' class="fold-docs">
+<span class="md-text">				decoded[i:j] contains decoded bytes that have not yet been passed on.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-field-lazyBuf"><label for="ReadSeeker-fold-field-lazyBuf"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-144">lazyBuf</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='ReadSeeker-fold-field-lazyBuf-docs' class="fold-docs">
+<span class="md-text">				alloc a buffer this size if &gt; 0.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-field-maxBlock"><label for="ReadSeeker-fold-field-maxBlock"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-140">maxBlock</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='ReadSeeker-fold-field-maxBlock-docs' class="fold-docs">
+<span class="md-text">				maximum block size allowed.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-field-maxBufSize"><label for="ReadSeeker-fold-field-maxBufSize"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-142">maxBufSize</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='ReadSeeker-fold-field-maxBufSize-docs' class="fold-docs">
+<span class="md-text">				maximum expected buffer size.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-146">paramsOK</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-129">r</a> <i><a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-145">readHeader</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-133">skippableCB</a> <i>[127]func(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-842" class="path-duplicate">Reader</a>.<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-147">snappyFrame</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="ReadSeeker-fold-methods"><label for="ReadSeeker-fold-methods">Methods (<i>total 13, in which 10 are exported</i>)</label><span id='ReadSeeker-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-DecodeConcurrent"><label for="ReadSeeker-fold-method-DecodeConcurrent">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-408">DecodeConcurrent</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, concurrent <a href="../../../builtin.html#name-int">int</a>) (written <a href="../../../builtin.html#name-int64">int64</a>, err <a href="../../../builtin.html#name-error">error</a>)</label><span id='ReadSeeker-fold-method-DecodeConcurrent-docs' class="fold-docs">
+<span class="md-text">				DecodeConcurrent will decode the full stream to w.
+				This function should not be combined with reading, seeking or other operations.
+				Up to 'concurrent' goroutines will be used.
+				If &lt;= 0, runtime.NumCPU will be used.
+				On success the number of bytes decompressed nil and is returned.
+				This is mainly intended for bigger streams.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-GetBufferCapacity"><label for="ReadSeeker-fold-method-GetBufferCapacity">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-155">GetBufferCapacity</a>() <a href="../../../builtin.html#name-int">int</a></label><span id='ReadSeeker-fold-method-GetBufferCapacity-docs' class="fold-docs">
+<span class="md-text">				GetBufferCapacity returns the capacity of the internal buffer.
+				This might be useful to know when reusing the same reader in combination
+				with the lazy buffer option.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-Read"><label for="ReadSeeker-fold-method-Read">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-244">Read</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='ReadSeeker-fold-method-Read-docs' class="fold-docs">
+<span class="md-text">				Read satisfies the io.Reader interface.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-ReadAt"><label for="ReadSeeker-fold-method-ReadAt">(*ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-1019">ReadAt</a>(p []<a href="../../../builtin.html#name-byte">byte</a>, offset <a href="../../../builtin.html#name-int64">int64</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='ReadSeeker-fold-method-ReadAt-docs' class="fold-docs">
+<span class="md-text">				ReadAt reads len(p) bytes into p starting at offset off in the
+				underlying input source. It returns the number of bytes
+				read (0 &lt;= n &lt;= len(p)) and any error encountered.
+				
+				When ReadAt returns n &lt; len(p), it returns a non-nil error
+				explaining why more bytes were not returned. In this respect,
+				ReadAt is stricter than Read.
+				
+				Even if ReadAt returns n &lt; len(p), it may use all of p as scratch
+				space during the call. If some data is available but not len(p) bytes,
+				ReadAt blocks until either all the data is available or an error occurs.
+				In this respect ReadAt is different from Read.
+				
+				If the n = len(p) bytes returned by ReadAt are at the end of the
+				input source, ReadAt may return either err == EOF or err == nil.
+				
+				If ReadAt is reading from an input source with a seek offset,
+				ReadAt should not affect nor be affected by the underlying
+				seek offset.
+				
+				Clients of ReadAt can execute parallel ReadAt calls on the
+				same input source. This is however not recommended.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-ReadByte"><label for="ReadSeeker-fold-method-ReadByte">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-1039">ReadByte</a>() (<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='ReadSeeker-fold-method-ReadByte-docs' class="fold-docs">
+<span class="md-text">				ReadByte satisfies the io.ByteReader interface.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-ReadSeeker"><label for="ReadSeeker-fold-method-ReadSeeker">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-859">ReadSeeker</a>(random <a href="../../../builtin.html#name-bool">bool</a>, index []<a href="../../../builtin.html#name-byte">byte</a>) (*<b>ReadSeeker</b>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='ReadSeeker-fold-method-ReadSeeker-docs' class="fold-docs">
+<span class="md-text">				ReadSeeker will return an io.ReadSeeker and io.ReaderAt
+				compatible version of the reader.
+				If 'random' is specified the returned io.Seeker can be used for
+				random seeking, otherwise only forward seeking is supported.
+				Enabling random seeking requires the original input to support
+				the io.Seeker interface.
+				A custom index can be specified which will be used if supplied.
+				When using a custom index, it will not be read from the input stream.
+				The ReadAt position will affect regular reads and the current position of Seek.
+				So using Read after ReadAt will continue from where the ReadAt stopped.
+				No functions should be used concurrently.
+				The returned ReadSeeker contains a shallow reference to the existing Reader,
+				meaning changes performed to one is reflected in the other.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-Reset"><label for="ReadSeeker-fold-method-Reset">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-177">Reset</a>(reader <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>)</label><span id='ReadSeeker-fold-method-Reset-docs' class="fold-docs">
+<span class="md-text">				Reset discards any buffered data, resets all state, and switches the Snappy
+				reader to read from r. This permits reusing a Reader rather than allocating
+				a new one.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-Seek"><label for="ReadSeeker-fold-method-Seek">(*ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-918">Seek</a>(offset <a href="../../../builtin.html#name-int64">int64</a>, whence <a href="../../../builtin.html#name-int">int</a>) (<a href="../../../builtin.html#name-int64">int64</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='ReadSeeker-fold-method-Seek-docs' class="fold-docs">
+<span class="md-text">				Seek allows seeking in compressed data.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-Skip"><label for="ReadSeeker-fold-method-Skip">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-669">Skip</a>(n <a href="../../../builtin.html#name-int64">int64</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='ReadSeeker-fold-method-Skip-docs' class="fold-docs">
+<span class="md-text">				Skip will skip n bytes forward in the decompressed output.
+				For larger skips this consumes less CPU and is faster than reading output and discarding it.
+				CRC is not checked on skipped blocks.
+				io.ErrUnexpectedEOF is returned if the stream ends before all bytes have been skipped.
+				If a decoding error is encountered subsequent calls to Read will also fail.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-SkippableCB"><label for="ReadSeeker-fold-method-SkippableCB">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-1069">SkippableCB</a>(id <a href="../../../builtin.html#name-uint8">uint8</a>, fn func(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="../../../builtin.html#name-error">error</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='ReadSeeker-fold-method-SkippableCB-docs' class="fold-docs">
+<span class="md-text">				SkippableCB will register a callback for chunks with the specified ID.
+				ID must be a Reserved skippable chunks ID, 0x80-0xfd (inclusive).
+				For each chunk with the ID, the callback is called with the content.
+				Any returned non-nil error will abort decompression.
+				Only one callback per ID is supported, latest sent will be used.
+				Sending a nil function will disable previous callbacks.
+				You can peek the stream, triggering the callback, by doing a Read with a 0
+				byte buffer.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="ReadSeeker-showhide-methods"><i><label for="ReadSeeker-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="ReadSeeker-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-ensureBufferSize"><label for="ReadSeeker-fold-method-ensureBufferSize">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-161">ensureBufferSize</a>(n <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-bool">bool</a></label><span id='ReadSeeker-fold-method-ensureBufferSize-docs' class="fold-docs">
+<span class="md-text">				ensureBufferSize will ensure that the buffer can take at least n bytes.
+				If false is returned the buffer exceeds maximum allowed size.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-190">readFull</a>(p []<a href="../../../builtin.html#name-byte">byte</a>, allowEOF <a href="../../../builtin.html#name-bool">bool</a>) (ok <a href="../../../builtin.html#name-bool">bool</a>)</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="ReadSeeker-fold-method-skippable"><label for="ReadSeeker-fold-method-skippable">( ReadSeeker) <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-204">skippable</a>(tmp []<a href="../../../builtin.html#name-byte">byte</a>, n <a href="../../../builtin.html#name-int">int</a>, allowEOF <a href="../../../builtin.html#name-bool">bool</a>, id <a href="../../../builtin.html#name-uint8">uint8</a>) (ok <a href="../../../builtin.html#name-bool">bool</a>)</label><span id='ReadSeeker-fold-method-skippable-docs' class="fold-docs">
+<span class="md-text">				skippable will skip n bytes.
+				If the supplied reader supports seeking that is used.
+				tmp is used as a temporary buffer for reading.
+				The supplied slice does not need to be the size of the read.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="ReadSeeker-fold-impls"><label for="ReadSeeker-fold-impls">Implements (<i>at least 8, all are exported</i>)</label><span id='ReadSeeker-fold-impls-items' class="fold-items"><span>
+			 ReadSeeker : github.com/klauspost/compress/flate.<a href="flate.html#name-Reader">Reader</a></span><span>
+			 ReadSeeker : compress/flate.<a href="../../../compress/flate.html#name-Reader">Reader</a></span><span>
+			 ReadSeeker : google.golang.org/protobuf/encoding/protodelim.<a href="../../../google.golang.org/protobuf/encoding/protodelim.html#name-Reader">Reader</a></span><span>
+			 ReadSeeker : io.<a href="../../../io.html#name-ByteReader">ByteReader</a></span><span>
+			 ReadSeeker : io.<a href="../../../io.html#name-Reader">Reader</a></span><span>
+			*ReadSeeker : io.<a href="../../../io.html#name-ReaderAt">ReaderAt</a></span><span>
+			*ReadSeeker : io.<a href="../../../io.html#name-ReadSeeker">ReadSeeker</a></span><span>
+			*ReadSeeker : io.<a href="../../../io.html#name-Seeker">Seeker</a></span></span>
+		<input type='checkbox' class="fold" id="ReadSeeker-fold-results"><label for="ReadSeeker-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='ReadSeeker-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Reader">Reader</a>).<a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-859">ReadSeeker</a>(random <a href="../../../builtin.html#name-bool">bool</a>, index []<a href="../../../builtin.html#name-byte">byte</a>) (*<b>ReadSeeker</b>, <a href="../../../builtin.html#name-error">error</a>)</span></span>
+
+</span></div><div class="anchor type-res" id="name-Writer" data-popularity="1175">	<input type='checkbox' class="fold" id="Writer-fold-content"><label for="Writer-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-58">Writer</a> <i>(struct)</i></label><span id='Writer-fold-content-docs' class="fold-docs">
+<span class="md-text">		Writer is an io.Writer that can write Snappy-compressed bytes.</span>
+
+		<input type='checkbox' class="fold" id="Writer-fold-fields"><label for="Writer-fold-fields">Fields (<i>total 23, none are exported</i>)</label><span id='Writer-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Writer-showhide-fields"><i><label for="Writer-showhide-fields" class="show-inline">/* 23 unexporteds ... */</label><label for="Writer-showhide-fields" class="hide-inline">/* 23 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-85">appendIndex</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-65">blockSize</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-86">bufferCB</a> <i>func([]<a href="../../../builtin.html#name-byte">byte</a>)</i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-71">buffers</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Pool">Pool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-67">concurrency</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-78">customEnc</a> <i>func(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-59">errMu</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Mutex">Mutex</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-60">errState</a> <i><a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-84">flushOnWrite</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Writer-fold-field-ibuf"><label for="Writer-fold-field-ibuf"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-63">ibuf</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></label><span id='Writer-fold-field-ibuf-docs' class="fold-docs">
+<span class="md-text">				ibuf is a buffer for the incoming (uncompressed) bytes.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-77">index</a> <i><a href="#name-Index">Index</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-87">level</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-66">obufLen</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-70">output</a> <i>chan chan <a href="#name-result">result</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-72">pad</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-82">paramsOK</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-75">randSrc</a> <i><a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-83">snappy</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Writer-fold-field-uncompWritten"><label for="Writer-fold-field-uncompWritten"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-69">uncompWritten</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></label><span id='Writer-fold-field-uncompWritten-docs' class="fold-docs">
+<span class="md-text">				// Bytes sent to compression</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-74">writer</a> <i><a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-76">writerWg</a> <i><a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-WaitGroup">WaitGroup</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-68">written</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Writer-fold-field-wroteStreamHeader"><label for="Writer-fold-field-wroteStreamHeader"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-81">wroteStreamHeader</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></label><span id='Writer-fold-field-wroteStreamHeader-docs' class="fold-docs">
+<span class="md-text">				wroteStreamHeader is whether we have written the stream header.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-methods"><label for="Writer-fold-methods">Methods (<i>total 15, in which 9 are exported</i>)</label><span id='Writer-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-AddSkippableBlock"><label for="Writer-fold-method-AddSkippableBlock">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-272">AddSkippableBlock</a>(id <a href="../../../builtin.html#name-uint8">uint8</a>, data []<a href="../../../builtin.html#name-byte">byte</a>) (err <a href="../../../builtin.html#name-error">error</a>)</label><span id='Writer-fold-method-AddSkippableBlock-docs' class="fold-docs">
+<span class="md-text">				AddSkippableBlock will add a skippable block to the stream.
+				The ID must be 0x80-0xfe (inclusive).
+				Length of the skippable block must be &lt;= 16777215 bytes.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-AsyncFlush"><label for="Writer-fold-method-AsyncFlush">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-741">AsyncFlush</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Writer-fold-method-AsyncFlush-docs' class="fold-docs">
+<span class="md-text">				AsyncFlush writes any buffered bytes to a block and starts compressing it.
+				It does not wait for the output has been written as Flush() does.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-Close"><label for="Writer-fold-method-Close">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-787">Close</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Writer-fold-method-Close-docs' class="fold-docs">
+<span class="md-text">				Close calls Flush and then closes the Writer.
+				Calling Close multiple times is ok,
+				but calling CloseIndex after this will make it not return the index.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-CloseIndex"><label for="Writer-fold-method-CloseIndex">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-794">CloseIndex</a>() ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Writer-fold-method-CloseIndex-docs' class="fold-docs">
+<span class="md-text">				CloseIndex calls Close and returns an index on first call.
+				This is not required if you are only adding index to a stream.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-EncodeBuffer"><label for="Writer-fold-method-EncodeBuffer">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-357">EncodeBuffer</a>(buf []<a href="../../../builtin.html#name-byte">byte</a>) (err <a href="../../../builtin.html#name-error">error</a>)</label><span id='Writer-fold-method-EncodeBuffer-docs' class="fold-docs">
+<span class="md-text">				EncodeBuffer will add a buffer to the stream.
+				This is the fastest way to encode a stream,
+				but the input buffer cannot be written to by the caller
+				until Flush or Close has been called when concurrency != 1.
+				
+				Use the WriterBufferDone to receive a callback when the buffer is done
+				Processing.
+				
+				Note that input is not buffered.
+				This means that each write will result in discrete blocks being created.
+				For buffered writes, use the regular Write function.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-Flush"><label for="Writer-fold-method-Flush">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-766">Flush</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Writer-fold-method-Flush-docs' class="fold-docs">
+<span class="md-text">				Flush flushes the Writer to its underlying io.Writer.
+				This does not apply padding.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-ReadFrom"><label for="Writer-fold-method-ReadFrom">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-220">ReadFrom</a>(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) (n <a href="../../../builtin.html#name-int64">int64</a>, err <a href="../../../builtin.html#name-error">error</a>)</label><span id='Writer-fold-method-ReadFrom-docs' class="fold-docs">
+<span class="md-text">				ReadFrom implements the io.ReaderFrom interface.
+				Using this is typically more efficient since it avoids a memory copy.
+				ReadFrom reads data from r until EOF or error.
+				The return value n is the number of bytes read.
+				Any error except io.EOF encountered during the read is also returned.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-Reset"><label for="Writer-fold-method-Reset">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-113">Reset</a>(writer <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>)</label><span id='Writer-fold-method-Reset-docs' class="fold-docs">
+<span class="md-text">				Reset discards the writer's state and switches the Snappy writer to write to w.
+				This permits reusing a Writer rather than allocating a new one.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Writer-fold-method-Write"><label for="Writer-fold-method-Write">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-182">Write</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (nRet <a href="../../../builtin.html#name-int">int</a>, errRet <a href="../../../builtin.html#name-error">error</a>)</label><span id='Writer-fold-method-Write-docs' class="fold-docs">
+<span class="md-text">				Write satisfies the io.Writer interface.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Writer-showhide-methods"><i><label for="Writer-showhide-methods" class="show-inline">/* 6 unexporteds ... */</label><label for="Writer-showhide-methods" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-798">closeIndex</a>(idx <a href="../../../builtin.html#name-bool">bool</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-455">encodeBlock</a>(obuf, uncompressed []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Writer-fold-method-err"><label for="Writer-fold-method-err">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-100">err</a>(err <a href="../../../builtin.html#name-error">error</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='Writer-fold-method-err-docs' class="fold-docs">
+<span class="md-text">				err returns the previously set error.
+				If no error has been set it is set to err if not nil.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-483">write</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (nRet <a href="../../../builtin.html#name-int">int</a>, errRet <a href="../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Writer-fold-method-writeFull"><label for="Writer-fold-method-writeFull">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-573">writeFull</a>(inbuf []<a href="../../../builtin.html#name-byte">byte</a>) (errRet <a href="../../../builtin.html#name-error">error</a>)</label><span id='Writer-fold-method-writeFull-docs' class="fold-docs">
+<span class="md-text">				writeFull is a special version of write that will always write the full buffer.
+				Data to be compressed should start at offset obufHeaderLen and fill the remainder of the buffer.
+				The data will be written as a single block.
+				The caller is not allowed to use inbuf after this function has been called.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*Writer) <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-651">writeSync</a>(p []<a href="../../../builtin.html#name-byte">byte</a>) (nRet <a href="../../../builtin.html#name-int">int</a>, errRet <a href="../../../builtin.html#name-error">error</a>)</span></i></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-impls"><label for="Writer-fold-impls">Implements (<i>at least 7, in which 6 are exported</i>)</label><span id='Writer-fold-impls-items' class="fold-items"><span>
+			*Writer : github.com/prometheus/common/expfmt.<a href="../../prometheus/common/expfmt.html#name-Closer">Closer</a></span><span>
+			*Writer : internal/bisect.<a href="../../../internal/bisect.html#name-Writer">Writer</a></span><span>
+			*Writer : io.<a href="../../../io.html#name-Closer">Closer</a></span><span>
+			*Writer : io.<a href="../../../io.html#name-ReaderFrom">ReaderFrom</a></span><span>
+			*Writer : io.<a href="../../../io.html#name-WriteCloser">WriteCloser</a></span><span>
+			*Writer : io.<a href="../../../io.html#name-Writer">Writer</a></span>
+			<input type='checkbox' class="showhide" id="Writer-showhide-impls"><i><label for="Writer-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="Writer-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			*Writer : crypto/tls.<a href="../../../crypto/tls.html#name-transcriptHash">transcriptHash</a></i></span></span>
+		<input type='checkbox' class="fold" id="Writer-fold-results"><label for="Writer-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Writer-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewWriter">NewWriter</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, opts ...<a href="#name-WriterOption">WriterOption</a>) *<b>Writer</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-WriterOption" data-popularity="935">	<input type='checkbox' class="fold" id="WriterOption-fold-content"><label for="WriterOption-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-903">WriterOption</a> <i>(func)</i></label><span id='WriterOption-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterOption is an option for creating a encoder.</span>
+
+		<input type='checkbox' class="fold" id="WriterOption-fold-results"><label for="WriterOption-fold-results">As Outputs Of (<i>at least 12, all are exported</i>)</label><span id='WriterOption-fold-results-items' class="fold-items"><span>
+			func <a href="#name-WriterAddIndex">WriterAddIndex</a>() <b>WriterOption</b></span><span>
+			func <a href="#name-WriterBestCompression">WriterBestCompression</a>() <b>WriterOption</b></span><span>
+			func <a href="#name-WriterBetterCompression">WriterBetterCompression</a>() <b>WriterOption</b></span><span>
+			func <a href="#name-WriterBlockSize">WriterBlockSize</a>(n <a href="../../../builtin.html#name-int">int</a>) <b>WriterOption</b></span><span>
+			func <a href="#name-WriterBufferDone">WriterBufferDone</a>(fn func(b []<a href="../../../builtin.html#name-byte">byte</a>)) <b>WriterOption</b></span><span>
+			func <a href="#name-WriterConcurrency">WriterConcurrency</a>(n <a href="../../../builtin.html#name-int">int</a>) <b>WriterOption</b></span><span>
+			func <a href="#name-WriterCustomEncoder">WriterCustomEncoder</a>(fn func(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a>) <b>WriterOption</b></span><span>
+			func <a href="#name-WriterFlushOnWrite">WriterFlushOnWrite</a>() <b>WriterOption</b></span><span>
+			func <a href="#name-WriterPadding">WriterPadding</a>(n <a href="../../../builtin.html#name-int">int</a>) <b>WriterOption</b></span><span>
+			func <a href="#name-WriterPaddingSrc">WriterPaddingSrc</a>(reader <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <b>WriterOption</b></span><span>
+			func <a href="#name-WriterSnappyCompat">WriterSnappyCompat</a>() <b>WriterOption</b></span><span>
+			func <a href="#name-WriterUncompressed">WriterUncompressed</a>() <b>WriterOption</b></span></span>
+		<input type='checkbox' class="fold" id="WriterOption-fold-params"><label for="WriterOption-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='WriterOption-fold-params-items' class="fold-items"><span>
+			func <a href="#name-NewWriter">NewWriter</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, opts ...<b>WriterOption</b>) *<a href="#name-Writer">Writer</a></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-byter" data-popularity="8050">	<input type='checkbox' class="fold" id="byter-fold-content"><label for="byter-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-147">byter</a> <b><i>(interface)</i></b></label><span id='byter-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="byter-fold-methods"><label for="byter-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='byter-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( byter) <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-148">Bytes</a>() []<a href="../../../builtin.html#name-byte">byte</a></span></span></span>
+		<input type='checkbox' class="fold" id="byter-fold-impledby"><label for="byter-fold-impledby">Implemented By (<i>at least 53, in which 75 are exported</i>)</label><span id='byter-fold-impledby-items' class="fold-items"><span>
+			*<a href="#name-Dict">Dict</a></span><span>
+			*bufio.<a href="../../../bufio.html#name-Scanner">Scanner</a></span><span>
+			*bytes.<a href="../../../bytes.html#name-Buffer">Buffer</a></span><span>
+			 crypto.<a href="../../../crypto.html#name-Encapsulator">Encapsulator</a> <i>(interface)</i></span><span>
+			*crypto/ecdh.<a href="../../../crypto/ecdh.html#name-PrivateKey">PrivateKey</a></span><span>
+			*crypto/ecdh.<a href="../../../crypto/ecdh.html#name-PublicKey">PublicKey</a></span><span>
+			 crypto/hpke.<a href="../../../crypto/hpke.html#name-PublicKey">PublicKey</a> <i>(interface)</i></span><span>
+			*crypto/internal/boring.<a href="../../../crypto/internal/boring.html#name-PublicKeyECDH">PublicKeyECDH</a></span><span>
+			 crypto/internal/fips140/ecdh.<a href="../../../crypto/internal/fips140/ecdh.html#name-Point">Point</a>[...] <i>(interface)</i></span><span>
+			*crypto/internal/fips140/ecdh.<a href="../../../crypto/internal/fips140/ecdh.html#name-PrivateKey">PrivateKey</a></span><span>
+			*crypto/internal/fips140/ecdh.<a href="../../../crypto/internal/fips140/ecdh.html#name-PublicKey">PublicKey</a></span><span>
+			 crypto/internal/fips140/ecdsa.<a href="../../../crypto/internal/fips140/ecdsa.html#name-Point">Point</a>[...] <i>(interface)</i></span><span>
+			*crypto/internal/fips140/ecdsa.<a href="../../../crypto/internal/fips140/ecdsa.html#name-PrivateKey">PrivateKey</a></span><span>
+			*crypto/internal/fips140/ecdsa.<a href="../../../crypto/internal/fips140/ecdsa.html#name-PublicKey">PublicKey</a></span><span>
+			*crypto/internal/fips140/ed25519.<a href="../../../crypto/internal/fips140/ed25519.html#name-PrivateKey">PrivateKey</a></span><span>
+			*crypto/internal/fips140/ed25519.<a href="../../../crypto/internal/fips140/ed25519.html#name-PublicKey">PublicKey</a></span><span>
+			*crypto/internal/fips140/edwards25519.<a href="../../../crypto/internal/fips140/edwards25519.html#name-Point">Point</a></span><span>
+			*crypto/internal/fips140/edwards25519.<a href="../../../crypto/internal/fips140/edwards25519.html#name-Scalar">Scalar</a></span><span>
+			*crypto/internal/fips140/edwards25519/field.<a href="../../../crypto/internal/fips140/edwards25519/field.html#name-Element">Element</a></span><span>
+			*crypto/internal/fips140/mlkem.<a href="../../../crypto/internal/fips140/mlkem.html#name-DecapsulationKey1024">DecapsulationKey1024</a></span><span>
+			*crypto/internal/fips140/mlkem.<a href="../../../crypto/internal/fips140/mlkem.html#name-DecapsulationKey768">DecapsulationKey768</a></span><span>
+			*crypto/internal/fips140/mlkem.<a href="../../../crypto/internal/fips140/mlkem.html#name-EncapsulationKey1024">EncapsulationKey1024</a></span><span>
+			*crypto/internal/fips140/mlkem.<a href="../../../crypto/internal/fips140/mlkem.html#name-EncapsulationKey768">EncapsulationKey768</a></span><span>
+			*crypto/internal/fips140/nistec.<a href="../../../crypto/internal/fips140/nistec.html#name-P224Point">P224Point</a></span><span>
+			*crypto/internal/fips140/nistec.<a href="../../../crypto/internal/fips140/nistec.html#name-P256Point">P256Point</a></span><span>
+			*crypto/internal/fips140/nistec.<a href="../../../crypto/internal/fips140/nistec.html#name-P384Point">P384Point</a></span><span>
+			*crypto/internal/fips140/nistec.<a href="../../../crypto/internal/fips140/nistec.html#name-P521Point">P521Point</a></span><span>
+			*crypto/internal/fips140/nistec/fiat.<a href="../../../crypto/internal/fips140/nistec/fiat.html#name-P224Element">P224Element</a></span><span>
+			*crypto/internal/fips140/nistec/fiat.<a href="../../../crypto/internal/fips140/nistec/fiat.html#name-P256Element">P256Element</a></span><span>
+			*crypto/internal/fips140/nistec/fiat.<a href="../../../crypto/internal/fips140/nistec/fiat.html#name-P384Element">P384Element</a></span><span>
+			*crypto/internal/fips140/nistec/fiat.<a href="../../../crypto/internal/fips140/nistec/fiat.html#name-P521Element">P521Element</a></span><span>
+			*crypto/mlkem.<a href="../../../crypto/mlkem.html#name-DecapsulationKey1024">DecapsulationKey1024</a></span><span>
+			*crypto/mlkem.<a href="../../../crypto/mlkem.html#name-DecapsulationKey768">DecapsulationKey768</a></span><span>
+			*crypto/mlkem.<a href="../../../crypto/mlkem.html#name-EncapsulationKey1024">EncapsulationKey1024</a></span><span>
+			*crypto/mlkem.<a href="../../../crypto/mlkem.html#name-EncapsulationKey768">EncapsulationKey768</a></span><span>
+			*golang.org/x/text/unicode/bidi.<a href="../../../golang.org/x/text/unicode/bidi.html#name-Run">Run</a></span><span>
+			*google.golang.org/protobuf/internal/encoding/json.<a href="../../../google.golang.org/protobuf/internal/encoding/json.html#name-Encoder">Encoder</a></span><span>
+			*google.golang.org/protobuf/internal/encoding/text.<a href="../../../google.golang.org/protobuf/internal/encoding/text.html#name-Encoder">Encoder</a></span><span>
+			 google.golang.org/protobuf/reflect/protoreflect.<a href="../../../google.golang.org/protobuf/reflect/protoreflect.html#name-Value">Value</a></span><span>
+			*math/big.<a href="../../../math/big.html#name-Int">Int</a></span><span>
+			 reflect.<a href="../../../reflect.html#name-Value">Value</a></span><span>
+			*vendor/golang.org/x/text/unicode/bidi.<a href="../../../vendor/golang.org/x/text/unicode/bidi.html#name-Run">Run</a></span></span>
+		<input type='checkbox' class="fold" id="byter-fold-impls"><label for="byter-fold-impls">Implements (<i>at least one unexported</i>)</label><span id='byter-fold-impls-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="byter-showhide-impls"><i><label for="byter-showhide-impls" class="show-inline">/* at least one unexported ... */</label><label for="byter-showhide-impls" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 byter : github.com/segmentio/kafka-go/protocol.<a href="../../segmentio/kafka-go/protocol.html#name-bytesBuffer">bytesBuffer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-result" data-popularity="0">	<input type='checkbox' class="fold" id="result-fold-content"><label for="result-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-90">result</a> <i>(struct)</i></label><span id='result-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="result-fold-fields"><label for="result-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='result-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="result-showhide-fields"><i><label for="result-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="result-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-91">b</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="result-fold-field-ret"><label for="result-fold-field-ret"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-93">ret</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></label><span id='result-fold-field-ret-docs' class="fold-docs">
+<span class="md-text">				return when writing</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="result-fold-field-startOffset"><label for="result-fold-field-startOffset"><a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-95">startOffset</a> <i><a href="../../../builtin.html#name-int64">int64</a></i></label><span id='result-fold-field-startOffset-docs' class="fold-docs">
+<span class="md-text">				Uncompressed start offset</span>
+</span></i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 85, in which 36 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ConcatBlocks">	<input type='checkbox' class="fold" id="ConcatBlocks-fold-content"><label for="ConcatBlocks-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-323">ConcatBlocks</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, blocks ...[]<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='ConcatBlocks-fold-content-docs' class="fold-docs">
+<span class="md-text">		ConcatBlocks will concatenate the supplied blocks and append them to the supplied destination.
+		If the destination is nil or too small, a new will be allocated.
+		The blocks are not validated, so garbage in = garbage out.
+		dst may not overlap block data.
+		Any data in dst is preserved as is, so it will not be considered a block.</span>
+
+</span></div><div class="anchor value-res" id="name-Decode">	<input type='checkbox' class="fold" id="Decode-fold-content"><label for="Decode-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-58">Decode</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Decode-fold-content-docs' class="fold-docs">
+<span class="md-text">		Decode returns the decoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire decoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.</span>
+
+</span></div><div class="anchor value-res" id="name-DecodedLen">	<input type='checkbox' class="fold" id="DecodedLen-fold-content"><label for="DecodedLen-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-29">DecodedLen</a>(src []<a href="../../../builtin.html#name-byte">byte</a>) (<a href="../../../builtin.html#name-int">int</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='DecodedLen-fold-content-docs' class="fold-docs">
+<span class="md-text">		DecodedLen returns the length of the decoded block.</span>
+
+</span></div><div class="anchor value-res" id="name-Encode">	<input type='checkbox' class="fold" id="Encode-fold-content"><label for="Encode-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-29">Encode</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='Encode-fold-content-docs' class="fold-docs">
+<span class="md-text">		Encode returns the encoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire encoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.
+		
+		The blocks will require the same amount of memory to decode as encoding,
+		and does not make for concurrent decoding.
+		Also note that blocks do not contain CRC information, so corruption may be undetected.
+		
+		If you need to encode larger amounts of data, consider using
+		the streaming interface which gives all of these features.</span>
+
+</span></div><div class="anchor value-res" id="name-EncodeBest">	<input type='checkbox' class="fold" id="EncodeBest-fold-content"><label for="EncodeBest-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-159">EncodeBest</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='EncodeBest-fold-content-docs' class="fold-docs">
+<span class="md-text">		EncodeBest returns the encoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire encoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		EncodeBest compresses as good as reasonably possible but with a
+		big speed decrease.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.
+		
+		The blocks will require the same amount of memory to decode as encoding,
+		and does not make for concurrent decoding.
+		Also note that blocks do not contain CRC information, so corruption may be undetected.
+		
+		If you need to encode larger amounts of data, consider using
+		the streaming interface which gives all of these features.</span>
+
+</span></div><div class="anchor value-res" id="name-EncodeBetter">	<input type='checkbox' class="fold" id="EncodeBetter-fold-content"><label for="EncodeBetter-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-117">EncodeBetter</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='EncodeBetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		EncodeBetter returns the encoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire encoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		EncodeBetter compresses better than Encode but typically with a
+		10-40% speed decrease on both compression and decompression.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.
+		
+		The blocks will require the same amount of memory to decode as encoding,
+		and does not make for concurrent decoding.
+		Also note that blocks do not contain CRC information, so corruption may be undetected.
+		
+		If you need to encode larger amounts of data, consider using
+		the streaming interface which gives all of these features.</span>
+
+</span></div><div class="anchor value-res" id="name-EncodeSnappy">	<input type='checkbox' class="fold" id="EncodeSnappy-fold-content"><label for="EncodeSnappy-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-200">EncodeSnappy</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='EncodeSnappy-fold-content-docs' class="fold-docs">
+<span class="md-text">		EncodeSnappy returns the encoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire encoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		The output is Snappy compatible and will likely decompress faster.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.
+		
+		The blocks will require the same amount of memory to decode as encoding,
+		and does not make for concurrent decoding.
+		Also note that blocks do not contain CRC information, so corruption may be undetected.
+		
+		If you need to encode larger amounts of data, consider using
+		the streaming interface which gives all of these features.</span>
+
+</span></div><div class="anchor value-res" id="name-EncodeSnappyBest">	<input type='checkbox' class="fold" id="EncodeSnappyBest-fold-content"><label for="EncodeSnappyBest-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-288">EncodeSnappyBest</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='EncodeSnappyBest-fold-content-docs' class="fold-docs">
+<span class="md-text">		EncodeSnappyBest returns the encoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire encoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		The output is Snappy compatible and will likely decompress faster.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.
+		
+		The blocks will require the same amount of memory to decode as encoding,
+		and does not make for concurrent decoding.
+		Also note that blocks do not contain CRC information, so corruption may be undetected.
+		
+		If you need to encode larger amounts of data, consider using
+		the streaming interface which gives all of these features.</span>
+
+</span></div><div class="anchor value-res" id="name-EncodeSnappyBetter">	<input type='checkbox' class="fold" id="EncodeSnappyBetter-fold-content"><label for="EncodeSnappyBetter-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-244">EncodeSnappyBetter</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='EncodeSnappyBetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		EncodeSnappyBetter returns the encoded form of src. The returned slice may be a sub-
+		slice of dst if dst was large enough to hold the entire encoded block.
+		Otherwise, a newly allocated slice will be returned.
+		
+		The output is Snappy compatible and will likely decompress faster.
+		
+		The dst and src must not overlap. It is valid to pass a nil dst.
+		
+		The blocks will require the same amount of memory to decode as encoding,
+		and does not make for concurrent decoding.
+		Also note that blocks do not contain CRC information, so corruption may be undetected.
+		
+		If you need to encode larger amounts of data, consider using
+		the streaming interface which gives all of these features.</span>
+
+</span></div><div class="anchor value-res" id="name-EstimateBlockSize">	<input type='checkbox' class="fold" id="EstimateBlockSize-fold-content"><label for="EstimateBlockSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-64">EstimateBlockSize</a>(src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='EstimateBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		EstimateBlockSize will perform a very fast compression
+		without outputting the result and return the compressed output size.
+		The function returns -1 if no improvement could be achieved.
+		Using actual compression will most often produce better compression than the estimate.</span>
+
+</span></div><div class="anchor value-res" id="name-IndexStream">	<input type='checkbox' class="fold" id="IndexStream-fold-content"><label for="IndexStream-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-420">IndexStream</a>(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='IndexStream-fold-content-docs' class="fold-docs">
+<span class="md-text">		IndexStream will return an index for a stream.
+		The stream structure will be checked, but
+		data within blocks is not verified.
+		The returned index can either be appended to the end of the stream
+		or stored separately.</span>
+
+</span></div><div class="anchor value-res" id="name-MakeDict">	<input type='checkbox' class="fold" id="MakeDict-fold-content"><label for="MakeDict-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-81">MakeDict</a>(data []<a href="../../../builtin.html#name-byte">byte</a>, searchStart []<a href="../../../builtin.html#name-byte">byte</a>) *<a href="#name-Dict">Dict</a></label><span id='MakeDict-fold-content-docs' class="fold-docs">
+<span class="md-text">		MakeDict will create a dictionary.
+		'data' must be at least MinDictSize.
+		If data is longer than MaxDictSize only the last MaxDictSize bytes will be used.
+		If searchStart is set the start repeat value will be set to the last
+		match of this content.
+		If no matches are found, it will attempt to find shorter matches.
+		This content should match the typical start of a block.
+		If at least 4 bytes cannot be matched, repeat is set to start of block.</span>
+
+</span></div><div class="anchor value-res" id="name-MakeDictManual">	<input type='checkbox' class="fold" id="MakeDictManual-fold-content"><label for="MakeDictManual-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-113">MakeDictManual</a>(data []<a href="../../../builtin.html#name-byte">byte</a>, firstIdx <a href="../../../builtin.html#name-uint16">uint16</a>) *<a href="#name-Dict">Dict</a></label><span id='MakeDictManual-fold-content-docs' class="fold-docs">
+<span class="md-text">		MakeDictManual will create a dictionary.
+		'data' must be at least MinDictSize and less than or equal to MaxDictSize.
+		A manual first repeat index into data must be provided.
+		It must be less than len(data)-8.</span>
+
+</span></div><div class="anchor value-res" id="name-MaxEncodedLen">	<input type='checkbox' class="fold" id="MaxEncodedLen-fold-content"><label for="MaxEncodedLen-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-385">MaxEncodedLen</a>(srcLen <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='MaxEncodedLen-fold-content-docs' class="fold-docs">
+<span class="md-text">		MaxEncodedLen returns the maximum length of a snappy block, given its
+		uncompressed length.
+		
+		It will return a negative value if srcLen is too large to encode.
+		32 bit platforms will have lower thresholds for rejecting big content.</span>
+
+</span></div><div class="anchor value-res" id="name-NewDict">	<input type='checkbox' class="fold" id="NewDict-fold-content"><label for="NewDict-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-41">NewDict</a>(dict []<a href="../../../builtin.html#name-byte">byte</a>) *<a href="#name-Dict">Dict</a></label><span id='NewDict-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewDict will read a dictionary.
+		It will return nil if the dictionary is invalid.</span>
+
+</span></div><div class="anchor value-res" id="name-NewReader">	<input type='checkbox' class="fold" id="NewReader-fold-content"><label for="NewReader-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-31">NewReader</a>(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>, opts ...<a href="#name-ReaderOption">ReaderOption</a>) *<a href="#name-Reader">Reader</a></label><span id='NewReader-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewReader returns a new Reader that decompresses from r, using the framing
+		format described at
+		https://github.com/google/snappy/blob/master/framing_format.txt with S2 changes.</span>
+
+</span></div><div class="anchor value-res" id="name-NewWriter">	<input type='checkbox' class="fold" id="NewWriter-fold-content"><label for="NewWriter-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-34">NewWriter</a>(w <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Writer">Writer</a>, opts ...<a href="#name-WriterOption">WriterOption</a>) *<a href="#name-Writer">Writer</a></label><span id='NewWriter-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewWriter returns a new Writer that compresses to w, using the
+		framing format described at
+		https://github.com/google/snappy/blob/master/framing_format.txt
+		
+		Users must call Close to guarantee all data has been forwarded to
+		the underlying io.Writer and that resources are released.
+		They may also call Flush zero or more times before calling Close.</span>
+
+</span></div><div class="anchor value-res" id="name-ReaderAllocBlock">	<input type='checkbox' class="fold" id="ReaderAllocBlock-fold-content"><label for="ReaderAllocBlock-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-82">ReaderAllocBlock</a>(blockSize <a href="../../../builtin.html#name-int">int</a>) <a href="#name-ReaderOption">ReaderOption</a></label><span id='ReaderAllocBlock-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReaderAllocBlock allows to control upfront stream allocations
+		and not allocate for frames bigger than this initially.
+		If frames bigger than this is seen a bigger buffer will be allocated.
+		
+		Default is 1MB, which is default output size.</span>
+
+</span></div><div class="anchor value-res" id="name-ReaderIgnoreCRC">	<input type='checkbox' class="fold" id="ReaderIgnoreCRC-fold-content"><label for="ReaderIgnoreCRC-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-120">ReaderIgnoreCRC</a>() <a href="#name-ReaderOption">ReaderOption</a></label><span id='ReaderIgnoreCRC-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReaderIgnoreCRC will make the reader skip CRC calculation and checks.</span>
+
+</span></div><div class="anchor value-res" id="name-ReaderIgnoreStreamIdentifier">	<input type='checkbox' class="fold" id="ReaderIgnoreStreamIdentifier-fold-content"><label for="ReaderIgnoreStreamIdentifier-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-95">ReaderIgnoreStreamIdentifier</a>() <a href="#name-ReaderOption">ReaderOption</a></label><span id='ReaderIgnoreStreamIdentifier-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReaderIgnoreStreamIdentifier will make the reader skip the expected
+		stream identifier at the beginning of the stream.
+		This can be used when serving a stream that has been forwarded to a specific point.</span>
+
+</span></div><div class="anchor value-res" id="name-ReaderMaxBlockSize">	<input type='checkbox' class="fold" id="ReaderMaxBlockSize-fold-content"><label for="ReaderMaxBlockSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-64">ReaderMaxBlockSize</a>(blockSize <a href="../../../builtin.html#name-int">int</a>) <a href="#name-ReaderOption">ReaderOption</a></label><span id='ReaderMaxBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReaderMaxBlockSize allows to control allocations if the stream
+		has been compressed with a smaller WriterBlockSize, or with the default 1MB.
+		Blocks must be this size or smaller to decompress,
+		otherwise the decoder will return ErrUnsupported.
+		
+		For streams compressed with Snappy this can safely be set to 64KB (64 &lt;&lt; 10).
+		
+		Default is the maximum limit of 4MB.</span>
+
+</span></div><div class="anchor value-res" id="name-ReaderSkippableCB">	<input type='checkbox' class="fold" id="ReaderSkippableCB-fold-content"><label for="ReaderSkippableCB-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/reader.go.html#line-109">ReaderSkippableCB</a>(id <a href="../../../builtin.html#name-uint8">uint8</a>, fn func(r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="../../../builtin.html#name-error">error</a>) <a href="#name-ReaderOption">ReaderOption</a></label><span id='ReaderSkippableCB-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReaderSkippableCB will register a callback for chuncks with the specified ID.
+		ID must be a Reserved skippable chunks ID, 0x80-0xfd (inclusive).
+		For each chunk with the ID, the callback is called with the content.
+		Any returned non-nil error will abort decompression.
+		Only one callback per ID is supported, latest sent will be used.
+		You can peek the stream, triggering the callback, by doing a Read with a 0
+		byte buffer.</span>
+
+</span></div><div class="anchor value-res" id="name-RemoveIndexHeaders">	<input type='checkbox' class="fold" id="RemoveIndexHeaders-fold-content"><label for="RemoveIndexHeaders-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-547">RemoveIndexHeaders</a>(b []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='RemoveIndexHeaders-fold-content-docs' class="fold-docs">
+<span class="md-text">		RemoveIndexHeaders will trim all headers and trailers from a given index.
+		This is expected to save 20 bytes.
+		These can be restored using RestoreIndexHeaders.
+		This removes a layer of security, but is the most compact representation.
+		Returns nil if headers contains errors.
+		The returned slice references the provided slice.</span>
+
+</span></div><div class="anchor value-res" id="name-RestoreIndexHeaders">	<input type='checkbox' class="fold" id="RestoreIndexHeaders-fold-content"><label for="RestoreIndexHeaders-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-582">RestoreIndexHeaders</a>(in []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></label><span id='RestoreIndexHeaders-fold-content-docs' class="fold-docs">
+<span class="md-text">		RestoreIndexHeaders will index restore headers removed by RemoveIndexHeaders.
+		No error checking is performed on the input.
+		If a 0 length slice is sent, it is returned without modification.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterAddIndex">	<input type='checkbox' class="fold" id="WriterAddIndex-fold-content"><label for="WriterAddIndex-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-921">WriterAddIndex</a>() <a href="#name-WriterOption">WriterOption</a></label><span id='WriterAddIndex-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterAddIndex will append an index to the end of a stream
+		when it is closed.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterBestCompression">	<input type='checkbox' class="fold" id="WriterBestCompression-fold-content"><label for="WriterBestCompression-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-941">WriterBestCompression</a>() <a href="#name-WriterOption">WriterOption</a></label><span id='WriterBestCompression-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterBestCompression will enable better compression.
+		EncodeBest compresses better than Encode but typically with a
+		big speed decrease on compression.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterBetterCompression">	<input type='checkbox' class="fold" id="WriterBetterCompression-fold-content"><label for="WriterBetterCompression-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-931">WriterBetterCompression</a>() <a href="#name-WriterOption">WriterOption</a></label><span id='WriterBetterCompression-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterBetterCompression will enable better compression.
+		EncodeBetter compresses better than Encode but typically with a
+		10-40% speed decrease on both compression and decompression.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterBlockSize">	<input type='checkbox' class="fold" id="WriterBlockSize-fold-content"><label for="WriterBlockSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-980">WriterBlockSize</a>(n <a href="../../../builtin.html#name-int">int</a>) <a href="#name-WriterOption">WriterOption</a></label><span id='WriterBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterBlockSize allows to override the default block size.
+		Blocks will be this size or smaller.
+		Minimum size is 4KB and maximum size is 4MB.
+		
+		Bigger blocks may give bigger throughput on systems with many cores,
+		and will increase compression slightly, but it will limit the possible
+		concurrency for smaller payloads for both encoding and decoding.
+		Default block size is 1MB.
+		
+		When writing Snappy compatible output using WriterSnappyCompat,
+		the maximum block size is 64KB.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterBufferDone">	<input type='checkbox' class="fold" id="WriterBufferDone-fold-content"><label for="WriterBufferDone-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-962">WriterBufferDone</a>(fn func(b []<a href="../../../builtin.html#name-byte">byte</a>)) <a href="#name-WriterOption">WriterOption</a></label><span id='WriterBufferDone-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterBufferDone will perform a callback when EncodeBuffer has finished
+		writing a buffer to the output and the buffer can safely be reused.
+		If the buffer was split into several blocks, it will be sent after the last block.
+		Callbacks will not be done concurrently.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterConcurrency">	<input type='checkbox' class="fold" id="WriterConcurrency-fold-content"><label for="WriterConcurrency-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-909">WriterConcurrency</a>(n <a href="../../../builtin.html#name-int">int</a>) <a href="#name-WriterOption">WriterOption</a></label><span id='WriterConcurrency-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterConcurrency will set the concurrency,
+		meaning the maximum number of decoders to run concurrently.
+		The value supplied must be at least 1.
+		By default this will be set to GOMAXPROCS.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterCustomEncoder">	<input type='checkbox' class="fold" id="WriterCustomEncoder-fold-content"><label for="WriterCustomEncoder-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-1059">WriterCustomEncoder</a>(fn func(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a>) <a href="#name-WriterOption">WriterOption</a></label><span id='WriterCustomEncoder-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterCustomEncoder allows to override the encoder for blocks on the stream.
+		The function must compress 'src' into 'dst' and return the bytes used in dst as an integer.
+		Block size (initial varint) should not be added by the encoder.
+		Returning value 0 indicates the block could not be compressed.
+		Returning a negative value indicates that compression should be attempted.
+		The function should expect to be called concurrently.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterFlushOnWrite">	<input type='checkbox' class="fold" id="WriterFlushOnWrite-fold-content"><label for="WriterFlushOnWrite-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-1046">WriterFlushOnWrite</a>() <a href="#name-WriterOption">WriterOption</a></label><span id='WriterFlushOnWrite-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterFlushOnWrite will compress blocks on each call to the Write function.
+		
+		This is quite inefficient as blocks size will depend on the write size.
+		
+		Use WriterConcurrency(1) to also make sure that output is flushed.
+		When Write calls return, otherwise they will be written when compression is done.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterPadding">	<input type='checkbox' class="fold" id="WriterPadding-fold-content"><label for="WriterPadding-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-999">WriterPadding</a>(n <a href="../../../builtin.html#name-int">int</a>) <a href="#name-WriterOption">WriterOption</a></label><span id='WriterPadding-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterPadding will add padding to all output so the size will be a multiple of n.
+		This can be used to obfuscate the exact output size or make blocks of a certain size.
+		The contents will be a skippable frame, so it will be invisible by the decoder.
+		n must be &gt; 0 and &lt;= 4MB.
+		The padded area will be filled with data from crypto/rand.Reader.
+		The padding will be applied whenever Close is called on the writer.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterPaddingSrc">	<input type='checkbox' class="fold" id="WriterPaddingSrc-fold-content"><label for="WriterPaddingSrc-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-1018">WriterPaddingSrc</a>(reader <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) <a href="#name-WriterOption">WriterOption</a></label><span id='WriterPaddingSrc-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterPaddingSrc will get random data for padding from the supplied source.
+		By default crypto/rand is used.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterSnappyCompat">	<input type='checkbox' class="fold" id="WriterSnappyCompat-fold-content"><label for="WriterSnappyCompat-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-1028">WriterSnappyCompat</a>() <a href="#name-WriterOption">WriterOption</a></label><span id='WriterSnappyCompat-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterSnappyCompat will write snappy compatible output.
+		The output can be decompressed using either snappy or s2.
+		If block size is more than 64KB it is set to that.</span>
+
+</span></div><div class="anchor value-res" id="name-WriterUncompressed">	<input type='checkbox' class="fold" id="WriterUncompressed-fold-content"><label for="WriterUncompressed-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-951">WriterUncompressed</a>() <a href="#name-WriterOption">WriterOption</a></label><span id='WriterUncompressed-fold-content-docs' class="fold-docs">
+<span class="md-text">		WriterUncompressed will bypass compression.
+		The stream will be written as uncompressed blocks only.
+		If concurrency is &gt; 1 CRC and output will still be done async.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 49 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 49 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-calcBlockSize"><i>	<input type='checkbox' class="fold" id="calcBlockSize-fold-content"><label for="calcBlockSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-332">calcBlockSize</a>(src []<a href="../../../builtin.html#name-byte">byte</a>, _ *[32768]<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='calcBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		input must be &gt; inputMargin</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-calcBlockSizeSmall"><i>	<input type='checkbox' class="fold" id="calcBlockSizeSmall-fold-content"><label for="calcBlockSizeSmall-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-518">calcBlockSizeSmall</a>(src []<a href="../../../builtin.html#name-byte">byte</a>, _ *[2048]<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='calcBlockSizeSmall-fold-content-docs' class="fold-docs">
+<span class="md-text">		length must be &gt; inputMargin.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-calcSkippableFrame"><i>	<input type='checkbox' class="fold" id="calcSkippableFrame-fold-content"><label for="calcSkippableFrame-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-858">calcSkippableFrame</a>(written, wantMultiple <a href="../../../builtin.html#name-int64">int64</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='calcSkippableFrame-fold-content-docs' class="fold-docs">
+<span class="md-text">		calcSkippableFrame will return a total size to be added for written
+		to be divisible by multiple.
+		The value will always be &gt; skippableFrameHeader.
+		The function will panic if written &lt; 0 or wantMultiple &lt;= 0.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-crc"><i>	<input type='checkbox' class="fold" id="crc-fold-content"><label for="crc-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-120">crc</a>(b []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='crc-fold-content-docs' class="fold-docs">
+<span class="md-text">		crc implements the checksum specified in section 3 of
+		https://github.com/google/snappy/blob/master/framing_format.txt</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-cvtLZ4BlockAsm"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-727">cvtLZ4BlockAsm</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, src []<a href="../../../builtin.html#name-byte">byte</a>) (uncompressed <a href="../../../builtin.html#name-int">int</a>, dstUsed <a href="../../../builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-cvtLZ4BlockSnappyAsm"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-731">cvtLZ4BlockSnappyAsm</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, src []<a href="../../../builtin.html#name-byte">byte</a>) (uncompressed <a href="../../../builtin.html#name-int">int</a>, dstUsed <a href="../../../builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-cvtLZ4sBlockAsm"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-735">cvtLZ4sBlockAsm</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, src []<a href="../../../builtin.html#name-byte">byte</a>) (uncompressed <a href="../../../builtin.html#name-int">int</a>, dstUsed <a href="../../../builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-cvtLZ4sBlockSnappyAsm"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-739">cvtLZ4sBlockSnappyAsm</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, src []<a href="../../../builtin.html#name-byte">byte</a>) (uncompressed <a href="../../../builtin.html#name-int">int</a>, dstUsed <a href="../../../builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-decodedLen"><i>	<input type='checkbox' class="fold" id="decodedLen-fold-content"><label for="decodedLen-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-36">decodedLen</a>(src []<a href="../../../builtin.html#name-byte">byte</a>) (blockLen, headerLen <a href="../../../builtin.html#name-int">int</a>, err <a href="../../../builtin.html#name-error">error</a>)</label><span id='decodedLen-fold-content-docs' class="fold-docs">
+<span class="md-text">		decodedLen returns the length of the decoded block and the number of bytes
+		that the length header occupied.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitCopy"><i>	<input type='checkbox' class="fold" id="emitCopy-fold-content"><label for="emitCopy-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-173">emitCopy</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, offset, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitCopy-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitCopy writes a copy chunk and returns the number of bytes written.
+		
+		It assumes that:
+		
+			dst is long enough to hold the encoded bytes
+			1 &lt;= offset &amp;&amp; offset &lt;= math.MaxUint32
+			4 &lt;= length &amp;&amp; length &lt;= 1 &lt;&lt; 24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitCopy16"><i>	<input type='checkbox' class="fold" id="emitCopy16-fold-content"><label for="emitCopy16-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-512">emitCopy16</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, offset <a href="../../../builtin.html#name-uint16">uint16</a>, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitCopy16-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitCopy writes a copy chunk and returns the number of bytes written.
+		
+		It assumes that:
+		
+			dst is long enough to hold the encoded bytes
+			1 &lt;= offset &amp;&amp; offset &lt;= math.MaxUint16
+			4 &lt;= length &amp;&amp; length &lt;= math.MaxUint32</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitCopyNoRepeat"><i>	<input type='checkbox' class="fold" id="emitCopyNoRepeat-fold-content"><label for="emitCopyNoRepeat-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-242">emitCopyNoRepeat</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, offset, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitCopyNoRepeat-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitCopyNoRepeat writes a copy chunk and returns the number of bytes written.
+		
+		It assumes that:
+		
+			dst is long enough to hold the encoded bytes
+			1 &lt;= offset &amp;&amp; offset &lt;= math.MaxUint32
+			4 &lt;= length &amp;&amp; length &lt;= 1 &lt;&lt; 24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitCopyNoRepeatSize"><i>	<input type='checkbox' class="fold" id="emitCopyNoRepeatSize-fold-content"><label for="emitCopyNoRepeatSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_best.go.html#line-756">emitCopyNoRepeatSize</a>(offset, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitCopyNoRepeatSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitCopyNoRepeatSize returns the size to encode the offset+length
+		
+		It assumes that:
+		
+			1 &lt;= offset &amp;&amp; offset &lt;= math.MaxUint32
+			4 &lt;= length &amp;&amp; length &lt;= 1 &lt;&lt; 24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitCopySize"><i>	<input type='checkbox' class="fold" id="emitCopySize-fold-content"><label for="emitCopySize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_best.go.html#line-717">emitCopySize</a>(offset, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitCopySize-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitCopySize returns the size to encode the offset+length
+		
+		It assumes that:
+		
+			1 &lt;= offset &amp;&amp; offset &lt;= math.MaxUint32
+			4 &lt;= length &amp;&amp; length &lt;= 1 &lt;&lt; 24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitLiteral"><i>	<input type='checkbox' class="fold" id="emitLiteral-fold-content"><label for="emitLiteral-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-81">emitLiteral</a>(dst, lit []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitLiteral-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitLiteral writes a literal chunk and returns the number of bytes written.
+		
+		It assumes that:
+		
+			dst is long enough to hold the encoded bytes
+			0 &lt;= len(lit) &amp;&amp; len(lit) &lt;= math.MaxUint32</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitLiteralGo"><i>	<input type='checkbox' class="fold" id="emitLiteralGo-fold-content"><label for="emitLiteralGo-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-552">emitLiteralGo</a>(dst, lit []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitLiteralGo-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitLiteral writes a literal chunk and returns the number of bytes written.
+		
+		It assumes that:
+		
+			dst is long enough to hold the encoded bytes
+			0 &lt;= len(lit) &amp;&amp; len(lit) &lt;= math.MaxUint32</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitLiteralSize"><i>	<input type='checkbox' class="fold" id="emitLiteralSize-fold-content"><label for="emitLiteralSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-709">emitLiteralSize</a>(lit []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitLiteralSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitLiteral writes a literal chunk and returns the number of bytes written.
+		
+		It assumes that:
+		
+			dst is long enough to hold the encoded bytes
+			0 &lt;= len(lit) &amp;&amp; len(lit) &lt;= math.MaxUint32</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitRepeat"><i>	<input type='checkbox' class="fold" id="emitRepeat-fold-content"><label for="emitRepeat-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-119">emitRepeat</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, offset, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitRepeat-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitRepeat writes a repeat chunk and returns the number of bytes written.
+		Length must be at least 4 and &lt; 1&lt;&lt;24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitRepeat16"><i>	<input type='checkbox' class="fold" id="emitRepeat16-fold-content"><label for="emitRepeat16-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-458">emitRepeat16</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, offset <a href="../../../builtin.html#name-uint16">uint16</a>, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitRepeat16-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitRepeat writes a repeat chunk and returns the number of bytes written.
+		Length must be at least 4 and &lt; 1&lt;&lt;24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-emitRepeatSize"><i>	<input type='checkbox' class="fold" id="emitRepeatSize-fold-content"><label for="emitRepeatSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_best.go.html#line-775">emitRepeatSize</a>(offset, length <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='emitRepeatSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		emitRepeatSize returns the number of bytes required to encode a repeat.
+		Length must be at least 4 and &lt; 1&lt;&lt;24</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlock"><i>	<input type='checkbox' class="fold" id="encodeBlock-fold-content"><label for="encodeBlock-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-20">encodeBlock</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlock-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlock encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src))</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBest"><i>	<input type='checkbox' class="fold" id="encodeBlockBest-fold-content"><label for="encodeBlockBest-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_best.go.html#line-22">encodeBlockBest</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<a href="#name-Dict">Dict</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBest-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBest encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBestSnappy"><i>	<input type='checkbox' class="fold" id="encodeBlockBestSnappy-fold-content"><label for="encodeBlockBestSnappy-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_best.go.html#line-458">encodeBlockBestSnappy</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBestSnappy-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBestSnappy encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetter"><i>	<input type='checkbox' class="fold" id="encodeBlockBetter-fold-content"><label for="encodeBlockBetter-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-37">encodeBlockBetter</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBetter-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBetter encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src))</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetterDict"><i>	<input type='checkbox' class="fold" id="encodeBlockBetterDict-fold-content"><label for="encodeBlockBetterDict-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-898">encodeBlockBetterDict</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<a href="#name-Dict">Dict</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBetterDict-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBetterDict encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetterGo"><i>	<input type='checkbox' class="fold" id="encodeBlockBetterGo-fold-content"><label for="encodeBlockBetterGo-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-50">encodeBlockBetterGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBetterGo-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBetter encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetterGo64K"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-481">encodeBlockBetterGo64K</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetterSnappy"><i>	<input type='checkbox' class="fold" id="encodeBlockBetterSnappy-fold-content"><label for="encodeBlockBetterSnappy-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-51">encodeBlockBetterSnappy</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBetterSnappy-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBetter encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src))</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetterSnappyGo"><i>	<input type='checkbox' class="fold" id="encodeBlockBetterSnappyGo-fold-content"><label for="encodeBlockBetterSnappyGo-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-308">encodeBlockBetterSnappyGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBetterSnappyGo-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBetterSnappyGo encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockBetterSnappyGo64K"><i>	<input type='checkbox' class="fold" id="encodeBlockBetterSnappyGo64K-fold-content"><label for="encodeBlockBetterSnappyGo64K-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-729">encodeBlockBetterSnappyGo64K</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockBetterSnappyGo64K-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockBetterSnappyGo encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockDictGo"><i>	<input type='checkbox' class="fold" id="encodeBlockDictGo-fold-content"><label for="encodeBlockDictGo-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-890">encodeBlockDictGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<a href="#name-Dict">Dict</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockDictGo-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockGo encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockGo"><i>	<input type='checkbox' class="fold" id="encodeBlockGo-fold-content"><label for="encodeBlockGo-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-72">encodeBlockGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockGo-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockGo encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;
+			minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockGo64K"><i>	<input type='checkbox' class="fold" id="encodeBlockGo64K-fold-content"><label for="encodeBlockGo64K-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-287">encodeBlockGo64K</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockGo64K-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockGo64K is a specialized version for compressing blocks &lt;= 64KB</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockSnappy"><i>	<input type='checkbox' class="fold" id="encodeBlockSnappy-fold-content"><label for="encodeBlockSnappy-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-65">encodeBlockSnappy</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockSnappy-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlock encodes a non-empty src to a guaranteed-large-enough dst. It
+		assumes that the varint-encoded length of the decompressed bytes has already
+		been written.
+		
+		It also assumes that:
+		
+			len(dst) &gt;= MaxEncodedLen(len(src))</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockSnappyGo"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-502">encodeBlockSnappyGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</span></i></div><div class="anchor value-res hidden" id="name-encodeBlockSnappyGo64K"><i>	<input type='checkbox' class="fold" id="encodeBlockSnappyGo64K-fold-content"><label for="encodeBlockSnappyGo64K-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-692">encodeBlockSnappyGo64K</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) (d <a href="../../../builtin.html#name-int">int</a>)</label><span id='encodeBlockSnappyGo64K-fold-content-docs' class="fold-docs">
+<span class="md-text">		encodeBlockSnappyGo64K is a special version of encodeBlockSnappyGo for sizes &lt;64KB</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-encodeGo"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-32">encodeGo</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) []<a href="../../../builtin.html#name-byte">byte</a></span></i></div><div class="anchor value-res hidden" id="name-hash4"><i>	<input type='checkbox' class="fold" id="hash4-fold-content"><label for="hash4-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-16">hash4</a>(u <a href="../../../builtin.html#name-uint64">uint64</a>, h <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='hash4-fold-content-docs' class="fold-docs">
+<span class="md-text">		hash4 returns the hash of the lowest 4 bytes of u to fit in a hash table with h bits.
+		Preferably h should be a constant and should always be &lt;32.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-hash5"><i>	<input type='checkbox' class="fold" id="hash5-fold-content"><label for="hash5-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-23">hash5</a>(u <a href="../../../builtin.html#name-uint64">uint64</a>, h <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='hash5-fold-content-docs' class="fold-docs">
+<span class="md-text">		hash5 returns the hash of the lowest 5 bytes of u to fit in a hash table with h bits.
+		Preferably h should be a constant and should always be &lt;64.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-hash6"><i>	<input type='checkbox' class="fold" id="hash6-fold-content"><label for="hash6-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-27">hash6</a>(u <a href="../../../builtin.html#name-uint64">uint64</a>, h <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='hash6-fold-content-docs' class="fold-docs">
+<span class="md-text">		hash6 returns the hash of the lowest 6 bytes of u to fit in a hash table with h bits.
+		Preferably h should be a constant and should always be &lt;64.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-hash7"><i>	<input type='checkbox' class="fold" id="hash7-fold-content"><label for="hash7-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-30">hash7</a>(u <a href="../../../builtin.html#name-uint64">uint64</a>, h <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='hash7-fold-content-docs' class="fold-docs">
+<span class="md-text">		hash7 returns the hash of the lowest 7 bytes of u to fit in a hash table with h bits.
+		Preferably h should be a constant and should always be &lt;64.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-hash8"><i>	<input type='checkbox' class="fold" id="hash8-fold-content"><label for="hash8-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_better.go.html#line-37">hash8</a>(u <a href="../../../builtin.html#name-uint64">uint64</a>, h <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='hash8-fold-content-docs' class="fold-docs">
+<span class="md-text">		hash8 returns the hash of u to fit in a hash table with h bits.
+		Preferably h should be a constant and should always be &lt;64.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-literalExtraSize"><i>	<input type='checkbox' class="fold" id="literalExtraSize-fold-content"><label for="literalExtraSize-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-129">literalExtraSize</a>(n <a href="../../../builtin.html#name-int64">int64</a>) <a href="../../../builtin.html#name-int64">int64</a></label><span id='literalExtraSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		literalExtraSize returns the extra size of encoding n literals.
+		n should be &gt;= 0 and &lt;= math.MaxUint32.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-load32"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-17">load32</a>(b []<a href="../../../builtin.html#name-byte">byte</a>, i <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-uint32">uint32</a></span></i></div><div class="anchor value-res hidden" id="name-load64"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_all.go.html#line-21">load64</a>(b []<a href="../../../builtin.html#name-byte">byte</a>, i <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-uint64">uint64</a></span></i></div><div class="anchor value-res hidden" id="name-matchLen"><i>	<input type='checkbox' class="fold" id="matchLen-fold-content"><label for="matchLen-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-300">matchLen</a>(a []<a href="../../../builtin.html#name-byte">byte</a>, b []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='matchLen-fold-content-docs' class="fold-docs">
+<span class="md-text">		matchLen returns how many bytes match in a and b
+		
+		It assumes that:
+		
+			len(a) &lt;= len(b)</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-s2Decode"><i>	<input type='checkbox' class="fold" id="s2Decode-fold-content"><label for="s2Decode-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/decode_asm.go.html#line-17">s2Decode</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='s2Decode-fold-content-docs' class="fold-docs">
+<span class="md-text">		decode has the same semantics as in decode_other.go.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-s2DecodeDict"><i>	<input type='checkbox' class="fold" id="s2DecodeDict-fold-content"><label for="s2DecodeDict-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-83">s2DecodeDict</a>(dst, src []<a href="../../../builtin.html#name-byte">byte</a>, dict *<a href="#name-Dict">Dict</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='s2DecodeDict-fold-content-docs' class="fold-docs">
+<span class="md-text">		s2DecodeDict writes the decoding of src to dst. It assumes that the varint-encoded
+		length of the decompressed bytes has already been read, and that len(dst)
+		equals that length.
+		
+		It returns 0 on success or a decodeErrCodeXxx error code on failure.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-skippableFrame"><i>	<input type='checkbox' class="fold" id="skippableFrame-fold-content"><label for="skippableFrame-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-878">skippableFrame</a>(dst []<a href="../../../builtin.html#name-byte">byte</a>, total <a href="../../../builtin.html#name-int">int</a>, r <a href="../../../io.html">io</a>.<a href="../../../io.html#name-Reader">Reader</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='skippableFrame-fold-content-docs' class="fold-docs">
+<span class="md-text">		skippableFrame will add a skippable frame with a total size of bytes.
+		total should be &gt;= skippableFrameHeader and &lt; maxBlockSize + skippableFrameHeader</span>
+
+</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 10, in which 5 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ErrCorrupt">	<input type='checkbox' class="fold" id="ErrCorrupt-fold-content"><label for="ErrCorrupt-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-19">ErrCorrupt</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrCorrupt-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrCorrupt reports that the input is invalid.</span>
+
+</span></div><div class="anchor value-res" id="name-ErrCRC">	<input type='checkbox' class="fold" id="ErrCRC-fold-content"><label for="ErrCRC-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-21">ErrCRC</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrCRC-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrCRC reports that the input failed CRC validation (streams only)</span>
+
+</span></div><div class="anchor value-res" id="name-ErrDstTooSmall">	<input type='checkbox' class="fold" id="ErrDstTooSmall-fold-content"><label for="ErrDstTooSmall-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/s2/lz4convert.go.html#line-19">ErrDstTooSmall</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrDstTooSmall-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrDstTooSmall is returned when provided destination is too small.</span>
+
+</span></div><div class="anchor value-res" id="name-ErrTooLarge">	<input type='checkbox' class="fold" id="ErrTooLarge-fold-content"><label for="ErrTooLarge-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-23">ErrTooLarge</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrTooLarge-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrTooLarge reports that the uncompressed length is too large.</span>
+
+</span></div><div class="anchor value-res" id="name-ErrUnsupported">	<input type='checkbox' class="fold" id="ErrUnsupported-fold-content"><label for="ErrUnsupported-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-25">ErrUnsupported</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrUnsupported-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrUnsupported reports that the input isn't supported.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 5 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 5 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-crcTable"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-113">crcTable</a> *<a href="../../../hash/crc32.html">crc32</a>.<a href="../../../hash/crc32.html#name-Table">Table</a></span></i></div><div class="anchor value-res hidden" id="name-errClosed"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-900">errClosed</a> <a href="../../../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-estblockPool"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-58">estblockPool</a> [2]<a href="../../../sync.html">sync</a>.<a href="../../../sync.html#name-Pool">Pool</a></span></i></div><div class="anchor value-res hidden" id="name-magicChunkBytes"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-115">magicChunkBytes</a> []<a href="../../../builtin.html#name-byte">byte</a> // <span class="md-text">Can be passed to functions where it escapes.</span></span></i></div><div class="anchor value-res hidden" id="name-magicChunkSnappyBytes"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-114">magicChunkSnappyBytes</a> []<a href="../../../builtin.html#name-byte">byte</a> // <span class="md-text">Can be passed to functions where it escapes.</span></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 39, in which 7 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ChunkTypeIndex">	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-107">ChunkTypeIndex</a> = 153</span></div><div class="anchor value-res" id="name-MaxBlockSize">	<input type='checkbox' class="fold" id="MaxBlockSize-fold-content"><label for="MaxBlockSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-378">MaxBlockSize</a> = 4294967285</label><span id='MaxBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		MaxBlockSize is the maximum value where MaxEncodedLen will return a valid block size.
+		Blocks this big are highly discouraged, though.
+		Half the size on 32 bit systems.</span>
+
+</span></div><div class="anchor value-res" id="name-MaxDictSize">	<input type='checkbox' class="fold" id="MaxDictSize-fold-content"><label for="MaxDictSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-18">MaxDictSize</a> = 65536</label><span id='MaxDictSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		MaxDictSize is the maximum dictionary size when repeat has been read.</span>
+
+</span></div><div class="anchor value-res" id="name-MaxDictSrcOffset">	<input type='checkbox' class="fold" id="MaxDictSrcOffset-fold-content"><label for="MaxDictSrcOffset-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-21">MaxDictSrcOffset</a> = 65535</label><span id='MaxDictSrcOffset-fold-content-docs' class="fold-docs">
+<span class="md-text">		MaxDictSrcOffset is the maximum offset where a dictionary entry can start.</span>
+
+</span></div><div class="anchor value-res" id="name-MinDictSize">	<input type='checkbox' class="fold" id="MinDictSize-fold-content"><label for="MinDictSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/dict.go.html#line-15">MinDictSize</a> = 16</label><span id='MinDictSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		MinDictSize is the minimum dictionary size when repeat has been read.</span>
+
+</span></div><div class="anchor value-res" id="name-S2IndexHeader">	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-17">S2IndexHeader</a> = "s2idx\x00"</span></div><div class="anchor value-res" id="name-S2IndexTrailer">	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-18">S2IndexTrailer</a> = "\x00xdi2s"</span></div>	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 32 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 32 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-checksumSize"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-76">checksumSize</a> = 4</span></i></div><div class="anchor value-res hidden" id="name-chunkHeaderSize"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-77">chunkHeaderSize</a> = 4</span></i></div><div class="anchor value-res hidden" id="name-chunkTypeCompressedData"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-105">chunkTypeCompressedData</a> = 0</span></i></div><div class="anchor value-res hidden" id="name-chunkTypePadding"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-108">chunkTypePadding</a> = 254</span></i></div><div class="anchor value-res hidden" id="name-chunkTypeStreamIdentifier"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-109">chunkTypeStreamIdentifier</a> = 255</span></i></div><div class="anchor value-res hidden" id="name-chunkTypeUncompressedData"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-106">chunkTypeUncompressedData</a> = 1</span></i></div><div class="anchor value-res hidden" id="name-decodeErrCodeCorrupt"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/decode.go.html#line-50">decodeErrCodeCorrupt</a> = 1</span></i></div><div class="anchor value-res hidden" id="name-defaultBlockSize"><i>	<input type='checkbox' class="fold" id="defaultBlockSize-fold-content"><label for="defaultBlockSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-96">defaultBlockSize</a> = 1048576</label><span id='defaultBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		Default block size</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-hasAmd64Asm"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/encode_go.go.html#line-11">hasAmd64Asm</a> = false</span></i></div><div class="anchor value-res hidden" id="name-inputMargin"><i>	<input type='checkbox' class="fold" id="inputMargin-fold-content"><label for="inputMargin-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-367">inputMargin</a> = 8</label><span id='inputMargin-fold-content-docs' class="fold-docs">
+<span class="md-text">		inputMargin is the minimum number of extra input bytes to keep, inside
+		encodeBlock's inner loop. On some architectures, this margin lets us
+		implement a fast path for emitLiteral, where the copy of short (&lt;= 16 byte)
+		literals can be implemented as a single load to and store from a 16-byte
+		register. That literal's actual length can be as short as 1 byte, so this
+		can copy up to 15 bytes too much, but that's OK as subsequent iterations of
+		the encoding loop will fix up the copy overrun, and this inputMargin ensures
+		that we don't overrun the dst and src buffers.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-intReduction"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-373">intReduction</a> = 0 // <span class="md-text">1 (32 bits) or 0 (64 bits)</span></span></i></div><div class="anchor value-res hidden" id="name-levelBest"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-24">levelBest</a> = 4</span></i></div><div class="anchor value-res hidden" id="name-levelBetter"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-23">levelBetter</a> = 3</span></i></div><div class="anchor value-res hidden" id="name-levelFast"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-22">levelFast</a> = 2</span></i></div><div class="anchor value-res hidden" id="name-levelUncompressed"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/writer.go.html#line-21">levelUncompressed</a> = 1</span></i></div><div class="anchor value-res hidden" id="name-magicBody"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-81">magicBody</a> = "S2sTwO"</span></i></div><div class="anchor value-res hidden" id="name-magicBodySnappy"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-80">magicBodySnappy</a> = "sNaPpY"</span></i></div><div class="anchor value-res hidden" id="name-magicChunk"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-78">magicChunk</a> = "\xff\x06\x00\x00S2sTwO"</span></i></div><div class="anchor value-res hidden" id="name-magicChunkSnappy"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-79">magicChunkSnappy</a> = "\xff\x06\x00\x00sNaPpY"</span></i></div><div class="anchor value-res hidden" id="name-maxBlockSize"><i>	<input type='checkbox' class="fold" id="maxBlockSize-fold-content"><label for="maxBlockSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-87">maxBlockSize</a> = 4194304</label><span id='maxBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		maxBlockSize is the maximum size of the input to encodeBlock.
+		
+		For the framing format (Writer type instead of Encode function),
+		this is the maximum uncompressed size of a block.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-maxChunkSize"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-93">maxChunkSize</a> = 16777215 // <span class="md-text">16777215</span></span></i></div><div class="anchor value-res hidden" id="name-maxIndexEntries"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-19">maxIndexEntries</a> = 65536</span></i></div><div class="anchor value-res hidden" id="name-maxSnappyBlockSize"><i>	<input type='checkbox' class="fold" id="maxSnappyBlockSize-fold-content"><label for="maxSnappyBlockSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-99">maxSnappyBlockSize</a> = 65536</label><span id='maxSnappyBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		maxSnappyBlockSize is the maximum snappy block size.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-minBlockSize"><i>	<input type='checkbox' class="fold" id="minBlockSize-fold-content"><label for="minBlockSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-90">minBlockSize</a> = 4096</label><span id='minBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		minBlockSize is the minimum size of block setting when creating a writer.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-minIndexDist"><i>	<input type='checkbox' class="fold" id="minIndexDist-fold-content"><label for="minIndexDist-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/index.go.html#line-21">minIndexDist</a> = 1048576</label><span id='minIndexDist-fold-content-docs' class="fold-docs">
+<span class="md-text">		If distance is less than this, we do not add the entry.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-minNonLiteralBlockSize"><i>	<input type='checkbox' class="fold" id="minNonLiteralBlockSize-fold-content"><label for="minNonLiteralBlockSize-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/encode.go.html#line-371">minNonLiteralBlockSize</a> = 32</label><span id='minNonLiteralBlockSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		minNonLiteralBlockSize is the minimum size of the input to encodeBlock that
+		will be accepted by the encoder.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-obufHeaderLen"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-101">obufHeaderLen</a> = 8</span></i></div><div class="anchor value-res hidden" id="name-skippableFrameHeader"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-92">skippableFrameHeader</a> = 4</span></i></div><div class="anchor value-res hidden" id="name-tagCopy1"><i>	<input type='checkbox' class="fold" id="tagCopy1-fold-content"><label for="tagCopy1-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-70">tagCopy1</a> = 1</label><span id='tagCopy1-fold-content-docs' class="fold-docs">
+<span class="md-text">		Each encoded block begins with the varint-encoded length of the decoded data,
+		followed by a sequence of chunks. Chunks begin and end on byte boundaries. The
+		first byte of each chunk is broken into its 2 least and 6 most significant bits
+		called l and m: l ranges in [0, 4) and m ranges in [0, 64). l is the chunk tag.
+		Zero means a literal tag. All other values mean a copy tag.
+		
+		For literal tags:
+		  - If m &lt; 60, the next 1 + m bytes are literal bytes.
+		  - Otherwise, let n be the little-endian unsigned integer denoted by the next
+		    m - 59 bytes. The next 1 + n bytes after that are literal bytes.
+		
+		For copy tags, length bytes are copied from offset bytes ago, in the style of
+		Lempel-Ziv compression algorithms. In particular:
+		  - For l == 1, the offset ranges in [0, 1&lt;&lt;11) and the length in [4, 12).
+		    The length is 4 + the low 3 bits of m. The high 3 bits of m form bits 8-10
+		    of the offset. The next byte is bits 0-7 of the offset.
+		  - For l == 2, the offset ranges in [0, 1&lt;&lt;16) and the length in [1, 65).
+		    The length is 1 + m. The offset is the little-endian unsigned integer
+		    denoted by the next 2 bytes.
+		  - For l == 3, the offset ranges in [0, 1&lt;&lt;32) and the length in
+		    [1, 65). The length is 1 + m. The offset is the little-endian unsigned
+		    integer denoted by the next 4 bytes.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-tagCopy2"><i>	<input type='checkbox' class="fold" id="tagCopy2-fold-content"><label for="tagCopy2-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-71">tagCopy2</a> = 2</label><span id='tagCopy2-fold-content-docs' class="fold-docs">
+<span class="md-text">		Each encoded block begins with the varint-encoded length of the decoded data,
+		followed by a sequence of chunks. Chunks begin and end on byte boundaries. The
+		first byte of each chunk is broken into its 2 least and 6 most significant bits
+		called l and m: l ranges in [0, 4) and m ranges in [0, 64). l is the chunk tag.
+		Zero means a literal tag. All other values mean a copy tag.
+		
+		For literal tags:
+		  - If m &lt; 60, the next 1 + m bytes are literal bytes.
+		  - Otherwise, let n be the little-endian unsigned integer denoted by the next
+		    m - 59 bytes. The next 1 + n bytes after that are literal bytes.
+		
+		For copy tags, length bytes are copied from offset bytes ago, in the style of
+		Lempel-Ziv compression algorithms. In particular:
+		  - For l == 1, the offset ranges in [0, 1&lt;&lt;11) and the length in [4, 12).
+		    The length is 4 + the low 3 bits of m. The high 3 bits of m form bits 8-10
+		    of the offset. The next byte is bits 0-7 of the offset.
+		  - For l == 2, the offset ranges in [0, 1&lt;&lt;16) and the length in [1, 65).
+		    The length is 1 + m. The offset is the little-endian unsigned integer
+		    denoted by the next 2 bytes.
+		  - For l == 3, the offset ranges in [0, 1&lt;&lt;32) and the length in
+		    [1, 65). The length is 1 + m. The offset is the little-endian unsigned
+		    integer denoted by the next 4 bytes.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-tagCopy4"><i>	<input type='checkbox' class="fold" id="tagCopy4-fold-content"><label for="tagCopy4-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-72">tagCopy4</a> = 3</label><span id='tagCopy4-fold-content-docs' class="fold-docs">
+<span class="md-text">		Each encoded block begins with the varint-encoded length of the decoded data,
+		followed by a sequence of chunks. Chunks begin and end on byte boundaries. The
+		first byte of each chunk is broken into its 2 least and 6 most significant bits
+		called l and m: l ranges in [0, 4) and m ranges in [0, 64). l is the chunk tag.
+		Zero means a literal tag. All other values mean a copy tag.
+		
+		For literal tags:
+		  - If m &lt; 60, the next 1 + m bytes are literal bytes.
+		  - Otherwise, let n be the little-endian unsigned integer denoted by the next
+		    m - 59 bytes. The next 1 + n bytes after that are literal bytes.
+		
+		For copy tags, length bytes are copied from offset bytes ago, in the style of
+		Lempel-Ziv compression algorithms. In particular:
+		  - For l == 1, the offset ranges in [0, 1&lt;&lt;11) and the length in [4, 12).
+		    The length is 4 + the low 3 bits of m. The high 3 bits of m form bits 8-10
+		    of the offset. The next byte is bits 0-7 of the offset.
+		  - For l == 2, the offset ranges in [0, 1&lt;&lt;16) and the length in [1, 65).
+		    The length is 1 + m. The offset is the little-endian unsigned integer
+		    denoted by the next 2 bytes.
+		  - For l == 3, the offset ranges in [0, 1&lt;&lt;32) and the length in
+		    [1, 65). The length is 1 + m. The offset is the little-endian unsigned
+		    integer denoted by the next 4 bytes.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-tagLiteral"><i>	<input type='checkbox' class="fold" id="tagLiteral-fold-content"><label for="tagLiteral-fold-content">const <a href="../../../../src/github.com/klauspost/compress/s2/s2.go.html#line-69">tagLiteral</a> = 0</label><span id='tagLiteral-fold-content-docs' class="fold-docs">
+<span class="md-text">		Each encoded block begins with the varint-encoded length of the decoded data,
+		followed by a sequence of chunks. Chunks begin and end on byte boundaries. The
+		first byte of each chunk is broken into its 2 least and 6 most significant bits
+		called l and m: l ranges in [0, 4) and m ranges in [0, 64). l is the chunk tag.
+		Zero means a literal tag. All other values mean a copy tag.
+		
+		For literal tags:
+		  - If m &lt; 60, the next 1 + m bytes are literal bytes.
+		  - Otherwise, let n be the little-endian unsigned integer denoted by the next
+		    m - 59 bytes. The next 1 + n bytes after that are literal bytes.
+		
+		For copy tags, length bytes are copied from offset bytes ago, in the style of
+		Lempel-Ziv compression algorithms. In particular:
+		  - For l == 1, the offset ranges in [0, 1&lt;&lt;11) and the length in [4, 12).
+		    The length is 4 + the low 3 bits of m. The high 3 bits of m form bits 8-10
+		    of the offset. The next byte is bits 0-7 of the offset.
+		  - For l == 2, the offset ranges in [0, 1&lt;&lt;16) and the length in [1, 65).
+		    The length is 1 + m. The offset is the little-endian unsigned integer
+		    denoted by the next 2 bytes.
+		  - For l == 3, the offset ranges in [0, 1&lt;&lt;32) and the length in
+		    [1, 65). The length is 1 + m. The offset is the little-endian unsigned
+		    integer denoted by the next 4 bytes.</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

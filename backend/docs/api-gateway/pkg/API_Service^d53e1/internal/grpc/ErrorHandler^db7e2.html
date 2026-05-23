@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: API_Service/internal/grpc/ErrorHandler</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>errorhandler</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-API_Service/internal/grpc/ErrorHandler">API_Service/internal/grpc/ErrorHandler</a><i> (on <a href="https://pkg.go.dev/API_Service/internal/grpc/ErrorHandler" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2.html">4 packages</a>, and imported by <a href="../../../../dep/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#doc">d</a> <a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html">errorHandler.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package errorhandler provides custom error handling for the gRPC-gateway.
+		It converts gRPC status errors into structured HTTP error responses.</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-ErrorHanlder" data-popularity="125">	<input type='checkbox' class="fold" id="ErrorHanlder-fold-content"><label for="ErrorHanlder-fold-content"> type <a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-14">ErrorHanlder</a> <i>(struct)</i></label><span id='ErrorHanlder-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrorHanlder formats gRPC errors as structured HTTP responses for the gateway.</span>
+
+		<input type='checkbox' class="fold" id="ErrorHanlder-fold-fields"><label for="ErrorHanlder-fold-fields">Fields (<i>total 5, none are exported</i>)</label><span id='ErrorHanlder-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="ErrorHanlder-showhide-fields"><i><label for="ErrorHanlder-showhide-fields" class="show-inline">/* 5 unexporteds ... */</label><label for="ErrorHanlder-showhide-fields" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-19">err</a> <i><a href="../../../builtin.html#name-error">error</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-16">marshaler</a> <i><a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Marshaler">Marshaler</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-15">mux</a> <i>*<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ServeMux">ServeMux</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-18">r</a> <i>*<a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-Request">Request</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-17">w</a> <i><a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-ResponseWriter">ResponseWriter</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="ErrorHanlder-fold-methods"><label for="ErrorHanlder-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='ErrorHanlder-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="ErrorHanlder-fold-method-Handle"><label for="ErrorHanlder-fold-method-Handle">(*ErrorHanlder) <a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-47">Handle</a>(ctx <a href="../../../context.html">context</a>.<a href="../../../context.html#name-Context">Context</a>)</label><span id='ErrorHanlder-fold-method-Handle-docs' class="fold-docs">
+<span class="md-text">				Handle processes the error and writes a structured JSON error response.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="ErrorHanlder-fold-results"><label for="ErrorHanlder-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='ErrorHanlder-fold-results-items' class="fold-items"><span>
+			func <a href="#name-New">New</a>(mux *<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ServeMux">ServeMux</a>, marshaler <a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Marshaler">Marshaler</a>, w <a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-ResponseWriter">ResponseWriter</a>, r *<a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-Request">Request</a>, err <a href="../../../builtin.html#name-error">error</a>) *<b>ErrorHanlder</b></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 2, both are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-CallHanlder">	<input type='checkbox' class="fold" id="CallHanlder-fold-content"><label for="CallHanlder-fold-content"> func <a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-34">CallHanlder</a>(ctx <a href="../../../context.html">context</a>.<a href="../../../context.html#name-Context">Context</a>, mux *<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ServeMux">ServeMux</a>, marshaler <a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Marshaler">Marshaler</a>, w <a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-ResponseWriter">ResponseWriter</a>, r *<a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-Request">Request</a>, err <a href="../../../builtin.html#name-error">error</a>)</label><span id='CallHanlder-fold-content-docs' class="fold-docs">
+<span class="md-text">		CallHanlder is a convenience function that creates an ErrorHanlder and calls Handle.</span>
+
+</span></div><div class="anchor value-res" id="name-New">	<input type='checkbox' class="fold" id="New-fold-content"><label for="New-fold-content"> func <a href="../../../../src/API_Service^d53e1/internal/grpc/ErrorHandler^db7e2/errorHandler.go^1da7f.html#line-23">New</a>(mux *<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ServeMux">ServeMux</a>, marshaler <a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">runtime</a>.<a href="../../../github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Marshaler">Marshaler</a>, w <a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-ResponseWriter">ResponseWriter</a>, r *<a href="../../../net/http.html">http</a>.<a href="../../../net/http.html#name-Request">Request</a>, err <a href="../../../builtin.html#name-error">error</a>) *<a href="#name-ErrorHanlder">ErrorHanlder</a></label><span id='New-fold-content-docs' class="fold-docs">
+<span class="md-text">		New creates a new ErrorHanlder instance with the given parameters.</span>
+
+</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

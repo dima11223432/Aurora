@@ -1,3 +1,5 @@
+// Package grpc sets up the gRPC server for the API Gateway, including
+// authentication interceptor and connections to SSO and Recommendation services.
 package grpc
 
 import (
@@ -21,12 +23,15 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+// App represents the gRPC server application with its dependencies.
 type App struct {
 	log  *slog.Logger
 	gRPC *grpc.Server
 	port int
 }
 
+// New creates a new gRPC App, initializing the gRPC server with auth interceptor,
+// and establishing connections to SSO and Recommendation services.
 func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string, ssoConfig config.ServiceConfig, recsConfig config.ServiceConfig) *App {
 	authInterceptor := authinterceptor.NewAuthInterceptor(authinterceptor.AuthConfig{JwtSecret: jwtSecret, PublicRoutes: publicRoutes})
 
@@ -67,6 +72,7 @@ func New(port int, logger *slog.Logger, jwtSecret string, publicRoutes []string,
 	}
 }
 
+// MustRun starts the gRPC server and panics on error.
 func (a *App) MustRun() {
 	a.log.Info("Starting gRPC server", slog.Int("port", a.port))
 	if err := a.Run(); err != nil {
@@ -74,6 +80,7 @@ func (a *App) MustRun() {
 	}
 }
 
+// Run starts the gRPC server on the configured port.
 func (a *App) Run() error {
 	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
@@ -92,6 +99,7 @@ func (a *App) Run() error {
 	return nil
 }
 
+// Close gracefully stops the gRPC server.
 func (a *App) Close() {
 	a.log.Info("Shutting down gRPC server...")
 	a.gRPC.GracefulStop()

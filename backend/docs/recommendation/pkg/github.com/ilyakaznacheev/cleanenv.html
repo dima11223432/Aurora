@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/ilyakaznacheev/cleanenv</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>cleanenv</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../index.html#pkg-github.com/ilyakaznacheev/cleanenv">github.com/ilyakaznacheev/cleanenv</a><i> (on <a href="https://pkg.go.dev/github.com/ilyakaznacheev/cleanenv" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../dep/github.com/ilyakaznacheev/cleanenv.html">17 packages</a>, and imported by <a href="../../../dep/github.com/ilyakaznacheev/cleanenv.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html">cleanenv.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-1-fold-content"><label for="file-1-fold-content">  <a href="../../../src/github.com/ilyakaznacheev/cleanenv/docs.go.html#doc">d</a> <a href="../../../src/github.com/ilyakaznacheev/cleanenv/docs.go.html">docs.go</a></label><span id='file-1-fold-content-items' class="fold-items">
+<span class="md-text">		Package cleanenv gives you a single tool to read application configuration from several sources with ease.
+		
+		Features
+		
+		- read from several file formats (YAML, JSON, TOML, ENV, EDN) and parse into the internal structure;
+		
+		- read environment variables into the internal structure;
+		
+		- output environment variable list with descriptions into help output;
+		
+		- custom variable readers (e.g. if you want to read from remote config server, etc).
+		
+		Usage
+		
+		You can just prepare the config structure and fill it from the config file and environment variables.
+		
+			type Config struct {
+				Port string `yaml:"port" env:"PORT" env-default:"8080"`
+				Host string `yaml:"host" env:"HOST" env-default:"localhost"`
+			}
+		
+			var cfg Config
+		
+			ReadConfig("config.yml", &amp;cfg)
+		
+		Help output
+		
+		You can list all of your environment variables by means of help output:
+		
+			type ConfigServer struct {
+				Port     string `env:"PORT" env-description:"server port"`
+				Host     string `env:"HOST" env-description:"server host"`
+			}
+		
+			var cfg ConfigRemote
+		
+			help, err := cleanenv.GetDescription(&amp;cfg, nil)
+			if err != nil {
+				...
+			}
+		
+			// setup help output
+			f := flag.NewFlagSet("Example app", 1)
+			fu := f.Usage
+			f.Usage = func() {
+				fu()
+				envHelp, _ := cleanenv.GetDescription(&amp;cfg, nil)
+				fmt.Fprintln(f.Output())
+				fmt.Fprintln(f.Output(), envHelp)
+			}
+		
+			f.Parse(os.Args[1:])
+		
+		Then run go run main.go -h and the output will include:
+		
+			Environment variables:
+				PORT  server port
+				HOST  server host
+		
+		For more detailed information check examples and example tests.</span></span></div>
+<div id="examples"><span class="title">Code Examples</span>
+
+	<input type='checkbox' class="fold" id="example-0-fold-content"><label for="example-0-fold-content">GetDescription</label><span id='example-0-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				One   int64   `env:"ONE" env-description:"first parameter"`
+				Two   float64 `env:"TWO" env-description:"second parameter"`
+				Three string  `env:"THREE" env-description:"third parameter"`
+			}
+		
+			var cfg config
+		
+			text, err := cleanenv.GetDescription(&amp;cfg, nil)
+			if err != nil {
+				panic(err)
+			}
+		
+			fmt.Println(text)
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-1-fold-content"><label for="example-1-fold-content">GetDescription_customHeaderText</label><span id='example-1-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				One   int64   `env:"ONE" env-description:"first parameter"`
+				Two   float64 `env:"TWO" env-description:"second parameter"`
+				Three string  `env:"THREE" env-description:"third parameter"`
+			}
+		
+			var cfg config
+		
+			header := "Custom header text:"
+		
+			text, err := cleanenv.GetDescription(&amp;cfg, &amp;header)
+			if err != nil {
+				panic(err)
+			}
+		
+			fmt.Println(text)
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-2-fold-content"><label for="example-2-fold-content">GetDescription_defaults</label><span id='example-2-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				One   int64   `env:"ONE" env-description:"first parameter" env-default:"1"`
+				Two   float64 `env:"TWO" env-description:"second parameter" env-default:"2.2"`
+				Three string  `env:"THREE" env-description:"third parameter" env-default:"test"`
+			}
+		
+			var cfg config
+		
+			text, err := cleanenv.GetDescription(&amp;cfg, nil)
+			if err != nil {
+				panic(err)
+			}
+		
+			fmt.Println(text)
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-3-fold-content"><label for="example-3-fold-content">GetDescription_variableList</label><span id='example-3-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				FirstVar int64 `env:"ONE,TWO,THREE" env-description:"first found parameter"`
+			}
+		
+			var cfg config
+		
+			text, err := cleanenv.GetDescription(&amp;cfg, nil)
+			if err != nil {
+				panic(err)
+			}
+		
+			fmt.Println(text)
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-4-fold-content"><label for="example-4-fold-content">ReadEnv</label><span id='example-4-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"os"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				Port     string `env:"PORT" env-default:"5432"`
+				Host     string `env:"HOST" env-default:"localhost"`
+				Name     string `env:"NAME" env-default:"postgres"`
+				User     string `env:"USER" env-default:"user"`
+				Password string `env:"PASSWORD"`
+			}
+		
+			var cfg config
+		
+			os.Setenv("PORT", "5050")
+			os.Setenv("NAME", "redis")
+			os.Setenv("USER", "tester")
+			os.Setenv("PASSWORD", "*****")
+		
+			cleanenv.ReadEnv(&amp;cfg)
+			fmt.Printf("%+v\n", cfg)
+		
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-5-fold-content"><label for="example-5-fold-content">ReadEnvWithURL</label><span id='example-5-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"net/url"
+			"os"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				ImageCDN url.URL `env:"IMAGE_CDN"`
+			}
+		
+			var cfg config
+		
+			os.Setenv("IMAGE_CDN", "https://images.cdn/")
+		
+			cleanenv.ReadEnv(&amp;cfg)
+			fmt.Printf("%+v\n", cfg.ImageCDN.String())
+		
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-6-fold-content"><label for="example-6-fold-content">UpdateEnv</label><span id='example-6-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"os"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			type config struct {
+				One int64 `env:"ONE"`
+				Two int64 `env:"TWO" env-upd:""`
+			}
+		
+			var cfg config
+		
+			// set environment variables
+			os.Setenv("ONE", "1")
+			os.Setenv("TWO", "2")
+		
+			// read environment variables into the structure
+			cleanenv.ReadEnv(&amp;cfg)
+			fmt.Printf("%+v\n", cfg)
+		
+			// update environment variables
+			os.Setenv("ONE", "11")
+			os.Setenv("TWO", "22")
+		
+			// update only updatable environment variables in the structure
+			cleanenv.UpdateEnv(&amp;cfg)
+			fmt.Printf("%+v\n", cfg)
+		
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-7-fold-content"><label for="example-7-fold-content">Usage</label><span id='example-7-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"flag"
+			"os"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		func main() {
+			os.Stderr = os.Stdout //replace STDERR with STDOUT for test
+		
+			type config struct {
+				One   int64   `env:"ONE" env-description:"first parameter"`
+				Two   float64 `env:"TWO" env-description:"second parameter"`
+				Three string  `env:"THREE" env-description:"third parameter"`
+			}
+		
+			// setup flags
+			fset := flag.NewFlagSet("Example", flag.ContinueOnError)
+		
+			fset.String("p", "8080", "service port")
+			fset.String("h", "localhost", "service host")
+		
+			var cfg config
+			customHeader := "My sweet variables:"
+		
+			// get config usage with wrapped flag usage and custom header string
+			u := cleanenv.Usage(&amp;cfg, &amp;customHeader, fset.Usage)
+		
+			// print usage to STDERR
+			u()
+		
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-8-fold-content"><label for="example-8-fold-content">_setter</label><span id='example-8-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"os"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		// MyField1 is an example type with a custom setter
+		type MyField1 string
+		
+		func (f *MyField1) SetValue(s string) error {
+			if s == "" {
+				return fmt.Errorf("field value can't be empty")
+			}
+			*f = MyField1("my field is: " + s)
+			return nil
+		}
+		
+		func (f MyField1) String() string {
+			return string(f)
+		}
+		
+		// MyField2 is an example type with encoding.TextUnmarshaler implementation.
+		type MyField2 string
+		
+		func (f *MyField2) UnmarshalText(p []byte) error {
+			if len(p) == 0 {
+				return fmt.Errorf("field value can't be empty")
+			}
+			*f = MyField2("my field is: " + string(p))
+			return nil
+		}
+		
+		func main() {
+			type config struct {
+				Default string   `env:"ONE"`
+				Custom1 MyField1 `env:"TWO"`
+				Custom2 MyField2 `env:"THREE"`
+			}
+		
+			var cfg config
+		
+			os.Setenv("ONE", "test1")
+			os.Setenv("TWO", "test2")
+			os.Setenv("THREE", "test3")
+		
+			cleanenv.ReadEnv(&amp;cfg)
+			fmt.Printf("%+v\n", cfg)
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-9-fold-content"><label for="example-9-fold-content">_updater</label><span id='example-9-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"os"
+		
+			"github.com/ilyakaznacheev/cleanenv"
+		)
+		
+		// ConfigUpdate is a type with a custom updater
+		type ConfigUpdate struct {
+			Default string `env:"DEFAULT"`
+			Custom  string
+		}
+		
+		func (c *ConfigUpdate) Update() error {
+			c.Custom = "custom"
+			return nil
+		}
+		
+		func main() {
+			var cfg ConfigUpdate
+		
+			os.Setenv("DEFAULT", "default")
+		
+			cleanenv.ReadEnv(&amp;cfg)
+			fmt.Printf("%+v\n", cfg)
+		}
+</span>
+</div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 4, in which 2 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Setter" data-popularity="50">	<input type='checkbox' class="fold" id="Setter-fold-content"><label for="Setter-fold-content"> type <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-69">Setter</a> <b><i>(interface)</i></b></label><span id='Setter-fold-content-docs' class="fold-docs">
+<span class="md-text">		Setter is an interface for a custom value setter.
+		
+		To implement a custom value setter you need to add a SetValue function to your type that will receive a string raw value:
+		
+			type MyField string
+		
+			func (f *MyField) SetValue(s string) error {
+				if s == "" {
+					return fmt.Errorf("field value can't be empty")
+				}
+				*f = MyField("my field is: " + s)
+				return nil
+			}</span>
+
+		<input type='checkbox' class="fold" id="Setter-fold-methods"><label for="Setter-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='Setter-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( Setter) <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-70">SetValue</a>(<a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-error">error</a></span></span></span>
+
+</span></div><div class="anchor type-res" id="name-Updater" data-popularity="50">	<input type='checkbox' class="fold" id="Updater-fold-content"><label for="Updater-fold-content"> type <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-74">Updater</a> <b><i>(interface)</i></b></label><span id='Updater-fold-content-docs' class="fold-docs">
+<span class="md-text">		Updater gives an ability to implement custom update function for a field or a whole structure</span>
+
+		<input type='checkbox' class="fold" id="Updater-fold-methods"><label for="Updater-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='Updater-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( Updater) <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-75">Update</a>() <a href="../../builtin.html#name-error">error</a></span></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-parseFunc" data-popularity="0">	<input type='checkbox' class="fold" id="parseFunc-fold-content"><label for="parseFunc-fold-content"> type <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-260">parseFunc</a> <i>(func)</i></label><span id='parseFunc-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseFunc custom value parser function</span>
+
+</span></div><div class="anchor type-res hidden" id="name-structMeta" data-popularity="125">	<input type='checkbox' class="fold" id="structMeta-fold-content"><label for="structMeta-fold-content"> type <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-242">structMeta</a> <i>(struct)</i></label><span id='structMeta-fold-content-docs' class="fold-docs">
+<span class="md-text">		structMeta is a structure metadata entity</span>
+
+		<input type='checkbox' class="fold" id="structMeta-fold-fields"><label for="structMeta-fold-fields">Fields (<i>total 9, none are exported</i>)</label><span id='structMeta-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="structMeta-showhide-fields"><i><label for="structMeta-showhide-fields" class="show-inline">/* 9 unexporteds ... */</label><label for="structMeta-showhide-fields" class="hide-inline">/* 9 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-246">defValue</a> <i>*<a href="../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-249">description</a> <i><a href="../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-243">envList</a> <i>[]<a href="../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-244">fieldName</a> <i><a href="../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-245">fieldValue</a> <i><a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Value">Value</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-247">layout</a> <i>*<a href="../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-251">required</a> <i><a href="../../builtin.html#name-bool">bool</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-248">separator</a> <i><a href="../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-250">updatable</a> <i><a href="../../builtin.html#name-bool">bool</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="structMeta-fold-methods"><label for="structMeta-fold-methods">Methods (<i>only one, which is unexported</i>)</label><span id='structMeta-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="structMeta-showhide-methods"><i><label for="structMeta-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="structMeta-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="structMeta-fold-method-isFieldValueZero"><label for="structMeta-fold-method-isFieldValueZero">(*structMeta) <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-255">isFieldValueZero</a>() <a href="../../builtin.html#name-bool">bool</a></label><span id='structMeta-fold-method-isFieldValueZero-docs' class="fold-docs">
+<span class="md-text">				isFieldValueZero determines if fieldValue empty or not</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="structMeta-fold-results"><label for="structMeta-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='structMeta-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="structMeta-showhide-inputofs"><i><label for="structMeta-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="structMeta-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-readStructMetadata">readStructMetadata</a>(cfgRoot interface{}) ([]<b>structMeta</b>, <a href="../../builtin.html#name-error">error</a>)</i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 17, in which 9 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-FUsage">	<input type='checkbox' class="fold" id="FUsage-fold-content"><label for="FUsage-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-622">FUsage</a>(w <a href="../../io.html">io</a>.<a href="../../io.html#name-Writer">Writer</a>, cfg interface{}, headerText *<a href="../../builtin.html#name-string">string</a>, usageFuncs ...func()) func()</label><span id='FUsage-fold-content-docs' class="fold-docs">
+<span class="md-text">		FUsage prints configuration help into the custom output.
+		Other usage instructions can be wrapped in and executed before this usage function</span>
+
+</span></div><div class="anchor value-res" id="name-GetDescription">	<input type='checkbox' class="fold" id="GetDescription-fold-content"><label for="GetDescription-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-569">GetDescription</a>(cfg interface{}, headerText *<a href="../../builtin.html#name-string">string</a>) (<a href="../../builtin.html#name-string">string</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='GetDescription-fold-content-docs' class="fold-docs">
+<span class="md-text">		GetDescription returns a description of environment variables.
+		You can provide a custom header text.</span>
+
+</span></div><div class="anchor value-res" id="name-ParseJSON">	<input type='checkbox' class="fold" id="ParseJSON-fold-content"><label for="ParseJSON-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-164">ParseJSON</a>(r <a href="../../io.html">io</a>.<a href="../../io.html#name-Reader">Reader</a>, str interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='ParseJSON-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseJSON parses JSON from reader to data structure</span>
+
+</span></div><div class="anchor value-res" id="name-ParseTOML">	<input type='checkbox' class="fold" id="ParseTOML-fold-content"><label for="ParseTOML-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-169">ParseTOML</a>(r <a href="../../io.html">io</a>.<a href="../../io.html#name-Reader">Reader</a>, str interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='ParseTOML-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseTOML parses TOML from reader to data structure</span>
+
+</span></div><div class="anchor value-res" id="name-ParseYAML">	<input type='checkbox' class="fold" id="ParseYAML-fold-content"><label for="ParseYAML-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-159">ParseYAML</a>(r <a href="../../io.html">io</a>.<a href="../../io.html#name-Reader">Reader</a>, str interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='ParseYAML-fold-content-docs' class="fold-docs">
+<span class="md-text">		ParseYAML parses YAML from reader to data structure</span>
+
+</span></div><div class="anchor value-res" id="name-ReadConfig">	<input type='checkbox' class="fold" id="ReadConfig-fold-content"><label for="ReadConfig-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-97">ReadConfig</a>(path <a href="../../builtin.html#name-string">string</a>, cfg interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='ReadConfig-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReadConfig reads configuration file and parses it depending on tags in structure provided.
+		Then it reads and parses
+		
+		Example:
+		
+			type ConfigDatabase struct {
+				Port     string `yaml:"port" env:"PORT" env-default:"5432"`
+				Host     string `yaml:"host" env:"HOST" env-default:"localhost"`
+				Name     string `yaml:"name" env:"NAME" env-default:"postgres"`
+				User     string `yaml:"user" env:"USER" env-default:"user"`
+				Password string `yaml:"password" env:"PASSWORD"`
+			}
+		
+			var cfg ConfigDatabase
+		
+			err := cleanenv.ReadConfig("config.yml", &amp;cfg)
+			if err != nil {
+			    ...
+			}</span>
+
+</span></div><div class="anchor value-res" id="name-ReadEnv">	<input type='checkbox' class="fold" id="ReadEnv-fold-content"><label for="ReadEnv-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-107">ReadEnv</a>(cfg interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='ReadEnv-fold-content-docs' class="fold-docs">
+<span class="md-text">		ReadEnv reads environment variables into the structure.</span>
+
+</span></div><div class="anchor value-res" id="name-UpdateEnv">	<input type='checkbox' class="fold" id="UpdateEnv-fold-content"><label for="UpdateEnv-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-112">UpdateEnv</a>(cfg interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='UpdateEnv-fold-content-docs' class="fold-docs">
+<span class="md-text">		UpdateEnv rereads (updates) environment variables in the structure.</span>
+
+</span></div><div class="anchor value-res" id="name-Usage">	<input type='checkbox' class="fold" id="Usage-fold-content"><label for="Usage-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-616">Usage</a>(cfg interface{}, headerText *<a href="../../builtin.html#name-string">string</a>, usageFuncs ...func()) func()</label><span id='Usage-fold-content-docs' class="fold-docs">
+<span class="md-text">		Usage returns a configuration usage help.
+		Other usage instructions can be wrapped in and executed before this usage function.
+		The default output is STDERR.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 8 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 8 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-parseEDN"><i>	<input type='checkbox' class="fold" id="parseEDN-fold-content"><label for="parseEDN-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-175">parseEDN</a>(r <a href="../../io.html">io</a>.<a href="../../io.html#name-Reader">Reader</a>, str interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='parseEDN-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseEDN parses EDN from reader to data structure</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseENV"><i>	<input type='checkbox' class="fold" id="parseENV-fold-content"><label for="parseENV-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-182">parseENV</a>(r <a href="../../io.html">io</a>.<a href="../../io.html#name-Reader">Reader</a>, _ interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='parseENV-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseENV, in fact, doesn't fill the structure with environment variable values.
+		It just parses ENV file and sets all variables to the environment.
+		Thus, the structure should be filled at the next steps.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseFile"><i>	<input type='checkbox' class="fold" id="parseFile-fold-content"><label for="parseFile-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-129">parseFile</a>(path <a href="../../builtin.html#name-string">string</a>, cfg interface{}) <a href="../../builtin.html#name-error">error</a></label><span id='parseFile-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseFile parses configuration file according to it's extension
+		
+		Currently following file extensions are supported:
+		
+		- yaml
+		
+		- json
+		
+		- toml
+		
+		- env
+		
+		- edn</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseMap"><i>	<input type='checkbox' class="fold" id="parseMap-fold-content"><label for="parseMap-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-216">parseMap</a>(valueType <a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Type">Type</a>, value <a href="../../builtin.html#name-string">string</a>, sep <a href="../../builtin.html#name-string">string</a>, layout *<a href="../../builtin.html#name-string">string</a>) (*<a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Value">Value</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='parseMap-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseMap parses value into a map of given type</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseSlice"><i>	<input type='checkbox' class="fold" id="parseSlice-fold-content"><label for="parseSlice-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-198">parseSlice</a>(valueType <a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Type">Type</a>, value <a href="../../builtin.html#name-string">string</a>, sep <a href="../../builtin.html#name-string">string</a>, layout *<a href="../../builtin.html#name-string">string</a>) (*<a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Value">Value</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='parseSlice-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseSlice parses value into a slice of given type</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseValue"><i>	<input type='checkbox' class="fold" id="parseValue-fold-content"><label for="parseValue-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-461">parseValue</a>(field <a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Value">Value</a>, value, sep <a href="../../builtin.html#name-string">string</a>, layout *<a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-error">error</a></label><span id='parseValue-fold-content-docs' class="fold-docs">
+<span class="md-text">		parseValue parses value into the corresponding field.
+		In case of maps and slices it uses provided separator to split raw value string</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-readEnvVars"><i>	<input type='checkbox' class="fold" id="readEnvVars-fold-content"><label for="readEnvVars-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-404">readEnvVars</a>(cfg interface{}, update <a href="../../builtin.html#name-bool">bool</a>) <a href="../../builtin.html#name-error">error</a></label><span id='readEnvVars-fold-content-docs' class="fold-docs">
+<span class="md-text">		readEnvVars reads environment variables to the provided configuration structure</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-readStructMetadata"><i>	<input type='checkbox' class="fold" id="readStructMetadata-fold-content"><label for="readStructMetadata-fold-content"> func <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-301">readStructMetadata</a>(cfgRoot interface{}) ([]<a href="#name-structMeta">structMeta</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='readStructMetadata-fold-content-docs' class="fold-docs">
+<span class="md-text">		readStructMetadata reads structure metadata (types, tags, etc.)</span>
+
+</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (only one, which is unexported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-validStructs"><i>	<input type='checkbox' class="fold" id="validStructs-fold-content"><label for="validStructs-fold-content">  var <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-263">validStructs</a> map[<a href="../../reflect.html">reflect</a>.<a href="../../reflect.html#name-Type">Type</a>]<a href="#name-parseFunc">parseFunc</a></label><span id='validStructs-fold-content-docs' class="fold-docs">
+<span class="md-text">		Any specific supported struct can be added here</span>
+
+</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 9, all are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-DefaultSeparator">	<input type='checkbox' class="fold" id="DefaultSeparator-fold-content"><label for="DefaultSeparator-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-26">DefaultSeparator</a> = ","</label><span id='DefaultSeparator-fold-content-docs' class="fold-docs">
+<span class="md-text">		DefaultSeparator is a default list and map separator character</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnv">	<input type='checkbox' class="fold" id="TagEnv-fold-content"><label for="TagEnv-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-32">TagEnv</a> = "env"</label><span id='TagEnv-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnv name of the environment variable or a list of names</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvDefault">	<input type='checkbox' class="fold" id="TagEnvDefault-fold-content"><label for="TagEnvDefault-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-38">TagEnvDefault</a> = "env-default"</label><span id='TagEnvDefault-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvDefault default value</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvDescription">	<input type='checkbox' class="fold" id="TagEnvDescription-fold-content"><label for="TagEnvDescription-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-44">TagEnvDescription</a> = "env-description"</label><span id='TagEnvDescription-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvDescription environment variable description</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvLayout">	<input type='checkbox' class="fold" id="TagEnvLayout-fold-content"><label for="TagEnvLayout-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-35">TagEnvLayout</a> = "env-layout"</label><span id='TagEnvLayout-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvLayout value parsing layout (for types like time.Time)</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvPrefix">	<input type='checkbox' class="fold" id="TagEnvPrefix-fold-content"><label for="TagEnvPrefix-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-53">TagEnvPrefix</a> = "env-prefix"</label><span id='TagEnvPrefix-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvPrefix аlag to specify prefix for structure fields</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvRequired">	<input type='checkbox' class="fold" id="TagEnvRequired-fold-content"><label for="TagEnvRequired-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-50">TagEnvRequired</a> = "env-required"</label><span id='TagEnvRequired-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvRequired flag to mark a field as required</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvSeparator">	<input type='checkbox' class="fold" id="TagEnvSeparator-fold-content"><label for="TagEnvSeparator-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-41">TagEnvSeparator</a> = "env-separator"</label><span id='TagEnvSeparator-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvSeparator custom list and map separator</span>
+
+</span></div><div class="anchor value-res" id="name-TagEnvUpd">	<input type='checkbox' class="fold" id="TagEnvUpd-fold-content"><label for="TagEnvUpd-fold-content">const <a href="../../../src/github.com/ilyakaznacheev/cleanenv/cleanenv.go.html#line-47">TagEnvUpd</a> = "env-upd"</label><span id='TagEnvUpd-fold-content-docs' class="fold-docs">
+<span class="md-text">		TagEnvUpd flag to mark a field as updatable</span>
+
+</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,3 +1,5 @@
+// Package redis implements Redis-backed storage for the Cache Service,
+// handling analysed data storage with sorted-set indexing by channel and timestamp.
 package redis
 
 import (
@@ -13,11 +15,13 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+// RedisController manages Redis operations for storing and retrieving analysed data.
 type RedisController struct {
 	redis      *redis.Client
 	DefaultTTl time.Duration
 }
 
+// NewRedisController creates a new RedisController with the given connection config.
 func NewRedisController(addr string, password string, db int, protocol int, ttl time.Duration) *RedisController {
 	return &RedisController{
 		redis: redis.NewClient(&redis.Options{
@@ -30,6 +34,8 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
 	}
 }
 
+// SetCard stores analysed data in Redis as a JSON string and indexes it
+// in sorted sets by timestamp and channel username.
 func (r *RedisController) SetCard(ctx context.Context, value models.AnalysedData) error {
 	const op = "Cache_Service.internal.storage.redis.SetCard"
 	id := uuid.NewString()
@@ -65,6 +71,7 @@ func (r *RedisController) SetCard(ctx context.Context, value models.AnalysedData
 	return nil
 }
 
+// SetValue stores a JSON-serialized value in Redis with optional TTL.
 func (r *RedisController) SetValue(ctx context.Context, key string, value interface{}, ttl ...time.Duration) error {
 	const op = "Cahce_Service.internal.storage.redis.SetValue"
 	data, err := json.Marshal(value)
@@ -78,6 +85,7 @@ func (r *RedisController) SetValue(ctx context.Context, key string, value interf
 	return r.redis.Set(ctx, key, data, r.DefaultTTl).Err()
 }
 
+// GetValue retrieves raw bytes from Redis by key. Returns ErrCacheMiss if not found.
 func (r *RedisController) GetValue(ctx context.Context, key string) (interface{}, error) {
 	const op = "Cahce_Service.internal.storage.redis.GetValue"
 	data, err := r.redis.Get(ctx, key).Bytes()
@@ -90,6 +98,7 @@ func (r *RedisController) GetValue(ctx context.Context, key string) (interface{}
 	return data, nil
 }
 
+// Ping checks the Redis connection health.
 func (r *RedisController) Ping(ctx context.Context) error {
 	return r.redis.Ping(ctx).Err()
 }

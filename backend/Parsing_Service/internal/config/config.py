@@ -1,4 +1,8 @@
-"""Configuration management for the application."""
+"""Configuration management for the Parser Service.
+
+Loads environment variables for Telegram API credentials,
+Kafka connection, database connection, and proxy settings.
+"""
 import os
 from pathlib import Path
 
@@ -11,9 +15,26 @@ if env_path and Path(env_path).exists():
 
 
 class Config:
-    """Application configuration loaded from environment variables."""
+    """Application configuration loaded from environment variables.
+
+    Attributes:
+        API_ID: Telegram API application ID.
+        API_HASH: Telegram API application hash.
+        PHONE_NUMBER: Phone number for Telegram authentication.
+        KAFKA_BOOTSTRAP_SERVERS: Kafka broker address.
+        KAFKA_TOPIC: Kafka topic for publishing posts.
+        DB_NAME: PostgreSQL database name.
+        DB_USER: PostgreSQL database user.
+        DB_PASSWORD: PostgreSQL database password.
+        DB_URL: PostgreSQL connection URL.
+        DB_HOST: PostgreSQL host.
+        DB_PORT: PostgreSQL port.
+        PROXY_HOST: SOCKS5 proxy host for Telegram.
+        PROXY_PORT: SOCKS5 proxy port.
+    """
 
     def __init__(self):
+        """Initialize config with default None values."""
         self.API_ID = None
         self.API_HASH = None
         self.PHONE_NUMBER = None

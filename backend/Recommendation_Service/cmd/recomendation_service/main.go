@@ -1,3 +1,4 @@
+// Command main starts the Recommendation Service gRPC server with graceful shutdown.
 package main
 
 import (

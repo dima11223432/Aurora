@@ -1,3 +1,4 @@
+// Command main runs database migrations for the API Gateway service.
 package main
 
 import (
