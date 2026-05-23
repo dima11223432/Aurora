@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: snappy.go in package github.com/segmentio/kafka-go/compress/snappy</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	snappy.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html">github.com/segmentio/kafka-go/compress/snappy</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> snappy</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"io"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"sync"</span></label></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i2"><span class="lit-string i2">"github.com/klauspost/compress/s2"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i3"><span class="lit-string i3">"github.com/klauspost/compress/snappy"</span></label></code></span>
+<span class="codeline" id="line-9"><code>)</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// Framing is an enumeration type used to enable or disable xerial framing of</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// snappy messages.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-Framing" class="ident">Framing</a> <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-16"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-Framed" class="ident">Framed</a> <a href="#line-13" class="ident">Framing</a> = <a href="../../../../../../pkg/builtin.html#name-iota" class="ident">iota</a></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-Unframed" class="ident">Unframed</a></code></span>
+<span class="codeline" id="line-18"><code>)</code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">// Compression level.</span></code></span>
+<span class="codeline" id="line-21"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-Compression" class="ident">Compression</a> <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-24"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-DefaultCompression" class="ident">DefaultCompression</a> <a href="#line-21" class="ident">Compression</a> = <a href="../../../../../../pkg/builtin.html#name-iota" class="ident">iota</a></code></span>
+<span class="codeline" id="line-25"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-FasterCompression" class="ident">FasterCompression</a></code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-BetterCompression" class="ident">BetterCompression</a></code></span>
+<span class="codeline" id="line-27"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-BestCompression" class="ident">BestCompression</a></code></span>
+<span class="codeline" id="line-28"><code>)</code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-31"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-readerPool" class="ident">readerPool</a> <a href="../../../../../../pkg/sync.html" class="ident i1">sync</a>.<a href="../../../../../sync/pool.go.html#line-51" class="ident">Pool</a></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-writerPool" class="ident">writerPool</a> <a href="../../../../../../pkg/sync.html" class="ident i1">sync</a>.<a href="../../../../../sync/pool.go.html#line-51" class="ident">Pool</a></code></span>
+<span class="codeline" id="line-33"><code>)</code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">// Codec is the implementation of a compress.Codec which supports creating</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">// readers and writers for kafka messages compressed with snappy.</span></code></span>
+<span class="codeline" id="line-37"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-Codec" class="ident">Codec</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-38"><code>	<span class="comment">// An optional framing to apply to snappy compression.</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">	// Default to Framed.</span></code></span>
+<span class="codeline" id="line-41"><code>	Framing <a href="#line-13" class="ident">Framing</a></code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code>	<span class="comment">// Compression level.</span></code></span>
+<span class="codeline" id="line-44"><code>	Compression <a href="#line-21" class="ident">Compression</a></code></span>
+<span class="codeline" id="line-45"><code>}</code></span>
+<span class="codeline" id="line-46"><code></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">// Code implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-48"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> *<a href="#line-37" class="ident">Codec</a>) <label for="r1" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/snappy.Codec.html#name-.Code" class="ident">Code</a></label>() <a href="../../../../../../pkg/builtin.html#name-int8" class="ident">int8</a> { <span class="keyword">return</span> <span class="lit-number">2</span> }</code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">// Name implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-51"><code><span class="keyword">func</span> (<label for="r2" class="ident">c</label> *<a href="#line-37" class="ident">Codec</a>) <label for="r3" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/snappy.Codec.html#name-.Name" class="ident">Name</a></label>() <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a> { <span class="keyword">return</span> <span class="lit-string">"snappy"</span> }</code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">// NewReader implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-54"><code><span class="keyword">func</span> (<label for="r4" class="ident">c</label> *<a href="#line-37" class="ident">Codec</a>) <label for="r5" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/snappy.Codec.html#name-.NewReader" class="ident">NewReader</a></label>(<label for="r6" class="ident">r</label> <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-86" class="ident">Reader</a>) <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-137" class="ident">ReadCloser</a> {</code></span>
+<span class="codeline" id="line-55"><code>	<label for="r7" class="ident">x</label>, <label for="r8" class="ident">_</label> := <a href="#line-31" class="ident">readerPool</a>.<a href="../../../../../sync/pool.go.html#line-131" class="ident">Get</a>().(*<a href="xerial.go.html#line-17" class="ident">xerialReader</a>)</code></span>
+<span class="codeline" id="line-56"><code>	<span class="keyword">if</span> <label for="r7" class="ident">x</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-57"><code>		<label for="r7" class="ident">x</label>.<a href="xerial.go.html#line-27" class="ident">Reset</a>(<label for="r6" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-58"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-59"><code>		<label for="r7" class="ident">x</label> = &amp;<a href="xerial.go.html#line-17" class="ident">xerialReader</a>{</code></span>
+<span class="codeline" id="line-60"><code>			<a href="xerial.go.html#line-18" class="ident">reader</a>: <label for="r6" class="ident">r</label>,</code></span>
+<span class="codeline" id="line-61"><code>			<a href="xerial.go.html#line-24" class="ident">decode</a>: <a href="../../../../../../pkg/github.com/klauspost/compress/snappy.html" class="ident i3">snappy</a>.<a href="../../../../klauspost/compress/snappy/decode.go.html#line-46" class="ident">Decode</a>,</code></span>
+<span class="codeline" id="line-62"><code>		}</code></span>
+<span class="codeline" id="line-63"><code>	}</code></span>
+<span class="codeline" id="line-64"><code>	<span class="keyword">return</span> &amp;<a href="#line-89" class="ident">reader</a>{<a href="#line-89" class="ident">xerialReader</a>: <label for="r7" class="ident">x</label>}</code></span>
+<span class="codeline" id="line-65"><code>}</code></span>
+<span class="codeline" id="line-66"><code></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">// NewWriter implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-68"><code><span class="keyword">func</span> (<label for="r9" class="ident">c</label> *<a href="#line-37" class="ident">Codec</a>) <label for="r10" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/snappy.Codec.html#name-.NewWriter" class="ident">NewWriter</a></label>(<label for="r11" class="ident">w</label> <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-99" class="ident">Writer</a>) <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-143" class="ident">WriteCloser</a> {</code></span>
+<span class="codeline" id="line-69"><code>	<label for="r12" class="ident">x</label>, <label for="r13" class="ident">_</label> := <a href="#line-32" class="ident">writerPool</a>.<a href="../../../../../sync/pool.go.html#line-131" class="ident">Get</a>().(*<a href="xerial.go.html#line-176" class="ident">xerialWriter</a>)</code></span>
+<span class="codeline" id="line-70"><code>	<span class="keyword">if</span> <label for="r12" class="ident">x</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-71"><code>		<label for="r12" class="ident">x</label>.<a href="xerial.go.html#line-186" class="ident">Reset</a>(<label for="r11" class="ident">w</label>)</code></span>
+<span class="codeline" id="line-72"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-73"><code>		<label for="r12" class="ident">x</label> = &amp;<a href="xerial.go.html#line-176" class="ident">xerialWriter</a>{<a href="xerial.go.html#line-177" class="ident">writer</a>: <label for="r11" class="ident">w</label>}</code></span>
+<span class="codeline" id="line-74"><code>	}</code></span>
+<span class="codeline" id="line-75"><code>	<label for="r12" class="ident">x</label>.<a href="xerial.go.html#line-182" class="ident">framed</a> = <label for="r9" class="ident">c</label>.<a href="#line-41" class="ident">Framing</a> == <a href="#line-16" class="ident">Framed</a></code></span>
+<span class="codeline" id="line-76"><code>	<span class="keyword">switch</span> <label for="r9" class="ident">c</label>.<a href="#line-44" class="ident">Compression</a> {</code></span>
+<span class="codeline" id="line-77"><code>	<span class="keyword">case</span> <a href="#line-25" class="ident">FasterCompression</a>:</code></span>
+<span class="codeline" id="line-78"><code>		<label for="r12" class="ident">x</label>.<a href="xerial.go.html#line-183" class="ident">encode</a> = <a href="../../../../../../pkg/github.com/klauspost/compress/s2.html" class="ident i2">s2</a>.<a href="../../../../klauspost/compress/s2/encode.go.html#line-159" class="ident">EncodeSnappy</a></code></span>
+<span class="codeline" id="line-79"><code>	<span class="keyword">case</span> <a href="#line-26" class="ident">BetterCompression</a>:</code></span>
+<span class="codeline" id="line-80"><code>		<label for="r12" class="ident">x</label>.<a href="xerial.go.html#line-183" class="ident">encode</a> = <a href="../../../../../../pkg/github.com/klauspost/compress/s2.html" class="ident i2">s2</a>.<a href="../../../../klauspost/compress/s2/encode.go.html#line-203" class="ident">EncodeSnappyBetter</a></code></span>
+<span class="codeline" id="line-81"><code>	<span class="keyword">case</span> <a href="#line-27" class="ident">BestCompression</a>:</code></span>
+<span class="codeline" id="line-82"><code>		<label for="r12" class="ident">x</label>.<a href="xerial.go.html#line-183" class="ident">encode</a> = <a href="../../../../../../pkg/github.com/klauspost/compress/s2.html" class="ident i2">s2</a>.<a href="../../../../klauspost/compress/s2/encode.go.html#line-247" class="ident">EncodeSnappyBest</a></code></span>
+<span class="codeline" id="line-83"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-84"><code>		<label for="r12" class="ident">x</label>.<a href="xerial.go.html#line-183" class="ident">encode</a> = <a href="../../../../../../pkg/github.com/klauspost/compress/snappy.html" class="ident i3">snappy</a>.<a href="../../../../klauspost/compress/snappy/encode.go.html#line-20" class="ident">Encode</a> <span class="comment">// aka. s2.EncodeSnappyBetter</span></code></span>
+<span class="codeline" id="line-85"><code>	}</code></span>
+<span class="codeline" id="line-86"><code>	<span class="keyword">return</span> &amp;<a href="#line-100" class="ident">writer</a>{<a href="#line-100" class="ident">xerialWriter</a>: <label for="r12" class="ident">x</label>}</code></span>
+<span class="codeline" id="line-87"><code>}</code></span>
+<span class="codeline" id="line-88"><code></code></span>
+<span class="codeline" id="line-89"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-reader" class="ident">reader</a> <span class="keyword">struct</span>{ *<a href="xerial.go.html#line-17" class="ident">xerialReader</a> }</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code><span class="keyword">func</span> (<label for="r14" class="ident">r</label> *<a href="#line-89" class="ident">reader</a>) <label for="r15" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/snappy.reader^3d094.html#name-.Close" class="ident">Close</a></label>() (<label for="r16" class="ident">err</label> <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-92"><code>	<span class="keyword">if</span> <label for="r17" class="ident">x</label> := <label for="r14" class="ident">r</label>.<a href="#line-89" class="ident">xerialReader</a>; <label for="r17" class="ident">x</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-93"><code>		<label for="r14" class="ident">r</label>.<a href="#line-89" class="ident">xerialReader</a> = <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-94"><code>		<label for="r17" class="ident">x</label>.<a href="xerial.go.html#line-27" class="ident">Reset</a>(<a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>)</code></span>
+<span class="codeline" id="line-95"><code>		<a href="#line-31" class="ident">readerPool</a>.<a href="../../../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r17" class="ident">x</label>)</code></span>
+<span class="codeline" id="line-96"><code>	}</code></span>
+<span class="codeline" id="line-97"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-98"><code>}</code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/snappy.html#name-writer" class="ident">writer</a> <span class="keyword">struct</span>{ *<a href="xerial.go.html#line-176" class="ident">xerialWriter</a> }</code></span>
+<span class="codeline" id="line-101"><code></code></span>
+<span class="codeline" id="line-102"><code><span class="keyword">func</span> (<label for="r18" class="ident">w</label> *<a href="#line-100" class="ident">writer</a>) <label for="r19" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/snappy.writer^b9300.html#name-.Close" class="ident">Close</a></label>() (<label for="r20" class="ident">err</label> <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-103"><code>	<span class="keyword">if</span> <label for="r21" class="ident">x</label> := <label for="r18" class="ident">w</label>.<a href="#line-100" class="ident">xerialWriter</a>; <label for="r21" class="ident">x</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-104"><code>		<label for="r18" class="ident">w</label>.<a href="#line-100" class="ident">xerialWriter</a> = <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-105"><code>		<label for="r20" class="ident">err</label> = <label for="r21" class="ident">x</label>.<a href="xerial.go.html#line-251" class="ident">Flush</a>()</code></span>
+<span class="codeline" id="line-106"><code>		<label for="r21" class="ident">x</label>.<a href="xerial.go.html#line-186" class="ident">Reset</a>(<a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>)</code></span>
+<span class="codeline" id="line-107"><code>		<a href="#line-32" class="ident">writerPool</a>.<a href="../../../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r21" class="ident">x</label>)</code></span>
+<span class="codeline" id="line-108"><code>	}</code></span>
+<span class="codeline" id="line-109"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-110"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

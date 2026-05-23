@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: pattern.go in package github.com/grpc-ecosystem/grpc-gateway/v2/utilities</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	pattern.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html">github.com/grpc-ecosystem/grpc-gateway/v2/utilities</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> utilities</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// OpCode is an opcode of compiled path patterns.</span></code></span>
+<span class="codeline" id="line-4"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpCode" class="ident">OpCode</a> <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// These constants are the valid values of OpCode.</span></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-8"><code>	<span class="comment">// OpNop does nothing</span></code></span>
+<span class="codeline" id="line-9"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpNop" class="ident">OpNop</a> = <a href="#line-4" class="ident">OpCode</a>(<a href="../../../../../../pkg/builtin.html#name-iota" class="ident">iota</a>)</code></span>
+<span class="codeline" id="line-10"><code>	<span class="comment">// OpPush pushes a component to stack</span></code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpPush" class="ident">OpPush</a></code></span>
+<span class="codeline" id="line-12"><code>	<span class="comment">// OpLitPush pushes a component to stack if it matches to the literal</span></code></span>
+<span class="codeline" id="line-13"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpLitPush" class="ident">OpLitPush</a></code></span>
+<span class="codeline" id="line-14"><code>	<span class="comment">// OpPushM concatenates the remaining components and pushes it to stack</span></code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpPushM" class="ident">OpPushM</a></code></span>
+<span class="codeline" id="line-16"><code>	<span class="comment">// OpConcatN pops N items from stack, concatenates them and pushes it back to stack</span></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpConcatN" class="ident">OpConcatN</a></code></span>
+<span class="codeline" id="line-18"><code>	<span class="comment">// OpCapture pops an item and binds it to the variable</span></code></span>
+<span class="codeline" id="line-19"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpCapture" class="ident">OpCapture</a></code></span>
+<span class="codeline" id="line-20"><code>	<span class="comment">// OpEnd is the least positive invalid opcode.</span></code></span>
+<span class="codeline" id="line-21"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/utilities.html#name-OpEnd" class="ident">OpEnd</a></code></span>
+<span class="codeline" id="line-22"><code>)</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

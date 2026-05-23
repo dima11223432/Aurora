@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: gzip.go in package github.com/segmentio/kafka-go/compress/gzip</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	gzip.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html">github.com/segmentio/kafka-go/compress/gzip</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> gzip</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"io"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"sync"</span></label></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i2"><span class="lit-string i2">"github.com/klauspost/compress/gzip"</span></label></code></span>
+<span class="codeline" id="line-8"><code>)</code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-readerPool" class="ident">readerPool</a> <a href="../../../../../../pkg/sync.html" class="ident i1">sync</a>.<a href="../../../../../sync/pool.go.html#line-51" class="ident">Pool</a></code></span>
+<span class="codeline" id="line-12"><code>)</code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// Codec is the implementation of a compress.Codec which supports creating</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// readers and writers for kafka messages compressed with gzip.</span></code></span>
+<span class="codeline" id="line-16"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-Codec" class="ident">Codec</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-17"><code>	<span class="comment">// The compression level to configure on writers created by this codec.</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">	// Acceptable values are defined in the standard gzip package.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	// Default to gzip.DefaultCompressionLevel.</span></code></span>
+<span class="codeline" id="line-21"><code>	Level <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code>	writerPool <a href="../../../../../../pkg/sync.html" class="ident i1">sync</a>.<a href="../../../../../sync/pool.go.html#line-51" class="ident">Pool</a></code></span>
+<span class="codeline" id="line-24"><code>}</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">// Code implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-27"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> *<a href="#line-16" class="ident">Codec</a>) <label for="r1" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.Codec.html#name-.Code" class="ident">Code</a></label>() <a href="../../../../../../pkg/builtin.html#name-int8" class="ident">int8</a> { <span class="keyword">return</span> <span class="lit-number">1</span> }</code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// Name implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="keyword">func</span> (<label for="r2" class="ident">c</label> *<a href="#line-16" class="ident">Codec</a>) <label for="r3" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.Codec.html#name-.Name" class="ident">Name</a></label>() <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a> { <span class="keyword">return</span> <span class="lit-string">"gzip"</span> }</code></span>
+<span class="codeline" id="line-31"><code></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">// NewReader implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">func</span> (<label for="r4" class="ident">c</label> *<a href="#line-16" class="ident">Codec</a>) <label for="r5" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.Codec.html#name-.NewReader" class="ident">NewReader</a></label>(<label for="r6" class="ident">r</label> <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-86" class="ident">Reader</a>) <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-137" class="ident">ReadCloser</a> {</code></span>
+<span class="codeline" id="line-34"><code>	<span class="keyword">var</span> <label for="r7" class="ident">err</label> <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-35"><code>	<label for="r8" class="ident">z</label>, <label for="r9" class="ident">_</label> := <a href="#line-11" class="ident">readerPool</a>.<a href="../../../../../sync/pool.go.html#line-131" class="ident">Get</a>().(*<a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gunzip.go.html#line-75" class="ident">Reader</a>)</code></span>
+<span class="codeline" id="line-36"><code>	<span class="keyword">if</span> <label for="r8" class="ident">z</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-37"><code>		<label for="r7" class="ident">err</label> = <label for="r8" class="ident">z</label>.<a href="../../../../klauspost/compress/gzip/gunzip.go.html#line-105" class="ident">Reset</a>(<label for="r6" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-38"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-39"><code>		<label for="r8" class="ident">z</label>, <label for="r7" class="ident">err</label> = <a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gunzip.go.html#line-94" class="ident">NewReader</a>(<label for="r6" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-40"><code>	}</code></span>
+<span class="codeline" id="line-41"><code>	<span class="keyword">if</span> <label for="r7" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-42"><code>		<span class="keyword">if</span> <label for="r8" class="ident">z</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-43"><code>			<a href="#line-11" class="ident">readerPool</a>.<a href="../../../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r8" class="ident">z</label>)</code></span>
+<span class="codeline" id="line-44"><code>		}</code></span>
+<span class="codeline" id="line-45"><code>		<span class="keyword">return</span> &amp;<a href="#line-113" class="ident">errorReader</a>{<a href="#line-113" class="ident">err</a>: <label for="r7" class="ident">err</label>}</code></span>
+<span class="codeline" id="line-46"><code>	}</code></span>
+<span class="codeline" id="line-47"><code>	<span class="keyword">return</span> &amp;<a href="#line-73" class="ident">reader</a>{<a href="#line-73" class="ident">Reader</a>: <label for="r8" class="ident">z</label>}</code></span>
+<span class="codeline" id="line-48"><code>}</code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">// NewWriter implements the compress.Codec interface.</span></code></span>
+<span class="codeline" id="line-51"><code><span class="keyword">func</span> (<label for="r10" class="ident">c</label> *<a href="#line-16" class="ident">Codec</a>) <label for="r11" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.Codec.html#name-.NewWriter" class="ident">NewWriter</a></label>(<label for="r12" class="ident">w</label> <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-99" class="ident">Writer</a>) <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-143" class="ident">WriteCloser</a> {</code></span>
+<span class="codeline" id="line-52"><code>	<label for="r13" class="ident">x</label> := <label for="r10" class="ident">c</label>.<a href="#line-23" class="ident">writerPool</a>.<a href="../../../../../sync/pool.go.html#line-131" class="ident">Get</a>()</code></span>
+<span class="codeline" id="line-53"><code>	<label for="r14" class="ident">z</label>, <label for="r15" class="ident">_</label> := <label for="r13" class="ident">x</label>.(*<a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-36" class="ident">Writer</a>)</code></span>
+<span class="codeline" id="line-54"><code>	<span class="keyword">if</span> <label for="r14" class="ident">z</label> == <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-55"><code>		<label for="r16" class="ident">x</label>, <label for="r17" class="ident">err</label> := <a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-68" class="ident">NewWriterLevel</a>(<label for="r12" class="ident">w</label>, <label for="r10" class="ident">c</label>.<a href="#line-66" class="ident">level</a>())</code></span>
+<span class="codeline" id="line-56"><code>		<span class="keyword">if</span> <label for="r17" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-57"><code>			<span class="keyword">return</span> &amp;<a href="#line-119" class="ident">errorWriter</a>{<a href="#line-119" class="ident">err</a>: <label for="r17" class="ident">err</label>}</code></span>
+<span class="codeline" id="line-58"><code>		}</code></span>
+<span class="codeline" id="line-59"><code>		<label for="r14" class="ident">z</label> = <label for="r16" class="ident">x</label></code></span>
+<span class="codeline" id="line-60"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-61"><code>		<label for="r14" class="ident">z</label>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-120" class="ident">Reset</a>(<label for="r12" class="ident">w</label>)</code></span>
+<span class="codeline" id="line-62"><code>	}</code></span>
+<span class="codeline" id="line-63"><code>	<span class="keyword">return</span> &amp;<a href="#line-92" class="ident">writer</a>{<a href="#line-93" class="ident">codec</a>: <label for="r10" class="ident">c</label>, <a href="#line-94" class="ident">Writer</a>: <label for="r14" class="ident">z</label>}</code></span>
+<span class="codeline" id="line-64"><code>}</code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code><span class="keyword">func</span> (<label for="r18" class="ident">c</label> *<a href="#line-16" class="ident">Codec</a>) <label for="r19" class="ident">level</label>() <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-67"><code>	<span class="keyword">if</span> <label for="r18" class="ident">c</label>.<a href="#line-21" class="ident">Level</a> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-68"><code>		<span class="keyword">return</span> <label for="r18" class="ident">c</label>.<a href="#line-21" class="ident">Level</a></code></span>
+<span class="codeline" id="line-69"><code>	}</code></span>
+<span class="codeline" id="line-70"><code>	<span class="keyword">return</span> <a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-22" class="ident">DefaultCompression</a></code></span>
+<span class="codeline" id="line-71"><code>}</code></span>
+<span class="codeline" id="line-72"><code></code></span>
+<span class="codeline" id="line-73"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-reader" class="ident">reader</a> <span class="keyword">struct</span>{ *<a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gunzip.go.html#line-75" class="ident">Reader</a> }</code></span>
+<span class="codeline" id="line-74"><code></code></span>
+<span class="codeline" id="line-75"><code><span class="keyword">func</span> (<label for="r20" class="ident">r</label> *<a href="#line-73" class="ident">reader</a>) <label for="r21" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.reader^3d094.html#name-.Close" class="ident">Close</a></label>() (<label for="r22" class="ident">err</label> <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-76"><code>	<span class="keyword">if</span> <label for="r23" class="ident">z</label> := <label for="r20" class="ident">r</label>.<a href="#line-73" class="ident">Reader</a>; <label for="r23" class="ident">z</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-77"><code>		<label for="r20" class="ident">r</label>.<a href="#line-73" class="ident">Reader</a> = <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-78"><code>		<label for="r22" class="ident">err</label> = <label for="r23" class="ident">z</label>.<a href="../../../../klauspost/compress/gzip/gunzip.go.html#line-380" class="ident">Close</a>()</code></span>
+<span class="codeline" id="line-79"><code>		<span class="comment">// Pass it an empty reader, which is a zero-size value implementing the</span></code></span>
+<span class="codeline" id="line-80"><code><span class="comment">		// flate.Reader interface to avoid the construction of a bufio.Reader in</span></code></span>
+<span class="codeline" id="line-81"><code><span class="comment">		// the call to Reset.</span></code></span>
+<span class="codeline" id="line-82"><code><span class="comment">		//</span></code></span>
+<span class="codeline" id="line-83"><code><span class="comment">		// Note: we could also not reset the reader at all, but that would cause</span></code></span>
+<span class="codeline" id="line-84"><code><span class="comment">		// the underlying reader to be retained until the gzip.Reader is freed,</span></code></span>
+<span class="codeline" id="line-85"><code><span class="comment">		// which may not be desirable.</span></code></span>
+<span class="codeline" id="line-86"><code>		<label for="r23" class="ident">z</label>.<a href="../../../../klauspost/compress/gzip/gunzip.go.html#line-105" class="ident">Reset</a>(<a href="#line-107" class="ident">emptyReader</a>{})</code></span>
+<span class="codeline" id="line-87"><code>		<a href="#line-11" class="ident">readerPool</a>.<a href="../../../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r23" class="ident">z</label>)</code></span>
+<span class="codeline" id="line-88"><code>	}</code></span>
+<span class="codeline" id="line-89"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-writer" class="ident">writer</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-93"><code>	codec *<a href="#line-16" class="ident">Codec</a></code></span>
+<span class="codeline" id="line-94"><code>	*<a href="../../../../../../pkg/github.com/klauspost/compress/gzip.html" class="ident i2">gzip</a>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-36" class="ident">Writer</a></code></span>
+<span class="codeline" id="line-95"><code>}</code></span>
+<span class="codeline" id="line-96"><code></code></span>
+<span class="codeline" id="line-97"><code><span class="keyword">func</span> (<label for="r24" class="ident">w</label> *<a href="#line-92" class="ident">writer</a>) <label for="r25" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.writer^b9300.html#name-.Close" class="ident">Close</a></label>() (<label for="r26" class="ident">err</label> <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-98"><code>	<span class="keyword">if</span> <label for="r27" class="ident">z</label> := <label for="r24" class="ident">w</label>.<a href="#line-94" class="ident">Writer</a>; <label for="r27" class="ident">z</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-99"><code>		<label for="r24" class="ident">w</label>.<a href="#line-94" class="ident">Writer</a> = <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-100"><code>		<label for="r26" class="ident">err</label> = <label for="r27" class="ident">z</label>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-264" class="ident">Close</a>()</code></span>
+<span class="codeline" id="line-101"><code>		<label for="r27" class="ident">z</label>.<a href="../../../../klauspost/compress/gzip/gzip.go.html#line-120" class="ident">Reset</a>(<a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>)</code></span>
+<span class="codeline" id="line-102"><code>		<label for="r24" class="ident">w</label>.<a href="#line-93" class="ident">codec</a>.<a href="#line-23" class="ident">writerPool</a>.<a href="../../../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r27" class="ident">z</label>)</code></span>
+<span class="codeline" id="line-103"><code>	}</code></span>
+<span class="codeline" id="line-104"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-105"><code>}</code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-emptyReader" class="ident">emptyReader</a> <span class="keyword">struct</span>{}</code></span>
+<span class="codeline" id="line-108"><code></code></span>
+<span class="codeline" id="line-109"><code><span class="keyword">func</span> (<a href="#line-107" class="ident">emptyReader</a>) <label for="r28" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.emptyReader^71df1.html#name-.ReadByte" class="ident">ReadByte</a></label>() (<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) { <span class="keyword">return</span> <span class="lit-number">0</span>, <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-44" class="ident">EOF</a> }</code></span>
+<span class="codeline" id="line-110"><code></code></span>
+<span class="codeline" id="line-111"><code><span class="keyword">func</span> (<a href="#line-107" class="ident">emptyReader</a>) <label for="r29" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.emptyReader^71df1.html#name-.Read" class="ident">Read</a></label>([]<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (<a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) { <span class="keyword">return</span> <span class="lit-number">0</span>, <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-44" class="ident">EOF</a> }</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-errorReader" class="ident">errorReader</a> <span class="keyword">struct</span>{ err <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> }</code></span>
+<span class="codeline" id="line-114"><code></code></span>
+<span class="codeline" id="line-115"><code><span class="keyword">func</span> (<label for="r30" class="ident">r</label> *<a href="#line-113" class="ident">errorReader</a>) <label for="r31" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.errorReader^acb05.html#name-.Close" class="ident">Close</a></label>() <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> { <span class="keyword">return</span> <label for="r30" class="ident">r</label>.<a href="#line-113" class="ident">err</a> }</code></span>
+<span class="codeline" id="line-116"><code></code></span>
+<span class="codeline" id="line-117"><code><span class="keyword">func</span> (<label for="r32" class="ident">r</label> *<a href="#line-113" class="ident">errorReader</a>) <label for="r33" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.errorReader^acb05.html#name-.Read" class="ident">Read</a></label>([]<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (<a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) { <span class="keyword">return</span> <span class="lit-number">0</span>, <label for="r32" class="ident">r</label>.<a href="#line-113" class="ident">err</a> }</code></span>
+<span class="codeline" id="line-118"><code></code></span>
+<span class="codeline" id="line-119"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/segmentio/kafka-go/compress/gzip.html#name-errorWriter" class="ident">errorWriter</a> <span class="keyword">struct</span>{ err <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> }</code></span>
+<span class="codeline" id="line-120"><code></code></span>
+<span class="codeline" id="line-121"><code><span class="keyword">func</span> (<label for="r34" class="ident">w</label> *<a href="#line-119" class="ident">errorWriter</a>) <label for="r35" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.errorWriter^b7a81.html#name-.Close" class="ident">Close</a></label>() <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> { <span class="keyword">return</span> <label for="r34" class="ident">w</label>.<a href="#line-119" class="ident">err</a> }</code></span>
+<span class="codeline" id="line-122"><code></code></span>
+<span class="codeline" id="line-123"><code><span class="keyword">func</span> (<label for="r36" class="ident">w</label> *<a href="#line-119" class="ident">errorWriter</a>) <label for="r37" class="ident"><a href="../../../../../../imp/github.com/segmentio/kafka-go/compress/gzip.errorWriter^b7a81.html#name-.Write" class="ident">Write</a></label>([]<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (<a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) { <span class="keyword">return</span> <span class="lit-number">0</span>, <label for="r36" class="ident">w</label>.<a href="#line-119" class="ident">err</a> }</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: claims.go in package github.com/golang-jwt/jwt/v5</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	claims.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/golang-jwt/jwt/v5.html">github.com/golang-jwt/jwt/v5</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> jwt</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// Claims represent any form of a JWT Claims Set according to</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// https://datatracker.ietf.org/doc/html/rfc7519#section-4. In order to have a</span></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">// common basis for validation, it is required that an implementation is able to</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// supply at least the claim names provided in</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// https://datatracker.ietf.org/doc/html/rfc7519#section-4.1 namely `exp`,</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// `iat`, `nbf`, `iss`, `sub` and `aud`.</span></code></span>
+<span class="codeline" id="line-9"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/golang-jwt/jwt/v5.html#name-Claims" class="ident">Claims</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../../imp/github.com/golang-jwt/jwt/v5.Claims.html#name-GetExpirationTime" class="ident">GetExpirationTime</a>() (*<a href="types.go.html#line-32" class="ident">NumericDate</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../../imp/github.com/golang-jwt/jwt/v5.Claims.html#name-GetIssuedAt" class="ident">GetIssuedAt</a>() (*<a href="types.go.html#line-32" class="ident">NumericDate</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-12"><code>	<a href="../../../../../imp/github.com/golang-jwt/jwt/v5.Claims.html#name-GetNotBefore" class="ident">GetNotBefore</a>() (*<a href="types.go.html#line-32" class="ident">NumericDate</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-13"><code>	<a href="../../../../../imp/github.com/golang-jwt/jwt/v5.Claims.html#name-GetIssuer" class="ident">GetIssuer</a>() (<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-14"><code>	<a href="../../../../../imp/github.com/golang-jwt/jwt/v5.Claims.html#name-GetSubject" class="ident">GetSubject</a>() (<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../../imp/github.com/golang-jwt/jwt/v5.Claims.html#name-GetAudience" class="ident">GetAudience</a>() (<a href="types.go.html#line-103" class="ident">ClaimStrings</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-16"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

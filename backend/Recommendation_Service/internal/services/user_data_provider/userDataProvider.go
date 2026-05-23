@@ -1,3 +1,5 @@
+// Package auth (user_data_provider) implements business logic for user data management,
+// including priority channels, parsing channels, and recommended news posts.
 package auth
 
 import (
@@ -10,6 +12,8 @@ import (
 	"time"
 )
 
+// UserDataProvider orchestrates user-related data operations by delegating
+// to priority channel, parsing channel, and priority news providers.
 type UserDataProvider struct {
 	log                      *slog.Logger
 	priorityChannelsProvider PriorityChannelsProvider
@@ -18,10 +22,12 @@ type UserDataProvider struct {
 	TokenTTL                 time.Duration
 }
 
+// PriorityChannelsProvider defines storage operations for priority channels.
 type PriorityChannelsProvider interface {
 	GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
 
+// ParsingChannelsProvider defines storage operations for parsing channels.
 type ParsingChannelsProvider interface {
 	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
 	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
@@ -36,6 +42,7 @@ type ParsingChannelsProvider interface {
 	SetChannelCategory(ctx context.Context, channel string, category string) error
 }
 
+// PriorityNewsProvider defines storage operations for retrieving news posts by channels.
 type PriorityNewsProvider interface {
 	GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error)
 }
@@ -63,6 +70,7 @@ func New(
 	}
 }
 
+// GetUserPriorityChannels returns priority channels for a given user.
 func (u *UserDataProvider) GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetUserPriorityChannels"
 
@@ -74,6 +82,8 @@ func (u *UserDataProvider) GetUserPriorityChannels(ctx context.Context, userID i
 	return channels, nil
 }
 
+// GetRecommendatedPosts fetches recommended posts for a user based on their priority channels.
+// Supports cursor-based pagination.
 func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetUserPriorityNews"
 
@@ -99,6 +109,7 @@ func (u *UserDataProvider) GetRecommendatedPosts(ctx context.Context, userID int
 	return posts, nextCursor, nil
 }
 
+// GetAllDefaultParsingChannels returns all system-wide default parsing channels.
 func (u *UserDataProvider) GetAllDefaultParsingChannels(ctx context.Context) ([]string, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetAllParsingChannels"
 	channels, err := u.parsingChannelsProvider.GetAllDefaultParsingChannels(ctx)
@@ -112,6 +123,7 @@ func (u *UserDataProvider) GetAllDefaultParsingChannels(ctx context.Context) ([]
 	return channels, nil
 }
 
+// AddNewUserCustomParsingChannel adds a custom parsing channel for a user.
 func (u *UserDataProvider) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewUserCustomParsingChannel"
 	if err := u.parsingChannelsProvider.AddNewUserCustomParsingChannel(ctx, userID, channel); err != nil {
@@ -124,6 +136,7 @@ func (u *UserDataProvider) AddNewUserCustomParsingChannel(ctx context.Context, u
 	return nil
 }
 
+// AddNewDefaultParsingChannel adds a new system-wide default parsing channel with a category.
 func (u *UserDataProvider) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.AddNewParsingChannel"
 	err := u.parsingChannelsProvider.AddNewDefaultParsingChannel(ctx, channel, category)
@@ -169,6 +182,7 @@ func (u *UserDataProvider) AddNewDefaultParsingChannel(ctx context.Context, chan
 	return nil
 }
 
+// DeleteUserCustomParsingChannel removes a custom parsing channel for a user.
 func (u *UserDataProvider) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteUserCustomParsingChannel"
 	if err := u.parsingChannelsProvider.DeleteUserCustomParsingChannel(ctx, userID, channel); err != nil {
@@ -188,6 +202,7 @@ func (u *UserDataProvider) DeleteUserCustomParsingChannel(ctx context.Context, u
 	return nil
 }
 
+// DeleteDefaultParsingChannel removes a system-wide default parsing channel.
 func (u *UserDataProvider) DeleteDefaultParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.services.user_data_provider.userDataProvider.go.DeleteParsingChannel"
 	err := u.parsingChannelsProvider.DeleteDefaultParsingChannel(ctx, channel)
@@ -207,6 +222,7 @@ func (u *UserDataProvider) DeleteDefaultParsingChannel(ctx context.Context, chan
 	return nil
 }
 
+// GetAllUserCustomParsingChannels returns all custom parsing channels for a user.
 func (u *UserDataProvider) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
 	const op = "internal.services.user_dats_provider.userDataProvider.go.GetAllDefaultParsingChannels"
 	channels, err := u.parsingChannelsProvider.GetAllUserCustomParsingChannels(ctx, userID)
@@ -220,6 +236,7 @@ func (u *UserDataProvider) GetAllUserCustomParsingChannels(ctx context.Context, 
 	return channels, nil
 }
 
+// GetDefaultParsingChannelsWithCategories returns default parsing channels grouped by category.
 func (u *UserDataProvider) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
 	const op = "internal.services.user_data_provider.GetDefaultParsingChannelsWithCategories"
 
@@ -250,6 +267,7 @@ func (u *UserDataProvider) GetDefaultParsingChannelsWithCategories(ctx context.C
 	return categoriesWithChannels, nil
 }
 
+// GetDefaultParsingChannelsByCategory returns parsing channels for a given category.
 func (u *UserDataProvider) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetParsingChannelsByCategory"
 	channels, err := u.parsingChannelsProvider.GetDefaultParsingChannelsByCategory(ctx, category)
@@ -263,6 +281,7 @@ func (u *UserDataProvider) GetDefaultParsingChannelsByCategory(ctx context.Conte
 	return channels, nil
 }
 
+// GetAllCategories returns all available channel categories.
 func (u *UserDataProvider) GetAllCategories(ctx context.Context) ([]string, error) {
 	const op = "internal.services.user_data_provider.userDataProvider.go.GetAllCategories"
 	categories, err := u.parsingChannelsProvider.GetAllCategories(ctx)

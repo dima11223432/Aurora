@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: util.go in package github.com/grpc-ecosystem/go-grpc-prometheus</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	util.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html">github.com/grpc-ecosystem/go-grpc-prometheus</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2016 Michal Witkowski. All Rights Reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// See LICENSE for licensing terms.</span></code></span>
+<span class="codeline" id="line-3"><code></code></span>
+<span class="codeline" id="line-4"><code><span class="keyword">package</span> grpc_prometheus</code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-7"><code>	<label for="i0"><span class="lit-string i0">"strings"</span></label></code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i1"><span class="lit-string i1">"google.golang.org/grpc"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i2"><span class="lit-string i2">"google.golang.org/grpc/codes"</span></label></code></span>
+<span class="codeline" id="line-11"><code>)</code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-grpcType" class="ident">grpcType</a> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-16"><code>	<a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-Unary" class="ident">Unary</a>        <a href="#line-13" class="ident">grpcType</a> = <span class="lit-string">"unary"</span></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-ClientStream" class="ident">ClientStream</a> <a href="#line-13" class="ident">grpcType</a> = <span class="lit-string">"client_stream"</span></code></span>
+<span class="codeline" id="line-18"><code>	<a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-ServerStream" class="ident">ServerStream</a> <a href="#line-13" class="ident">grpcType</a> = <span class="lit-string">"server_stream"</span></code></span>
+<span class="codeline" id="line-19"><code>	<a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-BidiStream" class="ident">BidiStream</a>   <a href="#line-13" class="ident">grpcType</a> = <span class="lit-string">"bidi_stream"</span></code></span>
+<span class="codeline" id="line-20"><code>)</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-23"><code>	<a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-allCodes" class="ident">allCodes</a> = []<a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-35" class="ident">Code</a>{</code></span>
+<span class="codeline" id="line-24"><code>		<a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-39" class="ident">OK</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-45" class="ident">Canceled</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-55" class="ident">Unknown</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-63" class="ident">InvalidArgument</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-73" class="ident">DeadlineExceeded</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-79" class="ident">NotFound</a>,</code></span>
+<span class="codeline" id="line-25"><code>		<a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-85" class="ident">AlreadyExists</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-96" class="ident">PermissionDenied</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-199" class="ident">Unauthenticated</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-104" class="ident">ResourceExhausted</a>,</code></span>
+<span class="codeline" id="line-26"><code>		<a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-127" class="ident">FailedPrecondition</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-137" class="ident">Aborted</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-156" class="ident">OutOfRange</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-166" class="ident">Unimplemented</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-174" class="ident">Internal</a>,</code></span>
+<span class="codeline" id="line-27"><code>		<a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-186" class="ident">Unavailable</a>, <a href="../../../../pkg/google.golang.org/grpc/codes.html" class="ident i2">codes</a>.<a href="../../../google.golang.org/grpc/codes/codes.go.html#line-191" class="ident">DataLoss</a>,</code></span>
+<span class="codeline" id="line-28"><code>	}</code></span>
+<span class="codeline" id="line-29"><code>)</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-splitMethodName" class="ident">splitMethodName</a></label>(<label for="r1" class="ident">fullMethodName</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-32"><code>	<label for="r1" class="ident">fullMethodName</label> = <a href="../../../../pkg/strings.html" class="ident i0">strings</a>.<a href="../../../strings/strings.go.html#line-1122" class="ident">TrimPrefix</a>(<label for="r1" class="ident">fullMethodName</label>, <span class="lit-string">"/"</span>) <span class="comment">// remove leading slash</span></code></span>
+<span class="codeline" id="line-33"><code>	<span class="keyword">if</span> <label for="r2" class="ident">i</label> := <a href="../../../../pkg/strings.html" class="ident i0">strings</a>.<a href="../../../strings/strings.go.html#line-1265" class="ident">Index</a>(<label for="r1" class="ident">fullMethodName</label>, <span class="lit-string">"/"</span>); <label for="r2" class="ident">i</label> &gt;= <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-34"><code>		<span class="keyword">return</span> <label for="r1" class="ident">fullMethodName</label>[:<label for="r2" class="ident">i</label>], <label for="r1" class="ident">fullMethodName</label>[<label for="r2" class="ident">i</label>+<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-35"><code>	}</code></span>
+<span class="codeline" id="line-36"><code>	<span class="keyword">return</span> <span class="lit-string">"unknown"</span>, <span class="lit-string">"unknown"</span></code></span>
+<span class="codeline" id="line-37"><code>}</code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code><span class="keyword">func</span> <label for="r3" class="ident"><a href="../../../../pkg/github.com/grpc-ecosystem/go-grpc-prometheus.html#name-typeFromMethodInfo" class="ident">typeFromMethodInfo</a></label>(<label for="r4" class="ident">mInfo</label> *<a href="../../../../pkg/google.golang.org/grpc.html" class="ident i1">grpc</a>.<a href="../../../google.golang.org/grpc/server.go.html#line-795" class="ident">MethodInfo</a>) <a href="#line-13" class="ident">grpcType</a> {</code></span>
+<span class="codeline" id="line-40"><code>	<span class="keyword">if</span> !<label for="r4" class="ident">mInfo</label>.<a href="../../../google.golang.org/grpc/server.go.html#line-799" class="ident">IsClientStream</a> &amp;&amp; !<label for="r4" class="ident">mInfo</label>.<a href="../../../google.golang.org/grpc/server.go.html#line-801" class="ident">IsServerStream</a> {</code></span>
+<span class="codeline" id="line-41"><code>		<span class="keyword">return</span> <a href="#line-16" class="ident">Unary</a></code></span>
+<span class="codeline" id="line-42"><code>	}</code></span>
+<span class="codeline" id="line-43"><code>	<span class="keyword">if</span> <label for="r4" class="ident">mInfo</label>.<a href="../../../google.golang.org/grpc/server.go.html#line-799" class="ident">IsClientStream</a> &amp;&amp; !<label for="r4" class="ident">mInfo</label>.<a href="../../../google.golang.org/grpc/server.go.html#line-801" class="ident">IsServerStream</a> {</code></span>
+<span class="codeline" id="line-44"><code>		<span class="keyword">return</span> <a href="#line-17" class="ident">ClientStream</a></code></span>
+<span class="codeline" id="line-45"><code>	}</code></span>
+<span class="codeline" id="line-46"><code>	<span class="keyword">if</span> !<label for="r4" class="ident">mInfo</label>.<a href="../../../google.golang.org/grpc/server.go.html#line-799" class="ident">IsClientStream</a> &amp;&amp; <label for="r4" class="ident">mInfo</label>.<a href="../../../google.golang.org/grpc/server.go.html#line-801" class="ident">IsServerStream</a> {</code></span>
+<span class="codeline" id="line-47"><code>		<span class="keyword">return</span> <a href="#line-18" class="ident">ServerStream</a></code></span>
+<span class="codeline" id="line-48"><code>	}</code></span>
+<span class="codeline" id="line-49"><code>	<span class="keyword">return</span> <a href="#line-19" class="ident">BidiStream</a></code></span>
+<span class="codeline" id="line-50"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

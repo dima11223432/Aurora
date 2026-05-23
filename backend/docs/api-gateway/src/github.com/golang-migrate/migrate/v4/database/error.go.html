@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: error.go in package github.com/golang-migrate/migrate/v4/database</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	error.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/golang-migrate/migrate/v4/database.html">github.com/golang-migrate/migrate/v4/database</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> database</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"fmt"</span></label></code></span>
+<span class="codeline" id="line-5"><code>)</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// Error should be used for errors involving queries ran against the database</span></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/golang-migrate/migrate/v4/database.html#name-Error" class="ident">Error</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-9"><code>	<span class="comment">// Optional: the line number</span></code></span>
+<span class="codeline" id="line-10"><code>	Line <a href="../../../../../../pkg/builtin.html#name-uint" class="ident">uint</a></code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code>	<span class="comment">// Query is a query excerpt</span></code></span>
+<span class="codeline" id="line-13"><code>	Query []<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code>	<span class="comment">// Err is a useful/helping error message for humans</span></code></span>
+<span class="codeline" id="line-16"><code>	Err <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-17"><code></code></span>
+<span class="codeline" id="line-18"><code>	<span class="comment">// OrigErr is the underlying error</span></code></span>
+<span class="codeline" id="line-19"><code>	OrigErr <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-20"><code>}</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">func</span> (<label for="r0" class="ident">e</label> <a href="#line-8" class="ident">Error</a>) <label for="r1" class="ident"><a href="../../../../../../imp/github.com/golang-migrate/migrate/v4/database.Error.html#name-.Error" class="ident">Error</a></label>() <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-23"><code>	<span class="keyword">if</span> <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r0" class="ident">e</label>.<a href="#line-16" class="ident">Err</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-24"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/fmt.html" class="ident i0">fmt</a>.<a href="../../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"%v in line %v: %s"</span>, <label for="r0" class="ident">e</label>.<a href="#line-19" class="ident">OrigErr</a>, <label for="r0" class="ident">e</label>.<a href="#line-10" class="ident">Line</a>, <label for="r0" class="ident">e</label>.<a href="#line-13" class="ident">Query</a>)</code></span>
+<span class="codeline" id="line-25"><code>	}</code></span>
+<span class="codeline" id="line-26"><code>	<span class="keyword">return</span> <a href="../../../../../../pkg/fmt.html" class="ident i0">fmt</a>.<a href="../../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"%v in line %v: %s (details: %v)"</span>, <label for="r0" class="ident">e</label>.<a href="#line-16" class="ident">Err</a>, <label for="r0" class="ident">e</label>.<a href="#line-10" class="ident">Line</a>, <label for="r0" class="ident">e</label>.<a href="#line-13" class="ident">Query</a>, <label for="r0" class="ident">e</label>.<a href="#line-19" class="ident">OrigErr</a>)</code></span>
+<span class="codeline" id="line-27"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

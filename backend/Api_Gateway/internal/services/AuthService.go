@@ -1,3 +1,7 @@
+// Package services provides business logic layers for the API Gateway,
+// including authentication, authorization, and recommendation operations.
+// It acts as an intermediary between the gRPC transport layer and external
+// service clients (SSO, Recommendation Service).
 package services
 
 import (
@@ -14,17 +18,23 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// AuthInterceptor defines methods for extracting authentication data from gRPC context.
 type AuthInterceptor interface {
 	SetAuthInterceptor() grpc.UnaryServerInterceptor
 	GetUserIdFromContext(ctx context.Context) (int64, error)
 	GetIsAdminFromContext(ctx context.Context) (bool, error)
 }
+
+// AuthService handles authentication and user-related operations.
+// It communicates with the SSO service via gRPC for login, admin checks,
+// and priority channel management.
 type AuthService struct {
 	log             *slog.Logger
 	AuthClient      ssov1.AuthServiceClient
 	AuthInterceptor AuthInterceptor
 }
 
+// NewAuthService creates a new AuthService instance.
 func NewAuthService(log *slog.Logger, authClient ssov1.AuthServiceClient, authinterceptor AuthInterceptor) *AuthService {
 	return &AuthService{
 		log:             log,
@@ -33,6 +43,7 @@ func NewAuthService(log *slog.Logger, authClient ssov1.AuthServiceClient, authin
 	}
 }
 
+// DeletePriorityChannels removes priority channels for the authenticated user.
 func (a *AuthService) DeletePriorityChannels(ctx context.Context, channels []string) error {
 	const op = "ApiService.internal.services.AuthService.DeletePriorityChannels"
 
@@ -52,6 +63,8 @@ func (a *AuthService) DeletePriorityChannels(ctx context.Context, channels []str
 	return nil
 }
 
+// SetPriorityChannels sets priority channels for the authenticated user.
+// Returns ErrChannelExists if any channel is already added.
 func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string) error {
 	const op = "services.AuthService.SetPriorityChannels"
 
@@ -85,6 +98,7 @@ func (a *AuthService) SetPriorityChannels(ctx context.Context, channels []string
 	return nil
 }
 
+// Login authenticates a user via Telegram ID and returns a JWT token.
 func (a *AuthService) Login(
 	ctx context.Context,
 	telegram_id int64,
@@ -110,6 +124,7 @@ func (a *AuthService) Login(
 	return resp.Token, nil
 }
 
+// ConnectWallet associates a wallet address with the authenticated user.
 func (a *AuthService) ConnectWallet(
 	ctx context.Context,
 	wallet_address string,
@@ -137,6 +152,7 @@ func (a *AuthService) ConnectWallet(
 	return nil
 }
 
+// IsAdmin checks if a user with the given Telegram ID has admin privileges.
 func (a *AuthService) IsAdmin(
 	ctx context.Context,
 	telegram_id int64,
@@ -152,6 +168,7 @@ func (a *AuthService) IsAdmin(
 	return resp.IsAdmin, nil
 }
 
+// IsAdminByContext checks admin privileges for the user in the current context.
 func (a *AuthService) IsAdminByContext(ctx context.Context) (bool, error) {
 	isAdmin, err := a.AuthInterceptor.GetIsAdminFromContext(ctx)
 	if err != nil {

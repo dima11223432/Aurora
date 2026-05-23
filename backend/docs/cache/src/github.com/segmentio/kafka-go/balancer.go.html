@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: balancer.go in package github.com/segmentio/kafka-go</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	balancer.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> kafka</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"hash"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"hash/crc32"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"hash/fnv"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"math/rand"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i4"><span class="lit-string i4">"sort"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i5"><span class="lit-string i5">"sync"</span></label></code></span>
+<span class="codeline" id="line-10"><code>)</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// The Balancer interface provides an abstraction of the message distribution</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// logic used by Writer instances to route messages to the partitions available</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// on a kafka cluster.</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// Balancers must be safe to use concurrently from multiple goroutines.</span></code></span>
+<span class="codeline" id="line-17"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-Balancer" class="ident">Balancer</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-18"><code>	<span class="comment">// Balance receives a message and a set of available partitions and</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">	// returns the partition number that the message should be routed to.</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">	// An application should refrain from using a balancer to manage multiple</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">	// sets of partitions (from different topics for examples), use one balancer</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">	// instance for each partition set, so the balancer can detect when the</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	// partitions change and assume that the kafka topic has been rebalanced.</span></code></span>
+<span class="codeline" id="line-25"><code>	<a href="../../../../imp/github.com/segmentio/kafka-go.Balancer.html#name-Balance" class="ident">Balance</a>(msg <a href="message.go.html#line-8" class="ident">Message</a>, partitions ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) (partition <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>)</code></span>
+<span class="codeline" id="line-26"><code>}</code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">// BalancerFunc is an implementation of the Balancer interface that makes it</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// possible to use regular functions to distribute messages across partitions.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-BalancerFunc" class="ident">BalancerFunc</a> <span class="keyword">func</span>(<a href="message.go.html#line-8" class="ident">Message</a>, ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-31"><code></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">// Balance calls f, satisfies the Balancer interface.</span></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">func</span> (<label for="r0" class="ident">f</label> <a href="#line-30" class="ident">BalancerFunc</a>) <label for="r1" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.BalancerFunc.html#name-.Balance" class="ident">Balance</a></label>(<label for="r2" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r3" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-34"><code>	<span class="keyword">return</span> <label for="r0" class="ident">f</label>(<label for="r2" class="ident">msg</label>, <label for="r3" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// RoundRobin is an Balancer implementation that equally distributes messages</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">// across all available partitions.  It can take an optional chunk size to send</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// ChunkSize messages to the same partition before moving to the next partition.</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">// This can be used to improve batch sizes.</span></code></span>
+<span class="codeline" id="line-41"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RoundRobin" class="ident">RoundRobin</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-42"><code>	ChunkSize <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-43"><code>	<span class="comment">// Use a 32 bits integer so RoundRobin values don't need to be aligned to</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">	// apply increments.</span></code></span>
+<span class="codeline" id="line-45"><code>	counter <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-46"><code></code></span>
+<span class="codeline" id="line-47"><code>	mutex <a href="../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-48"><code>}</code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">// Balance satisfies the Balancer interface.</span></code></span>
+<span class="codeline" id="line-51"><code><span class="keyword">func</span> (<label for="r4" class="ident">rr</label> *<a href="#line-41" class="ident">RoundRobin</a>) <label for="r5" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RoundRobin.html#name-.Balance" class="ident">Balance</a></label>(<label for="r6" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r7" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-52"><code>	<span class="keyword">return</span> <label for="r4" class="ident">rr</label>.<a href="#line-55" class="ident">balance</a>(<label for="r7" class="ident">partitions</label>)</code></span>
+<span class="codeline" id="line-53"><code>}</code></span>
+<span class="codeline" id="line-54"><code></code></span>
+<span class="codeline" id="line-55"><code><span class="keyword">func</span> (<label for="r8" class="ident">rr</label> *<a href="#line-41" class="ident">RoundRobin</a>) <label for="r9" class="ident">balance</label>(<label for="r10" class="ident">partitions</label> []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-56"><code>	<label for="r8" class="ident">rr</label>.<a href="#line-47" class="ident">mutex</a>.<a href="../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-57"><code>	<span class="keyword">defer</span> <label for="r8" class="ident">rr</label>.<a href="#line-47" class="ident">mutex</a>.<a href="../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code>	<span class="keyword">if</span> <label for="r8" class="ident">rr</label>.<a href="#line-42" class="ident">ChunkSize</a> &lt; <span class="lit-number">1</span> {</code></span>
+<span class="codeline" id="line-60"><code>		<label for="r8" class="ident">rr</label>.<a href="#line-42" class="ident">ChunkSize</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-61"><code>	}</code></span>
+<span class="codeline" id="line-62"><code></code></span>
+<span class="codeline" id="line-63"><code>	<label for="r11" class="ident">length</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r10" class="ident">partitions</label>)</code></span>
+<span class="codeline" id="line-64"><code>	<label for="r12" class="ident">counterNow</label> := <label for="r8" class="ident">rr</label>.<a href="#line-45" class="ident">counter</a></code></span>
+<span class="codeline" id="line-65"><code>	<label for="r13" class="ident">offset</label> := <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r12" class="ident">counterNow</label> / <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r8" class="ident">rr</label>.<a href="#line-42" class="ident">ChunkSize</a>))</code></span>
+<span class="codeline" id="line-66"><code>	<label for="r8" class="ident">rr</label>.<a href="#line-45" class="ident">counter</a>++</code></span>
+<span class="codeline" id="line-67"><code>	<span class="keyword">return</span> <label for="r10" class="ident">partitions</label>[<label for="r13" class="ident">offset</label>%<label for="r11" class="ident">length</label>]</code></span>
+<span class="codeline" id="line-68"><code>}</code></span>
+<span class="codeline" id="line-69"><code></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">// LeastBytes is a Balancer implementation that routes messages to the partition</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">// that has received the least amount of data.</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-73"><code><span class="comment">// Note that no coordination is done between multiple producers, having good</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">// balancing relies on the fact that each producer using a LeastBytes balancer</span></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">// should produce well balanced messages.</span></code></span>
+<span class="codeline" id="line-76"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-LeastBytes" class="ident">LeastBytes</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-77"><code>	mutex    <a href="../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-78"><code>	counters []<a href="#line-81" class="ident">leastBytesCounter</a></code></span>
+<span class="codeline" id="line-79"><code>}</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-leastBytesCounter" class="ident">leastBytesCounter</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-82"><code>	partition <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-83"><code>	bytes     <a href="../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a></code></span>
+<span class="codeline" id="line-84"><code>}</code></span>
+<span class="codeline" id="line-85"><code></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">// Balance satisfies the Balancer interface.</span></code></span>
+<span class="codeline" id="line-87"><code><span class="keyword">func</span> (<label for="r14" class="ident">lb</label> *<a href="#line-76" class="ident">LeastBytes</a>) <label for="r15" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.LeastBytes.html#name-.Balance" class="ident">Balance</a></label>(<label for="r16" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r17" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-88"><code>	<label for="r14" class="ident">lb</label>.<a href="#line-77" class="ident">mutex</a>.<a href="../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-89"><code>	<span class="keyword">defer</span> <label for="r14" class="ident">lb</label>.<a href="#line-77" class="ident">mutex</a>.<a href="../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code>	<span class="comment">// partitions change</span></code></span>
+<span class="codeline" id="line-92"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r17" class="ident">partitions</label>) != <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r14" class="ident">lb</label>.<a href="#line-78" class="ident">counters</a>) {</code></span>
+<span class="codeline" id="line-93"><code>		<label for="r14" class="ident">lb</label>.<a href="#line-78" class="ident">counters</a> = <label for="r14" class="ident">lb</label>.<a href="#line-111" class="ident">makeCounters</a>(<label for="r17" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-94"><code>	}</code></span>
+<span class="codeline" id="line-95"><code></code></span>
+<span class="codeline" id="line-96"><code>	<label for="r18" class="ident">minBytes</label> := <label for="r14" class="ident">lb</label>.<a href="#line-78" class="ident">counters</a>[<span class="lit-number">0</span>].<a href="#line-83" class="ident">bytes</a></code></span>
+<span class="codeline" id="line-97"><code>	<label for="r19" class="ident">minIndex</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-98"><code></code></span>
+<span class="codeline" id="line-99"><code>	<span class="keyword">for</span> <label for="r20" class="ident">i</label>, <label for="r21" class="ident">c</label> := <span class="keyword">range</span> <label for="r14" class="ident">lb</label>.<a href="#line-78" class="ident">counters</a>[<span class="lit-number">1</span>:] {</code></span>
+<span class="codeline" id="line-100"><code>		<span class="keyword">if</span> <label for="r21" class="ident">c</label>.<a href="#line-83" class="ident">bytes</a> &lt; <label for="r18" class="ident">minBytes</label> {</code></span>
+<span class="codeline" id="line-101"><code>			<label for="r19" class="ident">minIndex</label> = <label for="r20" class="ident">i</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-102"><code>			<label for="r18" class="ident">minBytes</label> = <label for="r21" class="ident">c</label>.<a href="#line-83" class="ident">bytes</a></code></span>
+<span class="codeline" id="line-103"><code>		}</code></span>
+<span class="codeline" id="line-104"><code>	}</code></span>
+<span class="codeline" id="line-105"><code></code></span>
+<span class="codeline" id="line-106"><code>	<label for="r22" class="ident">c</label> := &amp;<label for="r14" class="ident">lb</label>.<a href="#line-78" class="ident">counters</a>[<label for="r19" class="ident">minIndex</label>]</code></span>
+<span class="codeline" id="line-107"><code>	<label for="r22" class="ident">c</label>.<a href="#line-83" class="ident">bytes</a> += <a href="../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r16" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a>)) + <a href="../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r16" class="ident">msg</label>.<a href="message.go.html#line-20" class="ident">Value</a>))</code></span>
+<span class="codeline" id="line-108"><code>	<span class="keyword">return</span> <label for="r22" class="ident">c</label>.<a href="#line-82" class="ident">partition</a></code></span>
+<span class="codeline" id="line-109"><code>}</code></span>
+<span class="codeline" id="line-110"><code></code></span>
+<span class="codeline" id="line-111"><code><span class="keyword">func</span> (<label for="r23" class="ident">lb</label> *<a href="#line-76" class="ident">LeastBytes</a>) <label for="r24" class="ident">makeCounters</label>(<label for="r25" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) (<label for="r26" class="ident">counters</label> []<a href="#line-81" class="ident">leastBytesCounter</a>) {</code></span>
+<span class="codeline" id="line-112"><code>	<label for="r26" class="ident">counters</label> = <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="#line-81" class="ident">leastBytesCounter</a>, <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r25" class="ident">partitions</label>))</code></span>
+<span class="codeline" id="line-113"><code></code></span>
+<span class="codeline" id="line-114"><code>	<span class="keyword">for</span> <label for="r27" class="ident">i</label>, <label for="r28" class="ident">p</label> := <span class="keyword">range</span> <label for="r25" class="ident">partitions</label> {</code></span>
+<span class="codeline" id="line-115"><code>		<label for="r26" class="ident">counters</label>[<label for="r27" class="ident">i</label>].<a href="#line-82" class="ident">partition</a> = <label for="r28" class="ident">p</label></code></span>
+<span class="codeline" id="line-116"><code>	}</code></span>
+<span class="codeline" id="line-117"><code></code></span>
+<span class="codeline" id="line-118"><code>	<a href="../../../../pkg/sort.html" class="ident i4">sort</a>.<a href="../../../sort/slice.go.html#line-24" class="ident">Slice</a>(<label for="r26" class="ident">counters</label>, <span class="keyword">func</span>(<label for="r29" class="ident">i</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r30" class="ident">j</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-119"><code>		<span class="keyword">return</span> <label for="r26" class="ident">counters</label>[<label for="r29" class="ident">i</label>].<a href="#line-82" class="ident">partition</a> &lt; <label for="r26" class="ident">counters</label>[<label for="r30" class="ident">j</label>].<a href="#line-82" class="ident">partition</a></code></span>
+<span class="codeline" id="line-120"><code>	})</code></span>
+<span class="codeline" id="line-121"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-122"><code>}</code></span>
+<span class="codeline" id="line-123"><code></code></span>
+<span class="codeline" id="line-124"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-125"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-fnv1aPool" class="ident">fnv1aPool</a> = &amp;<a href="../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../sync/pool.go.html#line-51" class="ident">Pool</a>{</code></span>
+<span class="codeline" id="line-126"><code>		<a href="../../../sync/pool.go.html#line-63" class="ident">New</a>: <span class="keyword">func</span>() <span class="keyword">interface</span>{} {</code></span>
+<span class="codeline" id="line-127"><code>			<span class="keyword">return</span> <a href="../../../../pkg/hash/fnv.html" class="ident i2">fnv</a>.<a href="../../../hash/fnv/fnv.go.html#line-51" class="ident">New32a</a>()</code></span>
+<span class="codeline" id="line-128"><code>		},</code></span>
+<span class="codeline" id="line-129"><code>	}</code></span>
+<span class="codeline" id="line-130"><code>)</code></span>
+<span class="codeline" id="line-131"><code></code></span>
+<span class="codeline" id="line-132"><code><span class="comment">// Hash is a Balancer that uses the provided hash function to determine which</span></code></span>
+<span class="codeline" id="line-133"><code><span class="comment">// partition to route messages to.  This ensures that messages with the same key</span></code></span>
+<span class="codeline" id="line-134"><code><span class="comment">// are routed to the same partition.</span></code></span>
+<span class="codeline" id="line-135"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-136"><code><span class="comment">// The logic to calculate the partition is:</span></code></span>
+<span class="codeline" id="line-137"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-138"><code><span class="comment">//	hasher.Sum32() % len(partitions) =&gt; partition</span></code></span>
+<span class="codeline" id="line-139"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-140"><code><span class="comment">// By default, Hash uses the FNV-1a algorithm.  This is the same algorithm used</span></code></span>
+<span class="codeline" id="line-141"><code><span class="comment">// by the Sarama Producer and ensures that messages produced by kafka-go will</span></code></span>
+<span class="codeline" id="line-142"><code><span class="comment">// be delivered to the same topics that the Sarama producer would be delivered to.</span></code></span>
+<span class="codeline" id="line-143"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-Hash" class="ident">Hash</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-144"><code>	rr     <a href="#line-41" class="ident">RoundRobin</a></code></span>
+<span class="codeline" id="line-145"><code>	Hasher <a href="../../../../pkg/hash.html" class="ident i0">hash</a>.<a href="../../../hash/hash.go.html#line-49" class="ident">Hash32</a></code></span>
+<span class="codeline" id="line-146"><code></code></span>
+<span class="codeline" id="line-147"><code>	<span class="comment">// lock protects Hasher while calculating the hash code.  It is assumed that</span></code></span>
+<span class="codeline" id="line-148"><code><span class="comment">	// the Hasher field is read-only once the Balancer is created, so as a</span></code></span>
+<span class="codeline" id="line-149"><code><span class="comment">	// performance optimization, reads of the field are not protected.</span></code></span>
+<span class="codeline" id="line-150"><code>	lock <a href="../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-151"><code>}</code></span>
+<span class="codeline" id="line-152"><code></code></span>
+<span class="codeline" id="line-153"><code><span class="keyword">func</span> (<label for="r31" class="ident">h</label> *<a href="#line-143" class="ident">Hash</a>) <label for="r32" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.Hash.html#name-.Balance" class="ident">Balance</a></label>(<label for="r33" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r34" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-154"><code>	<span class="keyword">if</span> <label for="r33" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-155"><code>		<span class="keyword">return</span> <label for="r31" class="ident">h</label>.<a href="#line-144" class="ident">rr</a>.<a href="#line-51" class="ident">Balance</a>(<label for="r33" class="ident">msg</label>, <label for="r34" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-156"><code>	}</code></span>
+<span class="codeline" id="line-157"><code></code></span>
+<span class="codeline" id="line-158"><code>	<label for="r35" class="ident">hasher</label> := <label for="r31" class="ident">h</label>.<a href="#line-145" class="ident">Hasher</a></code></span>
+<span class="codeline" id="line-159"><code>	<span class="keyword">if</span> <label for="r35" class="ident">hasher</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-160"><code>		<label for="r31" class="ident">h</label>.<a href="#line-150" class="ident">lock</a>.<a href="../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-161"><code>		<span class="keyword">defer</span> <label for="r31" class="ident">h</label>.<a href="#line-150" class="ident">lock</a>.<a href="../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-162"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-163"><code>		<label for="r35" class="ident">hasher</label> = <a href="#line-125" class="ident">fnv1aPool</a>.<a href="../../../sync/pool.go.html#line-131" class="ident">Get</a>().(<a href="../../../../pkg/hash.html" class="ident i0">hash</a>.<a href="../../../hash/hash.go.html#line-49" class="ident">Hash32</a>)</code></span>
+<span class="codeline" id="line-164"><code>		<span class="keyword">defer</span> <a href="#line-125" class="ident">fnv1aPool</a>.<a href="../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r35" class="ident">hasher</label>)</code></span>
+<span class="codeline" id="line-165"><code>	}</code></span>
+<span class="codeline" id="line-166"><code></code></span>
+<span class="codeline" id="line-167"><code>	<label for="r35" class="ident">hasher</label>.<a href="../../../hash/hash.go.html#line-36" class="ident">Reset</a>()</code></span>
+<span class="codeline" id="line-168"><code>	<span class="keyword">if</span> <label for="r36" class="ident">_</label>, <label for="r37" class="ident">err</label> := <label for="r35" class="ident">hasher</label>.<a href="../../../io/io.go.html#line-100" class="ident">Write</a>(<label for="r33" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a>); <label for="r37" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-169"><code>		<a href="../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r37" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-170"><code>	}</code></span>
+<span class="codeline" id="line-171"><code></code></span>
+<span class="codeline" id="line-172"><code>	<span class="comment">// uses same algorithm that Sarama's hashPartitioner uses</span></code></span>
+<span class="codeline" id="line-173"><code><span class="comment">	// note the type conversions here.  if the uint32 hash code is not cast to</span></code></span>
+<span class="codeline" id="line-174"><code><span class="comment">	// an int32, we do not get the same result as sarama.</span></code></span>
+<span class="codeline" id="line-175"><code>	<label for="r38" class="ident">partition</label> := <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<label for="r35" class="ident">hasher</label>.<a href="../../../hash/hash.go.html#line-51" class="ident">Sum32</a>()) % <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r34" class="ident">partitions</label>))</code></span>
+<span class="codeline" id="line-176"><code>	<span class="keyword">if</span> <label for="r38" class="ident">partition</label> &lt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-177"><code>		<label for="r38" class="ident">partition</label> = -<label for="r38" class="ident">partition</label></code></span>
+<span class="codeline" id="line-178"><code>	}</code></span>
+<span class="codeline" id="line-179"><code></code></span>
+<span class="codeline" id="line-180"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r38" class="ident">partition</label>)</code></span>
+<span class="codeline" id="line-181"><code>}</code></span>
+<span class="codeline" id="line-182"><code></code></span>
+<span class="codeline" id="line-183"><code><span class="comment">// ReferenceHash is a Balancer that uses the provided hash function to determine which</span></code></span>
+<span class="codeline" id="line-184"><code><span class="comment">// partition to route messages to.  This ensures that messages with the same key</span></code></span>
+<span class="codeline" id="line-185"><code><span class="comment">// are routed to the same partition.</span></code></span>
+<span class="codeline" id="line-186"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-187"><code><span class="comment">// The logic to calculate the partition is:</span></code></span>
+<span class="codeline" id="line-188"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-189"><code><span class="comment">//	(int32(hasher.Sum32()) &amp; 0x7fffffff) % len(partitions) =&gt; partition</span></code></span>
+<span class="codeline" id="line-190"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-191"><code><span class="comment">// By default, ReferenceHash uses the FNV-1a algorithm. This is the same algorithm as</span></code></span>
+<span class="codeline" id="line-192"><code><span class="comment">// the Sarama NewReferenceHashPartitioner and ensures that messages produced by kafka-go will</span></code></span>
+<span class="codeline" id="line-193"><code><span class="comment">// be delivered to the same topics that the Sarama producer would be delivered to.</span></code></span>
+<span class="codeline" id="line-194"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ReferenceHash" class="ident">ReferenceHash</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-195"><code>	rr     <a href="#line-230" class="ident">randomBalancer</a></code></span>
+<span class="codeline" id="line-196"><code>	Hasher <a href="../../../../pkg/hash.html" class="ident i0">hash</a>.<a href="../../../hash/hash.go.html#line-49" class="ident">Hash32</a></code></span>
+<span class="codeline" id="line-197"><code></code></span>
+<span class="codeline" id="line-198"><code>	<span class="comment">// lock protects Hasher while calculating the hash code.  It is assumed that</span></code></span>
+<span class="codeline" id="line-199"><code><span class="comment">	// the Hasher field is read-only once the Balancer is created, so as a</span></code></span>
+<span class="codeline" id="line-200"><code><span class="comment">	// performance optimization, reads of the field are not protected.</span></code></span>
+<span class="codeline" id="line-201"><code>	lock <a href="../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-202"><code>}</code></span>
+<span class="codeline" id="line-203"><code></code></span>
+<span class="codeline" id="line-204"><code><span class="keyword">func</span> (<label for="r39" class="ident">h</label> *<a href="#line-194" class="ident">ReferenceHash</a>) <label for="r40" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.ReferenceHash.html#name-.Balance" class="ident">Balance</a></label>(<label for="r41" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r42" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-205"><code>	<span class="keyword">if</span> <label for="r41" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-206"><code>		<span class="keyword">return</span> <label for="r39" class="ident">h</label>.<a href="#line-195" class="ident">rr</a>.<a href="#line-234" class="ident">Balance</a>(<label for="r41" class="ident">msg</label>, <label for="r42" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-207"><code>	}</code></span>
+<span class="codeline" id="line-208"><code></code></span>
+<span class="codeline" id="line-209"><code>	<label for="r43" class="ident">hasher</label> := <label for="r39" class="ident">h</label>.<a href="#line-196" class="ident">Hasher</a></code></span>
+<span class="codeline" id="line-210"><code>	<span class="keyword">if</span> <label for="r43" class="ident">hasher</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-211"><code>		<label for="r39" class="ident">h</label>.<a href="#line-201" class="ident">lock</a>.<a href="../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-212"><code>		<span class="keyword">defer</span> <label for="r39" class="ident">h</label>.<a href="#line-201" class="ident">lock</a>.<a href="../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-213"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-214"><code>		<label for="r43" class="ident">hasher</label> = <a href="#line-125" class="ident">fnv1aPool</a>.<a href="../../../sync/pool.go.html#line-131" class="ident">Get</a>().(<a href="../../../../pkg/hash.html" class="ident i0">hash</a>.<a href="../../../hash/hash.go.html#line-49" class="ident">Hash32</a>)</code></span>
+<span class="codeline" id="line-215"><code>		<span class="keyword">defer</span> <a href="#line-125" class="ident">fnv1aPool</a>.<a href="../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r43" class="ident">hasher</label>)</code></span>
+<span class="codeline" id="line-216"><code>	}</code></span>
+<span class="codeline" id="line-217"><code></code></span>
+<span class="codeline" id="line-218"><code>	<label for="r43" class="ident">hasher</label>.<a href="../../../hash/hash.go.html#line-36" class="ident">Reset</a>()</code></span>
+<span class="codeline" id="line-219"><code>	<span class="keyword">if</span> <label for="r44" class="ident">_</label>, <label for="r45" class="ident">err</label> := <label for="r43" class="ident">hasher</label>.<a href="../../../io/io.go.html#line-100" class="ident">Write</a>(<label for="r41" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a>); <label for="r45" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-220"><code>		<a href="../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r45" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-221"><code>	}</code></span>
+<span class="codeline" id="line-222"><code></code></span>
+<span class="codeline" id="line-223"><code>	<span class="comment">// uses the same algorithm as the Sarama's referenceHashPartitioner.</span></code></span>
+<span class="codeline" id="line-224"><code><span class="comment">	// note the type conversions here. if the uint32 hash code is not cast to</span></code></span>
+<span class="codeline" id="line-225"><code><span class="comment">	// an int32, we do not get the same result as sarama.</span></code></span>
+<span class="codeline" id="line-226"><code>	<label for="r46" class="ident">partition</label> := (<a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<label for="r43" class="ident">hasher</label>.<a href="../../../hash/hash.go.html#line-51" class="ident">Sum32</a>()) &amp; <span class="lit-number">0x7fffffff</span>) % <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r42" class="ident">partitions</label>))</code></span>
+<span class="codeline" id="line-227"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r46" class="ident">partition</label>)</code></span>
+<span class="codeline" id="line-228"><code>}</code></span>
+<span class="codeline" id="line-229"><code></code></span>
+<span class="codeline" id="line-230"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-randomBalancer" class="ident">randomBalancer</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-231"><code>	mock <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> <span class="comment">// mocked return value, used for testing</span></code></span>
+<span class="codeline" id="line-232"><code>}</code></span>
+<span class="codeline" id="line-233"><code></code></span>
+<span class="codeline" id="line-234"><code><span class="keyword">func</span> (<label for="r47" class="ident">b</label> <a href="#line-230" class="ident">randomBalancer</a>) <label for="r48" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.randomBalancer^e79c1.html#name-.Balance" class="ident">Balance</a></label>(<label for="r49" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r50" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) (<label for="r51" class="ident">partition</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-235"><code>	<span class="keyword">if</span> <label for="r47" class="ident">b</label>.<a href="#line-231" class="ident">mock</a> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-236"><code>		<span class="keyword">return</span> <label for="r47" class="ident">b</label>.<a href="#line-231" class="ident">mock</a></code></span>
+<span class="codeline" id="line-237"><code>	}</code></span>
+<span class="codeline" id="line-238"><code>	<span class="keyword">return</span> <label for="r50" class="ident">partitions</label>[<a href="../../../../pkg/math/rand.html" class="ident i3">rand</a>.<a href="../../../math/rand/rand.go.html#line-449" class="ident">Int</a>()%<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r50" class="ident">partitions</label>)]</code></span>
+<span class="codeline" id="line-239"><code>}</code></span>
+<span class="codeline" id="line-240"><code></code></span>
+<span class="codeline" id="line-241"><code><span class="comment">// CRC32Balancer is a Balancer that uses the CRC32 hash function to determine</span></code></span>
+<span class="codeline" id="line-242"><code><span class="comment">// which partition to route messages to.  This ensures that messages with the</span></code></span>
+<span class="codeline" id="line-243"><code><span class="comment">// same key are routed to the same partition.  This balancer is compatible with</span></code></span>
+<span class="codeline" id="line-244"><code><span class="comment">// the built-in hash partitioners in librdkafka and the language bindings that</span></code></span>
+<span class="codeline" id="line-245"><code><span class="comment">// are built on top of it, including the</span></code></span>
+<span class="codeline" id="line-246"><code><span class="comment">// github.com/confluentinc/confluent-kafka-go Go package.</span></code></span>
+<span class="codeline" id="line-247"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-248"><code><span class="comment">// With the Consistent field false (default), this partitioner is equivalent to</span></code></span>
+<span class="codeline" id="line-249"><code><span class="comment">// the "consistent_random" setting in librdkafka.  When Consistent is true, this</span></code></span>
+<span class="codeline" id="line-250"><code><span class="comment">// partitioner is equivalent to the "consistent" setting.  The latter will hash</span></code></span>
+<span class="codeline" id="line-251"><code><span class="comment">// empty or nil keys into the same partition.</span></code></span>
+<span class="codeline" id="line-252"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-253"><code><span class="comment">// Unless you are absolutely certain that all your messages will have keys, it's</span></code></span>
+<span class="codeline" id="line-254"><code><span class="comment">// best to leave the Consistent flag off.  Otherwise, you run the risk of</span></code></span>
+<span class="codeline" id="line-255"><code><span class="comment">// creating a very hot partition.</span></code></span>
+<span class="codeline" id="line-256"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-CRC32Balancer" class="ident">CRC32Balancer</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-257"><code>	Consistent <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-258"><code>	random     <a href="#line-230" class="ident">randomBalancer</a></code></span>
+<span class="codeline" id="line-259"><code>}</code></span>
+<span class="codeline" id="line-260"><code></code></span>
+<span class="codeline" id="line-261"><code><span class="keyword">func</span> (<label for="r52" class="ident">b</label> <a href="#line-256" class="ident">CRC32Balancer</a>) <label for="r53" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.CRC32Balancer.html#name-.Balance" class="ident">Balance</a></label>(<label for="r54" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r55" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) (<label for="r56" class="ident">partition</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-262"><code>	<span class="comment">// NOTE: the crc32 balancers in librdkafka don't differentiate between nil</span></code></span>
+<span class="codeline" id="line-263"><code><span class="comment">	//       and empty keys.  both cases are treated as unset.</span></code></span>
+<span class="codeline" id="line-264"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r54" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a>) == <span class="lit-number">0</span> &amp;&amp; !<label for="r52" class="ident">b</label>.<a href="#line-257" class="ident">Consistent</a> {</code></span>
+<span class="codeline" id="line-265"><code>		<span class="keyword">return</span> <label for="r52" class="ident">b</label>.<a href="#line-258" class="ident">random</a>.<a href="#line-234" class="ident">Balance</a>(<label for="r54" class="ident">msg</label>, <label for="r55" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-266"><code>	}</code></span>
+<span class="codeline" id="line-267"><code></code></span>
+<span class="codeline" id="line-268"><code>	<label for="r57" class="ident">idx</label> := <a href="../../../../pkg/hash/crc32.html" class="ident i1">crc32</a>.<a href="../../../hash/crc32/crc32.go.html#line-243" class="ident">ChecksumIEEE</a>(<label for="r54" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a>) % <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r55" class="ident">partitions</label>))</code></span>
+<span class="codeline" id="line-269"><code>	<span class="keyword">return</span> <label for="r55" class="ident">partitions</label>[<label for="r57" class="ident">idx</label>]</code></span>
+<span class="codeline" id="line-270"><code>}</code></span>
+<span class="codeline" id="line-271"><code></code></span>
+<span class="codeline" id="line-272"><code><span class="comment">// Murmur2Balancer is a Balancer that uses the Murmur2 hash function to</span></code></span>
+<span class="codeline" id="line-273"><code><span class="comment">// determine which partition to route messages to.  This ensures that messages</span></code></span>
+<span class="codeline" id="line-274"><code><span class="comment">// with the same key are routed to the same partition.  This balancer is</span></code></span>
+<span class="codeline" id="line-275"><code><span class="comment">// compatible with the partitioner used by the Java library and by librdkafka's</span></code></span>
+<span class="codeline" id="line-276"><code><span class="comment">// "murmur2" and "murmur2_random" partitioners.</span></code></span>
+<span class="codeline" id="line-277"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-278"><code><span class="comment">// With the Consistent field false (default), this partitioner is equivalent to</span></code></span>
+<span class="codeline" id="line-279"><code><span class="comment">// the "murmur2_random" setting in librdkafka.  When Consistent is true, this</span></code></span>
+<span class="codeline" id="line-280"><code><span class="comment">// partitioner is equivalent to the "murmur2" setting.  The latter will hash</span></code></span>
+<span class="codeline" id="line-281"><code><span class="comment">// nil keys into the same partition.  Empty, non-nil keys are always hashed to</span></code></span>
+<span class="codeline" id="line-282"><code><span class="comment">// the same partition regardless of configuration.</span></code></span>
+<span class="codeline" id="line-283"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-284"><code><span class="comment">// Unless you are absolutely certain that all your messages will have keys, it's</span></code></span>
+<span class="codeline" id="line-285"><code><span class="comment">// best to leave the Consistent flag off.  Otherwise, you run the risk of</span></code></span>
+<span class="codeline" id="line-286"><code><span class="comment">// creating a very hot partition.</span></code></span>
+<span class="codeline" id="line-287"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-288"><code><span class="comment">// Note that the librdkafka documentation states that the "murmur2_random" is</span></code></span>
+<span class="codeline" id="line-289"><code><span class="comment">// functionally equivalent to the default Java partitioner.  That's because the</span></code></span>
+<span class="codeline" id="line-290"><code><span class="comment">// Java partitioner will use a round robin balancer instead of random on nil</span></code></span>
+<span class="codeline" id="line-291"><code><span class="comment">// keys.  We choose librdkafka's implementation because it arguably has a larger</span></code></span>
+<span class="codeline" id="line-292"><code><span class="comment">// install base.</span></code></span>
+<span class="codeline" id="line-293"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-Murmur2Balancer" class="ident">Murmur2Balancer</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-294"><code>	Consistent <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-295"><code>	random     <a href="#line-230" class="ident">randomBalancer</a></code></span>
+<span class="codeline" id="line-296"><code>}</code></span>
+<span class="codeline" id="line-297"><code></code></span>
+<span class="codeline" id="line-298"><code><span class="keyword">func</span> (<label for="r58" class="ident">b</label> <a href="#line-293" class="ident">Murmur2Balancer</a>) <label for="r59" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.Murmur2Balancer.html#name-.Balance" class="ident">Balance</a></label>(<label for="r60" class="ident">msg</label> <a href="message.go.html#line-8" class="ident">Message</a>, <label for="r61" class="ident">partitions</label> ...<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) (<label for="r62" class="ident">partition</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-299"><code>	<span class="comment">// NOTE: the murmur2 balancers in java and librdkafka treat a nil key as</span></code></span>
+<span class="codeline" id="line-300"><code><span class="comment">	//       non-existent while treating an empty slice as a defined value.</span></code></span>
+<span class="codeline" id="line-301"><code>	<span class="keyword">if</span> <label for="r60" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> &amp;&amp; !<label for="r58" class="ident">b</label>.<a href="#line-294" class="ident">Consistent</a> {</code></span>
+<span class="codeline" id="line-302"><code>		<span class="keyword">return</span> <label for="r58" class="ident">b</label>.<a href="#line-295" class="ident">random</a>.<a href="#line-234" class="ident">Balance</a>(<label for="r60" class="ident">msg</label>, <label for="r61" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-303"><code>	}</code></span>
+<span class="codeline" id="line-304"><code></code></span>
+<span class="codeline" id="line-305"><code>	<label for="r63" class="ident">idx</label> := (<a href="#line-311" class="ident">murmur2</a>(<label for="r60" class="ident">msg</label>.<a href="message.go.html#line-19" class="ident">Key</a>) &amp; <span class="lit-number">0x7fffffff</span>) % <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r61" class="ident">partitions</label>))</code></span>
+<span class="codeline" id="line-306"><code>	<span class="keyword">return</span> <label for="r61" class="ident">partitions</label>[<label for="r63" class="ident">idx</label>]</code></span>
+<span class="codeline" id="line-307"><code>}</code></span>
+<span class="codeline" id="line-308"><code></code></span>
+<span class="codeline" id="line-309"><code><span class="comment">// Go port of the Java library's murmur2 function.</span></code></span>
+<span class="codeline" id="line-310"><code><span class="comment">// https://github.com/apache/kafka/blob/1.0/clients/src/main/java/org/apache/kafka/common/utils/Utils.java#L353</span></code></span>
+<span class="codeline" id="line-311"><code><span class="keyword">func</span> <label for="r64" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-murmur2" class="ident">murmur2</a></label>(<label for="r65" class="ident">data</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-312"><code>	<label for="r66" class="ident">length</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r65" class="ident">data</label>)</code></span>
+<span class="codeline" id="line-313"><code>	<span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-314"><code>		<label for="r67" class="ident">seed</label> <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> = <span class="lit-number">0x9747b28c</span></code></span>
+<span class="codeline" id="line-315"><code>		<span class="comment">// 'm' and 'r' are mixing constants generated offline.</span></code></span>
+<span class="codeline" id="line-316"><code><span class="comment">		// They're not really 'magic', they just happen to work well.</span></code></span>
+<span class="codeline" id="line-317"><code>		<label for="r68" class="ident">m</label> = <span class="lit-number">0x5bd1e995</span></code></span>
+<span class="codeline" id="line-318"><code>		<label for="r69" class="ident">r</label> = <span class="lit-number">24</span></code></span>
+<span class="codeline" id="line-319"><code>	)</code></span>
+<span class="codeline" id="line-320"><code></code></span>
+<span class="codeline" id="line-321"><code>	<span class="comment">// Initialize the hash to a random value</span></code></span>
+<span class="codeline" id="line-322"><code>	<label for="r70" class="ident">h</label> := <label for="r67" class="ident">seed</label> ^ <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r66" class="ident">length</label>)</code></span>
+<span class="codeline" id="line-323"><code>	<label for="r71" class="ident">length4</label> := <label for="r66" class="ident">length</label> / <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-324"><code></code></span>
+<span class="codeline" id="line-325"><code>	<span class="keyword">for</span> <label for="r72" class="ident">i</label> := <span class="lit-number">0</span>; <label for="r72" class="ident">i</label> &lt; <label for="r71" class="ident">length4</label>; <label for="r72" class="ident">i</label>++ {</code></span>
+<span class="codeline" id="line-326"><code>		<label for="r73" class="ident">i4</label> := <label for="r72" class="ident">i</label> * <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-327"><code>		<label for="r74" class="ident">k</label> := (<a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[<label for="r73" class="ident">i4</label>+<span class="lit-number">0</span>]) &amp; <span class="lit-number">0xff</span>) + ((<a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[<label for="r73" class="ident">i4</label>+<span class="lit-number">1</span>]) &amp; <span class="lit-number">0xff</span>) &lt;&lt; <span class="lit-number">8</span>) + ((<a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[<label for="r73" class="ident">i4</label>+<span class="lit-number">2</span>]) &amp; <span class="lit-number">0xff</span>) &lt;&lt; <span class="lit-number">16</span>) + ((<a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[<label for="r73" class="ident">i4</label>+<span class="lit-number">3</span>]) &amp; <span class="lit-number">0xff</span>) &lt;&lt; <span class="lit-number">24</span>)</code></span>
+<span class="codeline" id="line-328"><code>		<label for="r74" class="ident">k</label> *= <label for="r68" class="ident">m</label></code></span>
+<span class="codeline" id="line-329"><code>		<label for="r74" class="ident">k</label> ^= <label for="r74" class="ident">k</label> &gt;&gt; <label for="r69" class="ident">r</label></code></span>
+<span class="codeline" id="line-330"><code>		<label for="r74" class="ident">k</label> *= <label for="r68" class="ident">m</label></code></span>
+<span class="codeline" id="line-331"><code>		<label for="r70" class="ident">h</label> *= <label for="r68" class="ident">m</label></code></span>
+<span class="codeline" id="line-332"><code>		<label for="r70" class="ident">h</label> ^= <label for="r74" class="ident">k</label></code></span>
+<span class="codeline" id="line-333"><code>	}</code></span>
+<span class="codeline" id="line-334"><code></code></span>
+<span class="codeline" id="line-335"><code>	<span class="comment">// Handle the last few bytes of the input array</span></code></span>
+<span class="codeline" id="line-336"><code>	<label for="r75" class="ident">extra</label> := <label for="r66" class="ident">length</label> % <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-337"><code>	<span class="keyword">if</span> <label for="r75" class="ident">extra</label> &gt;= <span class="lit-number">3</span> {</code></span>
+<span class="codeline" id="line-338"><code>		<label for="r70" class="ident">h</label> ^= (<a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[(<label for="r66" class="ident">length</label> &amp; ^<span class="lit-number">3</span>)+<span class="lit-number">2</span>]) &amp; <span class="lit-number">0xff</span>) &lt;&lt; <span class="lit-number">16</span></code></span>
+<span class="codeline" id="line-339"><code>	}</code></span>
+<span class="codeline" id="line-340"><code>	<span class="keyword">if</span> <label for="r75" class="ident">extra</label> &gt;= <span class="lit-number">2</span> {</code></span>
+<span class="codeline" id="line-341"><code>		<label for="r70" class="ident">h</label> ^= (<a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[(<label for="r66" class="ident">length</label> &amp; ^<span class="lit-number">3</span>)+<span class="lit-number">1</span>]) &amp; <span class="lit-number">0xff</span>) &lt;&lt; <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-342"><code>	}</code></span>
+<span class="codeline" id="line-343"><code>	<span class="keyword">if</span> <label for="r75" class="ident">extra</label> &gt;= <span class="lit-number">1</span> {</code></span>
+<span class="codeline" id="line-344"><code>		<label for="r70" class="ident">h</label> ^= <a href="../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r65" class="ident">data</label>[<label for="r66" class="ident">length</label> &amp; ^<span class="lit-number">3</span>]) &amp; <span class="lit-number">0xff</span></code></span>
+<span class="codeline" id="line-345"><code>		<label for="r70" class="ident">h</label> *= <label for="r68" class="ident">m</label></code></span>
+<span class="codeline" id="line-346"><code>	}</code></span>
+<span class="codeline" id="line-347"><code></code></span>
+<span class="codeline" id="line-348"><code>	<label for="r70" class="ident">h</label> ^= <label for="r70" class="ident">h</label> &gt;&gt; <span class="lit-number">13</span></code></span>
+<span class="codeline" id="line-349"><code>	<label for="r70" class="ident">h</label> *= <label for="r68" class="ident">m</label></code></span>
+<span class="codeline" id="line-350"><code>	<label for="r70" class="ident">h</label> ^= <label for="r70" class="ident">h</label> &gt;&gt; <span class="lit-number">15</span></code></span>
+<span class="codeline" id="line-351"><code></code></span>
+<span class="codeline" id="line-352"><code>	<span class="keyword">return</span> <label for="r70" class="ident">h</label></code></span>
+<span class="codeline" id="line-353"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

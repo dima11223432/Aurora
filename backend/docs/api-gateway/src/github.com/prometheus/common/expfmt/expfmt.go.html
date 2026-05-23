@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: expfmt.go in package github.com/prometheus/common/expfmt</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	expfmt.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html">github.com/prometheus/common/expfmt</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2015 The Prometheus Authors</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Licensed under the Apache License, Version 2.0 (the "License");</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// you may not use this file except in compliance with the License.</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// You may obtain a copy of the License at</span></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// distributed under the License is distributed on an "AS IS" BASIS,</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// See the License for the specific language governing permissions and</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// limitations under the License.</span></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-14"><code><span class="comment">// Package expfmt contains tools for reading and writing Prometheus metrics.</span></code></span></div><span class="codeline" id="line-15"><code><span class="keyword">package</span> expfmt</code></span>
+<span class="codeline" id="line-16"><code></code></span>
+<span class="codeline" id="line-17"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-18"><code>	<label for="i0"><span class="lit-string i0">"errors"</span></label></code></span>
+<span class="codeline" id="line-19"><code>	<label for="i1"><span class="lit-string i1">"strings"</span></label></code></span>
+<span class="codeline" id="line-20"><code></code></span>
+<span class="codeline" id="line-21"><code>	<label for="i2"><span class="lit-string i2">"github.com/prometheus/common/model"</span></label></code></span>
+<span class="codeline" id="line-22"><code>)</code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// Format specifies the HTTP content type of the different wire protocols.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-Format" class="ident">Format</a> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// Constants to assemble the Content-Type values for the different wire</span></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">// protocols. The Content-Type strings here are all for the legacy exposition</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// formats, where valid characters for metric names and label names are limited.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// Support for arbitrary UTF-8 characters in those names is already partially</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">// implemented in this module (see model.ValidationScheme), but to actually use</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">// it on the wire, new content-type strings will have to be agreed upon and</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// added here.</span></code></span>
+<span class="codeline" id="line-34"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TextVersion" class="ident">TextVersion</a>   = <span class="lit-string">"0.0.4"</span></code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-ProtoType" class="ident">ProtoType</a>     = <span class="lit-string">`application/vnd.google.protobuf`</span></code></span>
+<span class="codeline" id="line-37"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-ProtoProtocol" class="ident">ProtoProtocol</a> = <span class="lit-string">`io.prometheus.client.MetricFamily`</span></code></span>
+<span class="codeline" id="line-38"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeProtoCompact) instead.</span></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-ProtoFmt" class="ident">ProtoFmt</a>        = <a href="#line-36" class="ident">ProtoType</a> + <span class="lit-string">"; proto="</span> + <a href="#line-37" class="ident">ProtoProtocol</a> + <span class="lit-string">";"</span></code></span>
+<span class="codeline" id="line-40"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-OpenMetricsType" class="ident">OpenMetricsType</a> = <span class="lit-string">`application/openmetrics-text`</span></code></span>
+<span class="codeline" id="line-41"><code>	<span class="comment">//nolint:revive // Allow for underscores.</span></code></span>
+<span class="codeline" id="line-42"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-OpenMetricsVersion_0_0_1" class="ident">OpenMetricsVersion_0_0_1</a> = <span class="lit-string">"0.0.1"</span></code></span>
+<span class="codeline" id="line-43"><code>	<span class="comment">//nolint:revive // Allow for underscores.</span></code></span>
+<span class="codeline" id="line-44"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-OpenMetricsVersion_1_0_0" class="ident">OpenMetricsVersion_1_0_0</a> = <span class="lit-string">"1.0.0"</span></code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code>	<span class="comment">// The Content-Type values for the different wire protocols. Do not do direct</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">	// comparisons to these constants, instead use the comparison functions.</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">	// Deprecated: Use expfmt.NewFormat(expfmt.TypeUnknown) instead.</span></code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtUnknown" class="ident">FmtUnknown</a> <a href="#line-25" class="ident">Format</a> = <span class="lit-string">`&lt;unknown&gt;`</span></code></span>
+<span class="codeline" id="line-50"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeTextPlain) instead.</span></code></span>
+<span class="codeline" id="line-51"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtText" class="ident">FmtText</a> <a href="#line-25" class="ident">Format</a> = <span class="lit-string">`text/plain; version=`</span> + <a href="#line-35" class="ident">TextVersion</a> + <span class="lit-string">`; charset=utf-8`</span></code></span>
+<span class="codeline" id="line-52"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeProtoDelim) instead.</span></code></span>
+<span class="codeline" id="line-53"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtProtoDelim" class="ident">FmtProtoDelim</a> <a href="#line-25" class="ident">Format</a> = <a href="#line-39" class="ident">ProtoFmt</a> + <span class="lit-string">` encoding=delimited`</span></code></span>
+<span class="codeline" id="line-54"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeProtoText) instead.</span></code></span>
+<span class="codeline" id="line-55"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtProtoText" class="ident">FmtProtoText</a> <a href="#line-25" class="ident">Format</a> = <a href="#line-39" class="ident">ProtoFmt</a> + <span class="lit-string">` encoding=text`</span></code></span>
+<span class="codeline" id="line-56"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeProtoCompact) instead.</span></code></span>
+<span class="codeline" id="line-57"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtProtoCompact" class="ident">FmtProtoCompact</a> <a href="#line-25" class="ident">Format</a> = <a href="#line-39" class="ident">ProtoFmt</a> + <span class="lit-string">` encoding=compact-text`</span></code></span>
+<span class="codeline" id="line-58"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeOpenMetrics) instead.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">	//nolint:revive // Allow for underscores.</span></code></span>
+<span class="codeline" id="line-60"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtOpenMetrics_1_0_0" class="ident">FmtOpenMetrics_1_0_0</a> <a href="#line-25" class="ident">Format</a> = <a href="#line-40" class="ident">OpenMetricsType</a> + <span class="lit-string">`; version=`</span> + <a href="#line-44" class="ident">OpenMetricsVersion_1_0_0</a> + <span class="lit-string">`; charset=utf-8`</span></code></span>
+<span class="codeline" id="line-61"><code>	<span class="comment">// Deprecated: Use expfmt.NewFormat(expfmt.TypeOpenMetrics) instead.</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">	//nolint:revive // Allow for underscores.</span></code></span>
+<span class="codeline" id="line-63"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FmtOpenMetrics_0_0_1" class="ident">FmtOpenMetrics_0_0_1</a> <a href="#line-25" class="ident">Format</a> = <a href="#line-40" class="ident">OpenMetricsType</a> + <span class="lit-string">`; version=`</span> + <a href="#line-42" class="ident">OpenMetricsVersion_0_0_1</a> + <span class="lit-string">`; charset=utf-8`</span></code></span>
+<span class="codeline" id="line-64"><code>)</code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-67"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-hdrContentType" class="ident">hdrContentType</a> = <span class="lit-string">"Content-Type"</span></code></span>
+<span class="codeline" id="line-68"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-hdrAccept" class="ident">hdrAccept</a>      = <span class="lit-string">"Accept"</span></code></span>
+<span class="codeline" id="line-69"><code>)</code></span>
+<span class="codeline" id="line-70"><code></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">// FormatType is a Go enum representing the overall category for the given</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">// Format. As the number of Format permutations increases, doing basic string</span></code></span>
+<span class="codeline" id="line-73"><code><span class="comment">// comparisons are not feasible, so this enum captures the most useful</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">// high-level attribute of the Format string.</span></code></span>
+<span class="codeline" id="line-75"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-FormatType" class="ident">FormatType</a> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-76"><code></code></span>
+<span class="codeline" id="line-77"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-78"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TypeUnknown" class="ident">TypeUnknown</a> <a href="#line-75" class="ident">FormatType</a> = <a href="../../../../../pkg/builtin.html#name-iota" class="ident">iota</a></code></span>
+<span class="codeline" id="line-79"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TypeProtoCompact" class="ident">TypeProtoCompact</a></code></span>
+<span class="codeline" id="line-80"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TypeProtoDelim" class="ident">TypeProtoDelim</a></code></span>
+<span class="codeline" id="line-81"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TypeProtoText" class="ident">TypeProtoText</a></code></span>
+<span class="codeline" id="line-82"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TypeTextPlain" class="ident">TypeTextPlain</a></code></span>
+<span class="codeline" id="line-83"><code>	<a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-TypeOpenMetrics" class="ident">TypeOpenMetrics</a></code></span>
+<span class="codeline" id="line-84"><code>)</code></span>
+<span class="codeline" id="line-85"><code></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">// NewFormat generates a new Format from the type provided. Mostly used for</span></code></span>
+<span class="codeline" id="line-87"><code><span class="comment">// tests, most Formats should be generated as part of content negotiation in</span></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">// encode.go. If a type has more than one version, the latest version will be</span></code></span>
+<span class="codeline" id="line-89"><code><span class="comment">// returned.</span></code></span>
+<span class="codeline" id="line-90"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-NewFormat" class="ident">NewFormat</a></label>(<label for="r1" class="ident">t</label> <a href="#line-75" class="ident">FormatType</a>) <a href="#line-25" class="ident">Format</a> {</code></span>
+<span class="codeline" id="line-91"><code>	<span class="keyword">switch</span> <label for="r1" class="ident">t</label> {</code></span>
+<span class="codeline" id="line-92"><code>	<span class="keyword">case</span> <a href="#line-79" class="ident">TypeProtoCompact</a>:</code></span>
+<span class="codeline" id="line-93"><code>		<span class="keyword">return</span> <a href="#line-57" class="ident">FmtProtoCompact</a></code></span>
+<span class="codeline" id="line-94"><code>	<span class="keyword">case</span> <a href="#line-80" class="ident">TypeProtoDelim</a>:</code></span>
+<span class="codeline" id="line-95"><code>		<span class="keyword">return</span> <a href="#line-53" class="ident">FmtProtoDelim</a></code></span>
+<span class="codeline" id="line-96"><code>	<span class="keyword">case</span> <a href="#line-81" class="ident">TypeProtoText</a>:</code></span>
+<span class="codeline" id="line-97"><code>		<span class="keyword">return</span> <a href="#line-55" class="ident">FmtProtoText</a></code></span>
+<span class="codeline" id="line-98"><code>	<span class="keyword">case</span> <a href="#line-82" class="ident">TypeTextPlain</a>:</code></span>
+<span class="codeline" id="line-99"><code>		<span class="keyword">return</span> <a href="#line-51" class="ident">FmtText</a></code></span>
+<span class="codeline" id="line-100"><code>	<span class="keyword">case</span> <a href="#line-83" class="ident">TypeOpenMetrics</a>:</code></span>
+<span class="codeline" id="line-101"><code>		<span class="keyword">return</span> <a href="#line-60" class="ident">FmtOpenMetrics_1_0_0</a></code></span>
+<span class="codeline" id="line-102"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-103"><code>		<span class="keyword">return</span> <a href="#line-49" class="ident">FmtUnknown</a></code></span>
+<span class="codeline" id="line-104"><code>	}</code></span>
+<span class="codeline" id="line-105"><code>}</code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code><span class="comment">// NewOpenMetricsFormat generates a new OpenMetrics format matching the</span></code></span>
+<span class="codeline" id="line-108"><code><span class="comment">// specified version number.</span></code></span>
+<span class="codeline" id="line-109"><code><span class="keyword">func</span> <label for="r2" class="ident"><a href="../../../../../pkg/github.com/prometheus/common/expfmt.html#name-NewOpenMetricsFormat" class="ident">NewOpenMetricsFormat</a></label>(<label for="r3" class="ident">version</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="#line-25" class="ident">Format</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-110"><code>	<span class="keyword">if</span> <label for="r3" class="ident">version</label> == <a href="#line-42" class="ident">OpenMetricsVersion_0_0_1</a> {</code></span>
+<span class="codeline" id="line-111"><code>		<span class="keyword">return</span> <a href="#line-63" class="ident">FmtOpenMetrics_0_0_1</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-112"><code>	}</code></span>
+<span class="codeline" id="line-113"><code>	<span class="keyword">if</span> <label for="r3" class="ident">version</label> == <a href="#line-44" class="ident">OpenMetricsVersion_1_0_0</a> {</code></span>
+<span class="codeline" id="line-114"><code>		<span class="keyword">return</span> <a href="#line-60" class="ident">FmtOpenMetrics_1_0_0</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-115"><code>	}</code></span>
+<span class="codeline" id="line-116"><code>	<span class="keyword">return</span> <a href="#line-49" class="ident">FmtUnknown</a>, <a href="../../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"unknown open metrics version string"</span>)</code></span>
+<span class="codeline" id="line-117"><code>}</code></span>
+<span class="codeline" id="line-118"><code></code></span>
+<span class="codeline" id="line-119"><code><span class="comment">// WithEscapingScheme returns a copy of Format with the specified escaping</span></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">// scheme appended to the end. If an escaping scheme already exists it is</span></code></span>
+<span class="codeline" id="line-121"><code><span class="comment">// removed.</span></code></span>
+<span class="codeline" id="line-122"><code><span class="keyword">func</span> (<label for="r4" class="ident">f</label> <a href="#line-25" class="ident">Format</a>) <label for="r5" class="ident">WithEscapingScheme</label>(<label for="r6" class="ident">s</label> <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-212" class="ident">EscapingScheme</a>) <a href="#line-25" class="ident">Format</a> {</code></span>
+<span class="codeline" id="line-123"><code>	<span class="keyword">var</span> <label for="r7" class="ident">terms</label> []<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-124"><code>	<span class="keyword">for</span> <label for="r8" class="ident">_</label>, <label for="r9" class="ident">p</label> := <span class="keyword">range</span> <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>(<label for="r4" class="ident">f</label>), <span class="lit-string">";"</span>) {</code></span>
+<span class="codeline" id="line-125"><code>		<label for="r10" class="ident">toks</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<label for="r9" class="ident">p</label>, <span class="lit-string">"="</span>)</code></span>
+<span class="codeline" id="line-126"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r10" class="ident">toks</label>) != <span class="lit-number">2</span> {</code></span>
+<span class="codeline" id="line-127"><code>			<label for="r11" class="ident">trimmed</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r9" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-128"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r11" class="ident">trimmed</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-129"><code>				<label for="r7" class="ident">terms</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r7" class="ident">terms</label>, <label for="r11" class="ident">trimmed</label>)</code></span>
+<span class="codeline" id="line-130"><code>			}</code></span>
+<span class="codeline" id="line-131"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-132"><code>		}</code></span>
+<span class="codeline" id="line-133"><code>		<label for="r12" class="ident">key</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r10" class="ident">toks</label>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-134"><code>		<span class="keyword">if</span> <label for="r12" class="ident">key</label> != <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-239" class="ident">EscapingKey</a> {</code></span>
+<span class="codeline" id="line-135"><code>			<label for="r7" class="ident">terms</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r7" class="ident">terms</label>, <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r9" class="ident">p</label>))</code></span>
+<span class="codeline" id="line-136"><code>		}</code></span>
+<span class="codeline" id="line-137"><code>	}</code></span>
+<span class="codeline" id="line-138"><code>	<label for="r7" class="ident">terms</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r7" class="ident">terms</label>, <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-239" class="ident">EscapingKey</a>+<span class="lit-string">"="</span>+<label for="r6" class="ident">s</label>.<a href="../model/metric.go.html#line-562" class="ident">String</a>())</code></span>
+<span class="codeline" id="line-139"><code>	<span class="keyword">return</span> <a href="#line-25" class="ident">Format</a>(<a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-487" class="ident">Join</a>(<label for="r7" class="ident">terms</label>, <span class="lit-string">"; "</span>))</code></span>
+<span class="codeline" id="line-140"><code>}</code></span>
+<span class="codeline" id="line-141"><code></code></span>
+<span class="codeline" id="line-142"><code><span class="comment">// FormatType deduces an overall FormatType for the given format.</span></code></span>
+<span class="codeline" id="line-143"><code><span class="keyword">func</span> (<label for="r13" class="ident">f</label> <a href="#line-25" class="ident">Format</a>) <label for="r14" class="ident">FormatType</label>() <a href="#line-75" class="ident">FormatType</a> {</code></span>
+<span class="codeline" id="line-144"><code>	<label for="r15" class="ident">toks</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>(<label for="r13" class="ident">f</label>), <span class="lit-string">";"</span>)</code></span>
+<span class="codeline" id="line-145"><code>	<label for="r16" class="ident">params</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-146"><code>	<span class="keyword">for</span> <label for="r17" class="ident">i</label>, <label for="r18" class="ident">t</label> := <span class="keyword">range</span> <label for="r15" class="ident">toks</label> {</code></span>
+<span class="codeline" id="line-147"><code>		<span class="keyword">if</span> <label for="r17" class="ident">i</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-148"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-149"><code>		}</code></span>
+<span class="codeline" id="line-150"><code>		<label for="r19" class="ident">args</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<label for="r18" class="ident">t</label>, <span class="lit-string">"="</span>)</code></span>
+<span class="codeline" id="line-151"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r19" class="ident">args</label>) != <span class="lit-number">2</span> {</code></span>
+<span class="codeline" id="line-152"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-153"><code>		}</code></span>
+<span class="codeline" id="line-154"><code>		<label for="r16" class="ident">params</label>[<a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r19" class="ident">args</label>[<span class="lit-number">0</span>])] = <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r19" class="ident">args</label>[<span class="lit-number">1</span>])</code></span>
+<span class="codeline" id="line-155"><code>	}</code></span>
+<span class="codeline" id="line-156"><code></code></span>
+<span class="codeline" id="line-157"><code>	<span class="keyword">switch</span> <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r15" class="ident">toks</label>[<span class="lit-number">0</span>]) {</code></span>
+<span class="codeline" id="line-158"><code>	<span class="keyword">case</span> <a href="#line-36" class="ident">ProtoType</a>:</code></span>
+<span class="codeline" id="line-159"><code>		<span class="keyword">if</span> <label for="r16" class="ident">params</label>[<span class="lit-string">"proto"</span>] != <a href="#line-37" class="ident">ProtoProtocol</a> {</code></span>
+<span class="codeline" id="line-160"><code>			<span class="keyword">return</span> <a href="#line-78" class="ident">TypeUnknown</a></code></span>
+<span class="codeline" id="line-161"><code>		}</code></span>
+<span class="codeline" id="line-162"><code>		<span class="keyword">switch</span> <label for="r16" class="ident">params</label>[<span class="lit-string">"encoding"</span>] {</code></span>
+<span class="codeline" id="line-163"><code>		<span class="keyword">case</span> <span class="lit-string">"delimited"</span>:</code></span>
+<span class="codeline" id="line-164"><code>			<span class="keyword">return</span> <a href="#line-80" class="ident">TypeProtoDelim</a></code></span>
+<span class="codeline" id="line-165"><code>		<span class="keyword">case</span> <span class="lit-string">"text"</span>:</code></span>
+<span class="codeline" id="line-166"><code>			<span class="keyword">return</span> <a href="#line-81" class="ident">TypeProtoText</a></code></span>
+<span class="codeline" id="line-167"><code>		<span class="keyword">case</span> <span class="lit-string">"compact-text"</span>:</code></span>
+<span class="codeline" id="line-168"><code>			<span class="keyword">return</span> <a href="#line-79" class="ident">TypeProtoCompact</a></code></span>
+<span class="codeline" id="line-169"><code>		<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-170"><code>			<span class="keyword">return</span> <a href="#line-78" class="ident">TypeUnknown</a></code></span>
+<span class="codeline" id="line-171"><code>		}</code></span>
+<span class="codeline" id="line-172"><code>	<span class="keyword">case</span> <a href="#line-40" class="ident">OpenMetricsType</a>:</code></span>
+<span class="codeline" id="line-173"><code>		<span class="keyword">if</span> <label for="r16" class="ident">params</label>[<span class="lit-string">"charset"</span>] != <span class="lit-string">"utf-8"</span> {</code></span>
+<span class="codeline" id="line-174"><code>			<span class="keyword">return</span> <a href="#line-78" class="ident">TypeUnknown</a></code></span>
+<span class="codeline" id="line-175"><code>		}</code></span>
+<span class="codeline" id="line-176"><code>		<span class="keyword">return</span> <a href="#line-83" class="ident">TypeOpenMetrics</a></code></span>
+<span class="codeline" id="line-177"><code>	<span class="keyword">case</span> <span class="lit-string">"text/plain"</span>:</code></span>
+<span class="codeline" id="line-178"><code>		<label for="r20" class="ident">v</label>, <label for="r21" class="ident">ok</label> := <label for="r16" class="ident">params</label>[<span class="lit-string">"version"</span>]</code></span>
+<span class="codeline" id="line-179"><code>		<span class="keyword">if</span> !<label for="r21" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-180"><code>			<span class="keyword">return</span> <a href="#line-82" class="ident">TypeTextPlain</a></code></span>
+<span class="codeline" id="line-181"><code>		}</code></span>
+<span class="codeline" id="line-182"><code>		<span class="keyword">if</span> <label for="r20" class="ident">v</label> == <a href="#line-35" class="ident">TextVersion</a> {</code></span>
+<span class="codeline" id="line-183"><code>			<span class="keyword">return</span> <a href="#line-82" class="ident">TypeTextPlain</a></code></span>
+<span class="codeline" id="line-184"><code>		}</code></span>
+<span class="codeline" id="line-185"><code>		<span class="keyword">return</span> <a href="#line-78" class="ident">TypeUnknown</a></code></span>
+<span class="codeline" id="line-186"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-187"><code>		<span class="keyword">return</span> <a href="#line-78" class="ident">TypeUnknown</a></code></span>
+<span class="codeline" id="line-188"><code>	}</code></span>
+<span class="codeline" id="line-189"><code>}</code></span>
+<span class="codeline" id="line-190"><code></code></span>
+<span class="codeline" id="line-191"><code><span class="comment">// ToEscapingScheme returns an EscapingScheme depending on the Format. Iff the</span></code></span>
+<span class="codeline" id="line-192"><code><span class="comment">// Format contains a escaping=allow-utf-8 term, it will select NoEscaping. If a valid</span></code></span>
+<span class="codeline" id="line-193"><code><span class="comment">// "escaping" term exists, that will be used. Otherwise, the global default will</span></code></span>
+<span class="codeline" id="line-194"><code><span class="comment">// be returned.</span></code></span>
+<span class="codeline" id="line-195"><code><span class="keyword">func</span> (<label for="r22" class="ident">f</label> <a href="#line-25" class="ident">Format</a>) <label for="r23" class="ident">ToEscapingScheme</label>() <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-212" class="ident">EscapingScheme</a> {</code></span>
+<span class="codeline" id="line-196"><code>	<span class="keyword">for</span> <label for="r24" class="ident">_</label>, <label for="r25" class="ident">p</label> := <span class="keyword">range</span> <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>(<label for="r22" class="ident">f</label>), <span class="lit-string">";"</span>) {</code></span>
+<span class="codeline" id="line-197"><code>		<label for="r26" class="ident">toks</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<label for="r25" class="ident">p</label>, <span class="lit-string">"="</span>)</code></span>
+<span class="codeline" id="line-198"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r26" class="ident">toks</label>) != <span class="lit-number">2</span> {</code></span>
+<span class="codeline" id="line-199"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-200"><code>		}</code></span>
+<span class="codeline" id="line-201"><code>		<label for="r27" class="ident">key</label>, <label for="r28" class="ident">value</label> := <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r26" class="ident">toks</label>[<span class="lit-number">0</span>]), <a href="../../../../../pkg/strings.html" class="ident i1">strings</a>.<a href="../../../../strings/strings.go.html#line-1091" class="ident">TrimSpace</a>(<label for="r26" class="ident">toks</label>[<span class="lit-number">1</span>])</code></span>
+<span class="codeline" id="line-202"><code>		<span class="keyword">if</span> <label for="r27" class="ident">key</label> == <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-239" class="ident">EscapingKey</a> {</code></span>
+<span class="codeline" id="line-203"><code>			<label for="r29" class="ident">scheme</label>, <label for="r30" class="ident">err</label> := <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-577" class="ident">ToEscapingScheme</a>(<label for="r28" class="ident">value</label>)</code></span>
+<span class="codeline" id="line-204"><code>			<span class="keyword">if</span> <label for="r30" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-205"><code>				<span class="keyword">return</span> <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-59" class="ident">NameEscapingScheme</a></code></span>
+<span class="codeline" id="line-206"><code>			}</code></span>
+<span class="codeline" id="line-207"><code>			<span class="keyword">return</span> <label for="r29" class="ident">scheme</label></code></span>
+<span class="codeline" id="line-208"><code>		}</code></span>
+<span class="codeline" id="line-209"><code>	}</code></span>
+<span class="codeline" id="line-210"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/github.com/prometheus/common/model.html" class="ident i2">model</a>.<a href="../model/metric.go.html#line-59" class="ident">NameEscapingScheme</a></code></span>
+<span class="codeline" id="line-211"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

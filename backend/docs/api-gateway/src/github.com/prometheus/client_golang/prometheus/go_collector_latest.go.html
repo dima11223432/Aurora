@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: go_collector_latest.go in package github.com/prometheus/client_golang/prometheus</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	go_collector_latest.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html">github.com/prometheus/client_golang/prometheus</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86],
+input[id=r87]:checked ~pre label[for=r87],
+input[id=r88]:checked ~pre label[for=r88],
+input[id=r89]:checked ~pre label[for=r89],
+input[id=r90]:checked ~pre label[for=r90],
+input[id=r91]:checked ~pre label[for=r91],
+input[id=r92]:checked ~pre label[for=r92],
+input[id=r93]:checked ~pre label[for=r93],
+input[id=r94]:checked ~pre label[for=r94],
+input[id=r95]:checked ~pre label[for=r95],
+input[id=r96]:checked ~pre label[for=r96],
+input[id=r97]:checked ~pre label[for=r97],
+input[id=r98]:checked ~pre label[for=r98],
+input[id=r99]:checked ~pre label[for=r99],
+input[id=r100]:checked ~pre label[for=r100],
+input[id=r101]:checked ~pre label[for=r101],
+input[id=r102]:checked ~pre label[for=r102],
+input[id=r103]:checked ~pre label[for=r103],
+input[id=r104]:checked ~pre label[for=r104],
+input[id=r105]:checked ~pre label[for=r105],
+input[id=r106]:checked ~pre label[for=r106],
+input[id=r107]:checked ~pre label[for=r107],
+input[id=r108]:checked ~pre label[for=r108],
+input[id=r109]:checked ~pre label[for=r109],
+input[id=r110]:checked ~pre label[for=r110],
+input[id=r111]:checked ~pre label[for=r111],
+input[id=r112]:checked ~pre label[for=r112],
+input[id=r113]:checked ~pre label[for=r113],
+input[id=r114]:checked ~pre label[for=r114],
+input[id=r115]:checked ~pre label[for=r115],
+input[id=r116]:checked ~pre label[for=r116],
+input[id=r117]:checked ~pre label[for=r117],
+input[id=r118]:checked ~pre label[for=r118],
+input[id=r119]:checked ~pre label[for=r119],
+input[id=r120]:checked ~pre label[for=r120]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6,
+input[id=i7]:checked ~pre .i7,
+input[id=i8]:checked ~pre .i8
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="r87" type="radio" name="g"/>
+<input id="r88" type="radio" name="g"/>
+<input id="r89" type="radio" name="g"/>
+<input id="r90" type="radio" name="g"/>
+<input id="r91" type="radio" name="g"/>
+<input id="r92" type="radio" name="g"/>
+<input id="r93" type="radio" name="g"/>
+<input id="r94" type="radio" name="g"/>
+<input id="r95" type="radio" name="g"/>
+<input id="r96" type="radio" name="g"/>
+<input id="r97" type="radio" name="g"/>
+<input id="r98" type="radio" name="g"/>
+<input id="r99" type="radio" name="g"/>
+<input id="r100" type="radio" name="g"/>
+<input id="r101" type="radio" name="g"/>
+<input id="r102" type="radio" name="g"/>
+<input id="r103" type="radio" name="g"/>
+<input id="r104" type="radio" name="g"/>
+<input id="r105" type="radio" name="g"/>
+<input id="r106" type="radio" name="g"/>
+<input id="r107" type="radio" name="g"/>
+<input id="r108" type="radio" name="g"/>
+<input id="r109" type="radio" name="g"/>
+<input id="r110" type="radio" name="g"/>
+<input id="r111" type="radio" name="g"/>
+<input id="r112" type="radio" name="g"/>
+<input id="r113" type="radio" name="g"/>
+<input id="r114" type="radio" name="g"/>
+<input id="r115" type="radio" name="g"/>
+<input id="r116" type="radio" name="g"/>
+<input id="r117" type="radio" name="g"/>
+<input id="r118" type="radio" name="g"/>
+<input id="r119" type="radio" name="g"/>
+<input id="r120" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+<input id="i7" type="radio" name="i"/>
+<input id="i8" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2021 The Prometheus Authors</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Licensed under the Apache License, Version 2.0 (the "License");</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// you may not use this file except in compliance with the License.</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// You may obtain a copy of the License at</span></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// distributed under the License is distributed on an "AS IS" BASIS,</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// See the License for the specific language governing permissions and</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// limitations under the License.</span></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">//go:build go1.17</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// +build go1.17</span></code></span>
+<span class="codeline" id="line-16"><code></code></span>
+<span class="codeline" id="line-17"><code><span class="keyword">package</span> prometheus</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-20"><code>	<label for="i0"><span class="lit-string i0">"fmt"</span></label></code></span>
+<span class="codeline" id="line-21"><code>	<label for="i1"><span class="lit-string i1">"math"</span></label></code></span>
+<span class="codeline" id="line-22"><code>	<label for="i2"><span class="lit-string i2">"runtime"</span></label></code></span>
+<span class="codeline" id="line-23"><code>	<label for="i3"><span class="lit-string i3">"runtime/metrics"</span></label></code></span>
+<span class="codeline" id="line-24"><code>	<label for="i4"><span class="lit-string i4">"strings"</span></label></code></span>
+<span class="codeline" id="line-25"><code>	<label for="i5"><span class="lit-string i5">"sync"</span></label></code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code>	<label for="i6"><span class="lit-string i6">"github.com/prometheus/client_golang/prometheus/internal"</span></label></code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code>	<a href="../../../../../pkg/github.com/prometheus/client_model/go.html" class="ident i7">dto</a> <label for="i7"><span class="lit-string i7">"github.com/prometheus/client_model/go"</span></label></code></span>
+<span class="codeline" id="line-30"><code>	<label for="i8"><span class="lit-string i8">"google.golang.org/protobuf/proto"</span></label></code></span>
+<span class="codeline" id="line-31"><code>)</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-34"><code>	<span class="comment">// constants for strings referenced more than once.</span></code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapTinyAllocsObjects" class="ident">goGCHeapTinyAllocsObjects</a>               = <span class="lit-string">"/gc/heap/tiny/allocs:objects"</span></code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapAllocsObjects" class="ident">goGCHeapAllocsObjects</a>                   = <span class="lit-string">"/gc/heap/allocs:objects"</span></code></span>
+<span class="codeline" id="line-37"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapFreesObjects" class="ident">goGCHeapFreesObjects</a>                    = <span class="lit-string">"/gc/heap/frees:objects"</span></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapFreesBytes" class="ident">goGCHeapFreesBytes</a>                      = <span class="lit-string">"/gc/heap/frees:bytes"</span></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapAllocsBytes" class="ident">goGCHeapAllocsBytes</a>                     = <span class="lit-string">"/gc/heap/allocs:bytes"</span></code></span>
+<span class="codeline" id="line-40"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapObjects" class="ident">goGCHeapObjects</a>                         = <span class="lit-string">"/gc/heap/objects:objects"</span></code></span>
+<span class="codeline" id="line-41"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goGCHeapGoalBytes" class="ident">goGCHeapGoalBytes</a>                       = <span class="lit-string">"/gc/heap/goal:bytes"</span></code></span>
+<span class="codeline" id="line-42"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesTotalBytes" class="ident">goMemoryClassesTotalBytes</a>               = <span class="lit-string">"/memory/classes/total:bytes"</span></code></span>
+<span class="codeline" id="line-43"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesHeapObjectsBytes" class="ident">goMemoryClassesHeapObjectsBytes</a>         = <span class="lit-string">"/memory/classes/heap/objects:bytes"</span></code></span>
+<span class="codeline" id="line-44"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesHeapUnusedBytes" class="ident">goMemoryClassesHeapUnusedBytes</a>          = <span class="lit-string">"/memory/classes/heap/unused:bytes"</span></code></span>
+<span class="codeline" id="line-45"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesHeapReleasedBytes" class="ident">goMemoryClassesHeapReleasedBytes</a>        = <span class="lit-string">"/memory/classes/heap/released:bytes"</span></code></span>
+<span class="codeline" id="line-46"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesHeapFreeBytes" class="ident">goMemoryClassesHeapFreeBytes</a>            = <span class="lit-string">"/memory/classes/heap/free:bytes"</span></code></span>
+<span class="codeline" id="line-47"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesHeapStacksBytes" class="ident">goMemoryClassesHeapStacksBytes</a>          = <span class="lit-string">"/memory/classes/heap/stacks:bytes"</span></code></span>
+<span class="codeline" id="line-48"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesOSStacksBytes" class="ident">goMemoryClassesOSStacksBytes</a>            = <span class="lit-string">"/memory/classes/os-stacks:bytes"</span></code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesMetadataMSpanInuseBytes" class="ident">goMemoryClassesMetadataMSpanInuseBytes</a>  = <span class="lit-string">"/memory/classes/metadata/mspan/inuse:bytes"</span></code></span>
+<span class="codeline" id="line-50"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesMetadataMSPanFreeBytes" class="ident">goMemoryClassesMetadataMSPanFreeBytes</a>   = <span class="lit-string">"/memory/classes/metadata/mspan/free:bytes"</span></code></span>
+<span class="codeline" id="line-51"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesMetadataMCacheInuseBytes" class="ident">goMemoryClassesMetadataMCacheInuseBytes</a> = <span class="lit-string">"/memory/classes/metadata/mcache/inuse:bytes"</span></code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesMetadataMCacheFreeBytes" class="ident">goMemoryClassesMetadataMCacheFreeBytes</a>  = <span class="lit-string">"/memory/classes/metadata/mcache/free:bytes"</span></code></span>
+<span class="codeline" id="line-53"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesProfilingBucketsBytes" class="ident">goMemoryClassesProfilingBucketsBytes</a>    = <span class="lit-string">"/memory/classes/profiling/buckets:bytes"</span></code></span>
+<span class="codeline" id="line-54"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesMetadataOtherBytes" class="ident">goMemoryClassesMetadataOtherBytes</a>       = <span class="lit-string">"/memory/classes/metadata/other:bytes"</span></code></span>
+<span class="codeline" id="line-55"><code>	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goMemoryClassesOtherBytes" class="ident">goMemoryClassesOtherBytes</a>               = <span class="lit-string">"/memory/classes/other:bytes"</span></code></span>
+<span class="codeline" id="line-56"><code>)</code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">// rmNamesForMemStatsMetrics represents runtime/metrics names required to populate goRuntimeMemStats from like logic.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="keyword">var</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-rmNamesForMemStatsMetrics" class="ident">rmNamesForMemStatsMetrics</a> = []<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>{</code></span>
+<span class="codeline" id="line-60"><code>	<a href="#line-35" class="ident">goGCHeapTinyAllocsObjects</a>,</code></span>
+<span class="codeline" id="line-61"><code>	<a href="#line-36" class="ident">goGCHeapAllocsObjects</a>,</code></span>
+<span class="codeline" id="line-62"><code>	<a href="#line-37" class="ident">goGCHeapFreesObjects</a>,</code></span>
+<span class="codeline" id="line-63"><code>	<a href="#line-39" class="ident">goGCHeapAllocsBytes</a>,</code></span>
+<span class="codeline" id="line-64"><code>	<a href="#line-40" class="ident">goGCHeapObjects</a>,</code></span>
+<span class="codeline" id="line-65"><code>	<a href="#line-41" class="ident">goGCHeapGoalBytes</a>,</code></span>
+<span class="codeline" id="line-66"><code>	<a href="#line-42" class="ident">goMemoryClassesTotalBytes</a>,</code></span>
+<span class="codeline" id="line-67"><code>	<a href="#line-43" class="ident">goMemoryClassesHeapObjectsBytes</a>,</code></span>
+<span class="codeline" id="line-68"><code>	<a href="#line-44" class="ident">goMemoryClassesHeapUnusedBytes</a>,</code></span>
+<span class="codeline" id="line-69"><code>	<a href="#line-45" class="ident">goMemoryClassesHeapReleasedBytes</a>,</code></span>
+<span class="codeline" id="line-70"><code>	<a href="#line-46" class="ident">goMemoryClassesHeapFreeBytes</a>,</code></span>
+<span class="codeline" id="line-71"><code>	<a href="#line-47" class="ident">goMemoryClassesHeapStacksBytes</a>,</code></span>
+<span class="codeline" id="line-72"><code>	<a href="#line-48" class="ident">goMemoryClassesOSStacksBytes</a>,</code></span>
+<span class="codeline" id="line-73"><code>	<a href="#line-49" class="ident">goMemoryClassesMetadataMSpanInuseBytes</a>,</code></span>
+<span class="codeline" id="line-74"><code>	<a href="#line-50" class="ident">goMemoryClassesMetadataMSPanFreeBytes</a>,</code></span>
+<span class="codeline" id="line-75"><code>	<a href="#line-51" class="ident">goMemoryClassesMetadataMCacheInuseBytes</a>,</code></span>
+<span class="codeline" id="line-76"><code>	<a href="#line-52" class="ident">goMemoryClassesMetadataMCacheFreeBytes</a>,</code></span>
+<span class="codeline" id="line-77"><code>	<a href="#line-53" class="ident">goMemoryClassesProfilingBucketsBytes</a>,</code></span>
+<span class="codeline" id="line-78"><code>	<a href="#line-54" class="ident">goMemoryClassesMetadataOtherBytes</a>,</code></span>
+<span class="codeline" id="line-79"><code>	<a href="#line-55" class="ident">goMemoryClassesOtherBytes</a>,</code></span>
+<span class="codeline" id="line-80"><code>}</code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-bestEffortLookupRM" class="ident">bestEffortLookupRM</a></label>(<label for="r1" class="ident">lookup</label> []<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) []<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/description.go.html#line-10" class="ident">Description</a> {</code></span>
+<span class="codeline" id="line-83"><code>	<label for="r2" class="ident">ret</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/description.go.html#line-10" class="ident">Description</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">lookup</label>))</code></span>
+<span class="codeline" id="line-84"><code>	<span class="keyword">for</span> <label for="r3" class="ident">_</label>, <label for="r4" class="ident">rm</label> := <span class="keyword">range</span> <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/description.go.html#line-539" class="ident">All</a>() {</code></span>
+<span class="codeline" id="line-85"><code>		<span class="keyword">for</span> <label for="r5" class="ident">_</label>, <label for="r6" class="ident">m</label> := <span class="keyword">range</span> <label for="r1" class="ident">lookup</label> {</code></span>
+<span class="codeline" id="line-86"><code>			<span class="keyword">if</span> <label for="r6" class="ident">m</label> == <label for="r4" class="ident">rm</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a> {</code></span>
+<span class="codeline" id="line-87"><code>				<label for="r2" class="ident">ret</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r2" class="ident">ret</label>, <label for="r4" class="ident">rm</label>)</code></span>
+<span class="codeline" id="line-88"><code>			}</code></span>
+<span class="codeline" id="line-89"><code>		}</code></span>
+<span class="codeline" id="line-90"><code>	}</code></span>
+<span class="codeline" id="line-91"><code>	<span class="keyword">return</span> <label for="r2" class="ident">ret</label></code></span>
+<span class="codeline" id="line-92"><code>}</code></span>
+<span class="codeline" id="line-93"><code></code></span>
+<span class="codeline" id="line-94"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goCollector" class="ident">goCollector</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-95"><code>	base <a href="go_collector.go.html#line-201" class="ident">baseGoCollector</a></code></span>
+<span class="codeline" id="line-96"><code></code></span>
+<span class="codeline" id="line-97"><code>	<span class="comment">// mu protects updates to all fields ensuring a consistent</span></code></span>
+<span class="codeline" id="line-98"><code><span class="comment">	// snapshot is always produced by Collect.</span></code></span>
+<span class="codeline" id="line-99"><code>	mu <a href="../../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-100"><code></code></span>
+<span class="codeline" id="line-101"><code>	<span class="comment">// Contains all samples that has to retrieved from runtime/metrics (not all of them will be exposed).</span></code></span>
+<span class="codeline" id="line-102"><code>	sampleBuf []<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a></code></span>
+<span class="codeline" id="line-103"><code>	<span class="comment">// sampleMap allows lookup for MemStats metrics and runtime/metrics histograms for exact sums.</span></code></span>
+<span class="codeline" id="line-104"><code>	sampleMap <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a></code></span>
+<span class="codeline" id="line-105"><code></code></span>
+<span class="codeline" id="line-106"><code>	<span class="comment">// rmExposedMetrics represents all runtime/metrics package metrics</span></code></span>
+<span class="codeline" id="line-107"><code><span class="comment">	// that were configured to be exposed.</span></code></span>
+<span class="codeline" id="line-108"><code>	rmExposedMetrics     []<a href="collector.go.html#line-125" class="ident">collectorMetric</a></code></span>
+<span class="codeline" id="line-109"><code>	rmExactSumMapForHist <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-110"><code></code></span>
+<span class="codeline" id="line-111"><code>	<span class="comment">// With Go 1.17, the runtime/metrics package was introduced.</span></code></span>
+<span class="codeline" id="line-112"><code><span class="comment">	// From that point on, metric names produced by the runtime/metrics</span></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">	// package could be generated from runtime/metrics names. However,</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">	// these differ from the old names for the same values.</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">	// This field exists to export the same values under the old names</span></code></span>
+<span class="codeline" id="line-117"><code><span class="comment">	// as well.</span></code></span>
+<span class="codeline" id="line-118"><code>	msMetrics        <a href="go_collector.go.html#line-270" class="ident">memStatsMetrics</a></code></span>
+<span class="codeline" id="line-119"><code>	msMetricsEnabled <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-120"><code>}</code></span>
+<span class="codeline" id="line-121"><code></code></span>
+<span class="codeline" id="line-122"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-rmMetricDesc" class="ident">rmMetricDesc</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-123"><code>	<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/description.go.html#line-10" class="ident">Description</a></code></span>
+<span class="codeline" id="line-124"><code>}</code></span>
+<span class="codeline" id="line-125"><code></code></span>
+<span class="codeline" id="line-126"><code><span class="keyword">func</span> <label for="r7" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-matchRuntimeMetricsRules" class="ident">matchRuntimeMetricsRules</a></label>(<label for="r8" class="ident">rules</label> []<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_collector_options.go.html#line-18" class="ident">GoCollectorRule</a>) []<a href="#line-122" class="ident">rmMetricDesc</a> {</code></span>
+<span class="codeline" id="line-127"><code>	<span class="keyword">var</span> <label for="r9" class="ident">descs</label> []<a href="#line-122" class="ident">rmMetricDesc</a></code></span>
+<span class="codeline" id="line-128"><code>	<span class="keyword">for</span> <label for="r10" class="ident">_</label>, <label for="r11" class="ident">d</label> := <span class="keyword">range</span> <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/description.go.html#line-539" class="ident">All</a>() {</code></span>
+<span class="codeline" id="line-129"><code>		<span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-130"><code>			<label for="r12" class="ident">deny</label> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-131"><code>			<label for="r13" class="ident">desc</label> <a href="#line-122" class="ident">rmMetricDesc</a></code></span>
+<span class="codeline" id="line-132"><code>		)</code></span>
+<span class="codeline" id="line-133"><code></code></span>
+<span class="codeline" id="line-134"><code>		<span class="keyword">for</span> <label for="r14" class="ident">_</label>, <label for="r15" class="ident">r</label> := <span class="keyword">range</span> <label for="r8" class="ident">rules</label> {</code></span>
+<span class="codeline" id="line-135"><code>			<span class="keyword">if</span> !<label for="r15" class="ident">r</label>.<a href="internal/go_collector_options.go.html#line-19" class="ident">Matcher</a>.<a href="../../../../regexp/regexp.go.html#line-506" class="ident">MatchString</a>(<label for="r11" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>) {</code></span>
+<span class="codeline" id="line-136"><code>				<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-137"><code>			}</code></span>
+<span class="codeline" id="line-138"><code>			<label for="r12" class="ident">deny</label> = <label for="r15" class="ident">r</label>.<a href="internal/go_collector_options.go.html#line-20" class="ident">Deny</a></code></span>
+<span class="codeline" id="line-139"><code>		}</code></span>
+<span class="codeline" id="line-140"><code>		<span class="keyword">if</span> <label for="r12" class="ident">deny</label> {</code></span>
+<span class="codeline" id="line-141"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-142"><code>		}</code></span>
+<span class="codeline" id="line-143"><code></code></span>
+<span class="codeline" id="line-144"><code>		<label for="r13" class="ident">desc</label>.<a href="#line-123" class="ident">Description</a> = <label for="r11" class="ident">d</label></code></span>
+<span class="codeline" id="line-145"><code>		<label for="r9" class="ident">descs</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r9" class="ident">descs</label>, <label for="r13" class="ident">desc</label>)</code></span>
+<span class="codeline" id="line-146"><code>	}</code></span>
+<span class="codeline" id="line-147"><code>	<span class="keyword">return</span> <label for="r9" class="ident">descs</label></code></span>
+<span class="codeline" id="line-148"><code>}</code></span>
+<span class="codeline" id="line-149"><code></code></span>
+<span class="codeline" id="line-150"><code><span class="keyword">func</span> <label for="r16" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-defaultGoCollectorOptions" class="ident">defaultGoCollectorOptions</a></label>() <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_collector_options.go.html#line-28" class="ident">GoCollectorOptions</a> {</code></span>
+<span class="codeline" id="line-151"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_collector_options.go.html#line-28" class="ident">GoCollectorOptions</a>{</code></span>
+<span class="codeline" id="line-152"><code>		<a href="internal/go_collector_options.go.html#line-30" class="ident">RuntimeMetricSumForHist</a>: <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>{</code></span>
+<span class="codeline" id="line-153"><code>			<span class="lit-string">"/gc/heap/allocs-by-size:bytes"</span>: <a href="#line-39" class="ident">goGCHeapAllocsBytes</a>,</code></span>
+<span class="codeline" id="line-154"><code>			<span class="lit-string">"/gc/heap/frees-by-size:bytes"</span>:  <a href="#line-38" class="ident">goGCHeapFreesBytes</a>,</code></span>
+<span class="codeline" id="line-155"><code>		},</code></span>
+<span class="codeline" id="line-156"><code>		<a href="internal/go_collector_options.go.html#line-31" class="ident">RuntimeMetricRules</a>: []<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_collector_options.go.html#line-18" class="ident">GoCollectorRule</a>{</code></span>
+<span class="codeline" id="line-157"><code>			<span class="comment">// Recommended metrics we want by default from runtime/metrics.</span></code></span>
+<span class="codeline" id="line-158"><code>			{<a href="internal/go_collector_options.go.html#line-19" class="ident">Matcher</a>: <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_collector_options.go.html#line-34" class="ident">GoCollectorDefaultRuntimeMetrics</a>},</code></span>
+<span class="codeline" id="line-159"><code>		},</code></span>
+<span class="codeline" id="line-160"><code>	}</code></span>
+<span class="codeline" id="line-161"><code>}</code></span>
+<span class="codeline" id="line-162"><code></code></span>
+<span class="codeline" id="line-163"><code><span class="comment">// NewGoCollector is the obsolete version of collectors.NewGoCollector.</span></code></span>
+<span class="codeline" id="line-164"><code><span class="comment">// See there for documentation.</span></code></span>
+<span class="codeline" id="line-165"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-166"><code><span class="comment">// Deprecated: Use collectors.NewGoCollector instead.</span></code></span>
+<span class="codeline" id="line-167"><code><span class="keyword">func</span> <label for="r17" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-NewGoCollector" class="ident">NewGoCollector</a></label>(<label for="r18" class="ident">opts</label> ...<span class="keyword">func</span>(<label for="r19" class="ident">o</label> *<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_collector_options.go.html#line-28" class="ident">GoCollectorOptions</a>)) <a href="collector.go.html#line-27" class="ident">Collector</a> {</code></span>
+<span class="codeline" id="line-168"><code>	<label for="r20" class="ident">opt</label> := <a href="#line-150" class="ident">defaultGoCollectorOptions</a>()</code></span>
+<span class="codeline" id="line-169"><code>	<span class="keyword">for</span> <label for="r21" class="ident">_</label>, <label for="r22" class="ident">o</label> := <span class="keyword">range</span> <label for="r18" class="ident">opts</label> {</code></span>
+<span class="codeline" id="line-170"><code>		<label for="r22" class="ident">o</label>(&amp;<label for="r20" class="ident">opt</label>)</code></span>
+<span class="codeline" id="line-171"><code>	}</code></span>
+<span class="codeline" id="line-172"><code></code></span>
+<span class="codeline" id="line-173"><code>	<label for="r23" class="ident">exposedDescriptions</label> := <a href="#line-126" class="ident">matchRuntimeMetricsRules</a>(<label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-31" class="ident">RuntimeMetricRules</a>)</code></span>
+<span class="codeline" id="line-174"><code></code></span>
+<span class="codeline" id="line-175"><code>	<span class="comment">// Collect all histogram samples so that we can get their buckets.</span></code></span>
+<span class="codeline" id="line-176"><code><span class="comment">	// The API guarantees that the buckets are always fixed for the lifetime</span></code></span>
+<span class="codeline" id="line-177"><code><span class="comment">	// of the process.</span></code></span>
+<span class="codeline" id="line-178"><code>	<span class="keyword">var</span> <label for="r24" class="ident">histograms</label> []<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a></code></span>
+<span class="codeline" id="line-179"><code>	<span class="keyword">for</span> <label for="r25" class="ident">_</label>, <label for="r26" class="ident">d</label> := <span class="keyword">range</span> <label for="r23" class="ident">exposedDescriptions</label> {</code></span>
+<span class="codeline" id="line-180"><code>		<span class="keyword">if</span> <label for="r26" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-43" class="ident">Kind</a> == <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/value.go.html#line-26" class="ident">KindFloat64Histogram</a> {</code></span>
+<span class="codeline" id="line-181"><code>			<label for="r24" class="ident">histograms</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r24" class="ident">histograms</label>, <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>{<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>: <label for="r26" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>})</code></span>
+<span class="codeline" id="line-182"><code>		}</code></span>
+<span class="codeline" id="line-183"><code>	}</code></span>
+<span class="codeline" id="line-184"><code></code></span>
+<span class="codeline" id="line-185"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r24" class="ident">histograms</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-186"><code>		<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-45" class="ident">Read</a>(<label for="r24" class="ident">histograms</label>)</code></span>
+<span class="codeline" id="line-187"><code>	}</code></span>
+<span class="codeline" id="line-188"><code></code></span>
+<span class="codeline" id="line-189"><code>	<label for="r27" class="ident">bucketsMap</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>)</code></span>
+<span class="codeline" id="line-190"><code>	<span class="keyword">for</span> <label for="r28" class="ident">i</label> := <span class="keyword">range</span> <label for="r24" class="ident">histograms</label> {</code></span>
+<span class="codeline" id="line-191"><code>		<label for="r27" class="ident">bucketsMap</label>[<label for="r24" class="ident">histograms</label>[<label for="r28" class="ident">i</label>].<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>] = <label for="r24" class="ident">histograms</label>[<label for="r28" class="ident">i</label>].<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>.<a href="../../../../runtime/metrics/value.go.html#line-64" class="ident">Float64Histogram</a>().<a href="../../../../runtime/metrics/histogram.go.html#line-32" class="ident">Buckets</a></code></span>
+<span class="codeline" id="line-192"><code>	}</code></span>
+<span class="codeline" id="line-193"><code></code></span>
+<span class="codeline" id="line-194"><code>	<span class="comment">// Generate a collector for each exposed runtime/metrics metric.</span></code></span>
+<span class="codeline" id="line-195"><code>	<label for="r29" class="ident">metricSet</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="collector.go.html#line-125" class="ident">collectorMetric</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r23" class="ident">exposedDescriptions</label>))</code></span>
+<span class="codeline" id="line-196"><code>	<span class="comment">// SampleBuf is used for reading from runtime/metrics.</span></code></span>
+<span class="codeline" id="line-197"><code><span class="comment">	// We are assuming the largest case to have stable pointers for sampleMap purposes.</span></code></span>
+<span class="codeline" id="line-198"><code>	<label for="r30" class="ident">sampleBuf</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r23" class="ident">exposedDescriptions</label>)+<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-30" class="ident">RuntimeMetricSumForHist</a>)+<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<a href="#line-59" class="ident">rmNamesForMemStatsMetrics</a>))</code></span>
+<span class="codeline" id="line-199"><code>	<label for="r31" class="ident">sampleMap</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r23" class="ident">exposedDescriptions</label>))</code></span>
+<span class="codeline" id="line-200"><code>	<span class="keyword">for</span> <label for="r32" class="ident">_</label>, <label for="r33" class="ident">d</label> := <span class="keyword">range</span> <label for="r23" class="ident">exposedDescriptions</label> {</code></span>
+<span class="codeline" id="line-201"><code>		<label for="r34" class="ident">namespace</label>, <label for="r35" class="ident">subsystem</label>, <label for="r36" class="ident">name</label>, <label for="r37" class="ident">ok</label> := <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_runtime_metrics.go.html#line-39" class="ident">RuntimeMetricsToProm</a>(&amp;<label for="r33" class="ident">d</label>.<a href="#line-123" class="ident">Description</a>)</code></span>
+<span class="codeline" id="line-202"><code>		<span class="keyword">if</span> !<label for="r37" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-203"><code>			<span class="comment">// Just ignore this metric; we can't do anything with it here.</span></code></span>
+<span class="codeline" id="line-204"><code><span class="comment">			// If a user decides to use the latest version of Go, we don't want</span></code></span>
+<span class="codeline" id="line-205"><code><span class="comment">			// to fail here. This condition is tested in TestExpectedRuntimeMetrics.</span></code></span>
+<span class="codeline" id="line-206"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-207"><code>		}</code></span>
+<span class="codeline" id="line-208"><code>		<label for="r38" class="ident">help</label> := <a href="#line-290" class="ident">attachOriginalName</a>(<label for="r33" class="ident">d</label>.<a href="#line-123" class="ident">Description</a>.<a href="../../../../runtime/metrics/description.go.html#line-37" class="ident">Description</a>, <label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>)</code></span>
+<span class="codeline" id="line-209"><code></code></span>
+<span class="codeline" id="line-210"><code>		<label for="r30" class="ident">sampleBuf</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r30" class="ident">sampleBuf</label>, <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>{<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>: <label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>})</code></span>
+<span class="codeline" id="line-211"><code>		<label for="r31" class="ident">sampleMap</label>[<label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>] = &amp;<label for="r30" class="ident">sampleBuf</label>[<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r30" class="ident">sampleBuf</label>)-<span class="lit-number">1</span>]</code></span>
+<span class="codeline" id="line-212"><code></code></span>
+<span class="codeline" id="line-213"><code>		<span class="keyword">var</span> <label for="r39" class="ident">m</label> <a href="collector.go.html#line-125" class="ident">collectorMetric</a></code></span>
+<span class="codeline" id="line-214"><code>		<span class="keyword">if</span> <label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-43" class="ident">Kind</a> == <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/value.go.html#line-26" class="ident">KindFloat64Histogram</a> {</code></span>
+<span class="codeline" id="line-215"><code>			<label for="r40" class="ident">_</label>, <label for="r41" class="ident">hasSum</label> := <label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-30" class="ident">RuntimeMetricSumForHist</a>[<label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>]</code></span>
+<span class="codeline" id="line-216"><code>			<label for="r42" class="ident">unit</label> := <label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>[<a href="../../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../../strings/strings.go.html#line-127" class="ident">IndexRune</a>(<label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>, <span class="lit-number">':'</span>)+<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-217"><code>			<label for="r39" class="ident">m</label> = <a href="#line-485" class="ident">newBatchHistogram</a>(</code></span>
+<span class="codeline" id="line-218"><code>				<a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-219"><code>					<a href="metric.go.html#line-107" class="ident">BuildFQName</a>(<label for="r34" class="ident">namespace</label>, <label for="r35" class="ident">subsystem</label>, <label for="r36" class="ident">name</label>),</code></span>
+<span class="codeline" id="line-220"><code>					<label for="r38" class="ident">help</label>,</code></span>
+<span class="codeline" id="line-221"><code>					<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-222"><code>					<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-223"><code>				),</code></span>
+<span class="codeline" id="line-224"><code>				<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus/internal.html" class="ident i6">internal</a>.<a href="internal/go_runtime_metrics.go.html#line-85" class="ident">RuntimeMetricsBucketsForUnit</a>(<label for="r27" class="ident">bucketsMap</label>[<label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>], <label for="r42" class="ident">unit</label>),</code></span>
+<span class="codeline" id="line-225"><code>				<label for="r41" class="ident">hasSum</label>,</code></span>
+<span class="codeline" id="line-226"><code>			)</code></span>
+<span class="codeline" id="line-227"><code>		} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r33" class="ident">d</label>.<a href="../../../../runtime/metrics/description.go.html#line-50" class="ident">Cumulative</a> {</code></span>
+<span class="codeline" id="line-228"><code>			<label for="r39" class="ident">m</label> = <a href="counter.go.html#line-87" class="ident">NewCounter</a>(<a href="counter.go.html#line-61" class="ident">CounterOpts</a>{</code></span>
+<span class="codeline" id="line-229"><code>				<a href="metric.go.html#line-74" class="ident">Namespace</a>: <label for="r34" class="ident">namespace</label>,</code></span>
+<span class="codeline" id="line-230"><code>				<a href="metric.go.html#line-75" class="ident">Subsystem</a>: <label for="r35" class="ident">subsystem</label>,</code></span>
+<span class="codeline" id="line-231"><code>				<a href="metric.go.html#line-76" class="ident">Name</a>:      <label for="r36" class="ident">name</label>,</code></span>
+<span class="codeline" id="line-232"><code>				<a href="metric.go.html#line-82" class="ident">Help</a>:      <label for="r38" class="ident">help</label>,</code></span>
+<span class="codeline" id="line-233"><code>			},</code></span>
+<span class="codeline" id="line-234"><code>			)</code></span>
+<span class="codeline" id="line-235"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-236"><code>			<label for="r39" class="ident">m</label> = <a href="gauge.go.html#line-78" class="ident">NewGauge</a>(<a href="gauge.go.html#line-56" class="ident">GaugeOpts</a>{</code></span>
+<span class="codeline" id="line-237"><code>				<a href="metric.go.html#line-74" class="ident">Namespace</a>: <label for="r34" class="ident">namespace</label>,</code></span>
+<span class="codeline" id="line-238"><code>				<a href="metric.go.html#line-75" class="ident">Subsystem</a>: <label for="r35" class="ident">subsystem</label>,</code></span>
+<span class="codeline" id="line-239"><code>				<a href="metric.go.html#line-76" class="ident">Name</a>:      <label for="r36" class="ident">name</label>,</code></span>
+<span class="codeline" id="line-240"><code>				<a href="metric.go.html#line-82" class="ident">Help</a>:      <label for="r38" class="ident">help</label>,</code></span>
+<span class="codeline" id="line-241"><code>			})</code></span>
+<span class="codeline" id="line-242"><code>		}</code></span>
+<span class="codeline" id="line-243"><code>		<label for="r29" class="ident">metricSet</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r29" class="ident">metricSet</label>, <label for="r39" class="ident">m</label>)</code></span>
+<span class="codeline" id="line-244"><code>	}</code></span>
+<span class="codeline" id="line-245"><code></code></span>
+<span class="codeline" id="line-246"><code>	<span class="comment">// Add exact sum metrics to sampleBuf if not added before.</span></code></span>
+<span class="codeline" id="line-247"><code>	<span class="keyword">for</span> <label for="r43" class="ident">_</label>, <label for="r44" class="ident">h</label> := <span class="keyword">range</span> <label for="r24" class="ident">histograms</label> {</code></span>
+<span class="codeline" id="line-248"><code>		<label for="r45" class="ident">sumMetric</label>, <label for="r46" class="ident">ok</label> := <label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-30" class="ident">RuntimeMetricSumForHist</a>[<label for="r44" class="ident">h</label>.<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>]</code></span>
+<span class="codeline" id="line-249"><code>		<span class="keyword">if</span> !<label for="r46" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-250"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-251"><code>		}</code></span>
+<span class="codeline" id="line-252"><code></code></span>
+<span class="codeline" id="line-253"><code>		<span class="keyword">if</span> <label for="r47" class="ident">_</label>, <label for="r48" class="ident">ok</label> := <label for="r31" class="ident">sampleMap</label>[<label for="r45" class="ident">sumMetric</label>]; <label for="r48" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-254"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-255"><code>		}</code></span>
+<span class="codeline" id="line-256"><code>		<label for="r30" class="ident">sampleBuf</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r30" class="ident">sampleBuf</label>, <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>{<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>: <label for="r45" class="ident">sumMetric</label>})</code></span>
+<span class="codeline" id="line-257"><code>		<label for="r31" class="ident">sampleMap</label>[<label for="r45" class="ident">sumMetric</label>] = &amp;<label for="r30" class="ident">sampleBuf</label>[<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r30" class="ident">sampleBuf</label>)-<span class="lit-number">1</span>]</code></span>
+<span class="codeline" id="line-258"><code>	}</code></span>
+<span class="codeline" id="line-259"><code></code></span>
+<span class="codeline" id="line-260"><code>	<span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-261"><code>		<label for="r49" class="ident">msMetrics</label>      <a href="go_collector.go.html#line-270" class="ident">memStatsMetrics</a></code></span>
+<span class="codeline" id="line-262"><code>		<label for="r50" class="ident">msDescriptions</label> []<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/description.go.html#line-10" class="ident">Description</a></code></span>
+<span class="codeline" id="line-263"><code>	)</code></span>
+<span class="codeline" id="line-264"><code></code></span>
+<span class="codeline" id="line-265"><code>	<span class="keyword">if</span> !<label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-29" class="ident">DisableMemStatsLikeMetrics</a> {</code></span>
+<span class="codeline" id="line-266"><code>		<label for="r49" class="ident">msMetrics</label> = <a href="go_collector.go.html#line-26" class="ident">goRuntimeMemStats</a>()</code></span>
+<span class="codeline" id="line-267"><code>		<label for="r50" class="ident">msDescriptions</label> = <a href="#line-82" class="ident">bestEffortLookupRM</a>(<a href="#line-59" class="ident">rmNamesForMemStatsMetrics</a>)</code></span>
+<span class="codeline" id="line-268"><code></code></span>
+<span class="codeline" id="line-269"><code>		<span class="comment">// Check if metric was not exposed before and if not, add to sampleBuf.</span></code></span>
+<span class="codeline" id="line-270"><code>		<span class="keyword">for</span> <label for="r51" class="ident">_</label>, <label for="r52" class="ident">mdDesc</label> := <span class="keyword">range</span> <label for="r50" class="ident">msDescriptions</label> {</code></span>
+<span class="codeline" id="line-271"><code>			<span class="keyword">if</span> <label for="r53" class="ident">_</label>, <label for="r54" class="ident">ok</label> := <label for="r31" class="ident">sampleMap</label>[<label for="r52" class="ident">mdDesc</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>]; <label for="r54" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-272"><code>				<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-273"><code>			}</code></span>
+<span class="codeline" id="line-274"><code>			<label for="r30" class="ident">sampleBuf</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r30" class="ident">sampleBuf</label>, <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>{<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>: <label for="r52" class="ident">mdDesc</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>})</code></span>
+<span class="codeline" id="line-275"><code>			<label for="r31" class="ident">sampleMap</label>[<label for="r52" class="ident">mdDesc</label>.<a href="../../../../runtime/metrics/description.go.html#line-34" class="ident">Name</a>] = &amp;<label for="r30" class="ident">sampleBuf</label>[<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r30" class="ident">sampleBuf</label>)-<span class="lit-number">1</span>]</code></span>
+<span class="codeline" id="line-276"><code>		}</code></span>
+<span class="codeline" id="line-277"><code>	}</code></span>
+<span class="codeline" id="line-278"><code></code></span>
+<span class="codeline" id="line-279"><code>	<span class="keyword">return</span> &amp;<a href="#line-94" class="ident">goCollector</a>{</code></span>
+<span class="codeline" id="line-280"><code>		<a href="#line-95" class="ident">base</a>:                 <a href="go_collector.go.html#line-209" class="ident">newBaseGoCollector</a>(),</code></span>
+<span class="codeline" id="line-281"><code>		<a href="#line-102" class="ident">sampleBuf</a>:            <label for="r30" class="ident">sampleBuf</label>,</code></span>
+<span class="codeline" id="line-282"><code>		<a href="#line-104" class="ident">sampleMap</a>:            <label for="r31" class="ident">sampleMap</label>,</code></span>
+<span class="codeline" id="line-283"><code>		<a href="#line-108" class="ident">rmExposedMetrics</a>:     <label for="r29" class="ident">metricSet</label>,</code></span>
+<span class="codeline" id="line-284"><code>		<a href="#line-109" class="ident">rmExactSumMapForHist</a>: <label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-30" class="ident">RuntimeMetricSumForHist</a>,</code></span>
+<span class="codeline" id="line-285"><code>		<a href="#line-118" class="ident">msMetrics</a>:            <label for="r49" class="ident">msMetrics</label>,</code></span>
+<span class="codeline" id="line-286"><code>		<a href="#line-119" class="ident">msMetricsEnabled</a>:     !<label for="r20" class="ident">opt</label>.<a href="internal/go_collector_options.go.html#line-29" class="ident">DisableMemStatsLikeMetrics</a>,</code></span>
+<span class="codeline" id="line-287"><code>	}</code></span>
+<span class="codeline" id="line-288"><code>}</code></span>
+<span class="codeline" id="line-289"><code></code></span>
+<span class="codeline" id="line-290"><code><span class="keyword">func</span> <label for="r55" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-attachOriginalName" class="ident">attachOriginalName</a></label>(<label for="r56" class="ident">desc</label>, <label for="r57" class="ident">origName</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-291"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/fmt.html" class="ident i0">fmt</a>.<a href="../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"%s Sourced from %s."</span>, <label for="r56" class="ident">desc</label>, <label for="r57" class="ident">origName</label>)</code></span>
+<span class="codeline" id="line-292"><code>}</code></span>
+<span class="codeline" id="line-293"><code></code></span>
+<span class="codeline" id="line-294"><code><span class="comment">// Describe returns all descriptions of the collector.</span></code></span>
+<span class="codeline" id="line-295"><code><span class="keyword">func</span> (<label for="r58" class="ident">c</label> *<a href="#line-94" class="ident">goCollector</a>) <label for="r59" class="ident"><a href="../../../../../imp/github.com/prometheus/client_golang/prometheus.goCollector^8d59f.html#name-.Describe" class="ident">Describe</a></label>(<label for="r60" class="ident">ch</label> <span class="keyword">chan</span>&lt;- *<a href="desc.go.html#line-45" class="ident">Desc</a>) {</code></span>
+<span class="codeline" id="line-296"><code>	<label for="r58" class="ident">c</label>.<a href="#line-95" class="ident">base</a>.<a href="go_collector.go.html#line-235" class="ident">Describe</a>(<label for="r60" class="ident">ch</label>)</code></span>
+<span class="codeline" id="line-297"><code>	<span class="keyword">for</span> <label for="r61" class="ident">_</label>, <label for="r62" class="ident">i</label> := <span class="keyword">range</span> <label for="r58" class="ident">c</label>.<a href="#line-118" class="ident">msMetrics</a> {</code></span>
+<span class="codeline" id="line-298"><code>		<label for="r60" class="ident">ch</label> &lt;- <label for="r62" class="ident">i</label>.<a href="go_collector.go.html#line-271" class="ident">desc</a></code></span>
+<span class="codeline" id="line-299"><code>	}</code></span>
+<span class="codeline" id="line-300"><code>	<span class="keyword">for</span> <label for="r63" class="ident">_</label>, <label for="r64" class="ident">m</label> := <span class="keyword">range</span> <label for="r58" class="ident">c</label>.<a href="#line-108" class="ident">rmExposedMetrics</a> {</code></span>
+<span class="codeline" id="line-301"><code>		<label for="r60" class="ident">ch</label> &lt;- <label for="r64" class="ident">m</label>.<a href="metric.go.html#line-39" class="ident">Desc</a>()</code></span>
+<span class="codeline" id="line-302"><code>	}</code></span>
+<span class="codeline" id="line-303"><code>}</code></span>
+<span class="codeline" id="line-304"><code></code></span>
+<span class="codeline" id="line-305"><code><span class="comment">// Collect returns the current state of all metrics of the collector.</span></code></span>
+<span class="codeline" id="line-306"><code><span class="keyword">func</span> (<label for="r65" class="ident">c</label> *<a href="#line-94" class="ident">goCollector</a>) <label for="r66" class="ident"><a href="../../../../../imp/github.com/prometheus/client_golang/prometheus.goCollector^8d59f.html#name-.Collect" class="ident">Collect</a></label>(<label for="r67" class="ident">ch</label> <span class="keyword">chan</span>&lt;- <a href="metric.go.html#line-33" class="ident">Metric</a>) {</code></span>
+<span class="codeline" id="line-307"><code>	<span class="comment">// Collect base non-memory metrics.</span></code></span>
+<span class="codeline" id="line-308"><code>	<label for="r65" class="ident">c</label>.<a href="#line-95" class="ident">base</a>.<a href="go_collector.go.html#line-244" class="ident">Collect</a>(<label for="r67" class="ident">ch</label>)</code></span>
+<span class="codeline" id="line-309"><code></code></span>
+<span class="codeline" id="line-310"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r65" class="ident">c</label>.<a href="#line-102" class="ident">sampleBuf</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-311"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-312"><code>	}</code></span>
+<span class="codeline" id="line-313"><code></code></span>
+<span class="codeline" id="line-314"><code>	<span class="comment">// Collect must be thread-safe, so prevent concurrent use of</span></code></span>
+<span class="codeline" id="line-315"><code><span class="comment">	// sampleBuf elements. Just read into sampleBuf but write all the data</span></code></span>
+<span class="codeline" id="line-316"><code><span class="comment">	// we get into our Metrics or MemStats.</span></code></span>
+<span class="codeline" id="line-317"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-318"><code><span class="comment">	// This lock also ensures that the Metrics we send out are all from</span></code></span>
+<span class="codeline" id="line-319"><code><span class="comment">	// the same updates, ensuring their mutual consistency insofar as</span></code></span>
+<span class="codeline" id="line-320"><code><span class="comment">	// is guaranteed by the runtime/metrics package.</span></code></span>
+<span class="codeline" id="line-321"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-322"><code><span class="comment">	// N.B. This locking is heavy-handed, but Collect is expected to be called</span></code></span>
+<span class="codeline" id="line-323"><code><span class="comment">	// relatively infrequently. Also the core operation here, metrics.Read,</span></code></span>
+<span class="codeline" id="line-324"><code><span class="comment">	// is fast (O(tens of microseconds)) so contention should certainly be</span></code></span>
+<span class="codeline" id="line-325"><code><span class="comment">	// low, though channel operations and any allocations may add to that.</span></code></span>
+<span class="codeline" id="line-326"><code>	<label for="r65" class="ident">c</label>.<a href="#line-99" class="ident">mu</a>.<a href="../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-327"><code>	<span class="keyword">defer</span> <label for="r65" class="ident">c</label>.<a href="#line-99" class="ident">mu</a>.<a href="../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-328"><code></code></span>
+<span class="codeline" id="line-329"><code>	<span class="comment">// Populate runtime/metrics sample buffer.</span></code></span>
+<span class="codeline" id="line-330"><code>	<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-45" class="ident">Read</a>(<label for="r65" class="ident">c</label>.<a href="#line-102" class="ident">sampleBuf</a>)</code></span>
+<span class="codeline" id="line-331"><code></code></span>
+<span class="codeline" id="line-332"><code>	<span class="comment">// Collect all our runtime/metrics user chose to expose from sampleBuf (if any).</span></code></span>
+<span class="codeline" id="line-333"><code>	<span class="keyword">for</span> <label for="r68" class="ident">i</label>, <label for="r69" class="ident">metric</label> := <span class="keyword">range</span> <label for="r65" class="ident">c</label>.<a href="#line-108" class="ident">rmExposedMetrics</a> {</code></span>
+<span class="codeline" id="line-334"><code>		<span class="comment">// We created samples for exposed metrics first in order, so indexes match.</span></code></span>
+<span class="codeline" id="line-335"><code>		<label for="r70" class="ident">sample</label> := <label for="r65" class="ident">c</label>.<a href="#line-102" class="ident">sampleBuf</a>[<label for="r68" class="ident">i</label>]</code></span>
+<span class="codeline" id="line-336"><code></code></span>
+<span class="codeline" id="line-337"><code>		<span class="comment">// N.B. switch on concrete type because it's significantly more efficient</span></code></span>
+<span class="codeline" id="line-338"><code><span class="comment">		// than checking for the Counter and Gauge interface implementations. In</span></code></span>
+<span class="codeline" id="line-339"><code><span class="comment">		// this case, we control all the types here.</span></code></span>
+<span class="codeline" id="line-340"><code>		<span class="keyword">switch</span> m := <label for="r69" class="ident">metric</label>.(<span class="keyword">type</span>) {</code></span>
+<span class="codeline" id="line-341"><code>		<span class="keyword">case</span> *<a href="counter.go.html#line-103" class="ident">counter</a>:</code></span>
+<span class="codeline" id="line-342"><code>			<span class="comment">// Guard against decreases. This should never happen, but a failure</span></code></span>
+<span class="codeline" id="line-343"><code><span class="comment">			// to do so will result in a panic, which is a harsh consequence for</span></code></span>
+<span class="codeline" id="line-344"><code><span class="comment">			// a metrics collection bug.</span></code></span>
+<span class="codeline" id="line-345"><code>			<label for="r71" class="ident">v0</label>, <label for="r72" class="ident">v1</label> := <label for="r73" class="ident">m</label>.<a href="counter.go.html#line-155" class="ident">get</a>(), <a href="#line-375" class="ident">unwrapScalarRMValue</a>(<label for="r70" class="ident">sample</label>.<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>)</code></span>
+<span class="codeline" id="line-346"><code>			<span class="keyword">if</span> <label for="r72" class="ident">v1</label> &gt; <label for="r71" class="ident">v0</label> {</code></span>
+<span class="codeline" id="line-347"><code>				<label for="r73" class="ident">m</label>.<a href="counter.go.html#line-126" class="ident">Add</a>(<a href="#line-375" class="ident">unwrapScalarRMValue</a>(<label for="r70" class="ident">sample</label>.<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>) - <label for="r73" class="ident">m</label>.<a href="counter.go.html#line-155" class="ident">get</a>())</code></span>
+<span class="codeline" id="line-348"><code>			}</code></span>
+<span class="codeline" id="line-349"><code>			<label for="r73" class="ident">m</label>.<a href="collector.go.html#line-118" class="ident">Collect</a>(<label for="r67" class="ident">ch</label>)</code></span>
+<span class="codeline" id="line-350"><code>		<span class="keyword">case</span> *<a href="gauge.go.html#line-90" class="ident">gauge</a>:</code></span>
+<span class="codeline" id="line-351"><code>			<label for="r74" class="ident">m</label>.<a href="gauge.go.html#line-106" class="ident">Set</a>(<a href="#line-375" class="ident">unwrapScalarRMValue</a>(<label for="r70" class="ident">sample</label>.<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>))</code></span>
+<span class="codeline" id="line-352"><code>			<label for="r74" class="ident">m</label>.<a href="collector.go.html#line-118" class="ident">Collect</a>(<label for="r67" class="ident">ch</label>)</code></span>
+<span class="codeline" id="line-353"><code>		<span class="keyword">case</span> *<a href="#line-463" class="ident">batchHistogram</a>:</code></span>
+<span class="codeline" id="line-354"><code>			<label for="r75" class="ident">m</label>.<a href="#line-509" class="ident">update</a>(<label for="r70" class="ident">sample</label>.<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>.<a href="../../../../runtime/metrics/value.go.html#line-64" class="ident">Float64Histogram</a>(), <label for="r65" class="ident">c</label>.<a href="#line-402" class="ident">exactSumFor</a>(<label for="r70" class="ident">sample</label>.<a href="../../../../runtime/metrics/sample.go.html#line-18" class="ident">Name</a>))</code></span>
+<span class="codeline" id="line-355"><code>			<label for="r75" class="ident">m</label>.<a href="collector.go.html#line-118" class="ident">Collect</a>(<label for="r67" class="ident">ch</label>)</code></span>
+<span class="codeline" id="line-356"><code>		<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-357"><code>			<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"unexpected metric type"</span>)</code></span>
+<span class="codeline" id="line-358"><code>		}</code></span>
+<span class="codeline" id="line-359"><code>	}</code></span>
+<span class="codeline" id="line-360"><code></code></span>
+<span class="codeline" id="line-361"><code>	<span class="keyword">if</span> <label for="r65" class="ident">c</label>.<a href="#line-119" class="ident">msMetricsEnabled</a> {</code></span>
+<span class="codeline" id="line-362"><code>		<span class="comment">// ms is a dummy MemStats that we populate ourselves so that we can</span></code></span>
+<span class="codeline" id="line-363"><code><span class="comment">		// populate the old metrics from it if goMemStatsCollection is enabled.</span></code></span>
+<span class="codeline" id="line-364"><code>		<span class="keyword">var</span> <label for="r76" class="ident">ms</label> <a href="../../../../../pkg/runtime.html" class="ident i2">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a></code></span>
+<span class="codeline" id="line-365"><code>		<a href="#line-414" class="ident">memStatsFromRM</a>(&amp;<label for="r76" class="ident">ms</label>, <label for="r65" class="ident">c</label>.<a href="#line-104" class="ident">sampleMap</a>)</code></span>
+<span class="codeline" id="line-366"><code>		<span class="keyword">for</span> <label for="r77" class="ident">_</label>, <label for="r78" class="ident">i</label> := <span class="keyword">range</span> <label for="r65" class="ident">c</label>.<a href="#line-118" class="ident">msMetrics</a> {</code></span>
+<span class="codeline" id="line-367"><code>			<label for="r67" class="ident">ch</label> &lt;- <a href="value.go.html#line-126" class="ident">MustNewConstMetric</a>(<label for="r78" class="ident">i</label>.<a href="go_collector.go.html#line-271" class="ident">desc</a>, <label for="r78" class="ident">i</label>.<a href="go_collector.go.html#line-273" class="ident">valType</a>, <label for="r78" class="ident">i</label>.<a href="go_collector.go.html#line-272" class="ident">eval</a>(&amp;<label for="r76" class="ident">ms</label>))</code></span>
+<span class="codeline" id="line-368"><code>		}</code></span>
+<span class="codeline" id="line-369"><code>	}</code></span>
+<span class="codeline" id="line-370"><code>}</code></span>
+<span class="codeline" id="line-371"><code></code></span>
+<span class="codeline" id="line-372"><code><span class="comment">// unwrapScalarRMValue unwraps a runtime/metrics value that is assumed</span></code></span>
+<span class="codeline" id="line-373"><code><span class="comment">// to be scalar and returns the equivalent float64 value. Panics if the</span></code></span>
+<span class="codeline" id="line-374"><code><span class="comment">// value is not scalar.</span></code></span>
+<span class="codeline" id="line-375"><code><span class="keyword">func</span> <label for="r79" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-unwrapScalarRMValue" class="ident">unwrapScalarRMValue</a></label>(<label for="r80" class="ident">v</label> <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/value.go.html#line-30" class="ident">Value</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> {</code></span>
+<span class="codeline" id="line-376"><code>	<span class="keyword">switch</span> <label for="r80" class="ident">v</label>.<a href="../../../../runtime/metrics/value.go.html#line-37" class="ident">Kind</a>() {</code></span>
+<span class="codeline" id="line-377"><code>	<span class="keyword">case</span> <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/value.go.html#line-20" class="ident">KindUint64</a>:</code></span>
+<span class="codeline" id="line-378"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r80" class="ident">v</label>.<a href="../../../../runtime/metrics/value.go.html#line-44" class="ident">Uint64</a>())</code></span>
+<span class="codeline" id="line-379"><code>	<span class="keyword">case</span> <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/value.go.html#line-23" class="ident">KindFloat64</a>:</code></span>
+<span class="codeline" id="line-380"><code>		<span class="keyword">return</span> <label for="r80" class="ident">v</label>.<a href="../../../../runtime/metrics/value.go.html#line-54" class="ident">Float64</a>()</code></span>
+<span class="codeline" id="line-381"><code>	<span class="keyword">case</span> <a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/value.go.html#line-17" class="ident">KindBad</a>:</code></span>
+<span class="codeline" id="line-382"><code>		<span class="comment">// Unsupported metric.</span></code></span>
+<span class="codeline" id="line-383"><code><span class="comment">		//</span></code></span>
+<span class="codeline" id="line-384"><code><span class="comment">		// This should never happen because we always populate our metric</span></code></span>
+<span class="codeline" id="line-385"><code><span class="comment">		// set from the runtime/metrics package.</span></code></span>
+<span class="codeline" id="line-386"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"unexpected bad kind metric"</span>)</code></span>
+<span class="codeline" id="line-387"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-388"><code>		<span class="comment">// Unsupported metric kind.</span></code></span>
+<span class="codeline" id="line-389"><code><span class="comment">		//</span></code></span>
+<span class="codeline" id="line-390"><code><span class="comment">		// This should never happen because we check for this during initialization</span></code></span>
+<span class="codeline" id="line-391"><code><span class="comment">		// and flag and filter metrics whose kinds we don't understand.</span></code></span>
+<span class="codeline" id="line-392"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i0">fmt</a>.<a href="../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"unexpected unsupported metric: %v"</span>, <label for="r80" class="ident">v</label>.<a href="../../../../runtime/metrics/value.go.html#line-37" class="ident">Kind</a>()))</code></span>
+<span class="codeline" id="line-393"><code>	}</code></span>
+<span class="codeline" id="line-394"><code>}</code></span>
+<span class="codeline" id="line-395"><code></code></span>
+<span class="codeline" id="line-396"><code><span class="comment">// exactSumFor takes a runtime/metrics metric name (that is assumed to</span></code></span>
+<span class="codeline" id="line-397"><code><span class="comment">// be of kind KindFloat64Histogram) and returns its exact sum and whether</span></code></span>
+<span class="codeline" id="line-398"><code><span class="comment">// its exact sum exists.</span></code></span>
+<span class="codeline" id="line-399"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-400"><code><span class="comment">// The runtime/metrics API for histograms doesn't currently expose exact</span></code></span>
+<span class="codeline" id="line-401"><code><span class="comment">// sums, but some of the other metrics are in fact exact sums of histograms.</span></code></span>
+<span class="codeline" id="line-402"><code><span class="keyword">func</span> (<label for="r81" class="ident">c</label> *<a href="#line-94" class="ident">goCollector</a>) <label for="r82" class="ident">exactSumFor</label>(<label for="r83" class="ident">rmName</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> {</code></span>
+<span class="codeline" id="line-403"><code>	<label for="r84" class="ident">sumName</label>, <label for="r85" class="ident">ok</label> := <label for="r81" class="ident">c</label>.<a href="#line-109" class="ident">rmExactSumMapForHist</a>[<label for="r83" class="ident">rmName</label>]</code></span>
+<span class="codeline" id="line-404"><code>	<span class="keyword">if</span> !<label for="r85" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-405"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-406"><code>	}</code></span>
+<span class="codeline" id="line-407"><code>	<label for="r86" class="ident">s</label>, <label for="r85" class="ident">ok</label> := <label for="r81" class="ident">c</label>.<a href="#line-104" class="ident">sampleMap</a>[<label for="r84" class="ident">sumName</label>]</code></span>
+<span class="codeline" id="line-408"><code>	<span class="keyword">if</span> !<label for="r85" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-409"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-410"><code>	}</code></span>
+<span class="codeline" id="line-411"><code>	<span class="keyword">return</span> <a href="#line-375" class="ident">unwrapScalarRMValue</a>(<label for="r86" class="ident">s</label>.<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>)</code></span>
+<span class="codeline" id="line-412"><code>}</code></span>
+<span class="codeline" id="line-413"><code></code></span>
+<span class="codeline" id="line-414"><code><span class="keyword">func</span> <label for="r87" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-memStatsFromRM" class="ident">memStatsFromRM</a></label>(<label for="r88" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i2">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>, <label for="r89" class="ident">rm</label> <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/sample.go.html#line-13" class="ident">Sample</a>) {</code></span>
+<span class="codeline" id="line-415"><code>	<label for="r90" class="ident">lookupOrZero</label> := <span class="keyword">func</span>(<label for="r91" class="ident">name</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a> {</code></span>
+<span class="codeline" id="line-416"><code>		<span class="keyword">if</span> <label for="r92" class="ident">s</label>, <label for="r93" class="ident">ok</label> := <label for="r89" class="ident">rm</label>[<label for="r91" class="ident">name</label>]; <label for="r93" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-417"><code>			<span class="keyword">return</span> <label for="r92" class="ident">s</label>.<a href="../../../../runtime/metrics/sample.go.html#line-21" class="ident">Value</a>.<a href="../../../../runtime/metrics/value.go.html#line-44" class="ident">Uint64</a>()</code></span>
+<span class="codeline" id="line-418"><code>		}</code></span>
+<span class="codeline" id="line-419"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-420"><code>	}</code></span>
+<span class="codeline" id="line-421"><code></code></span>
+<span class="codeline" id="line-422"><code>	<span class="comment">// Currently, MemStats adds tiny alloc count to both Mallocs AND Frees.</span></code></span>
+<span class="codeline" id="line-423"><code><span class="comment">	// The reason for this is because MemStats couldn't be extended at the time</span></code></span>
+<span class="codeline" id="line-424"><code><span class="comment">	// but there was a desire to have Mallocs at least be a little more representative,</span></code></span>
+<span class="codeline" id="line-425"><code><span class="comment">	// while having Mallocs - Frees still represent a live object count.</span></code></span>
+<span class="codeline" id="line-426"><code><span class="comment">	// Unfortunately, MemStats doesn't actually export a large allocation count,</span></code></span>
+<span class="codeline" id="line-427"><code><span class="comment">	// so it's impossible to pull this number out directly.</span></code></span>
+<span class="codeline" id="line-428"><code>	<label for="r94" class="ident">tinyAllocs</label> := <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-35" class="ident">goGCHeapTinyAllocsObjects</a>)</code></span>
+<span class="codeline" id="line-429"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-88" class="ident">Mallocs</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-36" class="ident">goGCHeapAllocsObjects</a>) + <label for="r94" class="ident">tinyAllocs</label></code></span>
+<span class="codeline" id="line-430"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-91" class="ident">Frees</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-37" class="ident">goGCHeapFreesObjects</a>) + <label for="r94" class="ident">tinyAllocs</label></code></span>
+<span class="codeline" id="line-431"><code></code></span>
+<span class="codeline" id="line-432"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-68" class="ident">TotalAlloc</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-39" class="ident">goGCHeapAllocsBytes</a>)</code></span>
+<span class="codeline" id="line-433"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-78" class="ident">Sys</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-42" class="ident">goMemoryClassesTotalBytes</a>)</code></span>
+<span class="codeline" id="line-434"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-84" class="ident">Lookups</a> = <span class="lit-number">0</span> <span class="comment">// Already always zero.</span></code></span>
+<span class="codeline" id="line-435"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-125" class="ident">HeapAlloc</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-43" class="ident">goMemoryClassesHeapObjectsBytes</a>)</code></span>
+<span class="codeline" id="line-436"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-61" class="ident">Alloc</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-125" class="ident">HeapAlloc</a></code></span>
+<span class="codeline" id="line-437"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-166" class="ident">HeapInuse</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-125" class="ident">HeapAlloc</a> + <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-44" class="ident">goMemoryClassesHeapUnusedBytes</a>)</code></span>
+<span class="codeline" id="line-438"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-172" class="ident">HeapReleased</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-45" class="ident">goMemoryClassesHeapReleasedBytes</a>)</code></span>
+<span class="codeline" id="line-439"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-153" class="ident">HeapIdle</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-172" class="ident">HeapReleased</a> + <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-46" class="ident">goMemoryClassesHeapFreeBytes</a>)</code></span>
+<span class="codeline" id="line-440"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-138" class="ident">HeapSys</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-166" class="ident">HeapInuse</a> + <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-153" class="ident">HeapIdle</a></code></span>
+<span class="codeline" id="line-441"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-179" class="ident">HeapObjects</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-40" class="ident">goGCHeapObjects</a>)</code></span>
+<span class="codeline" id="line-442"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-194" class="ident">StackInuse</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-47" class="ident">goMemoryClassesHeapStacksBytes</a>)</code></span>
+<span class="codeline" id="line-443"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-210" class="ident">StackSys</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-194" class="ident">StackInuse</a> + <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-48" class="ident">goMemoryClassesOSStacksBytes</a>)</code></span>
+<span class="codeline" id="line-444"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-224" class="ident">MSpanInuse</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-49" class="ident">goMemoryClassesMetadataMSpanInuseBytes</a>)</code></span>
+<span class="codeline" id="line-445"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-228" class="ident">MSpanSys</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-224" class="ident">MSpanInuse</a> + <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-50" class="ident">goMemoryClassesMetadataMSPanFreeBytes</a>)</code></span>
+<span class="codeline" id="line-446"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-231" class="ident">MCacheInuse</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-51" class="ident">goMemoryClassesMetadataMCacheInuseBytes</a>)</code></span>
+<span class="codeline" id="line-447"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-235" class="ident">MCacheSys</a> = <label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-231" class="ident">MCacheInuse</a> + <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-52" class="ident">goMemoryClassesMetadataMCacheFreeBytes</a>)</code></span>
+<span class="codeline" id="line-448"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-238" class="ident">BuckHashSys</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-53" class="ident">goMemoryClassesProfilingBucketsBytes</a>)</code></span>
+<span class="codeline" id="line-449"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-241" class="ident">GCSys</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-54" class="ident">goMemoryClassesMetadataOtherBytes</a>)</code></span>
+<span class="codeline" id="line-450"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-245" class="ident">OtherSys</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-55" class="ident">goMemoryClassesOtherBytes</a>)</code></span>
+<span class="codeline" id="line-451"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-255" class="ident">NextGC</a> = <label for="r90" class="ident">lookupOrZero</label>(<a href="#line-41" class="ident">goGCHeapGoalBytes</a>)</code></span>
+<span class="codeline" id="line-452"><code></code></span>
+<span class="codeline" id="line-453"><code>	<span class="comment">// N.B. GCCPUFraction is intentionally omitted. This metric is not useful,</span></code></span>
+<span class="codeline" id="line-454"><code><span class="comment">	// and often misleading due to the fact that it's an average over the lifetime</span></code></span>
+<span class="codeline" id="line-455"><code><span class="comment">	// of the process.</span></code></span>
+<span class="codeline" id="line-456"><code><span class="comment">	// See https://github.com/prometheus/client_golang/issues/842#issuecomment-861812034</span></code></span>
+<span class="codeline" id="line-457"><code><span class="comment">	// for more details.</span></code></span>
+<span class="codeline" id="line-458"><code>	<label for="r88" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-305" class="ident">GCCPUFraction</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-459"><code>}</code></span>
+<span class="codeline" id="line-460"><code></code></span>
+<span class="codeline" id="line-461"><code><span class="comment">// batchHistogram is a mutable histogram that is updated</span></code></span>
+<span class="codeline" id="line-462"><code><span class="comment">// in batches.</span></code></span>
+<span class="codeline" id="line-463"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-batchHistogram" class="ident">batchHistogram</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-464"><code>	<a href="collector.go.html#line-101" class="ident">selfCollector</a></code></span>
+<span class="codeline" id="line-465"><code></code></span>
+<span class="codeline" id="line-466"><code>	<span class="comment">// Static fields updated only once.</span></code></span>
+<span class="codeline" id="line-467"><code>	desc   *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-468"><code>	hasSum <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-469"><code></code></span>
+<span class="codeline" id="line-470"><code>	<span class="comment">// Because this histogram operates in batches, it just uses a</span></code></span>
+<span class="codeline" id="line-471"><code><span class="comment">	// single mutex for everything. updates are always serialized</span></code></span>
+<span class="codeline" id="line-472"><code><span class="comment">	// but Write calls may operate concurrently with updates.</span></code></span>
+<span class="codeline" id="line-473"><code><span class="comment">	// Contention between these two sources should be rare.</span></code></span>
+<span class="codeline" id="line-474"><code>	mu      <a href="../../../../../pkg/sync.html" class="ident i5">sync</a>.<a href="../../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-475"><code>	buckets []<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> <span class="comment">// Inclusive lower bounds, like runtime/metrics.</span></code></span>
+<span class="codeline" id="line-476"><code>	counts  []<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a></code></span>
+<span class="codeline" id="line-477"><code>	sum     <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> <span class="comment">// Used if hasSum is true.</span></code></span>
+<span class="codeline" id="line-478"><code>}</code></span>
+<span class="codeline" id="line-479"><code></code></span>
+<span class="codeline" id="line-480"><code><span class="comment">// newBatchHistogram creates a new batch histogram value with the given</span></code></span>
+<span class="codeline" id="line-481"><code><span class="comment">// Desc, buckets, and whether or not it has an exact sum available.</span></code></span>
+<span class="codeline" id="line-482"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-483"><code><span class="comment">// buckets must always be from the runtime/metrics package, following</span></code></span>
+<span class="codeline" id="line-484"><code><span class="comment">// the same conventions.</span></code></span>
+<span class="codeline" id="line-485"><code><span class="keyword">func</span> <label for="r95" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-newBatchHistogram" class="ident">newBatchHistogram</a></label>(<label for="r96" class="ident">desc</label> *<a href="desc.go.html#line-45" class="ident">Desc</a>, <label for="r97" class="ident">buckets</label> []<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>, <label for="r98" class="ident">hasSum</label> <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) *<a href="#line-463" class="ident">batchHistogram</a> {</code></span>
+<span class="codeline" id="line-486"><code>	<span class="comment">// We need to remove -Inf values. runtime/metrics keeps them around.</span></code></span>
+<span class="codeline" id="line-487"><code><span class="comment">	// But -Inf bucket should not be allowed for prometheus histograms.</span></code></span>
+<span class="codeline" id="line-488"><code>	<span class="keyword">if</span> <label for="r97" class="ident">buckets</label>[<span class="lit-number">0</span>] == <a href="../../../../../pkg/math.html" class="ident i1">math</a>.<a href="../../../../math/bits.go.html#line-20" class="ident">Inf</a>(-<span class="lit-number">1</span>) {</code></span>
+<span class="codeline" id="line-489"><code>		<label for="r97" class="ident">buckets</label> = <label for="r97" class="ident">buckets</label>[<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-490"><code>	}</code></span>
+<span class="codeline" id="line-491"><code>	<label for="r99" class="ident">h</label> := &amp;<a href="#line-463" class="ident">batchHistogram</a>{</code></span>
+<span class="codeline" id="line-492"><code>		<a href="#line-467" class="ident">desc</a>:    <label for="r96" class="ident">desc</label>,</code></span>
+<span class="codeline" id="line-493"><code>		<a href="#line-475" class="ident">buckets</a>: <label for="r97" class="ident">buckets</label>,</code></span>
+<span class="codeline" id="line-494"><code>		<span class="comment">// Because buckets follows runtime/metrics conventions, there's</span></code></span>
+<span class="codeline" id="line-495"><code><span class="comment">		// 1 more value in the buckets list than there are buckets represented,</span></code></span>
+<span class="codeline" id="line-496"><code><span class="comment">		// because in runtime/metrics, the bucket values represent *boundaries*,</span></code></span>
+<span class="codeline" id="line-497"><code><span class="comment">		// and non-Inf boundaries are inclusive lower bounds for that bucket.</span></code></span>
+<span class="codeline" id="line-498"><code>		<a href="#line-476" class="ident">counts</a>: <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r97" class="ident">buckets</label>)-<span class="lit-number">1</span>),</code></span>
+<span class="codeline" id="line-499"><code>		<a href="#line-468" class="ident">hasSum</a>: <label for="r98" class="ident">hasSum</label>,</code></span>
+<span class="codeline" id="line-500"><code>	}</code></span>
+<span class="codeline" id="line-501"><code>	<label for="r99" class="ident">h</label>.<a href="collector.go.html#line-108" class="ident">init</a>(<label for="r99" class="ident">h</label>)</code></span>
+<span class="codeline" id="line-502"><code>	<span class="keyword">return</span> <label for="r99" class="ident">h</label></code></span>
+<span class="codeline" id="line-503"><code>}</code></span>
+<span class="codeline" id="line-504"><code></code></span>
+<span class="codeline" id="line-505"><code><span class="comment">// update updates the batchHistogram from a runtime/metrics histogram.</span></code></span>
+<span class="codeline" id="line-506"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-507"><code><span class="comment">// sum must be provided if the batchHistogram was created to have an exact sum.</span></code></span>
+<span class="codeline" id="line-508"><code><span class="comment">// h.buckets must be a strict subset of his.Buckets.</span></code></span>
+<span class="codeline" id="line-509"><code><span class="keyword">func</span> (<label for="r100" class="ident">h</label> *<a href="#line-463" class="ident">batchHistogram</a>) <label for="r101" class="ident">update</label>(<label for="r102" class="ident">his</label> *<a href="../../../../../pkg/runtime/metrics.html" class="ident i3">metrics</a>.<a href="../../../../runtime/metrics/histogram.go.html#line-8" class="ident">Float64Histogram</a>, <label for="r103" class="ident">sum</label> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>) {</code></span>
+<span class="codeline" id="line-510"><code>	<label for="r104" class="ident">counts</label>, <label for="r105" class="ident">buckets</label> := <label for="r102" class="ident">his</label>.<a href="../../../../runtime/metrics/histogram.go.html#line-13" class="ident">Counts</a>, <label for="r102" class="ident">his</label>.<a href="../../../../runtime/metrics/histogram.go.html#line-32" class="ident">Buckets</a></code></span>
+<span class="codeline" id="line-511"><code></code></span>
+<span class="codeline" id="line-512"><code>	<label for="r100" class="ident">h</label>.<a href="#line-474" class="ident">mu</a>.<a href="../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-513"><code>	<span class="keyword">defer</span> <label for="r100" class="ident">h</label>.<a href="#line-474" class="ident">mu</a>.<a href="../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-514"><code></code></span>
+<span class="codeline" id="line-515"><code>	<span class="comment">// Clear buckets.</span></code></span>
+<span class="codeline" id="line-516"><code>	<span class="keyword">for</span> <label for="r106" class="ident">i</label> := <span class="keyword">range</span> <label for="r100" class="ident">h</label>.<a href="#line-476" class="ident">counts</a> {</code></span>
+<span class="codeline" id="line-517"><code>		<label for="r100" class="ident">h</label>.<a href="#line-476" class="ident">counts</a>[<label for="r106" class="ident">i</label>] = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-518"><code>	}</code></span>
+<span class="codeline" id="line-519"><code>	<span class="comment">// Copy and reduce buckets.</span></code></span>
+<span class="codeline" id="line-520"><code>	<span class="keyword">var</span> <label for="r107" class="ident">j</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-521"><code>	<span class="keyword">for</span> <label for="r108" class="ident">i</label>, <label for="r109" class="ident">count</label> := <span class="keyword">range</span> <label for="r104" class="ident">counts</label> {</code></span>
+<span class="codeline" id="line-522"><code>		<label for="r100" class="ident">h</label>.<a href="#line-476" class="ident">counts</a>[<label for="r107" class="ident">j</label>] += <label for="r109" class="ident">count</label></code></span>
+<span class="codeline" id="line-523"><code>		<span class="keyword">if</span> <label for="r105" class="ident">buckets</label>[<label for="r108" class="ident">i</label>+<span class="lit-number">1</span>] == <label for="r100" class="ident">h</label>.<a href="#line-475" class="ident">buckets</a>[<label for="r107" class="ident">j</label>+<span class="lit-number">1</span>] {</code></span>
+<span class="codeline" id="line-524"><code>			<label for="r107" class="ident">j</label>++</code></span>
+<span class="codeline" id="line-525"><code>		}</code></span>
+<span class="codeline" id="line-526"><code>	}</code></span>
+<span class="codeline" id="line-527"><code>	<span class="keyword">if</span> <label for="r100" class="ident">h</label>.<a href="#line-468" class="ident">hasSum</a> {</code></span>
+<span class="codeline" id="line-528"><code>		<label for="r100" class="ident">h</label>.<a href="#line-477" class="ident">sum</a> = <label for="r103" class="ident">sum</label></code></span>
+<span class="codeline" id="line-529"><code>	}</code></span>
+<span class="codeline" id="line-530"><code>}</code></span>
+<span class="codeline" id="line-531"><code></code></span>
+<span class="codeline" id="line-532"><code><span class="keyword">func</span> (<label for="r110" class="ident">h</label> *<a href="#line-463" class="ident">batchHistogram</a>) <label for="r111" class="ident"><a href="../../../../../imp/github.com/prometheus/client_golang/prometheus.batchHistogram^4208d.html#name-.Desc" class="ident">Desc</a></label>() *<a href="desc.go.html#line-45" class="ident">Desc</a> {</code></span>
+<span class="codeline" id="line-533"><code>	<span class="keyword">return</span> <label for="r110" class="ident">h</label>.<a href="#line-467" class="ident">desc</a></code></span>
+<span class="codeline" id="line-534"><code>}</code></span>
+<span class="codeline" id="line-535"><code></code></span>
+<span class="codeline" id="line-536"><code><span class="keyword">func</span> (<label for="r112" class="ident">h</label> *<a href="#line-463" class="ident">batchHistogram</a>) <label for="r113" class="ident"><a href="../../../../../imp/github.com/prometheus/client_golang/prometheus.batchHistogram^4208d.html#name-.Write" class="ident">Write</a></label>(<label for="r114" class="ident">out</label> *<a href="../../../../../pkg/github.com/prometheus/client_model/go.html" class="ident i7">dto</a>.<a href="../../client_model/go/metrics.pb.go.html#line-831" class="ident">Metric</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-537"><code>	<label for="r112" class="ident">h</label>.<a href="#line-474" class="ident">mu</a>.<a href="../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-538"><code>	<span class="keyword">defer</span> <label for="r112" class="ident">h</label>.<a href="#line-474" class="ident">mu</a>.<a href="../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-539"><code></code></span>
+<span class="codeline" id="line-540"><code>	<label for="r115" class="ident">sum</label> := <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-541"><code>	<span class="keyword">if</span> <label for="r112" class="ident">h</label>.<a href="#line-468" class="ident">hasSum</a> {</code></span>
+<span class="codeline" id="line-542"><code>		<label for="r115" class="ident">sum</label> = <label for="r112" class="ident">h</label>.<a href="#line-477" class="ident">sum</a></code></span>
+<span class="codeline" id="line-543"><code>	}</code></span>
+<span class="codeline" id="line-544"><code>	<label for="r116" class="ident">dtoBuckets</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]*<a href="../../../../../pkg/github.com/prometheus/client_model/go.html" class="ident i7">dto</a>.<a href="../../client_model/go/metrics.pb.go.html#line-636" class="ident">Bucket</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r112" class="ident">h</label>.<a href="#line-476" class="ident">counts</a>))</code></span>
+<span class="codeline" id="line-545"><code>	<label for="r117" class="ident">totalCount</label> := <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-546"><code>	<span class="keyword">for</span> <label for="r118" class="ident">i</label>, <label for="r119" class="ident">count</label> := <span class="keyword">range</span> <label for="r112" class="ident">h</label>.<a href="#line-476" class="ident">counts</a> {</code></span>
+<span class="codeline" id="line-547"><code>		<label for="r117" class="ident">totalCount</label> += <label for="r119" class="ident">count</label></code></span>
+<span class="codeline" id="line-548"><code>		<span class="keyword">if</span> !<label for="r112" class="ident">h</label>.<a href="#line-468" class="ident">hasSum</a> {</code></span>
+<span class="codeline" id="line-549"><code>			<span class="keyword">if</span> <label for="r119" class="ident">count</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-550"><code>				<span class="comment">// N.B. This computed sum is an underestimate.</span></code></span>
+<span class="codeline" id="line-551"><code>				<label for="r115" class="ident">sum</label> += <label for="r112" class="ident">h</label>.<a href="#line-475" class="ident">buckets</a>[<label for="r118" class="ident">i</label>] * <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r119" class="ident">count</label>)</code></span>
+<span class="codeline" id="line-552"><code>			}</code></span>
+<span class="codeline" id="line-553"><code>		}</code></span>
+<span class="codeline" id="line-554"><code></code></span>
+<span class="codeline" id="line-555"><code>		<span class="comment">// Skip the +Inf bucket, but only for the bucket list.</span></code></span>
+<span class="codeline" id="line-556"><code><span class="comment">		// It must still count for sum and totalCount.</span></code></span>
+<span class="codeline" id="line-557"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/math.html" class="ident i1">math</a>.<a href="../../../../math/bits.go.html#line-46" class="ident">IsInf</a>(<label for="r112" class="ident">h</label>.<a href="#line-475" class="ident">buckets</a>[<label for="r118" class="ident">i</label>+<span class="lit-number">1</span>], <span class="lit-number">1</span>) {</code></span>
+<span class="codeline" id="line-558"><code>			<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-559"><code>		}</code></span>
+<span class="codeline" id="line-560"><code>		<span class="comment">// Float64Histogram's upper bound is exclusive, so make it inclusive</span></code></span>
+<span class="codeline" id="line-561"><code><span class="comment">		// by obtaining the next float64 value down, in order.</span></code></span>
+<span class="codeline" id="line-562"><code>		<label for="r120" class="ident">upperBound</label> := <a href="../../../../../pkg/math.html" class="ident i1">math</a>.<a href="../../../../math/nextafter.go.html#line-37" class="ident">Nextafter</a>(<label for="r112" class="ident">h</label>.<a href="#line-475" class="ident">buckets</a>[<label for="r118" class="ident">i</label>+<span class="lit-number">1</span>], <label for="r112" class="ident">h</label>.<a href="#line-475" class="ident">buckets</a>[<label for="r118" class="ident">i</label>])</code></span>
+<span class="codeline" id="line-563"><code>		<label for="r116" class="ident">dtoBuckets</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r116" class="ident">dtoBuckets</label>, &amp;<a href="../../../../../pkg/github.com/prometheus/client_model/go.html" class="ident i7">dto</a>.<a href="../../client_model/go/metrics.pb.go.html#line-636" class="ident">Bucket</a>{</code></span>
+<span class="codeline" id="line-564"><code>			<a href="../../client_model/go/metrics.pb.go.html#line-641" class="ident">CumulativeCount</a>: <a href="../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i8">proto</a>.<a href="../../../../google.golang.org/protobuf/proto/wrappers.go.html#line-26" class="ident">Uint64</a>(<label for="r117" class="ident">totalCount</label>),</code></span>
+<span class="codeline" id="line-565"><code>			<a href="../../client_model/go/metrics.pb.go.html#line-643" class="ident">UpperBound</a>:      <a href="../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i8">proto</a>.<a href="../../../../google.golang.org/protobuf/proto/wrappers.go.html#line-20" class="ident">Float64</a>(<label for="r120" class="ident">upperBound</label>),</code></span>
+<span class="codeline" id="line-566"><code>		})</code></span>
+<span class="codeline" id="line-567"><code>	}</code></span>
+<span class="codeline" id="line-568"><code>	<label for="r114" class="ident">out</label>.<a href="../../client_model/go/metrics.pb.go.html#line-841" class="ident">Histogram</a> = &amp;<a href="../../../../../pkg/github.com/prometheus/client_model/go.html" class="ident i7">dto</a>.<a href="../../client_model/go/metrics.pb.go.html#line-449" class="ident">Histogram</a>{</code></span>
+<span class="codeline" id="line-569"><code>		<a href="../../client_model/go/metrics.pb.go.html#line-458" class="ident">Bucket</a>:      <label for="r116" class="ident">dtoBuckets</label>,</code></span>
+<span class="codeline" id="line-570"><code>		<a href="../../client_model/go/metrics.pb.go.html#line-454" class="ident">SampleCount</a>: <a href="../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i8">proto</a>.<a href="../../../../google.golang.org/protobuf/proto/wrappers.go.html#line-26" class="ident">Uint64</a>(<label for="r117" class="ident">totalCount</label>),</code></span>
+<span class="codeline" id="line-571"><code>		<a href="../../client_model/go/metrics.pb.go.html#line-456" class="ident">SampleSum</a>:   <a href="../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i8">proto</a>.<a href="../../../../google.golang.org/protobuf/proto/wrappers.go.html#line-20" class="ident">Float64</a>(<label for="r115" class="ident">sum</label>),</code></span>
+<span class="codeline" id="line-572"><code>	}</code></span>
+<span class="codeline" id="line-573"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-574"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

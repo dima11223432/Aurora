@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: hash.go in package github.com/klauspost/compress/zstd</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	hash.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html">github.com/klauspost/compress/zstd</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3]
+{background: #226; color: #ff8;}
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2019+ Klaus Post. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// License information can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// Based on work by Yann Collet, released under BSD License.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="keyword">package</span> zstd</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-8"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-prime3bytes" class="ident">prime3bytes</a> = <span class="lit-number">506832829</span></code></span>
+<span class="codeline" id="line-9"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-prime4bytes" class="ident">prime4bytes</a> = <span class="lit-number">2654435761</span></code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-prime5bytes" class="ident">prime5bytes</a> = <span class="lit-number">889523592379</span></code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-prime6bytes" class="ident">prime6bytes</a> = <span class="lit-number">227718039650203</span></code></span>
+<span class="codeline" id="line-12"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-prime7bytes" class="ident">prime7bytes</a> = <span class="lit-number">58295818150454627</span></code></span>
+<span class="codeline" id="line-13"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-prime8bytes" class="ident">prime8bytes</a> = <span class="lit-number">0xcf1bbcdcb7a56463</span></code></span>
+<span class="codeline" id="line-14"><code>)</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// hashLen returns a hash of the lowest mls bytes of with length output bits.</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">// mls must be &gt;=3 and &lt;=8. Any other value will return hash for 4 bytes.</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// length should always be &lt; 32.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">// Preferably length and mls should be a constant for inlining.</span></code></span>
+<span class="codeline" id="line-20"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-hashLen" class="ident">hashLen</a></label>(<label for="r1" class="ident">u</label> <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>, <label for="r2" class="ident">length</label>, <label for="r3" class="ident">mls</label> <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-21"><code>	<span class="keyword">switch</span> <label for="r3" class="ident">mls</label> {</code></span>
+<span class="codeline" id="line-22"><code>	<span class="keyword">case</span> <span class="lit-number">3</span>:</code></span>
+<span class="codeline" id="line-23"><code>		<span class="keyword">return</span> (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r1" class="ident">u</label>&lt;&lt;<span class="lit-number">8</span>) * <a href="#line-8" class="ident">prime3bytes</a>) &gt;&gt; (<span class="lit-number">32</span> - <label for="r2" class="ident">length</label>)</code></span>
+<span class="codeline" id="line-24"><code>	<span class="keyword">case</span> <span class="lit-number">5</span>:</code></span>
+<span class="codeline" id="line-25"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(((<label for="r1" class="ident">u</label> &lt;&lt; (<span class="lit-number">64</span> - <span class="lit-number">40</span>)) * <a href="#line-10" class="ident">prime5bytes</a>) &gt;&gt; (<span class="lit-number">64</span> - <label for="r2" class="ident">length</label>))</code></span>
+<span class="codeline" id="line-26"><code>	<span class="keyword">case</span> <span class="lit-number">6</span>:</code></span>
+<span class="codeline" id="line-27"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(((<label for="r1" class="ident">u</label> &lt;&lt; (<span class="lit-number">64</span> - <span class="lit-number">48</span>)) * <a href="#line-11" class="ident">prime6bytes</a>) &gt;&gt; (<span class="lit-number">64</span> - <label for="r2" class="ident">length</label>))</code></span>
+<span class="codeline" id="line-28"><code>	<span class="keyword">case</span> <span class="lit-number">7</span>:</code></span>
+<span class="codeline" id="line-29"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(((<label for="r1" class="ident">u</label> &lt;&lt; (<span class="lit-number">64</span> - <span class="lit-number">56</span>)) * <a href="#line-12" class="ident">prime7bytes</a>) &gt;&gt; (<span class="lit-number">64</span> - <label for="r2" class="ident">length</label>))</code></span>
+<span class="codeline" id="line-30"><code>	<span class="keyword">case</span> <span class="lit-number">8</span>:</code></span>
+<span class="codeline" id="line-31"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>((<label for="r1" class="ident">u</label> * <a href="#line-13" class="ident">prime8bytes</a>) &gt;&gt; (<span class="lit-number">64</span> - <label for="r2" class="ident">length</label>))</code></span>
+<span class="codeline" id="line-32"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-33"><code>		<span class="keyword">return</span> (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r1" class="ident">u</label>) * <a href="#line-9" class="ident">prime4bytes</a>) &gt;&gt; (<span class="lit-number">32</span> - <label for="r2" class="ident">length</label>)</code></span>
+<span class="codeline" id="line-34"><code>	}</code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

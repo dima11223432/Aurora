@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: doc.go in package github.com/mattn/go-sqlite3</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	doc.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/mattn/go-sqlite3.html">github.com/mattn/go-sqlite3</a>
+</code></pre>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">/*</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">Package sqlite3 provides interface to SQLite3 databases.</span></code></span>
+<span class="codeline" id="line-3"><code></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">This works as a driver for database/sql.</span></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">Installation</span></code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">	go get github.com/mattn/go-sqlite3</span></code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="comment"># Supported Types</span></code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">Currently, go-sqlite3 supports the following data types.</span></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">	+------------------------------+</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">	|go        | sqlite3           |</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">	|----------|-------------------|</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">	|nil       | null              |</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">	|int       | integer           |</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">	|int64     | integer           |</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	|float64   | float             |</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">	|bool      | integer           |</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">	|[]byte    | blob              |</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">	|string    | text              |</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	|time.Time | timestamp/datetime|</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">	+------------------------------+</span></code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code><span class="comment"># SQLite3 Extension</span></code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">You can write your own extension module for sqlite3. For example, below is an</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">extension for a Regexp matcher operation.</span></code></span>
+<span class="codeline" id="line-31"><code></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">	#include &lt;pcre.h&gt;</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">	#include &lt;string.h&gt;</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">	#include &lt;stdio.h&gt;</span></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">	#include &lt;sqlite3ext.h&gt;</span></code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">	SQLITE_EXTENSION_INIT1</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">	static void regexp_func(sqlite3_context *context, int argc, sqlite3_value **argv) {</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">	  if (argc &gt;= 2) {</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">	    const char *target  = (const char *)sqlite3_value_text(argv[1]);</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">	    const char *pattern = (const char *)sqlite3_value_text(argv[0]);</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">	    const char* errstr = NULL;</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">	    int erroff = 0;</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">	    int vec[500];</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">	    int n, rc;</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">	    pcre* re = pcre_compile(pattern, 0, &amp;errstr, &amp;erroff, NULL);</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">	    rc = pcre_exec(re, NULL, target, strlen(target), 0, 0, vec, 500);</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">	    if (rc &lt;= 0) {</span></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">	      sqlite3_result_error(context, errstr, 0);</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">	      return;</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	    }</span></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">	    sqlite3_result_int(context, 1);</span></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">	  }</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">	}</span></code></span>
+<span class="codeline" id="line-55"><code></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">	#ifdef _WIN32</span></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">	__declspec(dllexport)</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">	#endif</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">	int sqlite3_extension_init(sqlite3 *db, char **errmsg,</span></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">	      const sqlite3_api_routines *api) {</span></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">	  SQLITE_EXTENSION_INIT2(api);</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">	  return sqlite3_create_function(db, "regexp", 2, SQLITE_UTF8,</span></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">	      (void*)db, regexp_func, NULL, NULL);</span></code></span>
+<span class="codeline" id="line-64"><code><span class="comment">	}</span></code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">It needs to be built as a so/dll shared library. And you need to register</span></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">the extension module like below.</span></code></span>
+<span class="codeline" id="line-68"><code></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">	sql.Register("sqlite3_with_extensions",</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">		&amp;sqlite3.SQLiteDriver{</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">			Extensions: []string{</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">				"sqlite3_mod_regexp",</span></code></span>
+<span class="codeline" id="line-73"><code><span class="comment">			},</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">		})</span></code></span>
+<span class="codeline" id="line-75"><code></code></span>
+<span class="codeline" id="line-76"><code><span class="comment">Then, you can use this extension.</span></code></span>
+<span class="codeline" id="line-77"><code></code></span>
+<span class="codeline" id="line-78"><code><span class="comment">	rows, err := db.Query("select text from mytable where name regexp '^golang'")</span></code></span>
+<span class="codeline" id="line-79"><code></code></span>
+<span class="codeline" id="line-80"><code><span class="comment"># Connection Hook</span></code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code><span class="comment">You can hook and inject your code when the connection is established by setting</span></code></span>
+<span class="codeline" id="line-83"><code><span class="comment">ConnectHook to get the SQLiteConn.</span></code></span>
+<span class="codeline" id="line-84"><code></code></span>
+<span class="codeline" id="line-85"><code><span class="comment">	sql.Register("sqlite3_with_hook_example",</span></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">			&amp;sqlite3.SQLiteDriver{</span></code></span>
+<span class="codeline" id="line-87"><code><span class="comment">					ConnectHook: func(conn *sqlite3.SQLiteConn) error {</span></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">						sqlite3conn = append(sqlite3conn, conn)</span></code></span>
+<span class="codeline" id="line-89"><code><span class="comment">						return nil</span></code></span>
+<span class="codeline" id="line-90"><code><span class="comment">					},</span></code></span>
+<span class="codeline" id="line-91"><code><span class="comment">			})</span></code></span>
+<span class="codeline" id="line-92"><code></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">You can also use database/sql.Conn.Raw (Go &gt;= 1.13):</span></code></span>
+<span class="codeline" id="line-94"><code></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">	conn, err := db.Conn(context.Background())</span></code></span>
+<span class="codeline" id="line-96"><code><span class="comment">	// if err != nil { ... }</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">	defer conn.Close()</span></code></span>
+<span class="codeline" id="line-98"><code><span class="comment">	err = conn.Raw(func (driverConn any) error {</span></code></span>
+<span class="codeline" id="line-99"><code><span class="comment">		sqliteConn := driverConn.(*sqlite3.SQLiteConn)</span></code></span>
+<span class="codeline" id="line-100"><code><span class="comment">		// ... use sqliteConn</span></code></span>
+<span class="codeline" id="line-101"><code><span class="comment">	})</span></code></span>
+<span class="codeline" id="line-102"><code><span class="comment">	// if err != nil { ... }</span></code></span>
+<span class="codeline" id="line-103"><code></code></span>
+<span class="codeline" id="line-104"><code><span class="comment"># Go SQlite3 Extensions</span></code></span>
+<span class="codeline" id="line-105"><code></code></span>
+<span class="codeline" id="line-106"><code><span class="comment">If you want to register Go functions as SQLite extension functions</span></code></span>
+<span class="codeline" id="line-107"><code><span class="comment">you can make a custom driver by calling RegisterFunction from</span></code></span>
+<span class="codeline" id="line-108"><code><span class="comment">ConnectHook.</span></code></span>
+<span class="codeline" id="line-109"><code></code></span>
+<span class="codeline" id="line-110"><code><span class="comment">	regex = func(re, s string) (bool, error) {</span></code></span>
+<span class="codeline" id="line-111"><code><span class="comment">		return regexp.MatchString(re, s)</span></code></span>
+<span class="codeline" id="line-112"><code><span class="comment">	}</span></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">	sql.Register("sqlite3_extended",</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">			&amp;sqlite3.SQLiteDriver{</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">					ConnectHook: func(conn *sqlite3.SQLiteConn) error {</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">						return conn.RegisterFunc("regexp", regex, true)</span></code></span>
+<span class="codeline" id="line-117"><code><span class="comment">					},</span></code></span>
+<span class="codeline" id="line-118"><code><span class="comment">			})</span></code></span>
+<span class="codeline" id="line-119"><code></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">You can then use the custom driver by passing its name to sql.Open.</span></code></span>
+<span class="codeline" id="line-121"><code></code></span>
+<span class="codeline" id="line-122"><code><span class="comment">	var i int</span></code></span>
+<span class="codeline" id="line-123"><code><span class="comment">	conn, err := sql.Open("sqlite3_extended", "./foo.db")</span></code></span>
+<span class="codeline" id="line-124"><code><span class="comment">	if err != nil {</span></code></span>
+<span class="codeline" id="line-125"><code><span class="comment">		panic(err)</span></code></span>
+<span class="codeline" id="line-126"><code><span class="comment">	}</span></code></span>
+<span class="codeline" id="line-127"><code><span class="comment">	err = db.QueryRow(`SELECT regexp("foo.*", "seafood")`).Scan(&amp;i)</span></code></span>
+<span class="codeline" id="line-128"><code><span class="comment">	if err != nil {</span></code></span>
+<span class="codeline" id="line-129"><code><span class="comment">		panic(err)</span></code></span>
+<span class="codeline" id="line-130"><code><span class="comment">	}</span></code></span>
+<span class="codeline" id="line-131"><code></code></span>
+<span class="codeline" id="line-132"><code><span class="comment">See the documentation of RegisterFunc for more details.</span></code></span>
+<span class="codeline" id="line-133"><code><span class="comment">*/</span></code></span></div><span class="codeline" id="line-134"><code><span class="keyword">package</span> sqlite3</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

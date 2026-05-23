@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: indexbyte_arm64.s in package internal/bytealg</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	indexbyte_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../../pkg/internal/bytealg.html">internal/bytealg</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2018 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>// func IndexByte(b []byte, c byte) int</code></span>
+<span class="codeline" id="line-8"><code>// input:</code></span>
+<span class="codeline" id="line-9"><code>//   R0: b ptr</code></span>
+<span class="codeline" id="line-10"><code>//   R1: b len</code></span>
+<span class="codeline" id="line-11"><code>//   R2: b cap (unused)</code></span>
+<span class="codeline" id="line-12"><code>//   R3: c byte to search</code></span>
+<span class="codeline" id="line-13"><code>// return</code></span>
+<span class="codeline" id="line-14"><code>//   R0: result</code></span>
+<span class="codeline" id="line-15"><code>TEXT ·IndexByte&lt;ABIInternal&gt;(SB),NOSPLIT,$0-40</code></span>
+<span class="codeline" id="line-16"><code>	MOVD	R3, R2</code></span>
+<span class="codeline" id="line-17"><code>	B	·IndexByteString&lt;ABIInternal&gt;(SB)</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code>// func IndexByteString(s string, c byte) int</code></span>
+<span class="codeline" id="line-20"><code>// input:</code></span>
+<span class="codeline" id="line-21"><code>//   R0: s ptr</code></span>
+<span class="codeline" id="line-22"><code>//   R1: s len</code></span>
+<span class="codeline" id="line-23"><code>//   R2: c byte to search</code></span>
+<span class="codeline" id="line-24"><code>// return</code></span>
+<span class="codeline" id="line-25"><code>//   R0: result</code></span>
+<span class="codeline" id="line-26"><code>TEXT ·IndexByteString&lt;ABIInternal&gt;(SB),NOSPLIT,$0-32</code></span>
+<span class="codeline" id="line-27"><code>	// Core algorithm:</code></span>
+<span class="codeline" id="line-28"><code>	// For each 32-byte chunk we calculate a 64-bit syndrome value,</code></span>
+<span class="codeline" id="line-29"><code>	// with two bits per byte. For each tuple, bit 0 is set if the</code></span>
+<span class="codeline" id="line-30"><code>	// relevant byte matched the requested character and bit 1 is</code></span>
+<span class="codeline" id="line-31"><code>	// not used (faster than using a 32bit syndrome). Since the bits</code></span>
+<span class="codeline" id="line-32"><code>	// in the syndrome reflect exactly the order in which things occur</code></span>
+<span class="codeline" id="line-33"><code>	// in the original string, counting trailing zeros allows to</code></span>
+<span class="codeline" id="line-34"><code>	// identify exactly which byte has matched.</code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code>	CBZ	R1, fail</code></span>
+<span class="codeline" id="line-37"><code>	MOVD	R0, R11</code></span>
+<span class="codeline" id="line-38"><code>	// Magic constant 0x40100401 allows us to identify</code></span>
+<span class="codeline" id="line-39"><code>	// which lane matches the requested byte.</code></span>
+<span class="codeline" id="line-40"><code>	// 0x40100401 = ((1&lt;&lt;0) + (4&lt;&lt;8) + (16&lt;&lt;16) + (64&lt;&lt;24))</code></span>
+<span class="codeline" id="line-41"><code>	// Different bytes have different bit masks (i.e: 1, 4, 16, 64)</code></span>
+<span class="codeline" id="line-42"><code>	MOVD	$0x40100401, R5</code></span>
+<span class="codeline" id="line-43"><code>	VMOV	R2, V0.B16</code></span>
+<span class="codeline" id="line-44"><code>	// Work with aligned 32-byte chunks</code></span>
+<span class="codeline" id="line-45"><code>	BIC	$0x1f, R0, R3</code></span>
+<span class="codeline" id="line-46"><code>	VMOV	R5, V5.S4</code></span>
+<span class="codeline" id="line-47"><code>	ANDS	$0x1f, R0, R9</code></span>
+<span class="codeline" id="line-48"><code>	AND	$0x1f, R1, R10</code></span>
+<span class="codeline" id="line-49"><code>	BEQ	loop</code></span>
+<span class="codeline" id="line-50"><code></code></span>
+<span class="codeline" id="line-51"><code>	// Input string is not 32-byte aligned. We calculate the</code></span>
+<span class="codeline" id="line-52"><code>	// syndrome value for the aligned 32 bytes block containing</code></span>
+<span class="codeline" id="line-53"><code>	// the first bytes and mask off the irrelevant part.</code></span>
+<span class="codeline" id="line-54"><code>	VLD1.P	(R3), [V1.B16, V2.B16]</code></span>
+<span class="codeline" id="line-55"><code>	SUB	$0x20, R9, R4</code></span>
+<span class="codeline" id="line-56"><code>	ADDS	R4, R1, R1</code></span>
+<span class="codeline" id="line-57"><code>	VCMEQ	V0.B16, V1.B16, V3.B16</code></span>
+<span class="codeline" id="line-58"><code>	VCMEQ	V0.B16, V2.B16, V4.B16</code></span>
+<span class="codeline" id="line-59"><code>	VAND	V5.B16, V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-60"><code>	VAND	V5.B16, V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-61"><code>	VADDP	V4.B16, V3.B16, V6.B16 // 256-&gt;128</code></span>
+<span class="codeline" id="line-62"><code>	VADDP	V6.B16, V6.B16, V6.B16 // 128-&gt;64</code></span>
+<span class="codeline" id="line-63"><code>	VMOV	V6.D[0], R6</code></span>
+<span class="codeline" id="line-64"><code>	// Clear the irrelevant lower bits</code></span>
+<span class="codeline" id="line-65"><code>	LSL	$1, R9, R4</code></span>
+<span class="codeline" id="line-66"><code>	LSR	R4, R6, R6</code></span>
+<span class="codeline" id="line-67"><code>	LSL	R4, R6, R6</code></span>
+<span class="codeline" id="line-68"><code>	// The first block can also be the last</code></span>
+<span class="codeline" id="line-69"><code>	BLS	masklast</code></span>
+<span class="codeline" id="line-70"><code>	// Have we found something already?</code></span>
+<span class="codeline" id="line-71"><code>	CBNZ	R6, tail</code></span>
+<span class="codeline" id="line-72"><code></code></span>
+<span class="codeline" id="line-73"><code>loop:</code></span>
+<span class="codeline" id="line-74"><code>	VLD1.P	(R3), [V1.B16, V2.B16]</code></span>
+<span class="codeline" id="line-75"><code>	SUBS	$0x20, R1, R1</code></span>
+<span class="codeline" id="line-76"><code>	VCMEQ	V0.B16, V1.B16, V3.B16</code></span>
+<span class="codeline" id="line-77"><code>	VCMEQ	V0.B16, V2.B16, V4.B16</code></span>
+<span class="codeline" id="line-78"><code>	// If we're out of data we finish regardless of the result</code></span>
+<span class="codeline" id="line-79"><code>	BLS	end</code></span>
+<span class="codeline" id="line-80"><code>	// Use a fast check for the termination condition</code></span>
+<span class="codeline" id="line-81"><code>	VORR	V4.B16, V3.B16, V6.B16</code></span>
+<span class="codeline" id="line-82"><code>	VADDP	V6.D2, V6.D2, V6.D2</code></span>
+<span class="codeline" id="line-83"><code>	VMOV	V6.D[0], R6</code></span>
+<span class="codeline" id="line-84"><code>	// We're not out of data, loop if we haven't found the character</code></span>
+<span class="codeline" id="line-85"><code>	CBZ	R6, loop</code></span>
+<span class="codeline" id="line-86"><code></code></span>
+<span class="codeline" id="line-87"><code>end:</code></span>
+<span class="codeline" id="line-88"><code>	// Termination condition found, let's calculate the syndrome value</code></span>
+<span class="codeline" id="line-89"><code>	VAND	V5.B16, V3.B16, V3.B16</code></span>
+<span class="codeline" id="line-90"><code>	VAND	V5.B16, V4.B16, V4.B16</code></span>
+<span class="codeline" id="line-91"><code>	VADDP	V4.B16, V3.B16, V6.B16</code></span>
+<span class="codeline" id="line-92"><code>	VADDP	V6.B16, V6.B16, V6.B16</code></span>
+<span class="codeline" id="line-93"><code>	VMOV	V6.D[0], R6</code></span>
+<span class="codeline" id="line-94"><code>	// Only do the clear for the last possible block with less than 32 bytes</code></span>
+<span class="codeline" id="line-95"><code>	// Condition flags come from SUBS in the loop</code></span>
+<span class="codeline" id="line-96"><code>	BHS	tail</code></span>
+<span class="codeline" id="line-97"><code></code></span>
+<span class="codeline" id="line-98"><code>masklast:</code></span>
+<span class="codeline" id="line-99"><code>	// Clear the irrelevant upper bits</code></span>
+<span class="codeline" id="line-100"><code>	ADD	R9, R10, R4</code></span>
+<span class="codeline" id="line-101"><code>	AND	$0x1f, R4, R4</code></span>
+<span class="codeline" id="line-102"><code>	SUB	$0x20, R4, R4</code></span>
+<span class="codeline" id="line-103"><code>	NEG	R4&lt;&lt;1, R4</code></span>
+<span class="codeline" id="line-104"><code>	LSL	R4, R6, R6</code></span>
+<span class="codeline" id="line-105"><code>	LSR	R4, R6, R6</code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code>tail:</code></span>
+<span class="codeline" id="line-108"><code>	// Check that we have found a character</code></span>
+<span class="codeline" id="line-109"><code>	CBZ	R6, fail</code></span>
+<span class="codeline" id="line-110"><code>	// Count the trailing zeros using bit reversing</code></span>
+<span class="codeline" id="line-111"><code>	RBIT	R6, R6</code></span>
+<span class="codeline" id="line-112"><code>	// Compensate the last post-increment</code></span>
+<span class="codeline" id="line-113"><code>	SUB	$0x20, R3, R3</code></span>
+<span class="codeline" id="line-114"><code>	// And count the leading zeros</code></span>
+<span class="codeline" id="line-115"><code>	CLZ	R6, R6</code></span>
+<span class="codeline" id="line-116"><code>	// R6 is twice the offset into the fragment</code></span>
+<span class="codeline" id="line-117"><code>	ADD	R6&gt;&gt;1, R3, R0</code></span>
+<span class="codeline" id="line-118"><code>	// Compute the offset result</code></span>
+<span class="codeline" id="line-119"><code>	SUB	R11, R0, R0</code></span>
+<span class="codeline" id="line-120"><code>	RET</code></span>
+<span class="codeline" id="line-121"><code></code></span>
+<span class="codeline" id="line-122"><code>fail:</code></span>
+<span class="codeline" id="line-123"><code>	MOVD	$-1, R0</code></span>
+<span class="codeline" id="line-124"><code>	RET</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

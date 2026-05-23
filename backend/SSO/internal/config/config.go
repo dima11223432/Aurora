@@ -1,3 +1,4 @@
+// Package config provides configuration loading for the SSO service.
 package config
 
 import (
@@ -8,6 +9,7 @@ import (
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
+// Config holds the SSO service configuration.
 type Config struct {
 	Env             string        `yaml:"env" env:"ENV" env-default:"local"`
 	StoragePass     string        `yaml:"storage_pass" env:"STORAGE_PASS" env-required:"true"`
@@ -16,11 +18,13 @@ type Config struct {
 	GRPC            GRPCConfig    `yaml:"grpc" env:"GRPC"`
 }
 
+// GRPCConfig holds gRPC server configuration.
 type GRPCConfig struct {
 	Port    int           `yaml:"port" env:"GRPC_PORT" env-default:"44044"`
 	TimeOut time.Duration `yaml:"timeout" env:"GRPC_TIMEOUT" env-default:"10h"`
 }
 
+// MustLoad loads configuration from file or environment. Panics on failure.
 func MustLoad() *Config {
 	path := fetchConfigPath()
 	if path == "" {
@@ -29,6 +33,7 @@ func MustLoad() *Config {
 	return MustLoadByPath(path)
 }
 
+// MustLoadFromEnv loads configuration from environment variables. Panics on failure.
 func MustLoadFromEnv() *Config {
 	var cfg Config
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
@@ -37,6 +42,7 @@ func MustLoadFromEnv() *Config {
 	return &cfg
 }
 
+// MustLoadByPath loads configuration from a YAML file. Panics on failure.
 func MustLoadByPath(configPath string) *Config {
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		panic("config does not exists" + configPath)

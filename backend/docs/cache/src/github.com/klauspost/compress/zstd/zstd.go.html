@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: zstd.go in package github.com/klauspost/compress/zstd</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	zstd.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html">github.com/klauspost/compress/zstd</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">// Package zstd provides decompression of zstandard files.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// For advanced usage and examples, go to the README: https://github.com/klauspost/compress/tree/master/zstd#zstd</span></code></span></div><span class="codeline" id="line-4"><code><span class="keyword">package</span> zstd</code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-7"><code>	<label for="i0"><span class="lit-string i0">"bytes"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i1"><span class="lit-string i1">"encoding/binary"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i2"><span class="lit-string i2">"errors"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i3"><span class="lit-string i3">"log"</span></label></code></span>
+<span class="codeline" id="line-11"><code>	<label for="i4"><span class="lit-string i4">"math"</span></label></code></span>
+<span class="codeline" id="line-12"><code>	<label for="i5"><span class="lit-string i5">"math/bits"</span></label></code></span>
+<span class="codeline" id="line-13"><code>)</code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// enable debug printing</span></code></span>
+<span class="codeline" id="line-16"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-debug" class="ident">debug</a> = <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-17"><code></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// enable encoding debug printing</span></code></span>
+<span class="codeline" id="line-19"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-debugEncoder" class="ident">debugEncoder</a> = <a href="#line-16" class="ident">debug</a></code></span>
+<span class="codeline" id="line-20"><code></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">// enable decoding debug printing</span></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-debugDecoder" class="ident">debugDecoder</a> = <a href="#line-16" class="ident">debug</a></code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// Enable extra assertions.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-debugAsserts" class="ident">debugAsserts</a> = <a href="#line-16" class="ident">debug</a> || <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// print sequence details</span></code></span>
+<span class="codeline" id="line-28"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-debugSequences" class="ident">debugSequences</a> = <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// print detailed matching information</span></code></span>
+<span class="codeline" id="line-31"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-debugMatches" class="ident">debugMatches</a> = <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// force encoder to use predefined tables.</span></code></span>
+<span class="codeline" id="line-34"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-forcePreDef" class="ident">forcePreDef</a> = <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">// zstdMinMatch is the minimum zstd match length.</span></code></span>
+<span class="codeline" id="line-37"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-zstdMinMatch" class="ident">zstdMinMatch</a> = <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// Reset the buffer offset when reaching this.</span></code></span>
+<span class="codeline" id="line-40"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-bufferReset" class="ident">bufferReset</a> = <a href="../../../../../pkg/math.html" class="ident i4">math</a>.<a href="../../../../math/const.go.html#line-48" class="ident">MaxInt32</a> - <a href="framedec.go.html#line-43" class="ident">MaxWindowSize</a></code></span>
+<span class="codeline" id="line-41"><code></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">// fcsUnknown is used for unknown frame content size.</span></code></span>
+<span class="codeline" id="line-43"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-fcsUnknown" class="ident">fcsUnknown</a> = <a href="../../../../../pkg/math.html" class="ident i4">math</a>.<a href="../../../../math/const.go.html#line-56" class="ident">MaxUint64</a></code></span>
+<span class="codeline" id="line-44"><code></code></span>
+<span class="codeline" id="line-45"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-46"><code>	<span class="comment">// ErrReservedBlockType is returned when a reserved block type is found.</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">	// Typically this indicates wrong or corrupted input.</span></code></span>
+<span class="codeline" id="line-48"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrReservedBlockType" class="ident">ErrReservedBlockType</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"invalid input: reserved block type encountered"</span>)</code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code>	<span class="comment">// ErrCompressedSizeTooBig is returned when a block is bigger than allowed.</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	// Typically this indicates wrong or corrupted input.</span></code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrCompressedSizeTooBig" class="ident">ErrCompressedSizeTooBig</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"invalid input: compressed size too big"</span>)</code></span>
+<span class="codeline" id="line-53"><code></code></span>
+<span class="codeline" id="line-54"><code>	<span class="comment">// ErrBlockTooSmall is returned when a block is too small to be decoded.</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">	// Typically returned on invalid input.</span></code></span>
+<span class="codeline" id="line-56"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrBlockTooSmall" class="ident">ErrBlockTooSmall</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"block too small"</span>)</code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code>	<span class="comment">// ErrUnexpectedBlockSize is returned when a block has unexpected size.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">	// Typically returned on invalid input.</span></code></span>
+<span class="codeline" id="line-60"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrUnexpectedBlockSize" class="ident">ErrUnexpectedBlockSize</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"unexpected block size"</span>)</code></span>
+<span class="codeline" id="line-61"><code></code></span>
+<span class="codeline" id="line-62"><code>	<span class="comment">// ErrMagicMismatch is returned when a "magic" number isn't what is expected.</span></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">	// Typically this indicates wrong or corrupted input.</span></code></span>
+<span class="codeline" id="line-64"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrMagicMismatch" class="ident">ErrMagicMismatch</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"invalid input: magic number mismatch"</span>)</code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code>	<span class="comment">// ErrWindowSizeExceeded is returned when a reference exceeds the valid window size.</span></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">	// Typically this indicates wrong or corrupted input.</span></code></span>
+<span class="codeline" id="line-68"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrWindowSizeExceeded" class="ident">ErrWindowSizeExceeded</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"window size exceeded"</span>)</code></span>
+<span class="codeline" id="line-69"><code></code></span>
+<span class="codeline" id="line-70"><code>	<span class="comment">// ErrWindowSizeTooSmall is returned when no window size is specified.</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">	// Typically this indicates wrong or corrupted input.</span></code></span>
+<span class="codeline" id="line-72"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrWindowSizeTooSmall" class="ident">ErrWindowSizeTooSmall</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"invalid input: window size was too small"</span>)</code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code>	<span class="comment">// ErrDecoderSizeExceeded is returned if decompressed size exceeds the configured limit.</span></code></span>
+<span class="codeline" id="line-75"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrDecoderSizeExceeded" class="ident">ErrDecoderSizeExceeded</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"decompressed size exceeds configured limit"</span>)</code></span>
+<span class="codeline" id="line-76"><code></code></span>
+<span class="codeline" id="line-77"><code>	<span class="comment">// ErrUnknownDictionary is returned if the dictionary ID is unknown.</span></code></span>
+<span class="codeline" id="line-78"><code><span class="comment">	// For the time being dictionaries are not supported.</span></code></span>
+<span class="codeline" id="line-79"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrUnknownDictionary" class="ident">ErrUnknownDictionary</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"unknown dictionary"</span>)</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>	<span class="comment">// ErrFrameSizeExceeded is returned if the stated frame size is exceeded.</span></code></span>
+<span class="codeline" id="line-82"><code><span class="comment">	// This is only returned if SingleSegment is specified on the frame.</span></code></span>
+<span class="codeline" id="line-83"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrFrameSizeExceeded" class="ident">ErrFrameSizeExceeded</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"frame size exceeded"</span>)</code></span>
+<span class="codeline" id="line-84"><code></code></span>
+<span class="codeline" id="line-85"><code>	<span class="comment">// ErrFrameSizeMismatch is returned if the stated frame size does not match the expected size.</span></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">	// This is only returned if SingleSegment is specified on the frame.</span></code></span>
+<span class="codeline" id="line-87"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrFrameSizeMismatch" class="ident">ErrFrameSizeMismatch</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"frame size does not match size on stream"</span>)</code></span>
+<span class="codeline" id="line-88"><code></code></span>
+<span class="codeline" id="line-89"><code>	<span class="comment">// ErrCRCMismatch is returned if CRC mismatches.</span></code></span>
+<span class="codeline" id="line-90"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrCRCMismatch" class="ident">ErrCRCMismatch</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"CRC check failed"</span>)</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code>	<span class="comment">// ErrDecoderClosed will be returned if the Decoder was used after</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">	// Close has been called.</span></code></span>
+<span class="codeline" id="line-94"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrDecoderClosed" class="ident">ErrDecoderClosed</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"decoder used after Close"</span>)</code></span>
+<span class="codeline" id="line-95"><code></code></span>
+<span class="codeline" id="line-96"><code>	<span class="comment">// ErrDecoderNilInput is returned when a nil Reader was provided</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">	// and an operation other than Reset/DecodeAll/Close was attempted.</span></code></span>
+<span class="codeline" id="line-98"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-ErrDecoderNilInput" class="ident">ErrDecoderNilInput</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"nil input provided as reader"</span>)</code></span>
+<span class="codeline" id="line-99"><code>)</code></span>
+<span class="codeline" id="line-100"><code></code></span>
+<span class="codeline" id="line-101"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-println" class="ident">println</a></label>(<label for="r1" class="ident">a</label> ...<span class="keyword">interface</span>{}) {</code></span>
+<span class="codeline" id="line-102"><code>	<span class="keyword">if</span> <a href="#line-16" class="ident">debug</a> || <a href="#line-22" class="ident">debugDecoder</a> || <a href="#line-19" class="ident">debugEncoder</a> {</code></span>
+<span class="codeline" id="line-103"><code>		<a href="../../../../../pkg/log.html" class="ident i3">log</a>.<a href="../../../../log/log.go.html#line-415" class="ident">Println</a>(<label for="r1" class="ident">a</label>...)</code></span>
+<span class="codeline" id="line-104"><code>	}</code></span>
+<span class="codeline" id="line-105"><code>}</code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code><span class="keyword">func</span> <label for="r2" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-printf" class="ident">printf</a></label>(<label for="r3" class="ident">format</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r4" class="ident">a</label> ...<span class="keyword">interface</span>{}) {</code></span>
+<span class="codeline" id="line-108"><code>	<span class="keyword">if</span> <a href="#line-16" class="ident">debug</a> || <a href="#line-22" class="ident">debugDecoder</a> || <a href="#line-19" class="ident">debugEncoder</a> {</code></span>
+<span class="codeline" id="line-109"><code>		<a href="../../../../../pkg/log.html" class="ident i3">log</a>.<a href="../../../../log/log.go.html#line-407" class="ident">Printf</a>(<label for="r3" class="ident">format</label>, <label for="r4" class="ident">a</label>...)</code></span>
+<span class="codeline" id="line-110"><code>	}</code></span>
+<span class="codeline" id="line-111"><code>}</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">// matchLen returns the maximum length.</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">// a must be the shortest of the two.</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">// The function also returns whether all bytes matched.</span></code></span>
+<span class="codeline" id="line-116"><code><span class="keyword">func</span> <label for="r5" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-matchLen" class="ident">matchLen</a></label>(<label for="r6" class="ident">a</label>, <label for="r7" class="ident">b</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-117"><code>	<label for="r7" class="ident">b</label> = <label for="r7" class="ident">b</label>[:<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r6" class="ident">a</label>)]</code></span>
+<span class="codeline" id="line-118"><code>	<span class="keyword">for</span> <label for="r8" class="ident">i</label> := <span class="lit-number">0</span>; <label for="r8" class="ident">i</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r6" class="ident">a</label>)-<span class="lit-number">7</span>; <label for="r8" class="ident">i</label> += <span class="lit-number">8</span> {</code></span>
+<span class="codeline" id="line-119"><code>		<span class="keyword">if</span> <label for="r9" class="ident">diff</label> := <a href="#line-143" class="ident">load64</a>(<label for="r6" class="ident">a</label>, <label for="r8" class="ident">i</label>) ^ <a href="#line-143" class="ident">load64</a>(<label for="r7" class="ident">b</label>, <label for="r8" class="ident">i</label>); <label for="r9" class="ident">diff</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-120"><code>			<span class="keyword">return</span> <label for="r8" class="ident">i</label> + (<a href="../../../../../pkg/math/bits.html" class="ident i5">bits</a>.<a href="../../../../math/bits/bits.go.html#line-90" class="ident">TrailingZeros64</a>(<label for="r9" class="ident">diff</label>) &gt;&gt; <span class="lit-number">3</span>)</code></span>
+<span class="codeline" id="line-121"><code>		}</code></span>
+<span class="codeline" id="line-122"><code>	}</code></span>
+<span class="codeline" id="line-123"><code></code></span>
+<span class="codeline" id="line-124"><code>	<label for="r10" class="ident">checked</label> := (<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r6" class="ident">a</label>) &gt;&gt; <span class="lit-number">3</span>) &lt;&lt; <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-125"><code>	<label for="r6" class="ident">a</label> = <label for="r6" class="ident">a</label>[<label for="r10" class="ident">checked</label>:]</code></span>
+<span class="codeline" id="line-126"><code>	<label for="r7" class="ident">b</label> = <label for="r7" class="ident">b</label>[<label for="r10" class="ident">checked</label>:]</code></span>
+<span class="codeline" id="line-127"><code>	<span class="keyword">for</span> <label for="r11" class="ident">i</label> := <span class="keyword">range</span> <label for="r6" class="ident">a</label> {</code></span>
+<span class="codeline" id="line-128"><code>		<span class="keyword">if</span> <label for="r6" class="ident">a</label>[<label for="r11" class="ident">i</label>] != <label for="r7" class="ident">b</label>[<label for="r11" class="ident">i</label>] {</code></span>
+<span class="codeline" id="line-129"><code>			<span class="keyword">return</span> <label for="r11" class="ident">i</label> + <label for="r10" class="ident">checked</label></code></span>
+<span class="codeline" id="line-130"><code>		}</code></span>
+<span class="codeline" id="line-131"><code>	}</code></span>
+<span class="codeline" id="line-132"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r6" class="ident">a</label>) + <label for="r10" class="ident">checked</label></code></span>
+<span class="codeline" id="line-133"><code>}</code></span>
+<span class="codeline" id="line-134"><code></code></span>
+<span class="codeline" id="line-135"><code><span class="keyword">func</span> <label for="r12" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-load3232" class="ident">load3232</a></label>(<label for="r13" class="ident">b</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r14" class="ident">i</label> <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-136"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/encoding/binary.html" class="ident i1">binary</a>.<a href="../../../../encoding/binary/binary.go.html#line-61" class="ident">LittleEndian</a>.<a href="../../../../encoding/binary/binary.go.html#line-90" class="ident">Uint32</a>(<label for="r13" class="ident">b</label>[<label for="r14" class="ident">i</label>:])</code></span>
+<span class="codeline" id="line-137"><code>}</code></span>
+<span class="codeline" id="line-138"><code></code></span>
+<span class="codeline" id="line-139"><code><span class="keyword">func</span> <label for="r15" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-load6432" class="ident">load6432</a></label>(<label for="r16" class="ident">b</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r17" class="ident">i</label> <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a>) <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a> {</code></span>
+<span class="codeline" id="line-140"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/encoding/binary.html" class="ident i1">binary</a>.<a href="../../../../encoding/binary/binary.go.html#line-61" class="ident">LittleEndian</a>.<a href="../../../../encoding/binary/binary.go.html#line-115" class="ident">Uint64</a>(<label for="r16" class="ident">b</label>[<label for="r17" class="ident">i</label>:])</code></span>
+<span class="codeline" id="line-141"><code>}</code></span>
+<span class="codeline" id="line-142"><code></code></span>
+<span class="codeline" id="line-143"><code><span class="keyword">func</span> <label for="r18" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-load64" class="ident">load64</a></label>(<label for="r19" class="ident">b</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r20" class="ident">i</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a> {</code></span>
+<span class="codeline" id="line-144"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/encoding/binary.html" class="ident i1">binary</a>.<a href="../../../../encoding/binary/binary.go.html#line-61" class="ident">LittleEndian</a>.<a href="../../../../encoding/binary/binary.go.html#line-115" class="ident">Uint64</a>(<label for="r19" class="ident">b</label>[<label for="r20" class="ident">i</label>:])</code></span>
+<span class="codeline" id="line-145"><code>}</code></span>
+<span class="codeline" id="line-146"><code></code></span>
+<span class="codeline" id="line-147"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-byter" class="ident">byter</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-148"><code>	<a href="../../../../../imp/github.com/klauspost/compress/zstd.byter^d8011.html#name-Bytes" class="ident">Bytes</a>() []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-149"><code>	<a href="../../../../../imp/github.com/klauspost/compress/zstd.byter^d8011.html#name-Len" class="ident">Len</a>() <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-150"><code>}</code></span>
+<span class="codeline" id="line-151"><code></code></span>
+<span class="codeline" id="line-152"><code><span class="keyword">var</span> _ <a href="#line-147" class="ident">byter</a> = &amp;<a href="../../../../../pkg/bytes.html" class="ident i0">bytes</a>.<a href="../../../../bytes/buffer.go.html#line-20" class="ident">Buffer</a>{}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

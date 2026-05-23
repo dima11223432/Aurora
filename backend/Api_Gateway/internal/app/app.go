@@ -1,3 +1,5 @@
+// Package app initializes and wires together the API Gateway application components,
+// including Redis cache, gRPC server, and service clients.
 package app
 
 import (
@@ -9,10 +11,12 @@ import (
 	"time"
 )
 
+// App represents the top-level application container for the API Gateway.
 type App struct {
 	GRPCApp *grpcApp.App
 }
 
+// New creates a new App instance, initializing Redis cache and gRPC server.
 func New(log *slog.Logger, cfg *config.Config) *App {
 	redisCache := cache.NewRedisCache(
 		cfg.RedisConfig.Host,

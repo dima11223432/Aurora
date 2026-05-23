@@ -1,3 +1,4 @@
+// Package grpc defines sentinel errors used in the Recommendation Service gRPC layer.
 package grpc
 
 import "errors"

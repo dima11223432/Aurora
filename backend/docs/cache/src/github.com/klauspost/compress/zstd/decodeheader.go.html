@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: decodeheader.go in package github.com/klauspost/compress/zstd</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	decodeheader.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html">github.com/klauspost/compress/zstd</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2020+ Klaus Post. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// License information can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-3"><code></code></span>
+<span class="codeline" id="line-4"><code><span class="keyword">package</span> zstd</code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-7"><code>	<label for="i0"><span class="lit-string i0">"bytes"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i1"><span class="lit-string i1">"encoding/binary"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i2"><span class="lit-string i2">"errors"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i3"><span class="lit-string i3">"io"</span></label></code></span>
+<span class="codeline" id="line-11"><code>)</code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// HeaderMaxSize is the maximum size of a Frame and Block Header.</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// If less is sent to Header.Decode it *may* still contain enough information.</span></code></span>
+<span class="codeline" id="line-15"><code><span class="keyword">const</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-HeaderMaxSize" class="ident">HeaderMaxSize</a> = <span class="lit-number">14</span> + <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-16"><code></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">// Header contains information about the first frame and block within that.</span></code></span>
+<span class="codeline" id="line-18"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-Header" class="ident">Header</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-19"><code>	<span class="comment">// SingleSegment specifies whether the data is to be decompressed into a</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	// single contiguous memory segment.</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">	// It implies that WindowSize is invalid and that FrameContentSize is valid.</span></code></span>
+<span class="codeline" id="line-22"><code>	SingleSegment <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code>	<span class="comment">// WindowSize is the window of data to keep while decoding.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">	// Will only be set if SingleSegment is false.</span></code></span>
+<span class="codeline" id="line-26"><code>	WindowSize <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a></code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	<span class="comment">// Dictionary ID.</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">	// If 0, no dictionary.</span></code></span>
+<span class="codeline" id="line-30"><code>	DictionaryID <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-31"><code></code></span>
+<span class="codeline" id="line-32"><code>	<span class="comment">// HasFCS specifies whether FrameContentSize has a valid value.</span></code></span>
+<span class="codeline" id="line-33"><code>	HasFCS <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code>	<span class="comment">// FrameContentSize is the expected uncompressed size of the entire frame.</span></code></span>
+<span class="codeline" id="line-36"><code>	FrameContentSize <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a></code></span>
+<span class="codeline" id="line-37"><code></code></span>
+<span class="codeline" id="line-38"><code>	<span class="comment">// Skippable will be true if the frame is meant to be skipped.</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">	// This implies that FirstBlock.OK is false.</span></code></span>
+<span class="codeline" id="line-40"><code>	Skippable <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-41"><code></code></span>
+<span class="codeline" id="line-42"><code>	<span class="comment">// SkippableID is the user-specific ID for the skippable frame.</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">	// Valid values are between 0 to 15, inclusive.</span></code></span>
+<span class="codeline" id="line-44"><code>	SkippableID <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code>	<span class="comment">// SkippableSize is the length of the user data to skip following</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">	// the header.</span></code></span>
+<span class="codeline" id="line-48"><code>	SkippableSize <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code>	<span class="comment">// HeaderSize is the raw size of the frame header.</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">	// For normal frames, it includes the size of the magic number and</span></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">	// the size of the header (per section 3.1.1.1).</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">	// It does not include the size for any data blocks (section 3.1.1.2) nor</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">	// the size for the trailing content checksum.</span></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">	// For skippable frames, this counts the size of the magic number</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">	// along with the size of the size field of the payload.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">	// It does not include the size of the skippable payload itself.</span></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">	// The total frame size is the HeaderSize plus the SkippableSize.</span></code></span>
+<span class="codeline" id="line-61"><code>	HeaderSize <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-62"><code></code></span>
+<span class="codeline" id="line-63"><code>	<span class="comment">// First block information.</span></code></span>
+<span class="codeline" id="line-64"><code>	FirstBlock <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-65"><code>		<span class="comment">// OK will be set if first block could be decoded.</span></code></span>
+<span class="codeline" id="line-66"><code>		OK <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code>		<span class="comment">// Is this the last block of a frame?</span></code></span>
+<span class="codeline" id="line-69"><code>		Last <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-70"><code></code></span>
+<span class="codeline" id="line-71"><code>		<span class="comment">// Is the data compressed?</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">		// If true CompressedSize will be populated.</span></code></span>
+<span class="codeline" id="line-73"><code><span class="comment">		// Unfortunately DecompressedSize cannot be determined</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">		// without decoding the blocks.</span></code></span>
+<span class="codeline" id="line-75"><code>		Compressed <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-76"><code></code></span>
+<span class="codeline" id="line-77"><code>		<span class="comment">// DecompressedSize is the expected decompressed size of the block.</span></code></span>
+<span class="codeline" id="line-78"><code><span class="comment">		// Will be 0 if it cannot be determined.</span></code></span>
+<span class="codeline" id="line-79"><code>		DecompressedSize <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>		<span class="comment">// CompressedSize of the data in the block.</span></code></span>
+<span class="codeline" id="line-82"><code><span class="comment">		// Does not include the block header.</span></code></span>
+<span class="codeline" id="line-83"><code><span class="comment">		// Will be equal to DecompressedSize if not Compressed.</span></code></span>
+<span class="codeline" id="line-84"><code>		CompressedSize <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-85"><code>	}</code></span>
+<span class="codeline" id="line-86"><code></code></span>
+<span class="codeline" id="line-87"><code>	<span class="comment">// If set there is a checksum present for the block content.</span></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">	// The checksum field at the end is always 4 bytes long.</span></code></span>
+<span class="codeline" id="line-89"><code>	HasCheckSum <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// Decode the header from the beginning of the stream.</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// This will decode the frame header and the first block header if enough bytes are provided.</span></code></span>
+<span class="codeline" id="line-94"><code><span class="comment">// It is recommended to provide at least HeaderMaxSize bytes.</span></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">// If the frame header cannot be read an error will be returned.</span></code></span>
+<span class="codeline" id="line-96"><code><span class="comment">// If there isn't enough input, io.ErrUnexpectedEOF is returned.</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">// The FirstBlock.OK will indicate if enough information was available to decode the first block header.</span></code></span>
+<span class="codeline" id="line-98"><code><span class="keyword">func</span> (<label for="r0" class="ident">h</label> *<a href="#line-18" class="ident">Header</a>) <label for="r1" class="ident">Decode</label>(<label for="r2" class="ident">in</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-99"><code>	*<label for="r0" class="ident">h</label> = <a href="#line-18" class="ident">Header</a>{}</code></span>
+<span class="codeline" id="line-100"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <span class="lit-number">4</span> {</code></span>
+<span class="codeline" id="line-101"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i3">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-102"><code>	}</code></span>
+<span class="codeline" id="line-103"><code>	<label for="r0" class="ident">h</label>.<a href="#line-61" class="ident">HeaderSize</a> += <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-104"><code>	<label for="r3" class="ident">b</label>, <label for="r2" class="ident">in</label> := <label for="r2" class="ident">in</label>[:<span class="lit-number">4</span>], <label for="r2" class="ident">in</label>[<span class="lit-number">4</span>:]</code></span>
+<span class="codeline" id="line-105"><code>	<span class="keyword">if</span> !<a href="../../../../../pkg/bytes.html" class="ident i0">bytes</a>.<a href="../../../../bytes/bytes.go.html#line-20" class="ident">Equal</a>(<label for="r3" class="ident">b</label>, <a href="framedec.go.html#line-47" class="ident">frameMagic</a>) {</code></span>
+<span class="codeline" id="line-106"><code>		<span class="keyword">if</span> !<a href="../../../../../pkg/bytes.html" class="ident i0">bytes</a>.<a href="../../../../bytes/bytes.go.html#line-20" class="ident">Equal</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">1</span>:<span class="lit-number">4</span>], <a href="framedec.go.html#line-48" class="ident">skippableFrameMagic</a>) || <label for="r3" class="ident">b</label>[<span class="lit-number">0</span>]&amp;<span class="lit-number">0xf0</span> != <span class="lit-number">0x50</span> {</code></span>
+<span class="codeline" id="line-107"><code>			<span class="keyword">return</span> <a href="zstd.go.html#line-64" class="ident">ErrMagicMismatch</a></code></span>
+<span class="codeline" id="line-108"><code>		}</code></span>
+<span class="codeline" id="line-109"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <span class="lit-number">4</span> {</code></span>
+<span class="codeline" id="line-110"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i3">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-111"><code>		}</code></span>
+<span class="codeline" id="line-112"><code>		<label for="r0" class="ident">h</label>.<a href="#line-61" class="ident">HeaderSize</a> += <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-113"><code>		<label for="r0" class="ident">h</label>.<a href="#line-40" class="ident">Skippable</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-114"><code>		<label for="r0" class="ident">h</label>.<a href="#line-44" class="ident">SkippableID</a> = <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>] &amp; <span class="lit-number">0xf</span>)</code></span>
+<span class="codeline" id="line-115"><code>		<label for="r0" class="ident">h</label>.<a href="#line-48" class="ident">SkippableSize</a> = <a href="../../../../../pkg/encoding/binary.html" class="ident i1">binary</a>.<a href="../../../../encoding/binary/binary.go.html#line-61" class="ident">LittleEndian</a>.<a href="../../../../encoding/binary/binary.go.html#line-90" class="ident">Uint32</a>(<label for="r2" class="ident">in</label>)</code></span>
+<span class="codeline" id="line-116"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-117"><code>	}</code></span>
+<span class="codeline" id="line-118"><code></code></span>
+<span class="codeline" id="line-119"><code>	<span class="comment">// Read Window_Descriptor</span></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">	// https://github.com/facebook/zstd/blob/dev/doc/zstd_compression_format.md#window_descriptor</span></code></span>
+<span class="codeline" id="line-121"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <span class="lit-number">1</span> {</code></span>
+<span class="codeline" id="line-122"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i3">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-123"><code>	}</code></span>
+<span class="codeline" id="line-124"><code>	<label for="r4" class="ident">fhd</label>, <label for="r2" class="ident">in</label> := <label for="r2" class="ident">in</label>[<span class="lit-number">0</span>], <label for="r2" class="ident">in</label>[<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-125"><code>	<label for="r0" class="ident">h</label>.<a href="#line-61" class="ident">HeaderSize</a>++</code></span>
+<span class="codeline" id="line-126"><code>	<label for="r0" class="ident">h</label>.<a href="#line-22" class="ident">SingleSegment</a> = <label for="r4" class="ident">fhd</label>&amp;(<span class="lit-number">1</span>&lt;&lt;<span class="lit-number">5</span>) != <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-127"><code>	<label for="r0" class="ident">h</label>.<a href="#line-89" class="ident">HasCheckSum</a> = <label for="r4" class="ident">fhd</label>&amp;(<span class="lit-number">1</span>&lt;&lt;<span class="lit-number">2</span>) != <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-128"><code>	<span class="keyword">if</span> <label for="r4" class="ident">fhd</label>&amp;(<span class="lit-number">1</span>&lt;&lt;<span class="lit-number">3</span>) != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-129"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"reserved bit set on frame header"</span>)</code></span>
+<span class="codeline" id="line-130"><code>	}</code></span>
+<span class="codeline" id="line-131"><code></code></span>
+<span class="codeline" id="line-132"><code>	<span class="keyword">if</span> !<label for="r0" class="ident">h</label>.<a href="#line-22" class="ident">SingleSegment</a> {</code></span>
+<span class="codeline" id="line-133"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <span class="lit-number">1</span> {</code></span>
+<span class="codeline" id="line-134"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i3">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-135"><code>		}</code></span>
+<span class="codeline" id="line-136"><code>		<span class="keyword">var</span> <label for="r5" class="ident">wd</label> <a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-137"><code>		<label for="r5" class="ident">wd</label>, <label for="r2" class="ident">in</label> = <label for="r2" class="ident">in</label>[<span class="lit-number">0</span>], <label for="r2" class="ident">in</label>[<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-138"><code>		<label for="r0" class="ident">h</label>.<a href="#line-61" class="ident">HeaderSize</a>++</code></span>
+<span class="codeline" id="line-139"><code>		<label for="r6" class="ident">windowLog</label> := <span class="lit-number">10</span> + (<label for="r5" class="ident">wd</label> &gt;&gt; <span class="lit-number">3</span>)</code></span>
+<span class="codeline" id="line-140"><code>		<label for="r7" class="ident">windowBase</label> := <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<span class="lit-number">1</span>) &lt;&lt; <label for="r6" class="ident">windowLog</label></code></span>
+<span class="codeline" id="line-141"><code>		<label for="r8" class="ident">windowAdd</label> := (<label for="r7" class="ident">windowBase</label> / <span class="lit-number">8</span>) * <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r5" class="ident">wd</label>&amp;<span class="lit-number">0x7</span>)</code></span>
+<span class="codeline" id="line-142"><code>		<label for="r0" class="ident">h</label>.<a href="#line-26" class="ident">WindowSize</a> = <label for="r7" class="ident">windowBase</label> + <label for="r8" class="ident">windowAdd</label></code></span>
+<span class="codeline" id="line-143"><code>	}</code></span>
+<span class="codeline" id="line-144"><code></code></span>
+<span class="codeline" id="line-145"><code>	<span class="comment">// Read Dictionary_ID</span></code></span>
+<span class="codeline" id="line-146"><code><span class="comment">	// https://github.com/facebook/zstd/blob/dev/doc/zstd_compression_format.md#dictionary_id</span></code></span>
+<span class="codeline" id="line-147"><code>	<span class="keyword">if</span> <label for="r9" class="ident">size</label> := <label for="r4" class="ident">fhd</label> &amp; <span class="lit-number">3</span>; <label for="r9" class="ident">size</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-148"><code>		<span class="keyword">if</span> <label for="r9" class="ident">size</label> == <span class="lit-number">3</span> {</code></span>
+<span class="codeline" id="line-149"><code>			<label for="r9" class="ident">size</label> = <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-150"><code>		}</code></span>
+<span class="codeline" id="line-151"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r9" class="ident">size</label>) {</code></span>
+<span class="codeline" id="line-152"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i3">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-153"><code>		}</code></span>
+<span class="codeline" id="line-154"><code>		<label for="r3" class="ident">b</label>, <label for="r2" class="ident">in</label> = <label for="r2" class="ident">in</label>[:<label for="r9" class="ident">size</label>], <label for="r2" class="ident">in</label>[<label for="r9" class="ident">size</label>:]</code></span>
+<span class="codeline" id="line-155"><code>		<label for="r0" class="ident">h</label>.<a href="#line-61" class="ident">HeaderSize</a> += <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r9" class="ident">size</label>)</code></span>
+<span class="codeline" id="line-156"><code>		<span class="keyword">switch</span> <label for="r9" class="ident">size</label> {</code></span>
+<span class="codeline" id="line-157"><code>		<span class="keyword">case</span> <span class="lit-number">1</span>:</code></span>
+<span class="codeline" id="line-158"><code>			<label for="r0" class="ident">h</label>.<a href="#line-30" class="ident">DictionaryID</a> = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-159"><code>		<span class="keyword">case</span> <span class="lit-number">2</span>:</code></span>
+<span class="codeline" id="line-160"><code>			<label for="r0" class="ident">h</label>.<a href="#line-30" class="ident">DictionaryID</a> = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">1</span>]) &lt;&lt; <span class="lit-number">8</span>)</code></span>
+<span class="codeline" id="line-161"><code>		<span class="keyword">case</span> <span class="lit-number">4</span>:</code></span>
+<span class="codeline" id="line-162"><code>			<label for="r0" class="ident">h</label>.<a href="#line-30" class="ident">DictionaryID</a> = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">1</span>]) &lt;&lt; <span class="lit-number">8</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">2</span>]) &lt;&lt; <span class="lit-number">16</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">3</span>]) &lt;&lt; <span class="lit-number">24</span>)</code></span>
+<span class="codeline" id="line-163"><code>		}</code></span>
+<span class="codeline" id="line-164"><code>	}</code></span>
+<span class="codeline" id="line-165"><code></code></span>
+<span class="codeline" id="line-166"><code>	<span class="comment">// Read Frame_Content_Size</span></code></span>
+<span class="codeline" id="line-167"><code><span class="comment">	// https://github.com/facebook/zstd/blob/dev/doc/zstd_compression_format.md#frame_content_size</span></code></span>
+<span class="codeline" id="line-168"><code>	<span class="keyword">var</span> <label for="r10" class="ident">fcsSize</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-169"><code>	<label for="r11" class="ident">v</label> := <label for="r4" class="ident">fhd</label> &gt;&gt; <span class="lit-number">6</span></code></span>
+<span class="codeline" id="line-170"><code>	<span class="keyword">switch</span> <label for="r11" class="ident">v</label> {</code></span>
+<span class="codeline" id="line-171"><code>	<span class="keyword">case</span> <span class="lit-number">0</span>:</code></span>
+<span class="codeline" id="line-172"><code>		<span class="keyword">if</span> <label for="r0" class="ident">h</label>.<a href="#line-22" class="ident">SingleSegment</a> {</code></span>
+<span class="codeline" id="line-173"><code>			<label for="r10" class="ident">fcsSize</label> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-174"><code>		}</code></span>
+<span class="codeline" id="line-175"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-176"><code>		<label for="r10" class="ident">fcsSize</label> = <span class="lit-number">1</span> &lt;&lt; <label for="r11" class="ident">v</label></code></span>
+<span class="codeline" id="line-177"><code>	}</code></span>
+<span class="codeline" id="line-178"><code></code></span>
+<span class="codeline" id="line-179"><code>	<span class="keyword">if</span> <label for="r10" class="ident">fcsSize</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-180"><code>		<label for="r0" class="ident">h</label>.<a href="#line-33" class="ident">HasFCS</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-181"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <label for="r10" class="ident">fcsSize</label> {</code></span>
+<span class="codeline" id="line-182"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i3">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-183"><code>		}</code></span>
+<span class="codeline" id="line-184"><code>		<label for="r3" class="ident">b</label>, <label for="r2" class="ident">in</label> = <label for="r2" class="ident">in</label>[:<label for="r10" class="ident">fcsSize</label>], <label for="r2" class="ident">in</label>[<label for="r10" class="ident">fcsSize</label>:]</code></span>
+<span class="codeline" id="line-185"><code>		<label for="r0" class="ident">h</label>.<a href="#line-61" class="ident">HeaderSize</a> += <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r10" class="ident">fcsSize</label>)</code></span>
+<span class="codeline" id="line-186"><code>		<span class="keyword">switch</span> <label for="r10" class="ident">fcsSize</label> {</code></span>
+<span class="codeline" id="line-187"><code>		<span class="keyword">case</span> <span class="lit-number">1</span>:</code></span>
+<span class="codeline" id="line-188"><code>			<label for="r0" class="ident">h</label>.<a href="#line-36" class="ident">FrameContentSize</a> = <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-189"><code>		<span class="keyword">case</span> <span class="lit-number">2</span>:</code></span>
+<span class="codeline" id="line-190"><code>			<span class="comment">// When FCS_Field_Size is 2, the offset of 256 is added.</span></code></span>
+<span class="codeline" id="line-191"><code>			<label for="r0" class="ident">h</label>.<a href="#line-36" class="ident">FrameContentSize</a> = <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">1</span>]) &lt;&lt; <span class="lit-number">8</span>) + <span class="lit-number">256</span></code></span>
+<span class="codeline" id="line-192"><code>		<span class="keyword">case</span> <span class="lit-number">4</span>:</code></span>
+<span class="codeline" id="line-193"><code>			<label for="r0" class="ident">h</label>.<a href="#line-36" class="ident">FrameContentSize</a> = <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">1</span>]) &lt;&lt; <span class="lit-number">8</span>) | (<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">2</span>]) &lt;&lt; <span class="lit-number">16</span>) | (<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">3</span>]) &lt;&lt; <span class="lit-number">24</span>)</code></span>
+<span class="codeline" id="line-194"><code>		<span class="keyword">case</span> <span class="lit-number">8</span>:</code></span>
+<span class="codeline" id="line-195"><code>			<label for="r12" class="ident">d1</label> := <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">0</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">1</span>]) &lt;&lt; <span class="lit-number">8</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">2</span>]) &lt;&lt; <span class="lit-number">16</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">3</span>]) &lt;&lt; <span class="lit-number">24</span>)</code></span>
+<span class="codeline" id="line-196"><code>			<label for="r13" class="ident">d2</label> := <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">4</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">5</span>]) &lt;&lt; <span class="lit-number">8</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">6</span>]) &lt;&lt; <span class="lit-number">16</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r3" class="ident">b</label>[<span class="lit-number">7</span>]) &lt;&lt; <span class="lit-number">24</span>)</code></span>
+<span class="codeline" id="line-197"><code>			<label for="r0" class="ident">h</label>.<a href="#line-36" class="ident">FrameContentSize</a> = <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r12" class="ident">d1</label>) | (<a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r13" class="ident">d2</label>) &lt;&lt; <span class="lit-number">32</span>)</code></span>
+<span class="codeline" id="line-198"><code>		}</code></span>
+<span class="codeline" id="line-199"><code>	}</code></span>
+<span class="codeline" id="line-200"><code></code></span>
+<span class="codeline" id="line-201"><code>	<span class="comment">// Frame Header done, we will not fail from now on.</span></code></span>
+<span class="codeline" id="line-202"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">in</label>) &lt; <span class="lit-number">3</span> {</code></span>
+<span class="codeline" id="line-203"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-204"><code>	}</code></span>
+<span class="codeline" id="line-205"><code>	<label for="r14" class="ident">tmp</label> := <label for="r2" class="ident">in</label>[:<span class="lit-number">3</span>]</code></span>
+<span class="codeline" id="line-206"><code>	<label for="r15" class="ident">bh</label> := <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r14" class="ident">tmp</label>[<span class="lit-number">0</span>]) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r14" class="ident">tmp</label>[<span class="lit-number">1</span>]) &lt;&lt; <span class="lit-number">8</span>) | (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r14" class="ident">tmp</label>[<span class="lit-number">2</span>]) &lt;&lt; <span class="lit-number">16</span>)</code></span>
+<span class="codeline" id="line-207"><code>	<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-69" class="ident">Last</a> = <label for="r15" class="ident">bh</label>&amp;<span class="lit-number">1</span> != <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-208"><code>	<label for="r16" class="ident">blockType</label> := <a href="blockdec.go.html#line-21" class="ident">blockType</a>((<label for="r15" class="ident">bh</label> &gt;&gt; <span class="lit-number">1</span>) &amp; <span class="lit-number">3</span>)</code></span>
+<span class="codeline" id="line-209"><code>	<span class="comment">// find size.</span></code></span>
+<span class="codeline" id="line-210"><code>	<label for="r17" class="ident">cSize</label> := <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r15" class="ident">bh</label> &gt;&gt; <span class="lit-number">3</span>)</code></span>
+<span class="codeline" id="line-211"><code>	<span class="keyword">switch</span> <label for="r16" class="ident">blockType</label> {</code></span>
+<span class="codeline" id="line-212"><code>	<span class="keyword">case</span> <a href="blockdec.go.html#line-29" class="ident">blockTypeReserved</a>:</code></span>
+<span class="codeline" id="line-213"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-214"><code>	<span class="keyword">case</span> <a href="blockdec.go.html#line-27" class="ident">blockTypeRLE</a>:</code></span>
+<span class="codeline" id="line-215"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-75" class="ident">Compressed</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-216"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-79" class="ident">DecompressedSize</a> = <label for="r17" class="ident">cSize</label></code></span>
+<span class="codeline" id="line-217"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-84" class="ident">CompressedSize</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-218"><code>	<span class="keyword">case</span> <a href="blockdec.go.html#line-28" class="ident">blockTypeCompressed</a>:</code></span>
+<span class="codeline" id="line-219"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-75" class="ident">Compressed</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-220"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-84" class="ident">CompressedSize</a> = <label for="r17" class="ident">cSize</label></code></span>
+<span class="codeline" id="line-221"><code>	<span class="keyword">case</span> <a href="blockdec.go.html#line-26" class="ident">blockTypeRaw</a>:</code></span>
+<span class="codeline" id="line-222"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-79" class="ident">DecompressedSize</a> = <label for="r17" class="ident">cSize</label></code></span>
+<span class="codeline" id="line-223"><code>		<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-84" class="ident">CompressedSize</a> = <label for="r17" class="ident">cSize</label></code></span>
+<span class="codeline" id="line-224"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-225"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"Invalid block type"</span>)</code></span>
+<span class="codeline" id="line-226"><code>	}</code></span>
+<span class="codeline" id="line-227"><code></code></span>
+<span class="codeline" id="line-228"><code>	<label for="r0" class="ident">h</label>.<a href="#line-64" class="ident">FirstBlock</a>.<a href="#line-66" class="ident">OK</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-229"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-230"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

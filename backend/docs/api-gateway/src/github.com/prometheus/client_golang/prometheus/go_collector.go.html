@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: go_collector.go in package github.com/prometheus/client_golang/prometheus</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	go_collector.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html">github.com/prometheus/client_golang/prometheus</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2018 The Prometheus Authors</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Licensed under the Apache License, Version 2.0 (the "License");</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// you may not use this file except in compliance with the License.</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// You may obtain a copy of the License at</span></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// http://www.apache.org/licenses/LICENSE-2.0</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// Unless required by applicable law or agreed to in writing, software</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// distributed under the License is distributed on an "AS IS" BASIS,</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// See the License for the specific language governing permissions and</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// limitations under the License.</span></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="keyword">package</span> prometheus</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-17"><code>	<label for="i0"><span class="lit-string i0">"runtime"</span></label></code></span>
+<span class="codeline" id="line-18"><code>	<label for="i1"><span class="lit-string i1">"runtime/debug"</span></label></code></span>
+<span class="codeline" id="line-19"><code>	<label for="i2"><span class="lit-string i2">"time"</span></label></code></span>
+<span class="codeline" id="line-20"><code>)</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">// goRuntimeMemStats provides the metrics initially provided by runtime.ReadMemStats.</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">// From Go 1.17 those similar (and better) statistics are provided by runtime/metrics, so</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// while eval closure works on runtime.MemStats, the struct from Go 1.17+ is</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">// populated using runtime/metrics. Those are the defaults we can't alter.</span></code></span>
+<span class="codeline" id="line-26"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-goRuntimeMemStats" class="ident">goRuntimeMemStats</a></label>() <a href="#line-270" class="ident">memStatsMetrics</a> {</code></span>
+<span class="codeline" id="line-27"><code>	<span class="keyword">return</span> <a href="#line-270" class="ident">memStatsMetrics</a>{</code></span>
+<span class="codeline" id="line-28"><code>		{</code></span>
+<span class="codeline" id="line-29"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-30"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"alloc_bytes"</span>),</code></span>
+<span class="codeline" id="line-31"><code>				<span class="lit-string">"Number of bytes allocated in heap and currently in use. Equals to /memory/classes/heap/objects:bytes."</span>,</code></span>
+<span class="codeline" id="line-32"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-33"><code>			),</code></span>
+<span class="codeline" id="line-34"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r1" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r1" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-61" class="ident">Alloc</a>) },</code></span>
+<span class="codeline" id="line-35"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-36"><code>		}, {</code></span>
+<span class="codeline" id="line-37"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-38"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"alloc_bytes_total"</span>),</code></span>
+<span class="codeline" id="line-39"><code>				<span class="lit-string">"Total number of bytes allocated in heap until now, even if released already. Equals to /gc/heap/allocs:bytes."</span>,</code></span>
+<span class="codeline" id="line-40"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-41"><code>			),</code></span>
+<span class="codeline" id="line-42"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r2" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r2" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-68" class="ident">TotalAlloc</a>) },</code></span>
+<span class="codeline" id="line-43"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-37" class="ident">CounterValue</a>,</code></span>
+<span class="codeline" id="line-44"><code>		}, {</code></span>
+<span class="codeline" id="line-45"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-46"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-47"><code>				<span class="lit-string">"Number of bytes obtained from system. Equals to /memory/classes/total:byte."</span>,</code></span>
+<span class="codeline" id="line-48"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-49"><code>			),</code></span>
+<span class="codeline" id="line-50"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r3" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r3" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-78" class="ident">Sys</a>) },</code></span>
+<span class="codeline" id="line-51"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-52"><code>		}, {</code></span>
+<span class="codeline" id="line-53"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-54"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"mallocs_total"</span>),</code></span>
+<span class="codeline" id="line-55"><code>				<span class="comment">// TODO(bwplotka): We could add go_memstats_heap_objects, probably useful for discovery. Let's gather more feedback, kind of a waste of bytes for everybody for compatibility reasons to keep both, and we can't really rename/remove useful metric.</span></code></span>
+<span class="codeline" id="line-56"><code>				<span class="lit-string">"Total number of heap objects allocated, both live and gc-ed. Semantically a counter version for go_memstats_heap_objects gauge. Equals to /gc/heap/allocs:objects + /gc/heap/tiny/allocs:objects."</span>,</code></span>
+<span class="codeline" id="line-57"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-58"><code>			),</code></span>
+<span class="codeline" id="line-59"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r4" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r4" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-88" class="ident">Mallocs</a>) },</code></span>
+<span class="codeline" id="line-60"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-37" class="ident">CounterValue</a>,</code></span>
+<span class="codeline" id="line-61"><code>		}, {</code></span>
+<span class="codeline" id="line-62"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-63"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"frees_total"</span>),</code></span>
+<span class="codeline" id="line-64"><code>				<span class="lit-string">"Total number of heap objects frees. Equals to /gc/heap/frees:objects + /gc/heap/tiny/allocs:objects."</span>,</code></span>
+<span class="codeline" id="line-65"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-66"><code>			),</code></span>
+<span class="codeline" id="line-67"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r5" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r5" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-91" class="ident">Frees</a>) },</code></span>
+<span class="codeline" id="line-68"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-37" class="ident">CounterValue</a>,</code></span>
+<span class="codeline" id="line-69"><code>		}, {</code></span>
+<span class="codeline" id="line-70"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-71"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"heap_alloc_bytes"</span>),</code></span>
+<span class="codeline" id="line-72"><code>				<span class="lit-string">"Number of heap bytes allocated and currently in use, same as go_memstats_alloc_bytes. Equals to /memory/classes/heap/objects:bytes."</span>,</code></span>
+<span class="codeline" id="line-73"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-74"><code>			),</code></span>
+<span class="codeline" id="line-75"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r6" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r6" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-125" class="ident">HeapAlloc</a>) },</code></span>
+<span class="codeline" id="line-76"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-77"><code>		}, {</code></span>
+<span class="codeline" id="line-78"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-79"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"heap_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-80"><code>				<span class="lit-string">"Number of heap bytes obtained from system. Equals to /memory/classes/heap/objects:bytes + /memory/classes/heap/unused:bytes + /memory/classes/heap/released:bytes + /memory/classes/heap/free:bytes."</span>,</code></span>
+<span class="codeline" id="line-81"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-82"><code>			),</code></span>
+<span class="codeline" id="line-83"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r7" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r7" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-138" class="ident">HeapSys</a>) },</code></span>
+<span class="codeline" id="line-84"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-85"><code>		}, {</code></span>
+<span class="codeline" id="line-86"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-87"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"heap_idle_bytes"</span>),</code></span>
+<span class="codeline" id="line-88"><code>				<span class="lit-string">"Number of heap bytes waiting to be used. Equals to /memory/classes/heap/released:bytes + /memory/classes/heap/free:bytes."</span>,</code></span>
+<span class="codeline" id="line-89"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-90"><code>			),</code></span>
+<span class="codeline" id="line-91"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r8" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r8" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-153" class="ident">HeapIdle</a>) },</code></span>
+<span class="codeline" id="line-92"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-93"><code>		}, {</code></span>
+<span class="codeline" id="line-94"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-95"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"heap_inuse_bytes"</span>),</code></span>
+<span class="codeline" id="line-96"><code>				<span class="lit-string">"Number of heap bytes that are in use. Equals to /memory/classes/heap/objects:bytes + /memory/classes/heap/unused:bytes"</span>,</code></span>
+<span class="codeline" id="line-97"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-98"><code>			),</code></span>
+<span class="codeline" id="line-99"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r9" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r9" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-166" class="ident">HeapInuse</a>) },</code></span>
+<span class="codeline" id="line-100"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-101"><code>		}, {</code></span>
+<span class="codeline" id="line-102"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-103"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"heap_released_bytes"</span>),</code></span>
+<span class="codeline" id="line-104"><code>				<span class="lit-string">"Number of heap bytes released to OS. Equals to /memory/classes/heap/released:bytes."</span>,</code></span>
+<span class="codeline" id="line-105"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-106"><code>			),</code></span>
+<span class="codeline" id="line-107"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r10" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r10" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-172" class="ident">HeapReleased</a>) },</code></span>
+<span class="codeline" id="line-108"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-109"><code>		}, {</code></span>
+<span class="codeline" id="line-110"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-111"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"heap_objects"</span>),</code></span>
+<span class="codeline" id="line-112"><code>				<span class="lit-string">"Number of currently allocated objects. Equals to /gc/heap/objects:objects."</span>,</code></span>
+<span class="codeline" id="line-113"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-114"><code>			),</code></span>
+<span class="codeline" id="line-115"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r11" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r11" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-179" class="ident">HeapObjects</a>) },</code></span>
+<span class="codeline" id="line-116"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-117"><code>		}, {</code></span>
+<span class="codeline" id="line-118"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-119"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"stack_inuse_bytes"</span>),</code></span>
+<span class="codeline" id="line-120"><code>				<span class="lit-string">"Number of bytes obtained from system for stack allocator in non-CGO environments. Equals to /memory/classes/heap/stacks:bytes."</span>,</code></span>
+<span class="codeline" id="line-121"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-122"><code>			),</code></span>
+<span class="codeline" id="line-123"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r12" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r12" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-194" class="ident">StackInuse</a>) },</code></span>
+<span class="codeline" id="line-124"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-125"><code>		}, {</code></span>
+<span class="codeline" id="line-126"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-127"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"stack_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-128"><code>				<span class="lit-string">"Number of bytes obtained from system for stack allocator. Equals to /memory/classes/heap/stacks:bytes + /memory/classes/os-stacks:bytes."</span>,</code></span>
+<span class="codeline" id="line-129"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-130"><code>			),</code></span>
+<span class="codeline" id="line-131"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r13" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r13" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-210" class="ident">StackSys</a>) },</code></span>
+<span class="codeline" id="line-132"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-133"><code>		}, {</code></span>
+<span class="codeline" id="line-134"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-135"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"mspan_inuse_bytes"</span>),</code></span>
+<span class="codeline" id="line-136"><code>				<span class="lit-string">"Number of bytes in use by mspan structures. Equals to /memory/classes/metadata/mspan/inuse:bytes."</span>,</code></span>
+<span class="codeline" id="line-137"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-138"><code>			),</code></span>
+<span class="codeline" id="line-139"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r14" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r14" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-224" class="ident">MSpanInuse</a>) },</code></span>
+<span class="codeline" id="line-140"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-141"><code>		}, {</code></span>
+<span class="codeline" id="line-142"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-143"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"mspan_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-144"><code>				<span class="lit-string">"Number of bytes used for mspan structures obtained from system. Equals to /memory/classes/metadata/mspan/inuse:bytes + /memory/classes/metadata/mspan/free:bytes."</span>,</code></span>
+<span class="codeline" id="line-145"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-146"><code>			),</code></span>
+<span class="codeline" id="line-147"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r15" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r15" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-228" class="ident">MSpanSys</a>) },</code></span>
+<span class="codeline" id="line-148"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-149"><code>		}, {</code></span>
+<span class="codeline" id="line-150"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-151"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"mcache_inuse_bytes"</span>),</code></span>
+<span class="codeline" id="line-152"><code>				<span class="lit-string">"Number of bytes in use by mcache structures. Equals to /memory/classes/metadata/mcache/inuse:bytes."</span>,</code></span>
+<span class="codeline" id="line-153"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-154"><code>			),</code></span>
+<span class="codeline" id="line-155"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r16" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r16" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-231" class="ident">MCacheInuse</a>) },</code></span>
+<span class="codeline" id="line-156"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-157"><code>		}, {</code></span>
+<span class="codeline" id="line-158"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-159"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"mcache_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-160"><code>				<span class="lit-string">"Number of bytes used for mcache structures obtained from system. Equals to /memory/classes/metadata/mcache/inuse:bytes + /memory/classes/metadata/mcache/free:bytes."</span>,</code></span>
+<span class="codeline" id="line-161"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-162"><code>			),</code></span>
+<span class="codeline" id="line-163"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r17" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r17" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-235" class="ident">MCacheSys</a>) },</code></span>
+<span class="codeline" id="line-164"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-165"><code>		}, {</code></span>
+<span class="codeline" id="line-166"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-167"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"buck_hash_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-168"><code>				<span class="lit-string">"Number of bytes used by the profiling bucket hash table. Equals to /memory/classes/profiling/buckets:bytes."</span>,</code></span>
+<span class="codeline" id="line-169"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-170"><code>			),</code></span>
+<span class="codeline" id="line-171"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r18" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r18" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-238" class="ident">BuckHashSys</a>) },</code></span>
+<span class="codeline" id="line-172"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-173"><code>		}, {</code></span>
+<span class="codeline" id="line-174"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-175"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"gc_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-176"><code>				<span class="lit-string">"Number of bytes used for garbage collection system metadata. Equals to /memory/classes/metadata/other:bytes."</span>,</code></span>
+<span class="codeline" id="line-177"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-178"><code>			),</code></span>
+<span class="codeline" id="line-179"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r19" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r19" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-241" class="ident">GCSys</a>) },</code></span>
+<span class="codeline" id="line-180"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-181"><code>		}, {</code></span>
+<span class="codeline" id="line-182"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-183"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"other_sys_bytes"</span>),</code></span>
+<span class="codeline" id="line-184"><code>				<span class="lit-string">"Number of bytes used for other system allocations. Equals to /memory/classes/other:bytes."</span>,</code></span>
+<span class="codeline" id="line-185"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-186"><code>			),</code></span>
+<span class="codeline" id="line-187"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r20" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r20" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-245" class="ident">OtherSys</a>) },</code></span>
+<span class="codeline" id="line-188"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-189"><code>		}, {</code></span>
+<span class="codeline" id="line-190"><code>			<a href="#line-271" class="ident">desc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-191"><code>				<a href="#line-264" class="ident">memstatNamespace</a>(<span class="lit-string">"next_gc_bytes"</span>),</code></span>
+<span class="codeline" id="line-192"><code>				<span class="lit-string">"Number of heap bytes when next garbage collection will take place. Equals to /gc/heap/goal:bytes."</span>,</code></span>
+<span class="codeline" id="line-193"><code>				<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>,</code></span>
+<span class="codeline" id="line-194"><code>			),</code></span>
+<span class="codeline" id="line-195"><code>			<a href="#line-272" class="ident">eval</a>:    <span class="keyword">func</span>(<label for="r21" class="ident">ms</label> *<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a> { <span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r21" class="ident">ms</label>.<a href="../../../../runtime/mstats.go.html#line-255" class="ident">NextGC</a>) },</code></span>
+<span class="codeline" id="line-196"><code>			<a href="#line-273" class="ident">valType</a>: <a href="value.go.html#line-38" class="ident">GaugeValue</a>,</code></span>
+<span class="codeline" id="line-197"><code>		},</code></span>
+<span class="codeline" id="line-198"><code>	}</code></span>
+<span class="codeline" id="line-199"><code>}</code></span>
+<span class="codeline" id="line-200"><code></code></span>
+<span class="codeline" id="line-201"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-baseGoCollector" class="ident">baseGoCollector</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-202"><code>	goroutinesDesc *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-203"><code>	threadsDesc    *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-204"><code>	gcDesc         *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-205"><code>	gcLastTimeDesc *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-206"><code>	goInfoDesc     *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-207"><code>}</code></span>
+<span class="codeline" id="line-208"><code></code></span>
+<span class="codeline" id="line-209"><code><span class="keyword">func</span> <label for="r22" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-newBaseGoCollector" class="ident">newBaseGoCollector</a></label>() <a href="#line-201" class="ident">baseGoCollector</a> {</code></span>
+<span class="codeline" id="line-210"><code>	<span class="keyword">return</span> <a href="#line-201" class="ident">baseGoCollector</a>{</code></span>
+<span class="codeline" id="line-211"><code>		<a href="#line-202" class="ident">goroutinesDesc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-212"><code>			<span class="lit-string">"go_goroutines"</span>,</code></span>
+<span class="codeline" id="line-213"><code>			<span class="lit-string">"Number of goroutines that currently exist."</span>,</code></span>
+<span class="codeline" id="line-214"><code>			<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>),</code></span>
+<span class="codeline" id="line-215"><code>		<a href="#line-203" class="ident">threadsDesc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-216"><code>			<span class="lit-string">"go_threads"</span>,</code></span>
+<span class="codeline" id="line-217"><code>			<span class="lit-string">"Number of OS threads created."</span>,</code></span>
+<span class="codeline" id="line-218"><code>			<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>),</code></span>
+<span class="codeline" id="line-219"><code>		<a href="#line-204" class="ident">gcDesc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-220"><code>			<span class="lit-string">"go_gc_duration_seconds"</span>,</code></span>
+<span class="codeline" id="line-221"><code>			<span class="lit-string">"A summary of the wall-time pause (stop-the-world) duration in garbage collection cycles."</span>,</code></span>
+<span class="codeline" id="line-222"><code>			<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>),</code></span>
+<span class="codeline" id="line-223"><code>		<a href="#line-205" class="ident">gcLastTimeDesc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-224"><code>			<span class="lit-string">"go_memstats_last_gc_time_seconds"</span>,</code></span>
+<span class="codeline" id="line-225"><code>			<span class="lit-string">"Number of seconds since 1970 of last garbage collection."</span>,</code></span>
+<span class="codeline" id="line-226"><code>			<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>),</code></span>
+<span class="codeline" id="line-227"><code>		<a href="#line-206" class="ident">goInfoDesc</a>: <a href="desc.go.html#line-78" class="ident">NewDesc</a>(</code></span>
+<span class="codeline" id="line-228"><code>			<span class="lit-string">"go_info"</span>,</code></span>
+<span class="codeline" id="line-229"><code>			<span class="lit-string">"Information about the Go environment."</span>,</code></span>
+<span class="codeline" id="line-230"><code>			<a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="labels.go.html#line-33" class="ident">Labels</a>{<span class="lit-string">"version"</span>: <a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/extern.go.html#line-373" class="ident">Version</a>()}),</code></span>
+<span class="codeline" id="line-231"><code>	}</code></span>
+<span class="codeline" id="line-232"><code>}</code></span>
+<span class="codeline" id="line-233"><code></code></span>
+<span class="codeline" id="line-234"><code><span class="comment">// Describe returns all descriptions of the collector.</span></code></span>
+<span class="codeline" id="line-235"><code><span class="keyword">func</span> (<label for="r23" class="ident">c</label> *<a href="#line-201" class="ident">baseGoCollector</a>) <label for="r24" class="ident"><a href="../../../../../imp/github.com/prometheus/client_golang/prometheus.baseGoCollector^9dc81.html#name-.Describe" class="ident">Describe</a></label>(<label for="r25" class="ident">ch</label> <span class="keyword">chan</span>&lt;- *<a href="desc.go.html#line-45" class="ident">Desc</a>) {</code></span>
+<span class="codeline" id="line-236"><code>	<label for="r25" class="ident">ch</label> &lt;- <label for="r23" class="ident">c</label>.<a href="#line-202" class="ident">goroutinesDesc</a></code></span>
+<span class="codeline" id="line-237"><code>	<label for="r25" class="ident">ch</label> &lt;- <label for="r23" class="ident">c</label>.<a href="#line-203" class="ident">threadsDesc</a></code></span>
+<span class="codeline" id="line-238"><code>	<label for="r25" class="ident">ch</label> &lt;- <label for="r23" class="ident">c</label>.<a href="#line-204" class="ident">gcDesc</a></code></span>
+<span class="codeline" id="line-239"><code>	<label for="r25" class="ident">ch</label> &lt;- <label for="r23" class="ident">c</label>.<a href="#line-205" class="ident">gcLastTimeDesc</a></code></span>
+<span class="codeline" id="line-240"><code>	<label for="r25" class="ident">ch</label> &lt;- <label for="r23" class="ident">c</label>.<a href="#line-206" class="ident">goInfoDesc</a></code></span>
+<span class="codeline" id="line-241"><code>}</code></span>
+<span class="codeline" id="line-242"><code></code></span>
+<span class="codeline" id="line-243"><code><span class="comment">// Collect returns the current state of all metrics of the collector.</span></code></span>
+<span class="codeline" id="line-244"><code><span class="keyword">func</span> (<label for="r26" class="ident">c</label> *<a href="#line-201" class="ident">baseGoCollector</a>) <label for="r27" class="ident"><a href="../../../../../imp/github.com/prometheus/client_golang/prometheus.baseGoCollector^9dc81.html#name-.Collect" class="ident">Collect</a></label>(<label for="r28" class="ident">ch</label> <span class="keyword">chan</span>&lt;- <a href="metric.go.html#line-33" class="ident">Metric</a>) {</code></span>
+<span class="codeline" id="line-245"><code>	<label for="r28" class="ident">ch</label> &lt;- <a href="value.go.html#line-126" class="ident">MustNewConstMetric</a>(<label for="r26" class="ident">c</label>.<a href="#line-202" class="ident">goroutinesDesc</a>, <a href="value.go.html#line-38" class="ident">GaugeValue</a>, <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/debug.go.html#line-179" class="ident">NumGoroutine</a>()))</code></span>
+<span class="codeline" id="line-246"><code></code></span>
+<span class="codeline" id="line-247"><code>	<label for="r29" class="ident">n</label> := <a href="num_threads.go.html#line-22" class="ident">getRuntimeNumThreads</a>()</code></span>
+<span class="codeline" id="line-248"><code>	<label for="r28" class="ident">ch</label> &lt;- <a href="value.go.html#line-126" class="ident">MustNewConstMetric</a>(<label for="r26" class="ident">c</label>.<a href="#line-203" class="ident">threadsDesc</a>, <a href="value.go.html#line-38" class="ident">GaugeValue</a>, <label for="r29" class="ident">n</label>)</code></span>
+<span class="codeline" id="line-249"><code></code></span>
+<span class="codeline" id="line-250"><code>	<span class="keyword">var</span> <label for="r30" class="ident">stats</label> <a href="../../../../../pkg/runtime/debug.html" class="ident i1">debug</a>.<a href="../../../../runtime/debug/garbage.go.html#line-14" class="ident">GCStats</a></code></span>
+<span class="codeline" id="line-251"><code>	<label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-20" class="ident">PauseQuantiles</a> = <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/time.html" class="ident i2">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a>, <span class="lit-number">5</span>)</code></span>
+<span class="codeline" id="line-252"><code>	<a href="../../../../../pkg/runtime/debug.html" class="ident i1">debug</a>.<a href="../../../../runtime/debug/garbage.go.html#line-31" class="ident">ReadGCStats</a>(&amp;<label for="r30" class="ident">stats</label>)</code></span>
+<span class="codeline" id="line-253"><code></code></span>
+<span class="codeline" id="line-254"><code>	<label for="r31" class="ident">quantiles</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>]<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>)</code></span>
+<span class="codeline" id="line-255"><code>	<span class="keyword">for</span> <label for="r32" class="ident">idx</label>, <label for="r33" class="ident">pq</label> := <span class="keyword">range</span> <label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-20" class="ident">PauseQuantiles</a>[<span class="lit-number">1</span>:] {</code></span>
+<span class="codeline" id="line-256"><code>		<label for="r31" class="ident">quantiles</label>[<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r32" class="ident">idx</label>+<span class="lit-number">1</span>)/<a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-20" class="ident">PauseQuantiles</a>)-<span class="lit-number">1</span>)] = <label for="r33" class="ident">pq</label>.<a href="../../../../time/time.go.html#line-1090" class="ident">Seconds</a>()</code></span>
+<span class="codeline" id="line-257"><code>	}</code></span>
+<span class="codeline" id="line-258"><code>	<label for="r31" class="ident">quantiles</label>[<span class="lit-number">0.0</span>] = <label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-20" class="ident">PauseQuantiles</a>[<span class="lit-number">0</span>].<a href="../../../../time/time.go.html#line-1090" class="ident">Seconds</a>()</code></span>
+<span class="codeline" id="line-259"><code>	<label for="r28" class="ident">ch</label> &lt;- <a href="summary.go.html#line-776" class="ident">MustNewConstSummary</a>(<label for="r26" class="ident">c</label>.<a href="#line-204" class="ident">gcDesc</a>, <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>(<label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-16" class="ident">NumGC</a>), <label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-17" class="ident">PauseTotal</a>.<a href="../../../../time/time.go.html#line-1090" class="ident">Seconds</a>(), <label for="r31" class="ident">quantiles</label>)</code></span>
+<span class="codeline" id="line-260"><code>	<label for="r28" class="ident">ch</label> &lt;- <a href="value.go.html#line-126" class="ident">MustNewConstMetric</a>(<label for="r26" class="ident">c</label>.<a href="#line-205" class="ident">gcLastTimeDesc</a>, <a href="value.go.html#line-38" class="ident">GaugeValue</a>, <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r30" class="ident">stats</label>.<a href="../../../../runtime/debug/garbage.go.html#line-15" class="ident">LastGC</a>.<a href="../../../../time/time.go.html#line-1460" class="ident">UnixNano</a>())/<span class="lit-number">1e9</span>)</code></span>
+<span class="codeline" id="line-261"><code>	<label for="r28" class="ident">ch</label> &lt;- <a href="value.go.html#line-126" class="ident">MustNewConstMetric</a>(<label for="r26" class="ident">c</label>.<a href="#line-206" class="ident">goInfoDesc</a>, <a href="value.go.html#line-38" class="ident">GaugeValue</a>, <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-262"><code>}</code></span>
+<span class="codeline" id="line-263"><code></code></span>
+<span class="codeline" id="line-264"><code><span class="keyword">func</span> <label for="r34" class="ident"><a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-memstatNamespace" class="ident">memstatNamespace</a></label>(<label for="r35" class="ident">s</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-265"><code>	<span class="keyword">return</span> <span class="lit-string">"go_memstats_"</span> + <label for="r35" class="ident">s</label></code></span>
+<span class="codeline" id="line-266"><code>}</code></span>
+<span class="codeline" id="line-267"><code></code></span>
+<span class="codeline" id="line-268"><code><span class="comment">// memStatsMetrics provide description, evaluator, runtime/metrics name, and</span></code></span>
+<span class="codeline" id="line-269"><code><span class="comment">// value type for memstat metrics.</span></code></span>
+<span class="codeline" id="line-270"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-memStatsMetrics" class="ident">memStatsMetrics</a> []<span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-271"><code>	desc    *<a href="desc.go.html#line-45" class="ident">Desc</a></code></span>
+<span class="codeline" id="line-272"><code>	eval    <span class="keyword">func</span>(*<a href="../../../../../pkg/runtime.html" class="ident i0">runtime</a>.<a href="../../../../runtime/mstats.go.html#line-55" class="ident">MemStats</a>) <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a></code></span>
+<span class="codeline" id="line-273"><code>	valType <a href="value.go.html#line-31" class="ident">ValueType</a></code></span>
+<span class="codeline" id="line-274"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,3 +1,4 @@
+// Command main runs database migrations for the Recommendation Service.
 package main
 
 import (

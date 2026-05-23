@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: Post.go in package recommendationService/internal/domain/models</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	Post.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/recommendationService^a4c16/internal/domain/models.html">recommendationService/internal/domain/models</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">// Package models defines domain types for the Recommendation Service.</span></code></span></div><span class="codeline" id="line-2"><code><span class="keyword">package</span> models</code></span>
+<span class="codeline" id="line-3"><code></code></span>
+<span class="codeline" id="line-4"><code><span class="keyword">import</span> <label for="i0"><span class="lit-string i0">"time"</span></label></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// Stock represents a financial instrument mentioned in a post.</span></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">type</span> <a href="../../../../../pkg/recommendationService^a4c16/internal/domain/models.html#name-Stock" class="ident">Stock</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-8"><code>	StockName <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> <span class="lit-string">`json:"stock_name"`</span></code></span>
+<span class="codeline" id="line-9"><code>	Side      <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> <span class="lit-string">`json:"side"`</span></code></span>
+<span class="codeline" id="line-10"><code>}</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// Post represents a recommended social media post with stock mentions.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">type</span> <a href="../../../../../pkg/recommendationService^a4c16/internal/domain/models.html#name-Post" class="ident">Post</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-14"><code>	Stocks          []<a href="#line-7" class="ident">Stock</a>   <span class="lit-string">`json:"stocks"`</span></code></span>
+<span class="codeline" id="line-15"><code>	PostText        <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>    <span class="lit-string">`json:"post_text"`</span></code></span>
+<span class="codeline" id="line-16"><code>	PostURI         <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>    <span class="lit-string">`json:"post_uri"`</span></code></span>
+<span class="codeline" id="line-17"><code>	ChannelUsername <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>    <span class="lit-string">`json:"channel_username"`</span></code></span>
+<span class="codeline" id="line-18"><code>	Reasoning       <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>    <span class="lit-string">`json:"reasoning"`</span></code></span>
+<span class="codeline" id="line-19"><code>	Date            <a href="../../../../../pkg/time.html" class="ident i0">time</a>.<a href="../../../../time/time.go.html#line-140" class="ident">Time</a> <span class="lit-string">`json:"date"`</span></code></span>
+<span class="codeline" id="line-20"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

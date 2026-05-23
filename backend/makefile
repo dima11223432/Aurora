@@ -245,6 +245,65 @@ clean:
 	find . -type f -name "coverage.out" -delete
 	@echo "$(GREEN)Готово!$(NC)"
 
+# ===== Документация (go doc) =====
+define print_doc
+	@echo "$(GREEN)========== $(1) ==========$(NC)"
+	cd $(2) && for pkg in $$(go list ./internal/... ./cmd/... 2>/dev/null); do \
+		rel=".$${pkg#$$(go list -m)}"; \
+		echo "$(YELLOW)--- $$rel ---$(NC)"; \
+		go doc ./$$rel 2>/dev/null | head -15; \
+		echo ""; \
+	done
+endef
+
+doc-api:
+	$(call print_doc,API Gateway,Api_Gateway)
+
+doc-sso:
+	$(call print_doc,SSO,SSO)
+
+doc-recs:
+	$(call print_doc,Recommendation Service,Recommendation_Service)
+
+doc-cache:
+	$(call print_doc,Cache Service,Cache_Service)
+
+doc-all: doc-sso doc-api doc-recs doc-cache
+	@echo "$(GREEN)Документация всех сервисов выведена выше.$(NC)"
+
+# ===== Документация (HTML — Sphinx-like) =====
+DOCS_DIR := docs
+
+doc-gen: doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache
+	@echo "$(GREEN)Генерация HTML-документации завершена.$(NC)"
+	@echo "$(GREEN)Откройте docs/index.html в браузере.$(NC)"
+
+doc-gen-sso:
+	@echo "$(GREEN)Генерация документации SSO...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd SSO && golds -gen -nouses -dir=../$(DOCS_DIR)/sso ./... 2>&1 | grep "Docs are generated"
+
+doc-gen-api:
+	@echo "$(GREEN)Генерация документации API Gateway...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd Api_Gateway && golds -gen -nouses -dir=../$(DOCS_DIR)/api-gateway ./... 2>&1 | grep "Docs are generated"
+
+doc-gen-recs:
+	@echo "$(GREEN)Генерация документации Recommendation Service...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd Recommendation_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/recommendation ./... 2>&1 | grep "Docs are generated"
+
+doc-gen-cache:
+	@echo "$(GREEN)Генерация документации Cache Service...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd Cache_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/cache ./... 2>&1 | grep "Docs are generated"
+
+doc-serve:
+	@echo "$(GREEN)Запуск сервера HTML-документации на http://localhost:56789$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	@echo "$(YELLOW)Нажмите Ctrl+C для остановки$(NC)"
+	golds -dir=$(DOCS_DIR)/sso,$(DOCS_DIR)/api-gateway,$(DOCS_DIR)/recommendation,$(DOCS_DIR)/cache
+
 # ===== Утилиты =====
 deps:
 	@echo "$(GREEN)Установка зависимостей...$(NC)"

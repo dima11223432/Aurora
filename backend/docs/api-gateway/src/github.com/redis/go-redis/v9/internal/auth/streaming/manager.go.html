@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: manager.go in package github.com/redis/go-redis/v9/internal/auth/streaming</title>
+<link href="../../../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	manager.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/auth/streaming.html">github.com/redis/go-redis/v9/internal/auth/streaming</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> streaming</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"errors"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"time"</span></label></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i2"><span class="lit-string i2">"github.com/redis/go-redis/v9/auth"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i3"><span class="lit-string i3">"github.com/redis/go-redis/v9/internal/pool"</span></label></code></span>
+<span class="codeline" id="line-9"><code>)</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// Manager coordinates streaming credentials and re-authentication for a connection pool.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// The manager is responsible for:</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">//   - Creating and managing per-connection credentials listeners</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">//   - Providing the pool hook for re-authentication</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">//   - Coordinating between credentials updates and pool operations</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// When credentials change via a StreamingCredentialsProvider:</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">//  1. The credentials listener (ConnReAuthCredentialsListener) receives the update</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">//  2. It calls MarkForReAuth on the manager</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">//  3. The manager delegates to the pool hook</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">//  4. The pool hook schedules background re-authentication</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// The manager maintains a registry of credentials listeners indexed by connection ID,</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">// allowing listener reuse when connections are reinitialized (e.g., after handoff).</span></code></span>
+<span class="codeline" id="line-26"><code><span class="keyword">type</span> <a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/auth/streaming.html#name-Manager" class="ident">Manager</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-27"><code>	<span class="comment">// credentialsListeners maps connection ID to credentials listener</span></code></span>
+<span class="codeline" id="line-28"><code>	credentialsListeners *<a href="cred_listeners.go.html#line-19" class="ident">CredentialsListeners</a></code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code>	<span class="comment">// pool is the connection pool being managed</span></code></span>
+<span class="codeline" id="line-31"><code>	pool <a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/pool.go.html#line-243" class="ident">Pooler</a></code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code>	<span class="comment">// poolHookRef is the re-authentication pool hook</span></code></span>
+<span class="codeline" id="line-34"><code>	poolHookRef *<a href="pool_hook.go.html#line-31" class="ident">ReAuthPoolHook</a></code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// NewManager creates a new streaming credentials manager.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// Parameters:</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">//   - pl: The connection pool to manage</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">//   - reAuthTimeout: Maximum time to wait for acquiring a connection for re-authentication</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// The manager creates a ReAuthPoolHook sized to match the pool size, ensuring that</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// re-auth operations don't exhaust the connection pool.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/auth/streaming.html#name-NewManager" class="ident">NewManager</a></label>(<label for="r1" class="ident">pl</label> <a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/pool.go.html#line-243" class="ident">Pooler</a>, <label for="r2" class="ident">reAuthTimeout</label> <a href="../../../../../../../../pkg/time.html" class="ident i1">time</a>.<a href="../../../../../../../time/time.go.html#line-915" class="ident">Duration</a>) *<a href="#line-26" class="ident">Manager</a> {</code></span>
+<span class="codeline" id="line-46"><code>	<label for="r3" class="ident">m</label> := &amp;<a href="#line-26" class="ident">Manager</a>{</code></span>
+<span class="codeline" id="line-47"><code>		<a href="#line-31" class="ident">pool</a>:                 <label for="r1" class="ident">pl</label>,</code></span>
+<span class="codeline" id="line-48"><code>		<a href="#line-34" class="ident">poolHookRef</a>:          <a href="pool_hook.go.html#line-62" class="ident">NewReAuthPoolHook</a>(<label for="r1" class="ident">pl</label>.<a href="../../pool/pool.go.html#line-257" class="ident">Size</a>(), <label for="r2" class="ident">reAuthTimeout</label>),</code></span>
+<span class="codeline" id="line-49"><code>		<a href="#line-28" class="ident">credentialsListeners</a>: <a href="cred_listeners.go.html#line-28" class="ident">NewCredentialsListeners</a>(),</code></span>
+<span class="codeline" id="line-50"><code>	}</code></span>
+<span class="codeline" id="line-51"><code>	<label for="r3" class="ident">m</label>.<a href="#line-34" class="ident">poolHookRef</a>.<a href="pool_hook.go.html#line-51" class="ident">manager</a> = <label for="r3" class="ident">m</label></code></span>
+<span class="codeline" id="line-52"><code>	<span class="keyword">return</span> <label for="r3" class="ident">m</label></code></span>
+<span class="codeline" id="line-53"><code>}</code></span>
+<span class="codeline" id="line-54"><code></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">// PoolHook returns the pool hook for re-authentication.</span></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">// This hook should be registered with the connection pool to enable</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">// automatic re-authentication when credentials change.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="keyword">func</span> (<label for="r4" class="ident">m</label> *<a href="#line-26" class="ident">Manager</a>) <label for="r5" class="ident">PoolHook</label>() <a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/hooks.go.html#line-9" class="ident">PoolHook</a> {</code></span>
+<span class="codeline" id="line-60"><code>	<span class="keyword">return</span> <label for="r4" class="ident">m</label>.<a href="#line-34" class="ident">poolHookRef</a></code></span>
+<span class="codeline" id="line-61"><code>}</code></span>
+<span class="codeline" id="line-62"><code></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">// Listener returns or creates a credentials listener for a connection.</span></code></span>
+<span class="codeline" id="line-64"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-65"><code><span class="comment">// This method is called during connection initialization to set up the</span></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">// credentials listener. If a listener already exists for the connection ID</span></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">// (e.g., after a handoff), it is reused.</span></code></span>
+<span class="codeline" id="line-68"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">// Parameters:</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">//   - poolCn: The connection to create/get a listener for</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">//   - reAuth: Function to re-authenticate the connection with new credentials</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">//   - onErr: Function to call when re-authentication fails</span></code></span>
+<span class="codeline" id="line-73"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">// Returns:</span></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">//   - auth.CredentialsListener: The listener to subscribe to the credentials provider</span></code></span>
+<span class="codeline" id="line-76"><code><span class="comment">//   - error: Non-nil if poolCn is nil</span></code></span>
+<span class="codeline" id="line-77"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-78"><code><span class="comment">// Note: The reAuth and onErr callbacks are captured once when the listener is</span></code></span>
+<span class="codeline" id="line-79"><code><span class="comment">// created and reused for the connection's lifetime. They should not change.</span></code></span>
+<span class="codeline" id="line-80"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-81"><code><span class="comment">// Thread-safe: Can be called concurrently during connection initialization.</span></code></span>
+<span class="codeline" id="line-82"><code><span class="keyword">func</span> (<label for="r6" class="ident">m</label> *<a href="#line-26" class="ident">Manager</a>) <label for="r7" class="ident">Listener</label>(</code></span>
+<span class="codeline" id="line-83"><code>	<label for="r8" class="ident">poolCn</label> *<a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/conn.go.html#line-68" class="ident">Conn</a>,</code></span>
+<span class="codeline" id="line-84"><code>	<label for="r9" class="ident">reAuth</label> <span class="keyword">func</span>(*<a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/conn.go.html#line-68" class="ident">Conn</a>, <a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/auth.html" class="ident i2">auth</a>.<a href="../../../auth/auth.go.html#line-31" class="ident">Credentials</a>) <a href="../../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>,</code></span>
+<span class="codeline" id="line-85"><code>	<label for="r10" class="ident">onErr</label> <span class="keyword">func</span>(*<a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/conn.go.html#line-68" class="ident">Conn</a>, <a href="../../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>),</code></span>
+<span class="codeline" id="line-86"><code>) (<a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/auth.html" class="ident i2">auth</a>.<a href="../../../auth/auth.go.html#line-24" class="ident">CredentialsListener</a>, <a href="../../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-87"><code>	<span class="keyword">if</span> <label for="r8" class="ident">poolCn</label> == <a href="../../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-88"><code>		<span class="keyword">return</span> <a href="../../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"poolCn cannot be nil"</span>)</code></span>
+<span class="codeline" id="line-89"><code>	}</code></span>
+<span class="codeline" id="line-90"><code>	<label for="r11" class="ident">connID</label> := <label for="r8" class="ident">poolCn</label>.<a href="../../pool/conn.go.html#line-727" class="ident">GetID</a>()</code></span>
+<span class="codeline" id="line-91"><code>	<span class="comment">// if we reconnect the underlying network connection, the streaming credentials listener will continue to work</span></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">	// so we can get the old listener from the cache and use it.</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">	// subscribing the same (an already subscribed) listener for a StreamingCredentialsProvider SHOULD be a no-op</span></code></span>
+<span class="codeline" id="line-94"><code>	<label for="r12" class="ident">listener</label>, <label for="r13" class="ident">ok</label> := <label for="r6" class="ident">m</label>.<a href="#line-28" class="ident">credentialsListeners</a>.<a href="cred_listeners.go.html#line-57" class="ident">Get</a>(<label for="r11" class="ident">connID</label>)</code></span>
+<span class="codeline" id="line-95"><code>	<span class="keyword">if</span> !<label for="r13" class="ident">ok</label> || <label for="r12" class="ident">listener</label> == <a href="../../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-96"><code>		<span class="comment">// Create new listener for this connection</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">		// Note: Callbacks (reAuth, onErr) are captured once and reused for the connection's lifetime</span></code></span>
+<span class="codeline" id="line-98"><code>		<label for="r14" class="ident">newCredListener</label> := &amp;<a href="conn_reauth_credentials_listener.go.html#line-24" class="ident">ConnReAuthCredentialsListener</a>{</code></span>
+<span class="codeline" id="line-99"><code>			<a href="conn_reauth_credentials_listener.go.html#line-32" class="ident">conn</a>:    <label for="r8" class="ident">poolCn</label>,</code></span>
+<span class="codeline" id="line-100"><code>			<a href="conn_reauth_credentials_listener.go.html#line-26" class="ident">reAuth</a>:  <label for="r9" class="ident">reAuth</label>,</code></span>
+<span class="codeline" id="line-101"><code>			<a href="conn_reauth_credentials_listener.go.html#line-29" class="ident">onErr</a>:   <label for="r10" class="ident">onErr</label>,</code></span>
+<span class="codeline" id="line-102"><code>			<a href="conn_reauth_credentials_listener.go.html#line-35" class="ident">manager</a>: <label for="r6" class="ident">m</label>,</code></span>
+<span class="codeline" id="line-103"><code>		}</code></span>
+<span class="codeline" id="line-104"><code></code></span>
+<span class="codeline" id="line-105"><code>		<label for="r6" class="ident">m</label>.<a href="#line-28" class="ident">credentialsListeners</a>.<a href="cred_listeners.go.html#line-41" class="ident">Add</a>(<label for="r11" class="ident">connID</label>, <label for="r14" class="ident">newCredListener</label>)</code></span>
+<span class="codeline" id="line-106"><code>		<label for="r12" class="ident">listener</label> = <label for="r14" class="ident">newCredListener</label></code></span>
+<span class="codeline" id="line-107"><code>	}</code></span>
+<span class="codeline" id="line-108"><code>	<span class="keyword">return</span> <label for="r12" class="ident">listener</label>, <a href="../../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-109"><code>}</code></span>
+<span class="codeline" id="line-110"><code></code></span>
+<span class="codeline" id="line-111"><code><span class="comment">// MarkForReAuth marks a connection for re-authentication.</span></code></span>
+<span class="codeline" id="line-112"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">// This method is called by the credentials listener when new credentials are</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">// received. It delegates to the pool hook to schedule background re-authentication.</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">// Parameters:</span></code></span>
+<span class="codeline" id="line-117"><code><span class="comment">//   - poolCn: The connection to re-authenticate</span></code></span>
+<span class="codeline" id="line-118"><code><span class="comment">//   - reAuthFn: Function to call for re-authentication, receives error if acquisition fails</span></code></span>
+<span class="codeline" id="line-119"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">// Thread-safe: Called by credentials listeners when credentials change.</span></code></span>
+<span class="codeline" id="line-121"><code><span class="keyword">func</span> (<label for="r15" class="ident">m</label> *<a href="#line-26" class="ident">Manager</a>) <label for="r16" class="ident">MarkForReAuth</label>(<label for="r17" class="ident">poolCn</label> *<a href="../../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i3">pool</a>.<a href="../../pool/conn.go.html#line-68" class="ident">Conn</a>, <label for="r18" class="ident">reAuthFn</label> <span class="keyword">func</span>(<a href="../../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>)) {</code></span>
+<span class="codeline" id="line-122"><code>	<label for="r19" class="ident">connID</label> := <label for="r17" class="ident">poolCn</label>.<a href="../../pool/conn.go.html#line-727" class="ident">GetID</a>()</code></span>
+<span class="codeline" id="line-123"><code>	<label for="r15" class="ident">m</label>.<a href="#line-34" class="ident">poolHookRef</a>.<a href="pool_hook.go.html#line-82" class="ident">MarkForReAuth</a>(<label for="r19" class="ident">connID</label>, <label for="r18" class="ident">reAuthFn</label>)</code></span>
+<span class="codeline" id="line-124"><code>}</code></span>
+<span class="codeline" id="line-125"><code></code></span>
+<span class="codeline" id="line-126"><code><span class="comment">// RemoveListener removes the credentials listener for a connection.</span></code></span>
+<span class="codeline" id="line-127"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-128"><code><span class="comment">// This method is called by the pool hook's OnRemove to clean up listeners</span></code></span>
+<span class="codeline" id="line-129"><code><span class="comment">// when connections are removed from the pool.</span></code></span>
+<span class="codeline" id="line-130"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-131"><code><span class="comment">// Parameters:</span></code></span>
+<span class="codeline" id="line-132"><code><span class="comment">//   - connID: The connection ID whose listener should be removed</span></code></span>
+<span class="codeline" id="line-133"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-134"><code><span class="comment">// Thread-safe: Called during connection removal.</span></code></span>
+<span class="codeline" id="line-135"><code><span class="keyword">func</span> (<label for="r20" class="ident">m</label> *<a href="#line-26" class="ident">Manager</a>) <label for="r21" class="ident">RemoveListener</label>(<label for="r22" class="ident">connID</label> <a href="../../../../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>) {</code></span>
+<span class="codeline" id="line-136"><code>	<label for="r20" class="ident">m</label>.<a href="#line-28" class="ident">credentialsListeners</a>.<a href="cred_listeners.go.html#line-73" class="ident">Remove</a>(<label for="r22" class="ident">connID</label>)</code></span>
+<span class="codeline" id="line-137"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
