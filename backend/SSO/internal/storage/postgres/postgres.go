@@ -57,7 +57,7 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channe
 			query.WriteString(",")
 		}
 		fmt.Fprintf(&query, "($%d, $%d)", i*channelsArgMultiplier+1, i*channelsArgMultiplier+channelsArgMultiplier)
-		args = append(args, userID, channel)
+		args = append(args, user_id, channel)
 	}
 
 	query.WriteString(" ON CONFLICT (user_id, channel_username) DO NOTHING")
@@ -219,6 +219,7 @@ func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 	}
 	return app, nil
 }
+
 // isDuplicateError checks if a database error is a unique constraint violation.
 func isDuplicateError(err error) bool {
 	var pqErr *pq.Error
