@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/klauspost/compress/fse</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>fse</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-github.com/klauspost/compress/fse">github.com/klauspost/compress/fse</a><i> (on <a href="https://pkg.go.dev/github.com/klauspost/compress/fse" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/github.com/klauspost/compress/fse.html">5 packages</a>, and imported by <a href="../../../../dep/github.com/klauspost/compress/fse.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html">bitreader.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html">bitwriter.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html">bytereader.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html">compress.go</a></span>
+	<span class="nodocs">    <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html">decompress.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-5-fold-content"><label for="file-5-fold-content">  <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#doc">d</a> <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html">fse.go</a></label><span id='file-5-fold-content-items' class="fold-items">
+<span class="md-text">		Package fse provides Finite State Entropy encoding and decoding.
+		
+		Finite State Entropy encoding provides a fast near-optimal symbol encoding/decoding
+		for byte blocks as implemented in zstd.
+		
+		See https://github.com/klauspost/compress/tree/master/fse for more information.</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 9, in which 1 is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Scratch" data-popularity="995">	<input type='checkbox' class="fold" id="Scratch-fold-content"><label for="Scratch-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-45">Scratch</a> <i>(struct)</i></label><span id='Scratch-fold-content-docs' class="fold-docs">
+<span class="md-text">		Scratch provides temporary storage for compression and decompression.</span>
+
+		<input type='checkbox' class="fold" id="Scratch-fold-fields"><label for="Scratch-fold-fields">Fields (<i>total 16, in which 4 are exported</i>)</label><span id='Scratch-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-DecompressLimit"><label for="Scratch-fold-field-DecompressLimit"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-71">DecompressLimit</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Scratch-fold-field-DecompressLimit-docs' class="fold-docs">
+<span class="md-text">				DecompressLimit limits the maximum decoded size acceptable.
+				If &gt; 0 decompression will stop when approximately this many bytes
+				has been decoded.
+				If 0, maximum size will be 2GB.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-MaxSymbolValue"><label for="Scratch-fold-field-MaxSymbolValue"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-79">MaxSymbolValue</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></label><span id='Scratch-fold-field-MaxSymbolValue-docs' class="fold-docs">
+<span class="md-text">				MaxSymbolValue will override the maximum symbol value of the next block.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-Out"><label for="Scratch-fold-field-Out"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-65">Out</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></label><span id='Scratch-fold-field-Out-docs' class="fold-docs">
+<span class="md-text">				Out is output buffer.
+				If the scratch is re-used before the caller is done processing the output,
+				set this field to nil.
+				Otherwise the output buffer will be re-used for next Compression/Decompression step
+				and allocation will be avoided.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-TableLog"><label for="Scratch-fold-field-TableLog"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-82">TableLog</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></label><span id='Scratch-fold-field-TableLog-docs' class="fold-docs">
+<span class="md-text">				TableLog will attempt to override the tablelog for the next block.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Scratch-showhide-fields"><i><label for="Scratch-showhide-fields" class="show-inline">/* 12 unexporteds ... */</label><label for="Scratch-showhide-fields" class="hide-inline">/* 12 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-actualTableLog"><label for="Scratch-fold-field-actualTableLog"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-74">actualTableLog</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></label><span id='Scratch-fold-field-actualTableLog-docs' class="fold-docs">
+<span class="md-text">				// Selected tablelog.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-50">bits</a> <i><a href="#name-bitReader">bitReader</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-49">br</a> <i><a href="#name-byteReader">byteReader</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-51">bw</a> <i><a href="#name-bitWriter">bitWriter</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-clearCount"><label for="Scratch-fold-field-clearCount"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-76">clearCount</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></label><span id='Scratch-fold-field-clearCount-docs' class="fold-docs">
+<span class="md-text">				// clear count</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-count"><label for="Scratch-fold-field-count"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-47">count</a> <i>[256]<a href="../../../builtin.html#name-uint32">uint32</a></i></label><span id='Scratch-fold-field-count-docs' class="fold-docs">
+<span class="md-text">				Private</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-ct"><label for="Scratch-fold-field-ct"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-52">ct</a> <i><a href="#name-cTable">cTable</a></i></label><span id='Scratch-fold-field-ct-docs' class="fold-docs">
+<span class="md-text">				// Compression tables.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-decTable"><label for="Scratch-fold-field-decTable"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-53">decTable</a> <i>[]<a href="#name-decSymbol">decSymbol</a></i></label><span id='Scratch-fold-field-decTable-docs' class="fold-docs">
+<span class="md-text">				// Decompression table.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-maxCount"><label for="Scratch-fold-field-maxCount"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-54">maxCount</a> <i><a href="../../../builtin.html#name-int">int</a></i></label><span id='Scratch-fold-field-maxCount-docs' class="fold-docs">
+<span class="md-text">				// count of the most probable symbol</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-48">norm</a> <i>[256]<a href="../../../builtin.html#name-int16">int16</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-symbolLen"><label for="Scratch-fold-field-symbolLen"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-73">symbolLen</a> <i><a href="../../../builtin.html#name-uint16">uint16</a></i></label><span id='Scratch-fold-field-symbolLen-docs' class="fold-docs">
+<span class="md-text">				// Length of active part of the symbol table.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-field-zeroBits"><label for="Scratch-fold-field-zeroBits"><a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-75">zeroBits</a> <i><a href="../../../builtin.html#name-bool">bool</a></i></label><span id='Scratch-fold-field-zeroBits-docs' class="fold-docs">
+<span class="md-text">				// no bits has prob &gt; 50%.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Scratch-fold-methods"><label for="Scratch-fold-methods">Methods (<i>total 17, in which 2 are exported</i>)</label><span id='Scratch-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-Histogram"><label for="Scratch-fold-method-Histogram">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-91">Histogram</a>() []<a href="../../../builtin.html#name-uint32">uint32</a></label><span id='Scratch-fold-method-Histogram-docs' class="fold-docs">
+<span class="md-text">				Histogram allows to populate the histogram and skip that step in the compression,
+				It otherwise allows to inspect the histogram when compression is done.
+				To indicate that you have populated the histogram call HistogramFinished
+				with the value of the highest populated symbol, as well as the number of entries
+				in the most populated entry. These are accepted at face value.
+				The returned slice will always be length 256.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-HistogramFinished"><label for="Scratch-fold-method-HistogramFinished">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-99">HistogramFinished</a>(maxSymbol <a href="../../../builtin.html#name-uint8">uint8</a>, maxCount <a href="../../../builtin.html#name-int">int</a>)</label><span id='Scratch-fold-method-HistogramFinished-docs' class="fold-docs">
+<span class="md-text">				HistogramFinished can be called to indicate that the histogram has been populated.
+				maxSymbol is the index of the highest set symbol of the next data segment.
+				maxCount is the number of entries in the most populated entry.
+				These are accepted at face value.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Scratch-showhide-methods"><i><label for="Scratch-showhide-methods" class="show-inline">/* 15 unexporteds ... */</label><label for="Scratch-showhide-methods" class="hide-inline">/* 15 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-allocCtable"><label for="Scratch-fold-method-allocCtable">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-330">allocCtable</a>()</label><span id='Scratch-fold-method-allocCtable-docs' class="fold-docs">
+<span class="md-text">				allocCtable will allocate tables needed for compression.
+				If existing tables a re big enough, they are simply re-used.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-allocDtable"><label for="Scratch-fold-method-allocDtable">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-173">allocDtable</a>()</label><span id='Scratch-fold-method-allocDtable-docs' class="fold-docs">
+<span class="md-text">				allocDtable will allocate decoding tables if they are not big enough.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-buildCTable"><label for="Scratch-fold-method-buildCTable">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-351">buildCTable</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-buildCTable-docs' class="fold-docs">
+<span class="md-text">				buildCTable will populate the compression table so it is ready to be used.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-buildDtable"><label for="Scratch-fold-method-buildDtable">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-192">buildDtable</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-buildDtable-docs' class="fold-docs">
+<span class="md-text">				buildDtable will build the decoding table.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-compress"><label for="Scratch-fold-method-compress">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-121">compress</a>(src []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-compress-docs' class="fold-docs">
+<span class="md-text">				compress is the main compression loop that will encode the input from the last byte to the first.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-countSimple"><label for="Scratch-fold-method-countSimple">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-458">countSimple</a>(in []<a href="../../../builtin.html#name-byte">byte</a>) (max <a href="../../../builtin.html#name-int">int</a>)</label><span id='Scratch-fold-method-countSimple-docs' class="fold-docs">
+<span class="md-text">				countSimple will create a simple histogram in s.count.
+				Returns the biggest count.
+				Does not update s.clearCount.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-decompress"><label for="Scratch-fold-method-decompress">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-261">decompress</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-decompress-docs' class="fold-docs">
+<span class="md-text">				decompress will decompress the bitstream.
+				If the buffer is over-read an error is returned.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-minTableLog"><label for="Scratch-fold-method-minTableLog">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-475">minTableLog</a>() <a href="../../../builtin.html#name-uint8">uint8</a></label><span id='Scratch-fold-method-minTableLog-docs' class="fold-docs">
+<span class="md-text">				minTableLog provides the minimum logSize to safely represent a distribution.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-normalizeCount"><label for="Scratch-fold-method-normalizeCount">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-510">normalizeCount</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-normalizeCount-docs' class="fold-docs">
+<span class="md-text">				normalizeCount will normalize the count of the symbols so
+				the total is equal to the table size.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-normalizeCount2"><label for="Scratch-fold-method-normalizeCount2">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-561">normalizeCount2</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-normalizeCount2-docs' class="fold-docs">
+<span class="md-text">				Secondary normalization method.
+				To be used when primary method fails.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-optimalTableLog"><label for="Scratch-fold-method-optimalTableLog">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-485">optimalTableLog</a>()</label><span id='Scratch-fold-method-optimalTableLog-docs' class="fold-docs">
+<span class="md-text">				optimalTableLog calculates and sets the optimal tableLog in s.actualTableLog</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-prepare"><label for="Scratch-fold-method-prepare">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-106">prepare</a>(in []<a href="../../../builtin.html#name-byte">byte</a>) (*<b>Scratch</b>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Scratch-fold-method-prepare-docs' class="fold-docs">
+<span class="md-text">				prepare will prepare and allocate scratch tables used for both compression and decompression.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-readNCount"><label for="Scratch-fold-method-readNCount">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-42">readNCount</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-readNCount-docs' class="fold-docs">
+<span class="md-text">				readNCount will read the symbol distribution so decoding tables can be constructed.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-validateNorm"><label for="Scratch-fold-method-validateNorm">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-656">validateNorm</a>() (err <a href="../../../builtin.html#name-error">error</a>)</label><span id='Scratch-fold-method-validateNorm-docs' class="fold-docs">
+<span class="md-text">				validateNorm validates the normalized histogram table.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Scratch-fold-method-writeCount"><label for="Scratch-fold-method-writeCount">(*Scratch) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-210">writeCount</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='Scratch-fold-method-writeCount-docs' class="fold-docs">
+<span class="md-text">				writeCount will write the normalized histogram count to header.
+				This is read back by readNCount.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Scratch-fold-results"><label for="Scratch-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='Scratch-fold-results-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Scratch-showhide-inputofs"><i><label for="Scratch-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="Scratch-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func (*Scratch).<a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-106">prepare</a>(in []<a href="../../../builtin.html#name-byte">byte</a>) (*<b>Scratch</b>, <a href="../../../builtin.html#name-error">error</a>)</i></span></span>
+		<input type='checkbox' class="fold" id="Scratch-fold-params"><label for="Scratch-fold-params">As Inputs Of (<i>at least 2, both are exported</i>)</label><span id='Scratch-fold-params-items' class="fold-items"><span>
+			func <a href="#name-Compress">Compress</a>(in []<a href="../../../builtin.html#name-byte">byte</a>, s *<b>Scratch</b>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</span><span>
+			func <a href="#name-Decompress">Decompress</a>(b []<a href="../../../builtin.html#name-byte">byte</a>, s *<b>Scratch</b>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 8 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 8 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-bitReader" data-popularity="400">	<input type='checkbox' class="fold" id="bitReader-fold-content"><label for="bitReader-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-17">bitReader</a> <i>(struct)</i></label><span id='bitReader-fold-content-docs' class="fold-docs">
+<span class="md-text">		bitReader reads a bitstream in reverse.
+		The last set bit indicates the start of the stream and is used
+		for aligning the input.</span>
+
+		<input type='checkbox' class="fold" id="bitReader-fold-fields"><label for="bitReader-fold-fields">Fields (<i>total 4, none are exported</i>)</label><span id='bitReader-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="bitReader-showhide-fields"><i><label for="bitReader-showhide-fields" class="show-inline">/* 4 unexporteds ... */</label><label for="bitReader-showhide-fields" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-21">bitsRead</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-18">in</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-field-off"><label for="bitReader-fold-field-off"><a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-19">off</a> <i><a href="../../../builtin.html#name-uint">uint</a></i></label><span id='bitReader-fold-field-off-docs' class="fold-docs">
+<span class="md-text">				// next byte to read is at in[off - 1]</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-20">value</a> <i><a href="../../../builtin.html#name-uint64">uint64</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="bitReader-fold-methods"><label for="bitReader-fold-methods">Methods (<i>total 8, none are exported</i>)</label><span id='bitReader-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="bitReader-showhide-methods"><i><label for="bitReader-showhide-methods" class="show-inline">/* 8 unexporteds ... */</label><label for="bitReader-showhide-methods" class="hide-inline">/* 8 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-close"><label for="bitReader-fold-method-close">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-115">close</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='bitReader-fold-method-close-docs' class="fold-docs">
+<span class="md-text">				close the bitstream and returns an error if out-of-buffer reads occurred.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-fill"><label for="bitReader-fold-method-fill">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-81">fill</a>()</label><span id='bitReader-fold-method-fill-docs' class="fold-docs">
+<span class="md-text">				fill() will make sure at least 32 bits are available.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-fillFast"><label for="bitReader-fold-method-fillFast">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-67">fillFast</a>()</label><span id='bitReader-fold-method-fillFast-docs' class="fold-docs">
+<span class="md-text">				fillFast() will make sure at least 32 bits are available.
+				There must be at least 4 bytes available.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-fillFastStart"><label for="bitReader-fold-method-fillFastStart">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-102">fillFastStart</a>()</label><span id='bitReader-fold-method-fillFastStart-docs' class="fold-docs">
+<span class="md-text">				fillFastStart() assumes the bitreader is empty and there is at least 8 bytes to read.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-finished"><label for="bitReader-fold-method-finished">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-110">finished</a>() <a href="../../../builtin.html#name-bool">bool</a></label><span id='bitReader-fold-method-finished-docs' class="fold-docs">
+<span class="md-text">				finished returns true if all bits have been read from the bit stream.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-getBits"><label for="bitReader-fold-method-getBits">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-49">getBits</a>(n <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint16">uint16</a></label><span id='bitReader-fold-method-getBits-docs' class="fold-docs">
+<span class="md-text">				getBits will return n bits. n can be 0.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-getBitsFast"><label for="bitReader-fold-method-getBitsFast">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-58">getBitsFast</a>(n <a href="../../../builtin.html#name-uint8">uint8</a>) <a href="../../../builtin.html#name-uint16">uint16</a></label><span id='bitReader-fold-method-getBitsFast-docs' class="fold-docs">
+<span class="md-text">				getBitsFast requires that at least one bit is requested every time.
+				There are no checks if the buffer is filled.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitReader-fold-method-init"><label for="bitReader-fold-method-init">(*bitReader) <a href="../../../../src/github.com/klauspost/compress/fse/bitreader.go.html#line-25">init</a>(in []<a href="../../../builtin.html#name-byte">byte</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='bitReader-fold-method-init-docs' class="fold-docs">
+<span class="md-text">				init initializes and resets the bit reader.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-bitWriter" data-popularity="400">	<input type='checkbox' class="fold" id="bitWriter-fold-content"><label for="bitWriter-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-12">bitWriter</a> <i>(struct)</i></label><span id='bitWriter-fold-content-docs' class="fold-docs">
+<span class="md-text">		bitWriter will write bits.
+		First bit will be LSB of the first byte of output.</span>
+
+		<input type='checkbox' class="fold" id="bitWriter-fold-fields"><label for="bitWriter-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='bitWriter-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="bitWriter-showhide-fields"><i><label for="bitWriter-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="bitWriter-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-13">bitContainer</a> <i><a href="../../../builtin.html#name-uint64">uint64</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-14">nBits</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-15">out</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="bitWriter-fold-methods"><label for="bitWriter-fold-methods">Methods (<i>total 8, none are exported</i>)</label><span id='bitWriter-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="bitWriter-showhide-methods"><i><label for="bitWriter-showhide-methods" class="show-inline">/* 8 unexporteds ... */</label><label for="bitWriter-showhide-methods" class="hide-inline">/* 8 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-addBits16Clean"><label for="bitWriter-fold-method-addBits16Clean">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-36">addBits16Clean</a>(value <a href="../../../builtin.html#name-uint16">uint16</a>, bits <a href="../../../builtin.html#name-uint8">uint8</a>)</label><span id='bitWriter-fold-method-addBits16Clean-docs' class="fold-docs">
+<span class="md-text">				addBits16Clean will add up to 16 bits. value may not contain more set bits than indicated.
+				It will not check if there is space for them, so the caller must ensure that it has flushed recently.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-addBits16NC"><label for="bitWriter-fold-method-addBits16NC">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-29">addBits16NC</a>(value <a href="../../../builtin.html#name-uint16">uint16</a>, bits <a href="../../../builtin.html#name-uint8">uint8</a>)</label><span id='bitWriter-fold-method-addBits16NC-docs' class="fold-docs">
+<span class="md-text">				addBits16NC will add up to 16 bits.
+				It will not check if there is space for them,
+				so the caller must ensure that it has flushed recently.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-addBits16ZeroNC"><label for="bitWriter-fold-method-addBits16ZeroNC">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-45">addBits16ZeroNC</a>(value <a href="../../../builtin.html#name-uint16">uint16</a>, bits <a href="../../../builtin.html#name-uint8">uint8</a>)</label><span id='bitWriter-fold-method-addBits16ZeroNC-docs' class="fold-docs">
+<span class="md-text">				addBits16ZeroNC will add up to 16 bits.
+				It will not check if there is space for them,
+				so the caller must ensure that it has flushed recently.
+				This is fastest if bits can be zero.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-close"><label for="bitWriter-fold-method-close">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-155">close</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='bitWriter-fold-method-close-docs' class="fold-docs">
+<span class="md-text">				close will write the alignment bit and write the final byte(s)
+				to the output.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-flush"><label for="bitWriter-fold-method-flush">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-58">flush</a>()</label><span id='bitWriter-fold-method-flush-docs' class="fold-docs">
+<span class="md-text">				flush will flush all pending full bytes.
+				There will be at least 56 bits available for writing when this has been called.
+				Using flush32 is faster, but leaves less space for writing.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-flush32"><label for="bitWriter-fold-method-flush32">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-130">flush32</a>()</label><span id='bitWriter-fold-method-flush32-docs' class="fold-docs">
+<span class="md-text">				flush32 will flush out, so there are at least 32 bits available for writing.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-flushAlign"><label for="bitWriter-fold-method-flushAlign">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-144">flushAlign</a>()</label><span id='bitWriter-fold-method-flushAlign-docs' class="fold-docs">
+<span class="md-text">				flushAlign will flush remaining full bytes and align to next byte boundary.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="bitWriter-fold-method-reset"><label for="bitWriter-fold-method-reset">(*bitWriter) <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-164">reset</a>(out []<a href="../../../builtin.html#name-byte">byte</a>)</label><span id='bitWriter-fold-method-reset-docs' class="fold-docs">
+<span class="md-text">				reset and continue writing by appending to out.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-byteReader" data-popularity="250">	<input type='checkbox' class="fold" id="byteReader-fold-content"><label for="byteReader-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-12">byteReader</a> <i>(struct)</i></label><span id='byteReader-fold-content-docs' class="fold-docs">
+<span class="md-text">		byteReader provides a byte reader that reads
+		little endian values from a byte stream.
+		The input stream is manually advanced.
+		The reader performs no bounds checks.</span>
+
+		<input type='checkbox' class="fold" id="byteReader-fold-fields"><label for="byteReader-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='byteReader-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="byteReader-showhide-fields"><i><label for="byteReader-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="byteReader-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-13">b</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-14">off</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="byteReader-fold-methods"><label for="byteReader-fold-methods">Methods (<i>total 5, in which 1 is exported</i>)</label><span id='byteReader-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="byteReader-fold-method-Uint32"><label for="byteReader-fold-method-Uint32">( byteReader) <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-29">Uint32</a>() <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='byteReader-fold-method-Uint32-docs' class="fold-docs">
+<span class="md-text">				Uint32 returns a little endian uint32 starting at current offset.</span>
+</span></span>
+			<input type='checkbox' checked class="showhide" id="byteReader-showhide-methods"><i><label for="byteReader-showhide-methods" class="show-inline">/* 4 unexporteds ... */</label><label for="byteReader-showhide-methods" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="byteReader-fold-method-advance"><label for="byteReader-fold-method-advance">(*byteReader) <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-24">advance</a>(n <a href="../../../builtin.html#name-uint">uint</a>)</label><span id='byteReader-fold-method-advance-docs' class="fold-docs">
+<span class="md-text">				advance the stream b n bytes.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="byteReader-fold-method-init"><label for="byteReader-fold-method-init">(*byteReader) <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-18">init</a>(in []<a href="../../../builtin.html#name-byte">byte</a>)</label><span id='byteReader-fold-method-init-docs' class="fold-docs">
+<span class="md-text">				init will initialize the reader and set the input.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="byteReader-fold-method-remain"><label for="byteReader-fold-method-remain">( byteReader) <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-45">remain</a>() <a href="../../../builtin.html#name-int">int</a></label><span id='byteReader-fold-method-remain-docs' class="fold-docs">
+<span class="md-text">				remain will return the number of bytes remaining.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="byteReader-fold-method-unread"><label for="byteReader-fold-method-unread">( byteReader) <a href="../../../../src/github.com/klauspost/compress/fse/bytereader.go.html#line-40">unread</a>() []<a href="../../../builtin.html#name-byte">byte</a></label><span id='byteReader-fold-method-unread-docs' class="fold-docs">
+<span class="md-text">				unread returns the unread portion of the input.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-cState" data-popularity="200">	<input type='checkbox' class="fold" id="cState-fold-content"><label for="cState-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-80">cState</a> <i>(struct)</i></label><span id='cState-fold-content-docs' class="fold-docs">
+<span class="md-text">		cState contains the compression state of a stream.</span>
+
+		<input type='checkbox' class="fold" id="cState-fold-fields"><label for="cState-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='cState-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="cState-showhide-fields"><i><label for="cState-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="cState-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-81">bw</a> <i>*<a href="#name-bitWriter">bitWriter</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-83">state</a> <i><a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-82">stateTable</a> <i>[]<a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="cState-fold-methods"><label for="cState-fold-methods">Methods (<i>total 4, none are exported</i>)</label><span id='cState-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="cState-showhide-methods"><i><label for="cState-showhide-methods" class="show-inline">/* 4 unexporteds ... */</label><label for="cState-showhide-methods" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cState-fold-method-encode"><label for="cState-fold-method-encode">(*cState) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-98">encode</a>(symbolTT <a href="#name-symbolTransform">symbolTransform</a>)</label><span id='cState-fold-method-encode-docs' class="fold-docs">
+<span class="md-text">				encode the output symbol provided and write it to the bitstream.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cState-fold-method-encodeZero"><label for="cState-fold-method-encodeZero">(*cState) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-106">encodeZero</a>(symbolTT <a href="#name-symbolTransform">symbolTransform</a>)</label><span id='cState-fold-method-encodeZero-docs' class="fold-docs">
+<span class="md-text">				encode the output symbol provided and write it to the bitstream.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cState-fold-method-flush"><label for="cState-fold-method-flush">(*cState) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-114">flush</a>(tableLog <a href="../../../builtin.html#name-uint8">uint8</a>)</label><span id='cState-fold-method-flush-docs' class="fold-docs">
+<span class="md-text">				flush will write the tablelog to the output and flush the remaining full bytes.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="cState-fold-method-init"><label for="cState-fold-method-init">(*cState) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-87">init</a>(bw *<a href="#name-bitWriter">bitWriter</a>, ct *<a href="#name-cTable">cTable</a>, tableLog <a href="../../../builtin.html#name-uint8">uint8</a>, first <a href="#name-symbolTransform">symbolTransform</a>)</label><span id='cState-fold-method-init-docs' class="fold-docs">
+<span class="md-text">				init will initialize the compression state to the first symbol of the stream.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-cTable" data-popularity="0">	<input type='checkbox' class="fold" id="cTable-fold-content"><label for="cTable-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-322">cTable</a> <i>(struct)</i></label><span id='cTable-fold-content-docs' class="fold-docs">
+<span class="md-text">		cTable contains tables used for compression.</span>
+
+		<input type='checkbox' class="fold" id="cTable-fold-fields"><label for="cTable-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='cTable-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="cTable-showhide-fields"><i><label for="cTable-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="cTable-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-324">stateTable</a> <i>[]<a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-325">symbolTT</a> <i>[]<a href="#name-symbolTransform">symbolTransform</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-323">tableSymbol</a> <i>[]<a href="../../../builtin.html#name-byte">byte</a></i></span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-decoder" data-popularity="250">	<input type='checkbox' class="fold" id="decoder-fold-content"><label for="decoder-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-333">decoder</a> <i>(struct)</i></label><span id='decoder-fold-content-docs' class="fold-docs">
+<span class="md-text">		decoder keeps track of the current state and updates it from the bitstream.</span>
+
+		<input type='checkbox' class="fold" id="decoder-fold-fields"><label for="decoder-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='decoder-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="decoder-showhide-fields"><i><label for="decoder-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="decoder-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-335">br</a> <i>*<a href="#name-bitReader">bitReader</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-336">dt</a> <i>[]<a href="#name-decSymbol">decSymbol</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-334">state</a> <i><a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="decoder-fold-methods"><label for="decoder-fold-methods">Methods (<i>total 5, none are exported</i>)</label><span id='decoder-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="decoder-showhide-methods"><i><label for="decoder-showhide-methods" class="show-inline">/* 5 unexporteds ... */</label><label for="decoder-showhide-methods" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="decoder-fold-method-final"><label for="decoder-fold-method-final">(*decoder) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-362">final</a>() <a href="../../../builtin.html#name-uint8">uint8</a></label><span id='decoder-fold-method-final-docs' class="fold-docs">
+<span class="md-text">				final returns the current state symbol without decoding the next.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="decoder-fold-method-finished"><label for="decoder-fold-method-finished">(*decoder) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-357">finished</a>() <a href="../../../builtin.html#name-bool">bool</a></label><span id='decoder-fold-method-finished-docs' class="fold-docs">
+<span class="md-text">				finished returns true if all bits have been read from the bitstream
+				and the next state would require reading bits from the input.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="decoder-fold-method-init"><label for="decoder-fold-method-init">(*decoder) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-340">init</a>(in *<a href="#name-bitReader">bitReader</a>, dt []<a href="#name-decSymbol">decSymbol</a>, tableLog <a href="../../../builtin.html#name-uint8">uint8</a>)</label><span id='decoder-fold-method-init-docs' class="fold-docs">
+<span class="md-text">				init will initialize the decoder and read the first state from the stream.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="decoder-fold-method-next"><label for="decoder-fold-method-next">(*decoder) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-348">next</a>() <a href="../../../builtin.html#name-uint8">uint8</a></label><span id='decoder-fold-method-next-docs' class="fold-docs">
+<span class="md-text">				next returns the next symbol and sets the next state.
+				At least tablelog bits must be available in the bit reader.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="decoder-fold-method-nextFast"><label for="decoder-fold-method-nextFast">(*decoder) <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-369">nextFast</a>() <a href="../../../builtin.html#name-uint8">uint8</a></label><span id='decoder-fold-method-nextFast-docs' class="fold-docs">
+<span class="md-text">				nextFast returns the next symbol and sets the next state.
+				This can only be used if no symbols are 0 bits.
+				At least tablelog bits must be available in the bit reader.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-decSymbol" data-popularity="0">	<input type='checkbox' class="fold" id="decSymbol-fold-content"><label for="decSymbol-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-166">decSymbol</a> <i>(struct)</i></label><span id='decSymbol-fold-content-docs' class="fold-docs">
+<span class="md-text">		decSymbol contains information about a state entry,
+		Including the state offset base, the output symbol and
+		the number of bits to read for the low part of the destination state.</span>
+
+		<input type='checkbox' class="fold" id="decSymbol-fold-fields"><label for="decSymbol-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='decSymbol-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="decSymbol-showhide-fields"><i><label for="decSymbol-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="decSymbol-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-169">nbBits</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-167">newState</a> <i><a href="../../../builtin.html#name-uint16">uint16</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-168">symbol</a> <i><a href="../../../builtin.html#name-uint8">uint8</a></i></span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-symbolTransform" data-popularity="250">	<input type='checkbox' class="fold" id="symbolTransform-fold-content"><label for="symbolTransform-fold-content"> type <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-311">symbolTransform</a> <i>(struct)</i></label><span id='symbolTransform-fold-content-docs' class="fold-docs">
+<span class="md-text">		symbolTransform contains the state transform for a symbol.</span>
+
+		<input type='checkbox' class="fold" id="symbolTransform-fold-fields"><label for="symbolTransform-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='symbolTransform-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="symbolTransform-showhide-fields"><i><label for="symbolTransform-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="symbolTransform-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-312">deltaFindState</a> <i><a href="../../../builtin.html#name-int32">int32</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-313">deltaNbBits</a> <i><a href="../../../builtin.html#name-uint32">uint32</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="symbolTransform-fold-methods"><label for="symbolTransform-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='symbolTransform-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="symbolTransform-fold-method-String"><label for="symbolTransform-fold-method-String">( symbolTransform) <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-317">String</a>() <a href="../../../builtin.html#name-string">string</a></label><span id='symbolTransform-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String prints values as a human readable string.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="symbolTransform-fold-impls"><label for="symbolTransform-fold-impls">Implements (<i>at least 4, in which 1 is exported</i>)</label><span id='symbolTransform-fold-impls-items' class="fold-items"><span>
+			 symbolTransform : fmt.<a href="../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="symbolTransform-showhide-impls"><i><label for="symbolTransform-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="symbolTransform-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 symbolTransform : context.<a href="../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 symbolTransform : os/signal.<a href="../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 symbolTransform : runtime.<a href="../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 4, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-Compress">	<input type='checkbox' class="fold" id="Compress-fold-content"><label for="Compress-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-18">Compress</a>(in []<a href="../../../builtin.html#name-byte">byte</a>, s *<a href="#name-Scratch">Scratch</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Compress-fold-content-docs' class="fold-docs">
+<span class="md-text">		Compress the input bytes. Input must be &lt; 2GB.
+		Provide a Scratch buffer to avoid memory allocations.
+		Note that the output is also kept in the scratch buffer.
+		If input is too hard to compress, ErrIncompressible is returned.
+		If input is a single byte value repeated ErrUseRLE is returned.</span>
+
+</span></div><div class="anchor value-res" id="name-Decompress">	<input type='checkbox' class="fold" id="Decompress-fold-content"><label for="Decompress-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-19">Decompress</a>(b []<a href="../../../builtin.html#name-byte">byte</a>, s *<a href="#name-Scratch">Scratch</a>) ([]<a href="../../../builtin.html#name-byte">byte</a>, <a href="../../../builtin.html#name-error">error</a>)</label><span id='Decompress-fold-content-docs' class="fold-docs">
+<span class="md-text">		Decompress a block of data.
+		You can provide a scratch buffer to avoid allocations.
+		If nil is provided a temporary one will be allocated.
+		It is possible, but by no way guaranteed that corrupt data will
+		return an error.
+		It is up to the caller to verify integrity of the returned data.
+		Use a predefined Scrach to set maximum acceptable output size.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-highBits"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-142">highBits</a>(val <a href="../../../builtin.html#name-uint32">uint32</a>) (n <a href="../../../builtin.html#name-uint32">uint32</a>)</span></i></div><div class="anchor value-res hidden" id="name-tableStep"><i>	<input type='checkbox' class="fold" id="tableStep-fold-content"><label for="tableStep-fold-content"> func <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-138">tableStep</a>(tableSize <a href="../../../builtin.html#name-uint32">uint32</a>) <a href="../../../builtin.html#name-uint32">uint32</a></label><span id='tableStep-fold-content-docs' class="fold-docs">
+<span class="md-text">		tableStep returns the next table index.</span>
+
+</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 4, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ErrIncompressible">	<input type='checkbox' class="fold" id="ErrIncompressible-fold-content"><label for="ErrIncompressible-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-38">ErrIncompressible</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrIncompressible-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrIncompressible is returned when input is judged to be too hard to compress.</span>
+
+</span></div><div class="anchor value-res" id="name-ErrUseRLE">	<input type='checkbox' class="fold" id="ErrUseRLE-fold-content"><label for="ErrUseRLE-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-41">ErrUseRLE</a> <a href="../../../builtin.html#name-error">error</a></label><span id='ErrUseRLE-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrUseRLE is returned from the compressor when the input is a single byte value repeated.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-bitMask16"><i>	<input type='checkbox' class="fold" id="bitMask16-fold-content"><label for="bitMask16-fold-content">  var <a href="../../../../src/github.com/klauspost/compress/fse/bitwriter.go.html#line-19">bitMask16</a> [32]<a href="../../../builtin.html#name-uint16">uint16</a> // <span class="md-text">up to 16 bits</span></label><span id='bitMask16-fold-content-docs' class="fold-docs">
+<span class="md-text">		bitMask16 is bitmasks. Has extra to avoid bounds check.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-rtbTable"><i>	<span class="nodocs">  var <a href="../../../../src/github.com/klauspost/compress/fse/compress.go.html#line-506">rtbTable</a> [8]<a href="../../../builtin.html#name-uint32">uint32</a></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 8, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 8 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 8 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-defaultMemoryUsage"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-27">defaultMemoryUsage</a> = 13</span></i></div><div class="anchor value-res hidden" id="name-defaultTablelog"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-31">defaultTablelog</a> = 11</span></i></div><div class="anchor value-res hidden" id="name-maxMemoryUsage"><i>	<input type='checkbox' class="fold" id="maxMemoryUsage-fold-content"><label for="maxMemoryUsage-fold-content">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-26">maxMemoryUsage</a> = 14</label><span id='maxMemoryUsage-fold-content-docs' class="fold-docs">
+<span class="md-text">		!MEMORY_USAGE :
+			 *  Memory usage formula : N-&gt;2^N Bytes (examples : 10 -&gt; 1KB; 12 -&gt; 4KB ; 16 -&gt; 64KB; 20 -&gt; 1MB; etc.)
+			 *  Increasing memory usage improves compression ratio
+			 *  Reduced memory usage can improve speed, due to cache effect
+			 *  Recommended max value is 14, for 16KB, which nicely fits into Intel x86 L1 cache</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-maxSymbolValue"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-33">maxSymbolValue</a> = 255</span></i></div><div class="anchor value-res hidden" id="name-maxTableLog"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-29">maxTableLog</a> = 12</span></i></div><div class="anchor value-res hidden" id="name-maxTablesize"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-30">maxTablesize</a> = 4096</span></i></div><div class="anchor value-res hidden" id="name-minTablelog"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/fse.go.html#line-32">minTablelog</a> = 5</span></i></div><div class="anchor value-res hidden" id="name-tablelogAbsoluteMax"><i>	<span class="nodocs">const <a href="../../../../src/github.com/klauspost/compress/fse/decompress.go.html#line-9">tablelogAbsoluteMax</a> = 15</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

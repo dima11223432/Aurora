@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>httprule</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../../index.html#pkg-github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule">github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule</a><i> (on <a href="https://pkg.go.dev/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../../dep/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule.html">4 packages</a>, and imported by <a href="../../../../../../dep/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html">compile.go</a></span>
+	<span class="nodocs">    <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html">parse.go</a></span>
+	<span class="nodocs">    <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html">types.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 12, in which 3 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Compiler" data-popularity="275">	<input type='checkbox' class="fold" id="Compiler-fold-content"><label for="Compiler-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-29">Compiler</a> <b><i>(interface)</i></b></label><span id='Compiler-fold-content-docs' class="fold-docs">
+<span class="md-text">		Compiler compiles utilities representation of path templates into marshallable operations.
+		They can be unmarshalled by runtime.NewPattern.</span>
+
+		<input type='checkbox' class="fold" id="Compiler-fold-methods"><label for="Compiler-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='Compiler-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( Compiler) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-30">Compile</a>() <a href="#name-Template">Template</a></span></span></span>
+		<input type='checkbox' class="fold" id="Compiler-fold-impledby"><label for="Compiler-fold-impledby">Implemented By (<i>at least one unexported</i>)</label><span id='Compiler-fold-impledby-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Compiler-showhide-impedBys"><i><label for="Compiler-showhide-impedBys" class="show-inline">/* at least one unexported ... */</label><label for="Compiler-showhide-impedBys" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			 <a href="#name-template">template</a></i></span></span>
+		<input type='checkbox' class="fold" id="Compiler-fold-results"><label for="Compiler-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Compiler-fold-results-items' class="fold-items"><span>
+			func <a href="#name-Parse">Parse</a>(tmpl <a href="../../../../../builtin.html#name-string">string</a>) (<b>Compiler</b>, <a href="../../../../../builtin.html#name-error">error</a>)</span></span>
+
+</span></div><div class="anchor type-res" id="name-InvalidTemplateError" data-popularity="100">	<input type='checkbox' class="fold" id="InvalidTemplateError-fold-content"><label for="InvalidTemplateError-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-10">InvalidTemplateError</a> <i>(struct)</i></label><span id='InvalidTemplateError-fold-content-docs' class="fold-docs">
+<span class="md-text">		InvalidTemplateError indicates that the path template is not valid.</span>
+
+		<input type='checkbox' class="fold" id="InvalidTemplateError-fold-fields"><label for="InvalidTemplateError-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='InvalidTemplateError-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="InvalidTemplateError-showhide-fields"><i><label for="InvalidTemplateError-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="InvalidTemplateError-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-12">msg</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-11">tmpl</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="InvalidTemplateError-fold-methods"><label for="InvalidTemplateError-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='InvalidTemplateError-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( InvalidTemplateError) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-15">Error</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="InvalidTemplateError-fold-impls"><label for="InvalidTemplateError-fold-impls">Implements (<i>at least one exported</i>)</label><span id='InvalidTemplateError-fold-impls-items' class="fold-items"><span>
+			 InvalidTemplateError : <a href="../../../../../builtin.html#name-error">error</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Template" data-popularity="75">	<input type='checkbox' class="fold" id="Template-fold-content"><label for="Template-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-12">Template</a> <i>(struct)</i></label><span id='Template-fold-content-docs' class="fold-docs">
+<span class="md-text">		Template is a compiled representation of path templates.</span>
+
+		<input type='checkbox' class="fold" id="Template-fold-fields"><label for="Template-fold-fields">Fields (<i>total 6, all are exported</i>)</label><span id='Template-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Template-fold-field-Fields"><label for="Template-fold-field-Fields"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-22">Fields</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></label><span id='Template-fold-field-Fields-docs' class="fold-docs">
+<span class="md-text">				Fields is a list of field paths bound in this template.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Template-fold-field-OpCodes"><label for="Template-fold-field-OpCodes"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-16">OpCodes</a> <i>[]<a href="../../../../../builtin.html#name-int">int</a></i></label><span id='Template-fold-field-OpCodes-docs' class="fold-docs">
+<span class="md-text">				OpCodes is a sequence of operations.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Template-fold-field-Pool"><label for="Template-fold-field-Pool"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-18">Pool</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></label><span id='Template-fold-field-Pool-docs' class="fold-docs">
+<span class="md-text">				Pool is a constant pool</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Template-fold-field-Template"><label for="Template-fold-field-Template"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-24">Template</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='Template-fold-field-Template-docs' class="fold-docs">
+<span class="md-text">				Original template (example: /v1/a_bit_of_everything)</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Template-fold-field-Verb"><label for="Template-fold-field-Verb"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-20">Verb</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='Template-fold-field-Verb-docs' class="fold-docs">
+<span class="md-text">				Verb is a VERB part in the template.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Template-fold-field-Version"><label for="Template-fold-field-Version"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-14">Version</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></label><span id='Template-fold-field-Version-docs' class="fold-docs">
+<span class="md-text">				Version is the version number of the format.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Template-fold-results"><label for="Template-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Template-fold-results-items' class="fold-items"><span>
+			func <a href="#name-Compiler">Compiler</a>.<a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-30">Compile</a>() <b>Template</b></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 9 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 9 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-deepWildcard" data-popularity="350">	<input type='checkbox' class="fold" id="deepWildcard-fold-content"><label for="deepWildcard-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-21">deepWildcard</a> <i>(struct)</i></label><span id='deepWildcard-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="deepWildcard-fold-methods"><label for="deepWildcard-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='deepWildcard-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( deepWildcard) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-34">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span>
+			<input type='checkbox' checked class="showhide" id="deepWildcard-showhide-methods"><i><label for="deepWildcard-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="deepWildcard-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( deepWildcard) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-51">compile</a>() []<a href="#name-op">op</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="deepWildcard-fold-impls"><label for="deepWildcard-fold-impls">Implements (<i>at least 5, in which 1 is exported</i>)</label><span id='deepWildcard-fold-impls-items' class="fold-items"><span>
+			 deepWildcard : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="deepWildcard-showhide-impls"><i><label for="deepWildcard-showhide-impls" class="show-inline">/* 4+ unexporteds ... */</label><label for="deepWildcard-showhide-impls" class="hide-inline">/* 4+ unexporteds: */</label></i><span class="hidden"><i>
+			 deepWildcard : <a href="#name-segment">segment</a></i></span><span class="hidden"><i>
+			 deepWildcard : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 deepWildcard : os/signal.<a href="../../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 deepWildcard : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-literal" data-popularity="350">	<input type='checkbox' class="fold" id="literal-fold-content"><label for="literal-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-23">literal</a> <a href="../../../../../builtin.html#name-string">string</a> <i>(basic type)</i></label><span id='literal-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="literal-fold-methods"><label for="literal-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='literal-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( literal) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-38">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span>
+			<input type='checkbox' checked class="showhide" id="literal-showhide-methods"><i><label for="literal-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="literal-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( literal) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-57">compile</a>() []<a href="#name-op">op</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="literal-fold-impls"><label for="literal-fold-impls">Implements (<i>at least 5, in which 1 is exported</i>)</label><span id='literal-fold-impls-items' class="fold-items"><span>
+			 literal : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="literal-showhide-impls"><i><label for="literal-showhide-impls" class="show-inline">/* 4+ unexporteds ... */</label><label for="literal-showhide-impls" class="hide-inline">/* 4+ unexporteds: */</label></i><span class="hidden"><i>
+			 literal : <a href="#name-segment">segment</a></i></span><span class="hidden"><i>
+			 literal : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 literal : os/signal.<a href="../../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 literal : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-op" data-popularity="0">	<input type='checkbox' class="fold" id="op-fold-content"><label for="op-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-33">op</a> <i>(struct)</i></label><span id='op-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="op-fold-fields"><label for="op-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='op-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="op-showhide-fields"><i><label for="op-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="op-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="op-fold-field-code"><label for="op-fold-field-code"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-35">code</a> <i><a href="../utilities.html">utilities</a>.<a href="../utilities.html#name-OpCode">OpCode</a></i></label><span id='op-fold-field-code-docs' class="fold-docs">
+<span class="md-text">				code is the opcode of the operation</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="op-fold-field-num"><label for="op-fold-field-num"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-42">num</a> <i><a href="../../../../../builtin.html#name-int">int</a></i></label><span id='op-fold-field-num-docs' class="fold-docs">
+<span class="md-text">				num is a numeric operand of the code.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="op-fold-field-str"><label for="op-fold-field-str"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-39">str</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></label><span id='op-fold-field-str-docs' class="fold-docs">
+<span class="md-text">				str is a string operand of the code.
+				num is ignored if str is not empty.</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-parser" data-popularity="350">	<input type='checkbox' class="fold" id="parser-fold-content"><label for="parser-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-115">parser</a> <i>(struct)</i></label><span id='parser-fold-content-docs' class="fold-docs">
+<span class="md-text">		parser is a parser of the template syntax defined in github.com/googleapis/googleapis/google/api/http.proto.</span>
+
+		<input type='checkbox' class="fold" id="parser-fold-fields"><label for="parser-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='parser-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="parser-showhide-fields"><i><label for="parser-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="parser-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-117">accepted</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-116">tokens</a> <i>[]<a href="../../../../../builtin.html#name-string">string</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="parser-fold-methods"><label for="parser-fold-methods">Methods (<i>total 7, none are exported</i>)</label><span id='parser-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="parser-showhide-methods"><i><label for="parser-showhide-methods" class="show-inline">/* 7 unexporteds ... */</label><label for="parser-showhide-methods" class="hide-inline">/* 7 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="parser-fold-method-accept"><label for="parser-fold-method-accept">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-247">accept</a>(term <a href="#name-termType">termType</a>) (<a href="../../../../../builtin.html#name-string">string</a>, <a href="../../../../../builtin.html#name-error">error</a>)</label><span id='parser-fold-method-accept-docs' class="fold-docs">
+<span class="md-text">				accept tries to accept a token in "p".
+				This function consumes a token and returns it if it matches to the specified "term".
+				If it doesn't match, the function does not consume any tokens and return an error.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-210">fieldPath</a>() (<a href="../../../../../builtin.html#name-string">string</a>, <a href="../../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-173">literal</a>() (<a href="#name-segment">segment</a>, <a href="../../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-155">segment</a>() (<a href="#name-segment">segment</a>, <a href="../../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-136">segments</a>() ([]<a href="#name-segment">segment</a>, <a href="../../../../../builtin.html#name-error">error</a>)</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="parser-fold-method-topLevelSegments"><label for="parser-fold-method-topLevelSegments">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-121">topLevelSegments</a>() ([]<a href="#name-segment">segment</a>, <a href="../../../../../builtin.html#name-error">error</a>)</label><span id='parser-fold-method-topLevelSegments-docs' class="fold-docs">
+<span class="md-text">				topLevelSegments is the target of this parser.</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*parser) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-181">variable</a>() (<a href="#name-segment">segment</a>, <a href="../../../../../builtin.html#name-error">error</a>)</span></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-segment" data-popularity="900">	<input type='checkbox' class="fold" id="segment-fold-content"><label for="segment-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-14">segment</a> <b><i>(interface)</i></b></label><span id='segment-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="segment-fold-methods"><label for="segment-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='segment-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( segment) <a href="../../../../../../src/runtime/error.go.html#line-204">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span>
+			<input type='checkbox' checked class="showhide" id="segment-showhide-methods"><i><label for="segment-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="segment-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( segment) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-16">compile</a>() (ops []<a href="#name-op">op</a>)</span></i></span></span>
+		<input type='checkbox' class="fold" id="segment-fold-impledby"><label for="segment-fold-impledby">Implemented By (<i>at least 4, none are exported</i>)</label><span id='segment-fold-impledby-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="segment-showhide-impedBys"><i><label for="segment-showhide-impedBys" class="show-inline">/* 4+ unexporteds ... */</label><label for="segment-showhide-impedBys" class="hide-inline">/* 4+ unexporteds: */</label></i><span class="hidden"><i>
+			 <a href="#name-deepWildcard">deepWildcard</a></i></span><span class="hidden"><i>
+			 <a href="#name-literal">literal</a></i></span><span class="hidden"><i>
+			 <a href="#name-variable">variable</a></i></span><span class="hidden"><i>
+			 <a href="#name-wildcard">wildcard</a></i></span></span>
+		<input type='checkbox' class="fold" id="segment-fold-impls"><label for="segment-fold-impls">Implements (<i>at least 4, in which 1 is exported</i>)</label><span id='segment-fold-impls-items' class="fold-items"><span>
+			 segment : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="segment-showhide-impls"><i><label for="segment-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="segment-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 segment : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 segment : os/signal.<a href="../../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 segment : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-template" data-popularity="350">	<input type='checkbox' class="fold" id="template-fold-content"><label for="template-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-8">template</a> <i>(struct)</i></label><span id='template-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="template-fold-fields"><label for="template-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='template-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="template-showhide-fields"><i><label for="template-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="template-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-9">segments</a> <i>[]<a href="#name-segment">segment</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-11">template</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-10">verb</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="template-fold-methods"><label for="template-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='template-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( template) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-82">Compile</a>() <a href="#name-Template">Template</a></span></span><span>
+			<span class="nodocs">( template) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-50">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="template-fold-impls"><label for="template-fold-impls">Implements (<i>at least 5, in which 2 are exported</i>)</label><span id='template-fold-impls-items' class="fold-items"><span>
+			 template : <a href="#name-Compiler">Compiler</a></span><span>
+			 template : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="template-showhide-impls"><i><label for="template-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="template-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 template : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 template : os/signal.<a href="../../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 template : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-termType" data-popularity="15">	<input type='checkbox' class="fold" id="termType-fold-content"><label for="termType-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-229">termType</a> <a href="../../../../../builtin.html#name-string">string</a> <i>(basic type)</i></label><span id='termType-fold-content-docs' class="fold-docs">
+<span class="md-text">		A termType is a type of terminal symbols.</span>
+
+		<input type='checkbox' class="fold" id="termType-fold-values"><label for="termType-fold-values">As Types Of (<i>total 3, none are exported</i>)</label><span id='termType-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="termType-showhide-values"><i><label for="termType-showhide-values" class="show-inline">/* 3 unexporteds ... */</label><label for="termType-showhide-values" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			const <a href="#name-typeEOF">typeEOF</a></i></span><span class="hidden"><i>
+			const <a href="#name-typeIdent">typeIdent</a></i></span><span class="hidden"><i>
+			const <a href="#name-typeLiteral">typeLiteral</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-variable" data-popularity="350">	<input type='checkbox' class="fold" id="variable-fold-content"><label for="variable-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-25">variable</a> <i>(struct)</i></label><span id='variable-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="variable-fold-fields"><label for="variable-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='variable-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="variable-showhide-fields"><i><label for="variable-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="variable-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-26">path</a> <i><a href="../../../../../builtin.html#name-string">string</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-27">segments</a> <i>[]<a href="#name-segment">segment</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="variable-fold-methods"><label for="variable-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='variable-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( variable) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-42">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span>
+			<input type='checkbox' checked class="showhide" id="variable-showhide-methods"><i><label for="variable-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="variable-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( variable) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-66">compile</a>() []<a href="#name-op">op</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="variable-fold-impls"><label for="variable-fold-impls">Implements (<i>at least 5, in which 1 is exported</i>)</label><span id='variable-fold-impls-items' class="fold-items"><span>
+			 variable : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="variable-showhide-impls"><i><label for="variable-showhide-impls" class="show-inline">/* 4+ unexporteds ... */</label><label for="variable-showhide-impls" class="hide-inline">/* 4+ unexporteds: */</label></i><span class="hidden"><i>
+			 variable : <a href="#name-segment">segment</a></i></span><span class="hidden"><i>
+			 variable : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 variable : os/signal.<a href="../../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 variable : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-wildcard" data-popularity="350">	<input type='checkbox' class="fold" id="wildcard-fold-content"><label for="wildcard-fold-content"> type <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-19">wildcard</a> <i>(struct)</i></label><span id='wildcard-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="wildcard-fold-methods"><label for="wildcard-fold-methods">Methods (<i>total 2, in which 1 is exported</i>)</label><span id='wildcard-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( wildcard) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/types.go.html#line-30">String</a>() <a href="../../../../../builtin.html#name-string">string</a></span></span>
+			<input type='checkbox' checked class="showhide" id="wildcard-showhide-methods"><i><label for="wildcard-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="wildcard-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs">( wildcard) <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-45">compile</a>() []<a href="#name-op">op</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="wildcard-fold-impls"><label for="wildcard-fold-impls">Implements (<i>at least 5, in which 1 is exported</i>)</label><span id='wildcard-fold-impls-items' class="fold-items"><span>
+			 wildcard : fmt.<a href="../../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' checked class="showhide" id="wildcard-showhide-impls"><i><label for="wildcard-showhide-impls" class="show-inline">/* 4+ unexporteds ... */</label><label for="wildcard-showhide-impls" class="hide-inline">/* 4+ unexporteds: */</label></i><span class="hidden"><i>
+			 wildcard : <a href="#name-segment">segment</a></i></span><span class="hidden"><i>
+			 wildcard : context.<a href="../../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 wildcard : os/signal.<a href="../../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 wildcard : runtime.<a href="../../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 5, in which 1 is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-Parse">	<input type='checkbox' class="fold" id="Parse-fold-content"><label for="Parse-fold-content"> func <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-20">Parse</a>(tmpl <a href="../../../../../builtin.html#name-string">string</a>) (<a href="#name-Compiler">Compiler</a>, <a href="../../../../../builtin.html#name-error">error</a>)</label><span id='Parse-fold-content-docs' class="fold-docs">
+<span class="md-text">		Parse parses the string representation of path template</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-expectIdent"><i>	<input type='checkbox' class="fold" id="expectIdent-fold-content"><label for="expectIdent-fold-content"> func <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-334">expectIdent</a>(ident <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></label><span id='expectIdent-fold-content-docs' class="fold-docs">
+<span class="md-text">		expectIdent determines if "ident" is a valid identifier in .proto schema ([[:alpha:]_][[:alphanum:]_]*).</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-expectPChars"><i>	<input type='checkbox' class="fold" id="expectPChars-fold-content"><label for="expectPChars-fold-content"> func <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-283">expectPChars</a>(t <a href="../../../../../builtin.html#name-string">string</a>) <a href="../../../../../builtin.html#name-error">error</a></label><span id='expectPChars-fold-content-docs' class="fold-docs">
+<span class="md-text">		expectPChars determines if "t" consists of only pchars defined in RFC3986.
+		
+		https://www.ietf.org/rfc/rfc3986.txt, P.49
+		
+			pchar         = unreserved / pct-encoded / sub-delims / ":" / "@"
+			unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
+			sub-delims    = "!" / "$" / "&amp;" / "'" / "(" / ")"
+			              / "*" / "+" / "," / ";" / "="
+			pct-encoded   = "%" HEXDIG HEXDIG</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-isHexDigit"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-358">isHexDigit</a>(r <a href="../../../../../builtin.html#name-rune">rune</a>) <a href="../../../../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-tokenize"><i>	<span class="nodocs"> func <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-39">tokenize</a>(path <a href="../../../../../builtin.html#name-string">string</a>) (tokens []<a href="../../../../../builtin.html#name-string">string</a>, verb <a href="../../../../../builtin.html#name-string">string</a>)</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 5, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 5 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 5 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-eof"><i>	<input type='checkbox' class="fold" id="eof-fold-content"><label for="eof-fold-content">const <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-242">eof</a> = "\x00"</label><span id='eof-fold-content-docs' class="fold-docs">
+<span class="md-text">		eof is the terminal symbol which always appears at the end of token sequence.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-opcodeVersion"><i>	<span class="nodocs">const <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/compile.go.html#line-8">opcodeVersion</a> = 1</span></i></div><div class="anchor value-res hidden" id="name-typeEOF"><i>	<input type='checkbox' class="fold" id="typeEOF-fold-content"><label for="typeEOF-fold-content">const <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-238">typeEOF</a> <a href="#name-termType">termType</a> = "$"</label><span id='typeEOF-fold-content-docs' class="fold-docs">
+<span class="md-text">		These constants define some of valid values of termType.
+		They improve readability of parse functions.
+		
+		You can also use "/", "*", "**", "." or "=" as valid values.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-typeIdent"><i>	<input type='checkbox' class="fold" id="typeIdent-fold-content"><label for="typeIdent-fold-content">const <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-236">typeIdent</a> <a href="#name-termType">termType</a> = "ident"</label><span id='typeIdent-fold-content-docs' class="fold-docs">
+<span class="md-text">		These constants define some of valid values of termType.
+		They improve readability of parse functions.
+		
+		You can also use "/", "*", "**", "." or "=" as valid values.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-typeLiteral"><i>	<input type='checkbox' class="fold" id="typeLiteral-fold-content"><label for="typeLiteral-fold-content">const <a href="../../../../../../src/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule/parse.go.html#line-237">typeLiteral</a> <a href="#name-termType">termType</a> = "literal"</label><span id='typeLiteral-fold-content-docs' class="fold-docs">
+<span class="md-text">		These constants define some of valid values of termType.
+		They improve readability of parse functions.
+		
+		You can also use "/", "*", "**", "." or "=" as valid values.</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

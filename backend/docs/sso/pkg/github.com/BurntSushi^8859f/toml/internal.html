@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/BurntSushi/toml/internal</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>internal</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-github.com/BurntSushi/toml/internal">github.com/BurntSushi/toml/internal</a><i> (on <a href="https://pkg.go.dev/github.com/BurntSushi/toml/internal" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/github.com/BurntSushi^8859f/toml/internal.html">one package</a>, and imported by <a href="../../../../dep/github.com/BurntSushi^8859f/toml/internal.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../../src/github.com/BurntSushi^8859f/toml/internal/tz.go.html">tz.go</a></span></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 4, in which 3 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-LocalDate">	<input type='checkbox' class="fold" id="LocalDate-fold-content"><label for="LocalDate-fold-content">  var <a href="../../../../src/github.com/BurntSushi^8859f/toml/internal/tz.go.html#line-34">LocalDate</a> *<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Location">Location</a></label><span id='LocalDate-fold-content-docs' class="fold-docs">
+<span class="md-text">		Timezones used for local datetime, date, and time TOML types.
+		
+		The exact way times and dates without a timezone should be interpreted is not
+		well-defined in the TOML specification and left to the implementation. These
+		defaults to current local timezone offset of the computer, but this can be
+		changed by changing these variables before decoding.
+		
+		TODO:
+		Ideally we'd like to offer people the ability to configure the used timezone
+		by setting Decoder.Timezone and Encoder.Timezone; however, this is a bit
+		tricky: the reason we use three different variables for this is to support
+		round-tripping – without these specific TZ names we wouldn't know which
+		format to use.
+		
+		There isn't a good way to encode this right now though, and passing this sort
+		of information also ties in to various related issues such as string format
+		encoding, encoding of comments, etc.
+		
+		So, for the time being, just put this in internal until we can write a good
+		comprehensive API for doing all of this.
+		
+		The reason they're exported is because they're referred from in e.g.
+		internal/tag.
+		
+		Note that this behaviour is valid according to the TOML spec as the exact
+		behaviour is left up to implementations.</span>
+
+</span></div><div class="anchor value-res" id="name-LocalDatetime">	<input type='checkbox' class="fold" id="LocalDatetime-fold-content"><label for="LocalDatetime-fold-content">  var <a href="../../../../src/github.com/BurntSushi^8859f/toml/internal/tz.go.html#line-33">LocalDatetime</a> *<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Location">Location</a></label><span id='LocalDatetime-fold-content-docs' class="fold-docs">
+<span class="md-text">		Timezones used for local datetime, date, and time TOML types.
+		
+		The exact way times and dates without a timezone should be interpreted is not
+		well-defined in the TOML specification and left to the implementation. These
+		defaults to current local timezone offset of the computer, but this can be
+		changed by changing these variables before decoding.
+		
+		TODO:
+		Ideally we'd like to offer people the ability to configure the used timezone
+		by setting Decoder.Timezone and Encoder.Timezone; however, this is a bit
+		tricky: the reason we use three different variables for this is to support
+		round-tripping – without these specific TZ names we wouldn't know which
+		format to use.
+		
+		There isn't a good way to encode this right now though, and passing this sort
+		of information also ties in to various related issues such as string format
+		encoding, encoding of comments, etc.
+		
+		So, for the time being, just put this in internal until we can write a good
+		comprehensive API for doing all of this.
+		
+		The reason they're exported is because they're referred from in e.g.
+		internal/tag.
+		
+		Note that this behaviour is valid according to the TOML spec as the exact
+		behaviour is left up to implementations.</span>
+
+</span></div><div class="anchor value-res" id="name-LocalTime">	<input type='checkbox' class="fold" id="LocalTime-fold-content"><label for="LocalTime-fold-content">  var <a href="../../../../src/github.com/BurntSushi^8859f/toml/internal/tz.go.html#line-35">LocalTime</a> *<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Location">Location</a></label><span id='LocalTime-fold-content-docs' class="fold-docs">
+<span class="md-text">		Timezones used for local datetime, date, and time TOML types.
+		
+		The exact way times and dates without a timezone should be interpreted is not
+		well-defined in the TOML specification and left to the implementation. These
+		defaults to current local timezone offset of the computer, but this can be
+		changed by changing these variables before decoding.
+		
+		TODO:
+		Ideally we'd like to offer people the ability to configure the used timezone
+		by setting Decoder.Timezone and Encoder.Timezone; however, this is a bit
+		tricky: the reason we use three different variables for this is to support
+		round-tripping – without these specific TZ names we wouldn't know which
+		format to use.
+		
+		There isn't a good way to encode this right now though, and passing this sort
+		of information also ties in to various related issues such as string format
+		encoding, encoding of comments, etc.
+		
+		So, for the time being, just put this in internal until we can write a good
+		comprehensive API for doing all of this.
+		
+		The reason they're exported is because they're referred from in e.g.
+		internal/tag.
+		
+		Note that this behaviour is valid according to the TOML spec as the exact
+		behaviour is left up to implementations.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-localOffset"><i>	<input type='checkbox' class="fold" id="localOffset-fold-content"><label for="localOffset-fold-content">  var <a href="../../../../src/github.com/BurntSushi^8859f/toml/internal/tz.go.html#line-32">localOffset</a> <a href="../../../builtin.html#name-int">int</a></label><span id='localOffset-fold-content-docs' class="fold-docs">
+<span class="md-text">		Timezones used for local datetime, date, and time TOML types.
+		
+		The exact way times and dates without a timezone should be interpreted is not
+		well-defined in the TOML specification and left to the implementation. These
+		defaults to current local timezone offset of the computer, but this can be
+		changed by changing these variables before decoding.
+		
+		TODO:
+		Ideally we'd like to offer people the ability to configure the used timezone
+		by setting Decoder.Timezone and Encoder.Timezone; however, this is a bit
+		tricky: the reason we use three different variables for this is to support
+		round-tripping – without these specific TZ names we wouldn't know which
+		format to use.
+		
+		There isn't a good way to encode this right now though, and passing this sort
+		of information also ties in to various related issues such as string format
+		encoding, encoding of comments, etc.
+		
+		So, for the time being, just put this in internal until we can write a good
+		comprehensive API for doing all of this.
+		
+		The reason they're exported is because they're referred from in e.g.
+		internal/tag.
+		
+		Note that this behaviour is valid according to the TOML spec as the exact
+		behaviour is left up to implementations.</span>
+
+</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

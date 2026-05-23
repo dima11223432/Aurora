@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: runtime/metrics</title>
+<link href="../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>metrics</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../index.html#pkg-runtime/metrics">runtime/metrics</a><i> (on <a href="https://pkg.go.dev/runtime/metrics" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../dep/runtime/metrics.html">4 packages</a>, and imported by <a href="../../dep/runtime/metrics.html#imported-by">2 packages</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../src/runtime/metrics/description.go.html">description.go</a></span>
+	<input type='checkbox' checked class="fold" id="file-1-fold-content"><label for="file-1-fold-content">  <a href="../../src/runtime/metrics/doc.go.html#doc">d</a> <a href="../../src/runtime/metrics/doc.go.html">doc.go</a></label><span id='file-1-fold-content-items' class="fold-items">
+<span class="md-text">		Package metrics provides a stable interface to access implementation-defined
+		metrics exported by the Go runtime. This package is similar to existing functions
+		like [runtime.ReadMemStats] and [runtime/debug.ReadGCStats], but significantly more general.
+		
+		The set of metrics defined by this package may evolve as the runtime itself
+		evolves, and also enables variation across Go implementations, whose relevant
+		metric sets may not intersect.
+		
+		# Interface
+		
+		Metrics are designated by a string key, rather than, for example, a field name in
+		a struct. The full list of supported metrics is always available in the slice of
+		Descriptions returned by [All]. Each [Description] also includes useful information
+		about the metric.
+		
+		Thus, users of this API are encouraged to sample supported metrics defined by the
+		slice returned by All to remain compatible across Go versions. Of course, situations
+		arise where reading specific metrics is critical. For these cases, users are
+		encouraged to use build tags, and although metrics may be deprecated and removed,
+		users should consider this to be an exceptional and rare event, coinciding with a
+		very large change in a particular Go implementation.
+		
+		Each metric key also has a "kind" (see [ValueKind]) that describes the format of the
+		metric's value.
+		In the interest of not breaking users of this package, the "kind" for a given metric
+		is guaranteed not to change. If it must change, then a new metric will be introduced
+		with a new key and a new "kind."
+		
+		# Metric key format
+		
+		As mentioned earlier, metric keys are strings. Their format is simple and well-defined,
+		designed to be both human and machine readable. It is split into two components,
+		separated by a colon: a rooted path and a unit. The choice to include the unit in
+		the key is motivated by compatibility: if a metric's unit changes, its semantics likely
+		did also, and a new key should be introduced.
+		
+		For more details on the precise definition of the metric key's path and unit formats, see
+		the documentation of the Name field of the Description struct.
+		
+		# A note about floats
+		
+		This package supports metrics whose values have a floating-point representation. In
+		order to improve ease-of-use, this package promises to never produce the following
+		classes of floating-point values: NaN, infinity.
+		
+		# Supported metrics
+		
+		Below is the full list of supported metrics, ordered lexicographically.
+		
+			/cgo/go-to-c-calls:calls
+				Count of calls made from Go to C by the current process.
+		
+			/cpu/classes/gc/mark/assist:cpu-seconds
+				Estimated total CPU time goroutines spent performing GC
+				tasks to assist the GC and prevent it from falling behind the
+				application. This metric is an overestimate, and not directly
+				comparable to system CPU time measurements. Compare only with
+				other /cpu/classes metrics.
+		
+			/cpu/classes/gc/mark/dedicated:cpu-seconds
+				Estimated total CPU time spent performing GC tasks on processors
+				(as defined by GOMAXPROCS) dedicated to those tasks. This metric
+				is an overestimate, and not directly comparable to system CPU
+				time measurements. Compare only with other /cpu/classes metrics.
+		
+			/cpu/classes/gc/mark/idle:cpu-seconds
+				Estimated total CPU time spent performing GC tasks on spare CPU
+				resources that the Go scheduler could not otherwise find a use
+				for. This should be subtracted from the total GC CPU time to
+				obtain a measure of compulsory GC CPU time. This metric is an
+				overestimate, and not directly comparable to system CPU time
+				measurements. Compare only with other /cpu/classes metrics.
+		
+			/cpu/classes/gc/pause:cpu-seconds
+				Estimated total CPU time spent with the application paused by
+				the GC. Even if only one thread is running during the pause,
+				this is computed as GOMAXPROCS times the pause latency because
+				nothing else can be executing. This is the exact sum of samples
+				in /sched/pauses/total/gc:seconds if each sample is multiplied
+				by GOMAXPROCS at the time it is taken. This metric is an
+				overestimate, and not directly comparable to system CPU time
+				measurements. Compare only with other /cpu/classes metrics.
+		
+			/cpu/classes/gc/total:cpu-seconds
+				Estimated total CPU time spent performing GC tasks. This metric
+				is an overestimate, and not directly comparable to system CPU
+				time measurements. Compare only with other /cpu/classes metrics.
+				Sum of all metrics in /cpu/classes/gc.
+		
+			/cpu/classes/idle:cpu-seconds
+				Estimated total available CPU time not spent executing
+				any Go or Go runtime code. In other words, the part of
+				/cpu/classes/total:cpu-seconds that was unused. This metric is
+				an overestimate, and not directly comparable to system CPU time
+				measurements. Compare only with other /cpu/classes metrics.
+		
+			/cpu/classes/scavenge/assist:cpu-seconds
+				Estimated total CPU time spent returning unused memory to the
+				underlying platform in response eagerly to memory pressure. This
+				metric is an overestimate, and not directly comparable to system
+				CPU time measurements. Compare only with other /cpu/classes
+				metrics.
+		
+			/cpu/classes/scavenge/background:cpu-seconds
+				Estimated total CPU time spent performing background tasks to
+				return unused memory to the underlying platform. This metric is
+				an overestimate, and not directly comparable to system CPU time
+				measurements. Compare only with other /cpu/classes metrics.
+		
+			/cpu/classes/scavenge/total:cpu-seconds
+				Estimated total CPU time spent performing tasks that return
+				unused memory to the underlying platform. This metric is an
+				overestimate, and not directly comparable to system CPU time
+				measurements. Compare only with other /cpu/classes metrics.
+				Sum of all metrics in /cpu/classes/scavenge.
+		
+			/cpu/classes/total:cpu-seconds
+				Estimated total available CPU time for user Go code or the Go
+				runtime, as defined by GOMAXPROCS. In other words, GOMAXPROCS
+				integrated over the wall-clock duration this process has been
+				executing for. This metric is an overestimate, and not directly
+				comparable to system CPU time measurements. Compare only with
+				other /cpu/classes metrics. Sum of all metrics in /cpu/classes.
+		
+			/cpu/classes/user:cpu-seconds
+				Estimated total CPU time spent running user Go code. This may
+				also include some small amount of time spent in the Go runtime.
+				This metric is an overestimate, and not directly comparable
+				to system CPU time measurements. Compare only with other
+				/cpu/classes metrics.
+		
+			/gc/cleanups/executed:cleanups
+				Approximate total count of cleanup functions (created
+				by runtime.AddCleanup) executed by the runtime. Subtract
+				/gc/cleanups/queued:cleanups to approximate cleanup queue
+				length. Useful for detecting slow cleanups holding up the queue.
+		
+			/gc/cleanups/queued:cleanups
+				Approximate total count of cleanup functions (created by
+				runtime.AddCleanup) queued by the runtime for execution.
+				Subtract from /gc/cleanups/executed:cleanups to approximate
+				cleanup queue length. Useful for detecting slow cleanups holding
+				up the queue.
+		
+			/gc/cycles/automatic:gc-cycles
+				Count of completed GC cycles generated by the Go runtime.
+		
+			/gc/cycles/forced:gc-cycles
+				Count of completed GC cycles forced by the application.
+		
+			/gc/cycles/total:gc-cycles
+				Count of all completed GC cycles.
+		
+			/gc/finalizers/executed:finalizers
+				Total count of finalizer functions (created by
+				runtime.SetFinalizer) executed by the runtime. Subtract
+				/gc/finalizers/queued:finalizers to approximate finalizer queue
+				length. Useful for detecting finalizers overwhelming the queue,
+				either by being too slow, or by there being too many of them.
+		
+			/gc/finalizers/queued:finalizers
+				Total count of finalizer functions (created by
+				runtime.SetFinalizer) and queued by the runtime for execution.
+				Subtract from /gc/finalizers/executed:finalizers to approximate
+				finalizer queue length. Useful for detecting slow finalizers
+				holding up the queue.
+		
+			/gc/gogc:percent
+				Heap size target percentage configured by the user, otherwise
+				100. This value is set by the GOGC environment variable, and the
+				runtime/debug.SetGCPercent function.
+		
+			/gc/gomemlimit:bytes
+				Go runtime memory limit configured by the user, otherwise
+				math.MaxInt64. This value is set by the GOMEMLIMIT environment
+				variable, and the runtime/debug.SetMemoryLimit function.
+		
+			/gc/heap/allocs-by-size:bytes
+				Distribution of heap allocations by approximate size.
+				Bucket counts increase monotonically. Note that this does not
+				include tiny objects as defined by /gc/heap/tiny/allocs:objects,
+				only tiny blocks.
+		
+			/gc/heap/allocs:bytes
+				Cumulative sum of memory allocated to the heap by the
+				application.
+		
+			/gc/heap/allocs:objects
+				Cumulative count of heap allocations triggered by the
+				application. Note that this does not include tiny objects as
+				defined by /gc/heap/tiny/allocs:objects, only tiny blocks.
+		
+			/gc/heap/frees-by-size:bytes
+				Distribution of freed heap allocations by approximate size.
+				Bucket counts increase monotonically. Note that this does not
+				include tiny objects as defined by /gc/heap/tiny/allocs:objects,
+				only tiny blocks.
+		
+			/gc/heap/frees:bytes
+				Cumulative sum of heap memory freed by the garbage collector.
+		
+			/gc/heap/frees:objects
+				Cumulative count of heap allocations whose storage was freed
+				by the garbage collector. Note that this does not include tiny
+				objects as defined by /gc/heap/tiny/allocs:objects, only tiny
+				blocks.
+		
+			/gc/heap/goal:bytes
+				Heap size target for the end of the GC cycle.
+		
+			/gc/heap/live:bytes
+				Heap memory occupied by live objects that were marked by the
+				previous GC.
+		
+			/gc/heap/objects:objects
+				Number of objects, live or unswept, occupying heap memory.
+		
+			/gc/heap/tiny/allocs:objects
+				Count of small allocations that are packed together into blocks.
+				These allocations are counted separately from other allocations
+				because each individual allocation is not tracked by the
+				runtime, only their block. Each block is already accounted for
+				in allocs-by-size and frees-by-size.
+		
+			/gc/limiter/last-enabled:gc-cycle
+				GC cycle the last time the GC CPU limiter was enabled.
+				This metric is useful for diagnosing the root cause of an
+				out-of-memory error, because the limiter trades memory for CPU
+				time when the GC's CPU time gets too high. This is most likely
+				to occur with use of SetMemoryLimit. The first GC cycle is cycle
+				1, so a value of 0 indicates that it was never enabled.
+		
+			/gc/pauses:seconds
+				Deprecated. Prefer the identical /sched/pauses/total/gc:seconds.
+		
+			/gc/scan/globals:bytes
+				The total amount of global variable space that is scannable.
+		
+			/gc/scan/heap:bytes
+				The total amount of heap space that is scannable.
+		
+			/gc/scan/stack:bytes
+				The number of bytes of stack that were scanned last GC cycle.
+		
+			/gc/scan/total:bytes
+				The total amount space that is scannable. Sum of all metrics in
+				/gc/scan.
+		
+			/gc/stack/starting-size:bytes
+				The stack size of new goroutines.
+		
+			/godebug/non-default-behavior/allowmultiplevcs:events
+				The number of non-default behaviors executed by the cmd/go
+				package due to a non-default GODEBUG=allowmultiplevcs=...
+				setting.
+		
+			/godebug/non-default-behavior/asynctimerchan:events
+				The number of non-default behaviors executed by the time package
+				due to a non-default GODEBUG=asynctimerchan=... setting.
+		
+			/godebug/non-default-behavior/containermaxprocs:events
+				The number of non-default behaviors executed by the runtime
+				package due to a non-default GODEBUG=containermaxprocs=...
+				setting.
+		
+			/godebug/non-default-behavior/cryptocustomrand:events
+				The number of non-default behaviors executed by the crypto
+				package due to a non-default GODEBUG=cryptocustomrand=...
+				setting.
+		
+			/godebug/non-default-behavior/embedfollowsymlinks:events
+				The number of non-default behaviors executed by the cmd/go
+				package due to a non-default GODEBUG=embedfollowsymlinks=...
+				setting.
+		
+			/godebug/non-default-behavior/execerrdot:events
+				The number of non-default behaviors executed by the os/exec
+				package due to a non-default GODEBUG=execerrdot=... setting.
+		
+			/godebug/non-default-behavior/gocachehash:events
+				The number of non-default behaviors executed by the cmd/go
+				package due to a non-default GODEBUG=gocachehash=... setting.
+		
+			/godebug/non-default-behavior/gocachetest:events
+				The number of non-default behaviors executed by the cmd/go
+				package due to a non-default GODEBUG=gocachetest=... setting.
+		
+			/godebug/non-default-behavior/gocacheverify:events
+				The number of non-default behaviors executed by the cmd/go
+				package due to a non-default GODEBUG=gocacheverify=... setting.
+		
+			/godebug/non-default-behavior/gotestjsonbuildtext:events
+				The number of non-default behaviors executed by the cmd/go
+				package due to a non-default GODEBUG=gotestjsonbuildtext=...
+				setting.
+		
+			/godebug/non-default-behavior/gotypesalias:events
+				The number of non-default behaviors executed by the go/types
+				package due to a non-default GODEBUG=gotypesalias=... setting.
+		
+			/godebug/non-default-behavior/htmlmetacontenturlescape:events
+				The number of non-default behaviors executed by
+				the html/template package due to a non-default
+				GODEBUG=htmlmetacontenturlescape=... setting.
+		
+			/godebug/non-default-behavior/http2client:events
+				The number of non-default behaviors executed by the net/http
+				package due to a non-default GODEBUG=http2client=... setting.
+		
+			/godebug/non-default-behavior/http2server:events
+				The number of non-default behaviors executed by the net/http
+				package due to a non-default GODEBUG=http2server=... setting.
+		
+			/godebug/non-default-behavior/httpcookiemaxnum:events
+				The number of non-default behaviors executed by the net/http
+				package due to a non-default GODEBUG=httpcookiemaxnum=...
+				setting.
+		
+			/godebug/non-default-behavior/httplaxcontentlength:events
+				The number of non-default behaviors executed by the net/http
+				package due to a non-default GODEBUG=httplaxcontentlength=...
+				setting.
+		
+			/godebug/non-default-behavior/httpmuxgo121:events
+				The number of non-default behaviors executed by the net/http
+				package due to a non-default GODEBUG=httpmuxgo121=... setting.
+		
+			/godebug/non-default-behavior/httpservecontentkeepheaders:events
+				The number of non-default behaviors executed
+				by the net/http package due to a non-default
+				GODEBUG=httpservecontentkeepheaders=... setting.
+		
+			/godebug/non-default-behavior/installgoroot:events
+				The number of non-default behaviors executed by the go/build
+				package due to a non-default GODEBUG=installgoroot=... setting.
+		
+			/godebug/non-default-behavior/multipartmaxheaders:events
+				The number of non-default behaviors executed by
+				the mime/multipart package due to a non-default
+				GODEBUG=multipartmaxheaders=... setting.
+		
+			/godebug/non-default-behavior/multipartmaxparts:events
+				The number of non-default behaviors executed by
+				the mime/multipart package due to a non-default
+				GODEBUG=multipartmaxparts=... setting.
+		
+			/godebug/non-default-behavior/multipathtcp:events
+				The number of non-default behaviors executed by the net package
+				due to a non-default GODEBUG=multipathtcp=... setting.
+		
+			/godebug/non-default-behavior/netedns0:events
+				The number of non-default behaviors executed by the net package
+				due to a non-default GODEBUG=netedns0=... setting.
+		
+			/godebug/non-default-behavior/panicnil:events
+				The number of non-default behaviors executed by the runtime
+				package due to a non-default GODEBUG=panicnil=... setting.
+		
+			/godebug/non-default-behavior/randautoseed:events
+				The number of non-default behaviors executed by the math/rand
+				package due to a non-default GODEBUG=randautoseed=... setting.
+		
+			/godebug/non-default-behavior/randseednop:events
+				The number of non-default behaviors executed by the math/rand
+				package due to a non-default GODEBUG=randseednop=... setting.
+		
+			/godebug/non-default-behavior/rsa1024min:events
+				The number of non-default behaviors executed by the crypto/rsa
+				package due to a non-default GODEBUG=rsa1024min=... setting.
+		
+			/godebug/non-default-behavior/tarinsecurepath:events
+				The number of non-default behaviors executed by the archive/tar
+				package due to a non-default GODEBUG=tarinsecurepath=...
+				setting.
+		
+			/godebug/non-default-behavior/tls10server:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=tls10server=... setting.
+		
+			/godebug/non-default-behavior/tls3des:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=tls3des=... setting.
+		
+			/godebug/non-default-behavior/tlsmaxrsasize:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=tlsmaxrsasize=... setting.
+		
+			/godebug/non-default-behavior/tlsrsakex:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=tlsrsakex=... setting.
+		
+			/godebug/non-default-behavior/tlssha1:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=tlssha1=... setting.
+		
+			/godebug/non-default-behavior/tlsunsafeekm:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=tlsunsafeekm=... setting.
+		
+			/godebug/non-default-behavior/updatemaxprocs:events
+				The number of non-default behaviors executed by the runtime
+				package due to a non-default GODEBUG=updatemaxprocs=... setting.
+		
+			/godebug/non-default-behavior/urlmaxqueryparams:events
+				The number of non-default behaviors executed by the net/url
+				package due to a non-default GODEBUG=urlmaxqueryparams=...
+				setting.
+		
+			/godebug/non-default-behavior/urlstrictcolons:events
+				The number of non-default behaviors executed by the net/url
+				package due to a non-default GODEBUG=urlstrictcolons=...
+				setting.
+		
+			/godebug/non-default-behavior/winreadlinkvolume:events
+				The number of non-default behaviors executed by the os package
+				due to a non-default GODEBUG=winreadlinkvolume=... setting.
+		
+			/godebug/non-default-behavior/winsymlink:events
+				The number of non-default behaviors executed by the os package
+				due to a non-default GODEBUG=winsymlink=... setting.
+		
+			/godebug/non-default-behavior/x509keypairleaf:events
+				The number of non-default behaviors executed by the crypto/tls
+				package due to a non-default GODEBUG=x509keypairleaf=...
+				setting.
+		
+			/godebug/non-default-behavior/x509negativeserial:events
+				The number of non-default behaviors executed by the crypto/x509
+				package due to a non-default GODEBUG=x509negativeserial=...
+				setting.
+		
+			/godebug/non-default-behavior/x509rsacrt:events
+				The number of non-default behaviors executed by the crypto/x509
+				package due to a non-default GODEBUG=x509rsacrt=... setting.
+		
+			/godebug/non-default-behavior/x509sha256skid:events
+				The number of non-default behaviors executed by the crypto/x509
+				package due to a non-default GODEBUG=x509sha256skid=... setting.
+		
+			/godebug/non-default-behavior/x509usefallbackroots:events
+				The number of non-default behaviors executed by the crypto/x509
+				package due to a non-default GODEBUG=x509usefallbackroots=...
+				setting.
+		
+			/godebug/non-default-behavior/x509usepolicies:events
+				The number of non-default behaviors executed by the crypto/x509
+				package due to a non-default GODEBUG=x509usepolicies=...
+				setting.
+		
+			/godebug/non-default-behavior/zipinsecurepath:events
+				The number of non-default behaviors executed by the archive/zip
+				package due to a non-default GODEBUG=zipinsecurepath=...
+				setting.
+		
+			/memory/classes/heap/free:bytes
+				Memory that is completely free and eligible to be returned to
+				the underlying system, but has not been. This metric is the
+				runtime's estimate of free address space that is backed by
+				physical memory.
+		
+			/memory/classes/heap/objects:bytes
+				Memory occupied by live objects and dead objects that have not
+				yet been marked free by the garbage collector.
+		
+			/memory/classes/heap/released:bytes
+				Memory that is completely free and has been returned to the
+				underlying system. This metric is the runtime's estimate of free
+				address space that is still mapped into the process, but is not
+				backed by physical memory.
+		
+			/memory/classes/heap/stacks:bytes
+				Memory allocated from the heap that is reserved for stack space,
+				whether or not it is currently in-use. Currently, this
+				represents all stack memory for goroutines. It also includes all
+				OS thread stacks in non-cgo programs. Note that stacks may be
+				allocated differently in the future, and this may change.
+		
+			/memory/classes/heap/unused:bytes
+				Memory that is reserved for heap objects but is not currently
+				used to hold heap objects.
+		
+			/memory/classes/metadata/mcache/free:bytes
+				Memory that is reserved for runtime mcache structures, but not
+				in-use.
+		
+			/memory/classes/metadata/mcache/inuse:bytes
+				Memory that is occupied by runtime mcache structures that are
+				currently being used.
+		
+			/memory/classes/metadata/mspan/free:bytes
+				Memory that is reserved for runtime mspan structures, but not
+				in-use.
+		
+			/memory/classes/metadata/mspan/inuse:bytes
+				Memory that is occupied by runtime mspan structures that are
+				currently being used.
+		
+			/memory/classes/metadata/other:bytes
+				Memory that is reserved for or used to hold runtime metadata.
+		
+			/memory/classes/os-stacks:bytes
+				Stack memory allocated by the underlying operating system.
+				In non-cgo programs this metric is currently zero. This may
+				change in the future.In cgo programs this metric includes
+				OS thread stacks allocated directly from the OS. Currently,
+				this only accounts for one stack in c-shared and c-archive build
+				modes, and other sources of stacks from the OS are not measured.
+				This too may change in the future.
+		
+			/memory/classes/other:bytes
+				Memory used by execution trace buffers, structures for debugging
+				the runtime, finalizer and profiler specials, and more.
+		
+			/memory/classes/profiling/buckets:bytes
+				Memory that is used by the stack trace hash map used for
+				profiling.
+		
+			/memory/classes/total:bytes
+				All memory mapped by the Go runtime into the current process
+				as read-write. Note that this does not include memory mapped
+				by code called via cgo or via the syscall package. Sum of all
+				metrics in /memory/classes.
+		
+			/sched/gomaxprocs:threads
+				The current runtime.GOMAXPROCS setting, or the number of
+				operating system threads that can execute user-level Go code
+				simultaneously.
+		
+			/sched/goroutines-created:goroutines
+				Count of goroutines created since program start.
+		
+			/sched/goroutines/not-in-go:goroutines
+				Approximate count of goroutines running or blocked in
+				a system call or cgo call. Not guaranteed to add up to
+				/sched/goroutines:goroutines with other goroutine metrics.
+		
+			/sched/goroutines/runnable:goroutines
+				Approximate count of goroutines ready to execute,
+				but not executing. Not guaranteed to add up to
+				/sched/goroutines:goroutines with other goroutine metrics.
+		
+			/sched/goroutines/running:goroutines
+				Approximate count of goroutines executing. Always less than or
+				equal to /sched/gomaxprocs:threads. Not guaranteed to add up to
+				/sched/goroutines:goroutines with other goroutine metrics.
+		
+			/sched/goroutines/waiting:goroutines
+				Approximate count of goroutines waiting on a resource
+				(I/O or sync primitives). Not guaranteed to add up to
+				/sched/goroutines:goroutines with other goroutine metrics.
+		
+			/sched/goroutines:goroutines
+				Count of live goroutines.
+		
+			/sched/latencies:seconds
+				Distribution of the time goroutines have spent in the scheduler
+				in a runnable state before actually running. Bucket counts
+				increase monotonically.
+		
+			/sched/pauses/stopping/gc:seconds
+				Distribution of individual GC-related stop-the-world stopping
+				latencies. This is the time it takes from deciding to stop the
+				world until all Ps are stopped. This is a subset of the total
+				GC-related stop-the-world time (/sched/pauses/total/gc:seconds).
+				During this time, some threads may be executing. Bucket counts
+				increase monotonically.
+		
+			/sched/pauses/stopping/other:seconds
+				Distribution of individual non-GC-related stop-the-world
+				stopping latencies. This is the time it takes from deciding
+				to stop the world until all Ps are stopped. This is a
+				subset of the total non-GC-related stop-the-world time
+				(/sched/pauses/total/other:seconds). During this time, some
+				threads may be executing. Bucket counts increase monotonically.
+		
+			/sched/pauses/total/gc:seconds
+				Distribution of individual GC-related stop-the-world pause
+				latencies. This is the time from deciding to stop the world
+				until the world is started again. Some of this time is spent
+				getting all threads to stop (this is measured directly in
+				/sched/pauses/stopping/gc:seconds), during which some threads
+				may still be running. Bucket counts increase monotonically.
+		
+			/sched/pauses/total/other:seconds
+				Distribution of individual non-GC-related stop-the-world
+				pause latencies. This is the time from deciding to stop the
+				world until the world is started again. Some of this time
+				is spent getting all threads to stop (measured directly in
+				/sched/pauses/stopping/other:seconds). Bucket counts increase
+				monotonically.
+		
+			/sched/threads/total:threads
+				The current count of live threads that are owned by the Go
+				runtime.
+		
+			/sync/mutex/wait/total:seconds
+				Approximate cumulative time goroutines have spent blocked on a
+				sync.Mutex, sync.RWMutex, or runtime-internal lock. This metric
+				is useful for identifying global changes in lock contention.
+				Collect a mutex or block profile using the runtime/pprof package
+				for more detailed contention data.</span>
+</span>
+	<span class="nodocs">    <a href="../../src/runtime/metrics/histogram.go.html">histogram.go</a></span>
+	<span class="nodocs">    <a href="../../src/runtime/metrics/sample.go.html">sample.go</a></span>
+	<span class="nodocs">    <a href="../../src/runtime/metrics/value.go.html">value.go</a></span></div>
+<div id="examples"><span class="title">Code Examples</span>
+
+	<input type='checkbox' class="fold" id="example-0-fold-content"><label for="example-0-fold-content">Read_readingAllMetrics</label><span id='example-0-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"runtime/metrics"
+		)
+		
+		func main() {
+			// Get descriptions for all supported metrics.
+			descs := metrics.All()
+		
+			// Create a sample for each metric.
+			samples := make([]metrics.Sample, len(descs))
+			for i := range samples {
+				samples[i].Name = descs[i].Name
+			}
+		
+			// Sample the metrics. Re-use the samples slice if you can!
+			metrics.Read(samples)
+		
+			// Iterate over all results.
+			for _, sample := range samples {
+				// Pull out the name and value.
+				name, value := sample.Name, sample.Value
+		
+				// Handle each sample.
+				switch value.Kind() {
+				case metrics.KindUint64:
+					fmt.Printf("%s: %d\n", name, value.Uint64())
+				case metrics.KindFloat64:
+					fmt.Printf("%s: %f\n", name, value.Float64())
+				case metrics.KindFloat64Histogram:
+					// The histogram may be quite large, so let's just pull out
+					// a crude estimate for the median for the sake of this example.
+					fmt.Printf("%s: %f\n", name, medianBucket(value.Float64Histogram()))
+				case metrics.KindBad:
+					// This should never happen because all metrics are supported
+					// by construction.
+					panic("bug in runtime/metrics package!")
+				default:
+					// This may happen as new metrics get added.
+					//
+					// The safest thing to do here is to simply log it somewhere
+					// as something to look into, but ignore it for now.
+					// In the worst case, you might temporarily miss out on a new metric.
+					fmt.Printf("%s: unexpected metric Kind: %v\n", name, value.Kind())
+				}
+			}
+		}
+		
+		func medianBucket(h *metrics.Float64Histogram) float64 {
+			total := uint64(0)
+			for _, count := range h.Counts {
+				total += count
+			}
+			thresh := total / 2
+			total = 0
+			for i, count := range h.Counts {
+				total += count
+				if total &gt;= thresh {
+					return h.Buckets[i]
+				}
+			}
+			panic("should not happen")
+		}
+</span>
+	<input type='checkbox' class="fold" id="example-1-fold-content"><label for="example-1-fold-content">Read_readingOneMetric</label><span id='example-1-fold-content-items' class="fold-items">
+		package main
+		
+		import (
+			"fmt"
+			"runtime/metrics"
+		)
+		
+		func main() {
+			// Name of the metric we want to read.
+			const myMetric = "/memory/classes/heap/free:bytes"
+		
+			// Create a sample for the metric.
+			sample := make([]metrics.Sample, 1)
+			sample[0].Name = myMetric
+		
+			// Sample the metric.
+			metrics.Read(sample)
+		
+			// Check if the metric is actually supported.
+			// If it's not, the resulting value will always have
+			// kind KindBad.
+			if sample[0].Value.Kind() == metrics.KindBad {
+				panic(fmt.Sprintf("metric %q no longer supported", myMetric))
+			}
+		
+			// Handle the result.
+			//
+			// It's OK to assume a particular Kind for a metric;
+			// they're guaranteed not to change.
+			freeBytes := sample[0].Value.Uint64()
+		
+			fmt.Printf("free but not released memory: %d\n", freeBytes)
+		}
+</span>
+</div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 5, all are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-Description" data-popularity="185">	<input type='checkbox' class="fold" id="Description-fold-content"><label for="Description-fold-content"> type <a href="../../src/runtime/metrics/description.go.html#line-10">Description</a> <i>(struct)</i></label><span id='Description-fold-content-docs' class="fold-docs">
+<span class="md-text">		Description describes a runtime metric.</span>
+
+		<input type='checkbox' class="fold" id="Description-fold-fields"><label for="Description-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='Description-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Description-fold-field-Cumulative"><label for="Description-fold-field-Cumulative"><a href="../../src/runtime/metrics/description.go.html#line-50">Cumulative</a> <i><a href="../builtin.html#name-bool">bool</a></i></label><span id='Description-fold-field-Cumulative-docs' class="fold-docs">
+<span class="md-text">				Cumulative is whether or not the metric is cumulative. If a cumulative metric is just
+				a single number, then it increases monotonically. If the metric is a distribution,
+				then each bucket count increases monotonically.
+				
+				This flag thus indicates whether or not it's useful to compute a rate from this value.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Description-fold-field-Description"><label for="Description-fold-field-Description"><a href="../../src/runtime/metrics/description.go.html#line-37">Description</a> <i><a href="../builtin.html#name-string">string</a></i></label><span id='Description-fold-field-Description-docs' class="fold-docs">
+<span class="md-text">				Description is an English language sentence describing the metric.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Description-fold-field-Kind"><label for="Description-fold-field-Kind"><a href="../../src/runtime/metrics/description.go.html#line-43">Kind</a> <i><a href="#name-ValueKind">ValueKind</a></i></label><span id='Description-fold-field-Kind-docs' class="fold-docs">
+<span class="md-text">				Kind is the kind of value for this metric.
+				
+				The purpose of this field is to allow users to filter out metrics whose values are
+				types which their application may not understand.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Description-fold-field-Name"><label for="Description-fold-field-Name"><a href="../../src/runtime/metrics/description.go.html#line-34">Name</a> <i><a href="../builtin.html#name-string">string</a></i></label><span id='Description-fold-field-Name-docs' class="fold-docs">
+<span class="md-text">				Name is the full name of the metric which includes the unit.
+				
+				The format of the metric may be described by the following regular expression.
+				
+					^(?P&lt;name&gt;/[^:]+):(?P&lt;unit&gt;[^:*/]+(?:[*/][^:*/]+)*)$
+				
+				The format splits the name into two components, separated by a colon: a path which always
+				starts with a /, and a machine-parseable unit. The name may contain any valid Unicode
+				codepoint in between / characters, but by convention will try to stick to lowercase
+				characters and hyphens. An example of such a path might be "/memory/heap/free".
+				
+				The unit is by convention a series of lowercase English unit names (singular or plural)
+				without prefixes delimited by '*' or '/'. The unit names may contain any valid Unicode
+				codepoint that is not a delimiter.
+				Examples of units might be "seconds", "bytes", "bytes/second", "cpu-seconds",
+				"byte*cpu-seconds", and "bytes/second/second".
+				
+				For histograms, multiple units may apply. For instance, the units of the buckets and
+				the count. By convention, for histograms, the units of the count are always "samples"
+				with the type of sample evident by the metric's name, while the unit in the name
+				specifies the buckets' unit.
+				
+				A complete name might look like "/memory/heap/free:bytes".</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Description-fold-results"><label for="Description-fold-results">As Outputs Of (<i>at least 2, in which 1 is exported</i>)</label><span id='Description-fold-results-items' class="fold-items"><span>
+			func <a href="#name-All">All</a>() []<b>Description</b></span>
+			<input type='checkbox' class="showhide" id="Description-showhide-inputofs"><i><label for="Description-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="Description-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func github.com/prometheus/client_golang/prometheus.<a href="../github.com/prometheus/client_golang/prometheus.html#name-bestEffortLookupRM">bestEffortLookupRM</a>(lookup []<a href="../builtin.html#name-string">string</a>) []<b>Description</b></i></span></span>
+		<input type='checkbox' class="fold" id="Description-fold-params"><label for="Description-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='Description-fold-params-items' class="fold-items"><span>
+			func github.com/prometheus/client_golang/prometheus/internal.<a href="../github.com/prometheus/client_golang/prometheus/internal.html#name-RuntimeMetricsToProm">RuntimeMetricsToProm</a>(d *<b>Description</b>) (<a href="../builtin.html#name-string">string</a>, <a href="../builtin.html#name-string">string</a>, <a href="../builtin.html#name-string">string</a>, <a href="../builtin.html#name-bool">bool</a>)</span></span>
+
+</span></div><div class="anchor type-res" id="name-Float64Histogram" data-popularity="75">	<input type='checkbox' class="fold" id="Float64Histogram-fold-content"><label for="Float64Histogram-fold-content"> type <a href="../../src/runtime/metrics/histogram.go.html#line-8">Float64Histogram</a> <i>(struct)</i></label><span id='Float64Histogram-fold-content-docs' class="fold-docs">
+<span class="md-text">		Float64Histogram represents a distribution of float64 values.</span>
+
+		<input type='checkbox' class="fold" id="Float64Histogram-fold-fields"><label for="Float64Histogram-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='Float64Histogram-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Float64Histogram-fold-field-Buckets"><label for="Float64Histogram-fold-field-Buckets"><a href="../../src/runtime/metrics/histogram.go.html#line-32">Buckets</a> <i>[]<a href="../builtin.html#name-float64">float64</a></i></label><span id='Float64Histogram-fold-field-Buckets-docs' class="fold-docs">
+<span class="md-text">				Buckets contains the boundaries of the histogram buckets, in increasing order.
+				
+				Buckets[0] is the inclusive lower bound of the minimum bucket while
+				Buckets[len(Buckets)-1] is the exclusive upper bound of the maximum bucket.
+				Hence, there are len(Buckets)-1 counts. Furthermore, len(Buckets) != 1, always,
+				since at least two boundaries are required to describe one bucket (and 0
+				boundaries are used to describe 0 buckets).
+				
+				Buckets[0] is permitted to have value -Inf and Buckets[len(Buckets)-1] is
+				permitted to have value Inf.
+				
+				For a given metric name, the value of Buckets is guaranteed not to change
+				between calls until program exit.
+				
+				This slice value is permitted to alias with other Float64Histograms' Buckets
+				fields, so the values within should only ever be read. If they need to be
+				modified, the user must make a copy.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Float64Histogram-fold-field-Counts"><label for="Float64Histogram-fold-field-Counts"><a href="../../src/runtime/metrics/histogram.go.html#line-13">Counts</a> <i>[]<a href="../builtin.html#name-uint64">uint64</a></i></label><span id='Float64Histogram-fold-field-Counts-docs' class="fold-docs">
+<span class="md-text">				Counts contains the weights for each histogram bucket.
+				
+				Given N buckets, Count[n] is the weight of the range
+				[bucket[n], bucket[n+1]), for 0 &lt;= n &lt; N.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Float64Histogram-fold-results"><label for="Float64Histogram-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='Float64Histogram-fold-results-items' class="fold-items"><span>
+			func <a href="#name-Value">Value</a>.<a href="../../src/runtime/metrics/value.go.html#line-64">Float64Histogram</a>() *<b>Float64Histogram</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-Sample" data-popularity="70">	<input type='checkbox' class="fold" id="Sample-fold-content"><label for="Sample-fold-content"> type <a href="../../src/runtime/metrics/sample.go.html#line-13">Sample</a> <i>(struct)</i></label><span id='Sample-fold-content-docs' class="fold-docs">
+<span class="md-text">		Sample captures a single metric sample.</span>
+
+		<input type='checkbox' class="fold" id="Sample-fold-fields"><label for="Sample-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='Sample-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Sample-fold-field-Name"><label for="Sample-fold-field-Name"><a href="../../src/runtime/metrics/sample.go.html#line-18">Name</a> <i><a href="../builtin.html#name-string">string</a></i></label><span id='Sample-fold-field-Name-docs' class="fold-docs">
+<span class="md-text">				Name is the name of the metric sampled.
+				
+				It must correspond to a name in one of the metric descriptions
+				returned by All.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Sample-fold-field-Value"><label for="Sample-fold-field-Value"><a href="../../src/runtime/metrics/sample.go.html#line-21">Value</a> <i><a href="#name-Value">Value</a></i></label><span id='Sample-fold-field-Value-docs' class="fold-docs">
+<span class="md-text">				Value is the value of the metric sample.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Sample-fold-params"><label for="Sample-fold-params">As Inputs Of (<i>at least 2, in which 1 is exported</i>)</label><span id='Sample-fold-params-items' class="fold-items"><span>
+			func <a href="#name-Read">Read</a>(m []<b>Sample</b>)</span>
+			<input type='checkbox' class="showhide" id="Sample-showhide-outputofs"><i><label for="Sample-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="Sample-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func github.com/prometheus/client_golang/prometheus.<a href="../github.com/prometheus/client_golang/prometheus.html#name-memStatsFromRM">memStatsFromRM</a>(ms *<a href="../runtime.html">runtime</a>.<a href="../runtime.html#name-MemStats">MemStats</a>, rm map[<a href="../builtin.html#name-string">string</a>]*<b>Sample</b>)</i></span></span>
+
+</span></div><div class="anchor type-res" id="name-Value" data-popularity="285">	<input type='checkbox' class="fold" id="Value-fold-content"><label for="Value-fold-content"> type <a href="../../src/runtime/metrics/value.go.html#line-30">Value</a> <i>(struct)</i></label><span id='Value-fold-content-docs' class="fold-docs">
+<span class="md-text">		Value represents a metric value returned by the runtime.</span>
+
+		<input type='checkbox' class="fold" id="Value-fold-fields"><label for="Value-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='Value-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Value-showhide-fields"><i><label for="Value-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="Value-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../src/runtime/metrics/value.go.html#line-31">kind</a> <i><a href="#name-ValueKind">ValueKind</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Value-fold-field-pointer"><label for="Value-fold-field-pointer"><a href="../../src/runtime/metrics/value.go.html#line-33">pointer</a> <i><a href="../unsafe.html">unsafe</a>.<a href="../unsafe.html#name-Pointer">Pointer</a></i></label><span id='Value-fold-field-pointer-docs' class="fold-docs">
+<span class="md-text">				// contains non-scalar values.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Value-fold-field-scalar"><label for="Value-fold-field-scalar"><a href="../../src/runtime/metrics/value.go.html#line-32">scalar</a> <i><a href="../builtin.html#name-uint64">uint64</a></i></label><span id='Value-fold-field-scalar-docs' class="fold-docs">
+<span class="md-text">				// contains scalar values for scalar Kinds.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Value-fold-methods"><label for="Value-fold-methods">Methods (<i>total 4, all are exported</i>)</label><span id='Value-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Value-fold-method-Float64"><label for="Value-fold-method-Float64">( Value) <a href="../../src/runtime/metrics/value.go.html#line-54">Float64</a>() <a href="../builtin.html#name-float64">float64</a></label><span id='Value-fold-method-Float64-docs' class="fold-docs">
+<span class="md-text">				Float64 returns the internal float64 value for the metric.
+				
+				If v.Kind() != KindFloat64, this method panics.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Value-fold-method-Float64Histogram"><label for="Value-fold-method-Float64Histogram">( Value) <a href="../../src/runtime/metrics/value.go.html#line-64">Float64Histogram</a>() *<a href="#name-Float64Histogram">Float64Histogram</a></label><span id='Value-fold-method-Float64Histogram-docs' class="fold-docs">
+<span class="md-text">				Float64Histogram returns the internal *Float64Histogram value for the metric.
+				
+				If v.Kind() != KindFloat64Histogram, this method panics.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Value-fold-method-Kind"><label for="Value-fold-method-Kind">( Value) <a href="../../src/runtime/metrics/value.go.html#line-37">Kind</a>() <a href="#name-ValueKind">ValueKind</a></label><span id='Value-fold-method-Kind-docs' class="fold-docs">
+<span class="md-text">				Kind returns the tag representing the kind of value this is.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Value-fold-method-Uint64"><label for="Value-fold-method-Uint64">( Value) <a href="../../src/runtime/metrics/value.go.html#line-44">Uint64</a>() <a href="../builtin.html#name-uint64">uint64</a></label><span id='Value-fold-method-Uint64-docs' class="fold-docs">
+<span class="md-text">				Uint64 returns the internal uint64 value for the metric.
+				
+				If v.Kind() != KindUint64, this method panics.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Value-fold-impls"><label for="Value-fold-impls">Implements (<i>at least one exported</i>)</label><span id='Value-fold-impls-items' class="fold-items"><span>
+			 Value : math/rand/v2.<a href="../math/rand/v2.html#name-Source">Source</a></span></span>
+		<input type='checkbox' class="fold" id="Value-fold-params"><label for="Value-fold-params">As Inputs Of (<i>at least one unexported</i>)</label><span id='Value-fold-params-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Value-showhide-outputofs"><i><label for="Value-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="Value-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func github.com/prometheus/client_golang/prometheus.<a href="../github.com/prometheus/client_golang/prometheus.html#name-unwrapScalarRMValue">unwrapScalarRMValue</a>(v <b>Value</b>) <a href="../builtin.html#name-float64">float64</a></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-ValueKind" data-popularity="90">	<input type='checkbox' class="fold" id="ValueKind-fold-content"><label for="ValueKind-fold-content"> type <a href="../../src/runtime/metrics/value.go.html#line-13">ValueKind</a> <a href="../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='ValueKind-fold-content-docs' class="fold-docs">
+<span class="md-text">		ValueKind is a tag for a metric [Value] which indicates its type.</span>
+
+		<input type='checkbox' class="fold" id="ValueKind-fold-results"><label for="ValueKind-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='ValueKind-fold-results-items' class="fold-items"><span>
+			func <a href="#name-Value">Value</a>.<a href="../../src/runtime/metrics/value.go.html#line-37">Kind</a>() <b>ValueKind</b></span></span>
+		<input type='checkbox' class="fold" id="ValueKind-fold-values"><label for="ValueKind-fold-values">As Types Of (<i>total 4, all are exported</i>)</label><span id='ValueKind-fold-values-items' class="fold-items"><span>
+			const <a href="#name-KindBad">KindBad</a></span><span>
+			const <a href="#name-KindFloat64">KindFloat64</a></span><span>
+			const <a href="#name-KindFloat64Histogram">KindFloat64Histogram</a></span><span>
+			const <a href="#name-KindUint64">KindUint64</a></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 4, in which 2 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-All">	<input type='checkbox' class="fold" id="All-fold-content"><label for="All-fold-content"> func <a href="../../src/runtime/metrics/description.go.html#line-539">All</a>() []<a href="#name-Description">Description</a></label><span id='All-fold-content-docs' class="fold-docs">
+<span class="md-text">		All returns a slice of containing metric descriptions for all supported metrics.</span>
+
+</span></div><div class="anchor value-res" id="name-Read">	<input type='checkbox' class="fold" id="Read-fold-content"><label for="Read-fold-content"> func <a href="../../src/runtime/metrics/sample.go.html#line-45">Read</a>(m []<a href="#name-Sample">Sample</a>)</label><span id='Read-fold-content-docs' class="fold-docs">
+<span class="md-text">		Read populates each [Value] field in the given slice of metric samples.
+		
+		Desired metrics should be present in the slice with the appropriate name.
+		The user of this API is encouraged to re-use the same slice between calls for
+		efficiency, but is not required to do so.
+		
+		Note that re-use has some caveats. Notably, Values should not be read or
+		manipulated while a Read with that value is outstanding; that is a data race.
+		This property includes pointer-typed Values (for example, [Float64Histogram])
+		whose underlying storage will be reused by Read when possible. To safely use
+		such values in a concurrent setting, all data must be deep-copied.
+		
+		It is safe to execute multiple Read calls concurrently, but their arguments
+		must share no underlying memory. When in doubt, create a new []Sample from
+		scratch, which is always safe, though may be inefficient.
+		
+		Sample values with names not appearing in [All] will have their Value populated
+		as KindBad to indicate that the name is unknown.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../../src/runtime/metrics/description.go.html#line-514">init</a>()</span></i></div><div class="anchor value-res hidden" id="name-runtime_readMetrics"><i>	<input type='checkbox' class="fold" id="runtime_readMetrics-fold-content"><label for="runtime_readMetrics-fold-content"> func <a href="../../src/runtime/metrics/sample.go.html#line-25">runtime_readMetrics</a>(<a href="../unsafe.html">unsafe</a>.<a href="../unsafe.html#name-Pointer">Pointer</a>, <a href="../builtin.html#name-int">int</a>, <a href="../builtin.html#name-int">int</a>)</label><span id='runtime_readMetrics-fold-content-docs' class="fold-docs">
+<span class="md-text">		Implemented in the runtime.</span>
+
+</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (only one, which is unexported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-allDesc"><i>	<input type='checkbox' class="fold" id="allDesc-fold-content"><label for="allDesc-fold-content">  var <a href="../../src/runtime/metrics/description.go.html#line-55">allDesc</a> []<a href="#name-Description">Description</a></label><span id='allDesc-fold-content-docs' class="fold-docs">
+<span class="md-text">		The English language descriptions below must be kept in sync with the
+		descriptions of each metric in doc.go by running 'go generate'.</span>
+
+</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 4, all are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-KindBad">	<input type='checkbox' class="fold" id="KindBad-fold-content"><label for="KindBad-fold-content">const <a href="../../src/runtime/metrics/value.go.html#line-17">KindBad</a> <a href="#name-ValueKind">ValueKind</a> = 0</label><span id='KindBad-fold-content-docs' class="fold-docs">
+<span class="md-text">		KindBad indicates that the Value has no type and should not be used.</span>
+
+</span></div><div class="anchor value-res" id="name-KindFloat64">	<input type='checkbox' class="fold" id="KindFloat64-fold-content"><label for="KindFloat64-fold-content">const <a href="../../src/runtime/metrics/value.go.html#line-23">KindFloat64</a> <a href="#name-ValueKind">ValueKind</a> = 2</label><span id='KindFloat64-fold-content-docs' class="fold-docs">
+<span class="md-text">		KindFloat64 indicates that the type of the Value is a float64.</span>
+
+</span></div><div class="anchor value-res" id="name-KindFloat64Histogram">	<input type='checkbox' class="fold" id="KindFloat64Histogram-fold-content"><label for="KindFloat64Histogram-fold-content">const <a href="../../src/runtime/metrics/value.go.html#line-26">KindFloat64Histogram</a> <a href="#name-ValueKind">ValueKind</a> = 3</label><span id='KindFloat64Histogram-fold-content-docs' class="fold-docs">
+<span class="md-text">		KindFloat64Histogram indicates that the type of the Value is a *Float64Histogram.</span>
+
+</span></div><div class="anchor value-res" id="name-KindUint64">	<input type='checkbox' class="fold" id="KindUint64-fold-content"><label for="KindUint64-fold-content">const <a href="../../src/runtime/metrics/value.go.html#line-20">KindUint64</a> <a href="#name-ValueKind">ValueKind</a> = 1</label><span id='KindUint64-fold-content-docs' class="fold-docs">
+<span class="md-text">		KindUint64 indicates that the type of the Value is a uint64.</span>
+
+</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -28,4 +28,4 @@ USER appuser
 
 EXPOSE 44043
 
-CMD ["/bin/sh", "-c", "sleep 5 && python3 -m entrypoints.analytic.main"]
+CMD ["/bin/sh", "-c", "sleep 5 && python3 -m command.analytic.main"]

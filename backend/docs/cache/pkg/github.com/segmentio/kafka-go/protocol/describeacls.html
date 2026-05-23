@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/segmentio/kafka-go/protocol/describeacls</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>describeacls</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-github.com/segmentio/kafka-go/protocol/describeacls">github.com/segmentio/kafka-go/protocol/describeacls</a><i> (on <a href="https://pkg.go.dev/github.com/segmentio/kafka-go/protocol/describeacls" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/github.com/segmentio/kafka-go/protocol/describeacls.html">one package</a>, and imported by <a href="../../../../../dep/github.com/segmentio/kafka-go/protocol/describeacls.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html">describeacls.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 5, all are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-ACLFilter" data-popularity="0">	<input type='checkbox' class="fold" id="ACLFilter-fold-content"><label for="ACLFilter-fold-content"> type <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-23">ACLFilter</a> <i>(struct)</i></label><span id='ACLFilter-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="ACLFilter-fold-fields"><label for="ACLFilter-fold-fields">Fields (<i>total 7, all are exported</i>)</label><span id='ACLFilter-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-32">HostFilter</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-33">Operation</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-34">PermissionType</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-31">PrincipalFilter</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-29">ResourceNameFilter</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-30">ResourcePatternTypeFilter</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-28">ResourceTypeFilter</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span></span>
+
+</span></div><div class="anchor type-res" id="name-Request" data-popularity="200">	<input type='checkbox' class="fold" id="Request-fold-content"><label for="Request-fold-content"> type <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-9">Request</a> <i>(struct)</i></label><span id='Request-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="Request-fold-fields"><label for="Request-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='Request-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-14">Filter</a> <i><a href="#name-ACLFilter">ACLFilter</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="Request-fold-methods"><label for="Request-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='Request-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*Request) <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-17">ApiKey</a>() <a href="../protocol.html">protocol</a>.<a href="../protocol.html#name-ApiKey">ApiKey</a></span></span><span>
+			<span class="nodocs">(*Request) <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-19">Broker</a>(cluster <a href="../protocol.html">protocol</a>.<a href="../protocol.html#name-Cluster">Cluster</a>) (<a href="../protocol.html">protocol</a>.<a href="../protocol.html#name-Broker">Broker</a>, <a href="../../../../builtin.html#name-error">error</a>)</span></span></span>
+		<input type='checkbox' class="fold" id="Request-fold-impls"><label for="Request-fold-impls">Implements (<i>at least 2, both are exported</i>)</label><span id='Request-fold-impls-items' class="fold-items"><span>
+			*Request : github.com/segmentio/kafka-go/protocol.<a href="../protocol.html#name-BrokerMessage">BrokerMessage</a></span><span>
+			*Request : github.com/segmentio/kafka-go/protocol.<a href="../protocol.html#name-Message">Message</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-Resource" data-popularity="0">	<input type='checkbox' class="fold" id="Resource-fold-content"><label for="Resource-fold-content"> type <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-50">Resource</a> <i>(struct)</i></label><span id='Resource-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="Resource-fold-fields"><label for="Resource-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='Resource-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-58">ACLs</a> <i>[]<a href="#name-ResponseACL">ResponseACL</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-57">PatternType</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-56">ResourceName</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-55">ResourceType</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span></span>
+
+</span></div><div class="anchor type-res" id="name-Response" data-popularity="100">	<input type='checkbox' class="fold" id="Response-fold-content"><label for="Response-fold-content"> type <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-37">Response</a> <i>(struct)</i></label><span id='Response-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="Response-fold-fields"><label for="Response-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='Response-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-43">ErrorCode</a> <i><a href="../../../../builtin.html#name-int16">int16</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-44">ErrorMessage</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-45">Resources</a> <i>[]<a href="#name-Resource">Resource</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-42">ThrottleTimeMs</a> <i><a href="../../../../builtin.html#name-int32">int32</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="Response-fold-methods"><label for="Response-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='Response-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*Response) <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-48">ApiKey</a>() <a href="../protocol.html">protocol</a>.<a href="../protocol.html#name-ApiKey">ApiKey</a></span></span></span>
+		<input type='checkbox' class="fold" id="Response-fold-impls"><label for="Response-fold-impls">Implements (<i>at least one exported</i>)</label><span id='Response-fold-impls-items' class="fold-items"><span>
+			*Response : github.com/segmentio/kafka-go/protocol.<a href="../protocol.html#name-Message">Message</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-ResponseACL" data-popularity="0">	<input type='checkbox' class="fold" id="ResponseACL-fold-content"><label for="ResponseACL-fold-content"> type <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-61">ResponseACL</a> <i>(struct)</i></label><span id='ResponseACL-fold-content-docs' class="fold-docs">
+
+		<input type='checkbox' class="fold" id="ResponseACL-fold-fields"><label for="ResponseACL-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='ResponseACL-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-67">Host</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-68">Operation</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-69">PermissionType</a> <i><a href="../../../../builtin.html#name-int8">int8</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-66">Principal</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (only one, which is unexported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-init"><i>	<span class="nodocs"> func <a href="../../../../../src/github.com/segmentio/kafka-go/protocol/describeacls/describeacls.go.html#line-5">init</a>()</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/rs/cors/internal</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>internal</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-github.com/rs/cors/internal">github.com/rs/cors/internal</a><i> (on <a href="https://pkg.go.dev/github.com/rs/cors/internal" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/github.com/rs/cors/internal.html">2 packages</a>, and imported by <a href="../../../../dep/github.com/rs/cors/internal.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#doc">d</a> <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html">sortedset.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		adapted from github.com/jub0bs/cors</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-SortedSet" data-popularity="475">	<input type='checkbox' class="fold" id="SortedSet-fold-content"><label for="SortedSet-fold-content"> type <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-14">SortedSet</a> <i>(struct)</i></label><span id='SortedSet-fold-content-docs' class="fold-docs">
+<span class="md-text">		A SortedSet represents a mathematical set of strings sorted in
+		lexicographical order.
+		Each element has a unique position ranging from 0 (inclusive)
+		to the set's cardinality (exclusive).
+		The zero value represents an empty set.</span>
+
+		<input type='checkbox' class="fold" id="SortedSet-fold-fields"><label for="SortedSet-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='SortedSet-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="SortedSet-showhide-fields"><i><label for="SortedSet-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="SortedSet-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-15">m</a> <i>map[<a href="../../../builtin.html#name-string">string</a>]<a href="../../../builtin.html#name-int">int</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-16">maxLen</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="SortedSet-fold-methods"><label for="SortedSet-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='SortedSet-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="SortedSet-fold-method-Accepts"><label for="SortedSet-fold-method-Accepts">( SortedSet) <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-60">Accepts</a>(values []<a href="../../../builtin.html#name-string">string</a>) <a href="../../../builtin.html#name-bool">bool</a></label><span id='SortedSet-fold-method-Accepts-docs' class="fold-docs">
+<span class="md-text">				Accepts reports whether values is a sequence of list-based field values
+				whose elements are
+				  - all members of set,
+				  - sorted in lexicographical order,
+				  - unique.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="SortedSet-fold-method-Size"><label for="SortedSet-fold-method-Size">( SortedSet) <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-41">Size</a>() <a href="../../../builtin.html#name-int">int</a></label><span id='SortedSet-fold-method-Size-docs' class="fold-docs">
+<span class="md-text">				Size returns the cardinality of set.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="SortedSet-fold-method-String"><label for="SortedSet-fold-method-String">( SortedSet) <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-47">String</a>() <a href="../../../builtin.html#name-string">string</a></label><span id='SortedSet-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String sorts joins the elements of set (in lexicographical order)
+				with a comma and returns the resulting string.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="SortedSet-fold-impls"><label for="SortedSet-fold-impls">Implements (<i>at least 5, in which 2 are exported</i>)</label><span id='SortedSet-fold-impls-items' class="fold-items"><span>
+			 SortedSet : expvar.<a href="../../../expvar.html#name-Var">Var</a></span><span>
+			 SortedSet : fmt.<a href="../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="SortedSet-showhide-impls"><i><label for="SortedSet-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="SortedSet-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 SortedSet : context.<a href="../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 SortedSet : os/signal.<a href="../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 SortedSet : runtime.<a href="../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="SortedSet-fold-results"><label for="SortedSet-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='SortedSet-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewSortedSet">NewSortedSet</a>(elems ...<a href="../../../builtin.html#name-string">string</a>) <b>SortedSet</b></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 7, in which 1 is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-NewSortedSet">	<input type='checkbox' class="fold" id="NewSortedSet-fold-content"><label for="NewSortedSet-fold-content"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-21">NewSortedSet</a>(elems ...<a href="../../../builtin.html#name-string">string</a>) <a href="#name-SortedSet">SortedSet</a></label><span id='NewSortedSet-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewSortedSet returns a SortedSet that contains all of elems,
+		but no other elements.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 6 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 6 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-cutAtComma"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-119">cutAtComma</a>(s <a href="../../../builtin.html#name-string">string</a>, n <a href="../../../builtin.html#name-int">int</a>) (before, after <a href="../../../builtin.html#name-string">string</a>, found <a href="../../../builtin.html#name-bool">bool</a>)</span></i></div><div class="anchor value-res hidden" id="name-max"><i>	<input type='checkbox' class="fold" id="max-fold-content"><label for="max-fold-content"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-196">max</a>(a, b <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='max-fold-content-docs' class="fold-docs">
+<span class="md-text">		TODO: when updating go directive to 1.21 or later,
+		use max builtin instead.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-min"><i>	<input type='checkbox' class="fold" id="min-fold-content"><label for="min-fold-content"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-187">min</a>(a, b <a href="../../../builtin.html#name-int">int</a>) <a href="../../../builtin.html#name-int">int</a></label><span id='min-fold-content-docs' class="fold-docs">
+<span class="md-text">		TODO: when updating go directive to 1.21 or later,
+		use min builtin instead.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-trimLeftOWS"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-152">trimLeftOWS</a>(s <a href="../../../builtin.html#name-string">string</a>, n <a href="../../../builtin.html#name-int">int</a>) (<a href="../../../builtin.html#name-string">string</a>, <a href="../../../builtin.html#name-bool">bool</a>)</span></i></div><div class="anchor value-res hidden" id="name-trimOWS"><i>	<input type='checkbox' class="fold" id="trimOWS-fold-content"><label for="trimOWS-fold-content"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-137">trimOWS</a>(s <a href="../../../builtin.html#name-string">string</a>, n <a href="../../../builtin.html#name-int">int</a>) (trimmed <a href="../../../builtin.html#name-string">string</a>, ok <a href="../../../builtin.html#name-bool">bool</a>)</label><span id='trimOWS-fold-content-docs' class="fold-docs">
+<span class="md-text">		TrimOWS trims up to n bytes of [optional whitespace (OWS)]
+		from the start of and/or the end of s.
+		If no more than n bytes of OWS are found at the start of s
+		and no more than n bytes of OWS are found at the end of s,
+		it returns the trimmed result and true.
+		Otherwise, it returns the original string and false.
+		
+		[optional whitespace (OWS)]: https://httpwg.org/specs/rfc9110.html#whitespace</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-trimRightOWS"><i>	<span class="nodocs"> func <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-168">trimRightOWS</a>(s <a href="../../../builtin.html#name-string">string</a>, n <a href="../../../builtin.html#name-int">int</a>) (<a href="../../../builtin.html#name-string">string</a>, <a href="../../../builtin.html#name-bool">bool</a>)</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 2, neither is exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-maxEmptyElements"><i>	<span class="nodocs">const <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-116">maxEmptyElements</a> = 16 // <span class="md-text">number of empty list elements tolerated</span></span></i></div><div class="anchor value-res hidden" id="name-maxOWSBytes"><i>	<span class="nodocs">const <a href="../../../../src/github.com/rs/cors/internal/sortedset.go.html#line-115">maxOWSBytes</a> = 1 // <span class="md-text">number of leading/trailing OWS bytes tolerated</span></span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
