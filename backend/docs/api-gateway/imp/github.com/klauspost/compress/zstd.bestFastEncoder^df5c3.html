@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method Implmentations: github.com/klauspost/compress/zstd.bestFastEncoder</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+<pre><code><span style="font-size:x-large;">type <a href="../../../../pkg/github.com/klauspost/compress/zstd.html">github.com/klauspost/compress/zstd</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/enc_best.go.html#line-69">bestFastEncoder</a></b></span><span style="font-size:large;"> <i>(struct)</i></span>
+
+<code><span class="title">Method Implmentations<span class="title-stat"><i> (4 other methods implement nothing)</i></span></span>
+
+<div class="anchor" id="name-AppendCRC">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_base.go.html#line-34">AppendCRC</a>(dst []<a href="../../../../pkg/builtin.html#name-byte">byte</a>) []<a href="../../../../pkg/builtin.html#name-byte">byte</a>
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-37">AppendCRC</a></b></div>
+<div class="anchor" id="name-Block">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_base.go.html#line-55">Block</a>() *<a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-blockEnc">blockEnc</a>
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-35">Block</a></b></div>
+<div class="anchor" id="name-CRC">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_base.go.html#line-29">CRC</a>() *<a href="../../../../pkg/github.com/klauspost/compress/zstd/internal/xxhash.html">xxhash</a>.<a href="../../../../pkg/github.com/klauspost/compress/zstd/internal/xxhash.html#name-Digest">Digest</a>
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-36">CRC</a></b></div>
+<div class="anchor" id="name-Encode">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_best.go.html#line-78">Encode</a>(blk *<a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-blockEnc">blockEnc</a>, src []<a href="../../../../pkg/builtin.html#name-byte">byte</a>)
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-33">Encode</a></b></div>
+<div class="anchor" id="name-EncodeNoHist">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_best.go.html#line-482">EncodeNoHist</a>(blk *<a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-blockEnc">blockEnc</a>, src []<a href="../../../../pkg/builtin.html#name-byte">byte</a>)
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-34">EncodeNoHist</a></b></div>
+<div class="anchor" id="name-Reset">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_best.go.html#line-488">Reset</a>(d *<a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-dict">dict</a>, singleBlock <a href="../../../../pkg/builtin.html#name-bool">bool</a>)
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-40">Reset</a></b></div>
+<div class="anchor" id="name-UseBlock">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_base.go.html#line-107">UseBlock</a>(enc *<a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-blockEnc">blockEnc</a>)
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-39">UseBlock</a></b></div>
+<div class="anchor" id="name-WindowSize">	<a href="../../../../src/github.com/klauspost/compress/zstd/enc_base.go.html#line-42">WindowSize</a>(size <a href="../../../../pkg/builtin.html#name-int64">int64</a>) <a href="../../../../pkg/builtin.html#name-int32">int32</a>
+		*bestFastEncoder.M : <a href="../../../../pkg/github.com/klauspost/compress/zstd.html#name-encoder">encoder</a>.<b><a href="../../../../src/github.com/klauspost/compress/zstd/encoder.go.html#line-38">WindowSize</a></b></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

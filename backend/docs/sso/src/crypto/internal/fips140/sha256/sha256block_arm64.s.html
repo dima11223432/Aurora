@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: sha256block_arm64.s in package crypto/internal/fips140/sha256</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	sha256block_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/crypto/internal/fips140/sha256.html">crypto/internal/fips140/sha256</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2017 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>//go:build !purego</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code>#define HASHUPDATE \</code></span>
+<span class="codeline" id="line-10"><code>	SHA256H	V9.S4, V3, V2 \</code></span>
+<span class="codeline" id="line-11"><code>	SHA256H2	V9.S4, V8, V3 \</code></span>
+<span class="codeline" id="line-12"><code>	VMOV	V2.B16, V8.B16</code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code>// func blockSHA2(dig *Digest, p []byte)</code></span>
+<span class="codeline" id="line-15"><code>TEXT ·blockSHA2(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-16"><code>	MOVD	dig+0(FP), R0                              // Hash value first address</code></span>
+<span class="codeline" id="line-17"><code>	MOVD	p_base+8(FP), R1                           // message first address</code></span>
+<span class="codeline" id="line-18"><code>	MOVD	p_len+16(FP), R3                           // message length</code></span>
+<span class="codeline" id="line-19"><code>	MOVD	$·_K+0(SB), R2                             // k constants first address</code></span>
+<span class="codeline" id="line-20"><code>	VLD1	(R0), [V0.S4, V1.S4]                       // load h(a,b,c,d,e,f,g,h)</code></span>
+<span class="codeline" id="line-21"><code>	VLD1.P	64(R2), [V16.S4, V17.S4, V18.S4, V19.S4]</code></span>
+<span class="codeline" id="line-22"><code>	VLD1.P	64(R2), [V20.S4, V21.S4, V22.S4, V23.S4]</code></span>
+<span class="codeline" id="line-23"><code>	VLD1.P	64(R2), [V24.S4, V25.S4, V26.S4, V27.S4]</code></span>
+<span class="codeline" id="line-24"><code>	VLD1	(R2), [V28.S4, V29.S4, V30.S4, V31.S4]     //load 64*4bytes K constant(K0-K63)</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code>blockloop:</code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	VLD1.P	16(R1), [V4.B16]                            // load 16bytes message</code></span>
+<span class="codeline" id="line-29"><code>	VLD1.P	16(R1), [V5.B16]                            // load 16bytes message</code></span>
+<span class="codeline" id="line-30"><code>	VLD1.P	16(R1), [V6.B16]                            // load 16bytes message</code></span>
+<span class="codeline" id="line-31"><code>	VLD1.P	16(R1), [V7.B16]                            // load 16bytes message</code></span>
+<span class="codeline" id="line-32"><code>	VMOV	V0.B16, V2.B16                              // backup: VO h(dcba)</code></span>
+<span class="codeline" id="line-33"><code>	VMOV	V1.B16, V3.B16                              // backup: V1 h(hgfe)</code></span>
+<span class="codeline" id="line-34"><code>	VMOV	V2.B16, V8.B16</code></span>
+<span class="codeline" id="line-35"><code>	VREV32	V4.B16, V4.B16                              // prepare for using message in Byte format</code></span>
+<span class="codeline" id="line-36"><code>	VREV32	V5.B16, V5.B16</code></span>
+<span class="codeline" id="line-37"><code>	VREV32	V6.B16, V6.B16</code></span>
+<span class="codeline" id="line-38"><code>	VREV32	V7.B16, V7.B16</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code>	VADD	V16.S4, V4.S4, V9.S4                        // V18(W0+K0...W3+K3)</code></span>
+<span class="codeline" id="line-41"><code>	SHA256SU0	V5.S4, V4.S4                        // V4: (su0(W1)+W0,...,su0(W4)+W3)</code></span>
+<span class="codeline" id="line-42"><code>	HASHUPDATE                                          // H4</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code>	VADD	V17.S4, V5.S4, V9.S4                        // V18(W4+K4...W7+K7)</code></span>
+<span class="codeline" id="line-45"><code>	SHA256SU0	V6.S4, V5.S4                        // V5: (su0(W5)+W4,...,su0(W8)+W7)</code></span>
+<span class="codeline" id="line-46"><code>	SHA256SU1	V7.S4, V6.S4, V4.S4                 // V4: W16-W19</code></span>
+<span class="codeline" id="line-47"><code>	HASHUPDATE                                          // H8</code></span>
+<span class="codeline" id="line-48"><code></code></span>
+<span class="codeline" id="line-49"><code>	VADD	V18.S4, V6.S4, V9.S4                        // V18(W8+K8...W11+K11)</code></span>
+<span class="codeline" id="line-50"><code>	SHA256SU0	V7.S4, V6.S4                        // V6: (su0(W9)+W8,...,su0(W12)+W11)</code></span>
+<span class="codeline" id="line-51"><code>	SHA256SU1	V4.S4, V7.S4, V5.S4                 // V5: W20-W23</code></span>
+<span class="codeline" id="line-52"><code>	HASHUPDATE                                          // H12</code></span>
+<span class="codeline" id="line-53"><code></code></span>
+<span class="codeline" id="line-54"><code>	VADD	V19.S4, V7.S4, V9.S4                        // V18(W12+K12...W15+K15)</code></span>
+<span class="codeline" id="line-55"><code>	SHA256SU0	V4.S4, V7.S4                        // V7: (su0(W13)+W12,...,su0(W16)+W15)</code></span>
+<span class="codeline" id="line-56"><code>	SHA256SU1	V5.S4, V4.S4, V6.S4                 // V6: W24-W27</code></span>
+<span class="codeline" id="line-57"><code>	HASHUPDATE                                          // H16</code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code>	VADD	V20.S4, V4.S4, V9.S4                        // V18(W16+K16...W19+K19)</code></span>
+<span class="codeline" id="line-60"><code>	SHA256SU0	V5.S4, V4.S4                        // V4: (su0(W17)+W16,...,su0(W20)+W19)</code></span>
+<span class="codeline" id="line-61"><code>	SHA256SU1	V6.S4, V5.S4, V7.S4                 // V7: W28-W31</code></span>
+<span class="codeline" id="line-62"><code>	HASHUPDATE                                          // H20</code></span>
+<span class="codeline" id="line-63"><code></code></span>
+<span class="codeline" id="line-64"><code>	VADD	V21.S4, V5.S4, V9.S4                        // V18(W20+K20...W23+K23)</code></span>
+<span class="codeline" id="line-65"><code>	SHA256SU0	V6.S4, V5.S4                        // V5: (su0(W21)+W20,...,su0(W24)+W23)</code></span>
+<span class="codeline" id="line-66"><code>	SHA256SU1	V7.S4, V6.S4, V4.S4                 // V4: W32-W35</code></span>
+<span class="codeline" id="line-67"><code>	HASHUPDATE                                          // H24</code></span>
+<span class="codeline" id="line-68"><code></code></span>
+<span class="codeline" id="line-69"><code>	VADD	V22.S4, V6.S4, V9.S4                        // V18(W24+K24...W27+K27)</code></span>
+<span class="codeline" id="line-70"><code>	SHA256SU0	V7.S4, V6.S4                        // V6: (su0(W25)+W24,...,su0(W28)+W27)</code></span>
+<span class="codeline" id="line-71"><code>	SHA256SU1	V4.S4, V7.S4, V5.S4                 // V5: W36-W39</code></span>
+<span class="codeline" id="line-72"><code>	HASHUPDATE                                          // H28</code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code>	VADD	V23.S4, V7.S4, V9.S4                        // V18(W28+K28...W31+K31)</code></span>
+<span class="codeline" id="line-75"><code>	SHA256SU0	V4.S4, V7.S4                        // V7: (su0(W29)+W28,...,su0(W32)+W31)</code></span>
+<span class="codeline" id="line-76"><code>	SHA256SU1	V5.S4, V4.S4, V6.S4                 // V6: W40-W43</code></span>
+<span class="codeline" id="line-77"><code>	HASHUPDATE                                          // H32</code></span>
+<span class="codeline" id="line-78"><code></code></span>
+<span class="codeline" id="line-79"><code>	VADD	V24.S4, V4.S4, V9.S4                        // V18(W32+K32...W35+K35)</code></span>
+<span class="codeline" id="line-80"><code>	SHA256SU0	V5.S4, V4.S4                        // V4: (su0(W33)+W32,...,su0(W36)+W35)</code></span>
+<span class="codeline" id="line-81"><code>	SHA256SU1	V6.S4, V5.S4, V7.S4                 // V7: W44-W47</code></span>
+<span class="codeline" id="line-82"><code>	HASHUPDATE                                          // H36</code></span>
+<span class="codeline" id="line-83"><code></code></span>
+<span class="codeline" id="line-84"><code>	VADD	V25.S4, V5.S4, V9.S4                        // V18(W36+K36...W39+K39)</code></span>
+<span class="codeline" id="line-85"><code>	SHA256SU0	V6.S4, V5.S4                        // V5: (su0(W37)+W36,...,su0(W40)+W39)</code></span>
+<span class="codeline" id="line-86"><code>	SHA256SU1	V7.S4, V6.S4, V4.S4                 // V4: W48-W51</code></span>
+<span class="codeline" id="line-87"><code>	HASHUPDATE                                          // H40</code></span>
+<span class="codeline" id="line-88"><code></code></span>
+<span class="codeline" id="line-89"><code>	VADD	V26.S4, V6.S4, V9.S4                        // V18(W40+K40...W43+K43)</code></span>
+<span class="codeline" id="line-90"><code>	SHA256SU0	V7.S4, V6.S4                        // V6: (su0(W41)+W40,...,su0(W44)+W43)</code></span>
+<span class="codeline" id="line-91"><code>	SHA256SU1	V4.S4, V7.S4, V5.S4                 // V5: W52-W55</code></span>
+<span class="codeline" id="line-92"><code>	HASHUPDATE                                          // H44</code></span>
+<span class="codeline" id="line-93"><code></code></span>
+<span class="codeline" id="line-94"><code>	VADD	V27.S4, V7.S4, V9.S4                        // V18(W44+K44...W47+K47)</code></span>
+<span class="codeline" id="line-95"><code>	SHA256SU0	V4.S4, V7.S4                        // V7: (su0(W45)+W44,...,su0(W48)+W47)</code></span>
+<span class="codeline" id="line-96"><code>	SHA256SU1	V5.S4, V4.S4, V6.S4                 // V6: W56-W59</code></span>
+<span class="codeline" id="line-97"><code>	HASHUPDATE                                          // H48</code></span>
+<span class="codeline" id="line-98"><code></code></span>
+<span class="codeline" id="line-99"><code>	VADD	V28.S4, V4.S4, V9.S4                        // V18(W48+K48,...,W51+K51)</code></span>
+<span class="codeline" id="line-100"><code>	HASHUPDATE                                          // H52</code></span>
+<span class="codeline" id="line-101"><code>	SHA256SU1	V6.S4, V5.S4, V7.S4                 // V7: W60-W63</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code>	VADD	V29.S4, V5.S4, V9.S4                        // V18(W52+K52,...,W55+K55)</code></span>
+<span class="codeline" id="line-104"><code>	HASHUPDATE                                          // H56</code></span>
+<span class="codeline" id="line-105"><code></code></span>
+<span class="codeline" id="line-106"><code>	VADD	V30.S4, V6.S4, V9.S4                        // V18(W59+K59,...,W59+K59)</code></span>
+<span class="codeline" id="line-107"><code>	HASHUPDATE                                          // H60</code></span>
+<span class="codeline" id="line-108"><code></code></span>
+<span class="codeline" id="line-109"><code>	VADD	V31.S4, V7.S4, V9.S4                        // V18(W60+K60,...,W63+K63)</code></span>
+<span class="codeline" id="line-110"><code>	HASHUPDATE                                          // H64</code></span>
+<span class="codeline" id="line-111"><code></code></span>
+<span class="codeline" id="line-112"><code>	SUB	$64, R3, R3                                 // message length - 64bytes, then compare with 64bytes</code></span>
+<span class="codeline" id="line-113"><code>	VADD	V2.S4, V0.S4, V0.S4</code></span>
+<span class="codeline" id="line-114"><code>	VADD	V3.S4, V1.S4, V1.S4</code></span>
+<span class="codeline" id="line-115"><code>	CBNZ	R3, blockloop</code></span>
+<span class="codeline" id="line-116"><code></code></span>
+<span class="codeline" id="line-117"><code>sha256ret:</code></span>
+<span class="codeline" id="line-118"><code></code></span>
+<span class="codeline" id="line-119"><code>	VST1	[V0.S4, V1.S4], (R0)                       // store hash value H</code></span>
+<span class="codeline" id="line-120"><code>	RET</code></span>
+<span class="codeline" id="line-121"><code></code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

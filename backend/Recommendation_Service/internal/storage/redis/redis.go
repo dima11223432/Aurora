@@ -1,3 +1,5 @@
+// Package redis implements Redis-backed storage for the Recommendation Service,
+// providing sorted-set operations for channel-based post feeds with cursor pagination.
 package redis
 
 import (
@@ -13,11 +15,13 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
+// RedisController manages Redis operations for post feeds and caching.
 type RedisController struct {
 	redis      *redis.Client
 	DefaultTTl time.Duration
 }
 
+// NewRedisController creates a new RedisController with the given connection config.
 func NewRedisController(addr string, password string, db int, protocol int, ttl time.Duration) *RedisController {
 	return &RedisController{
 		redis: redis.NewClient(&redis.Options{
@@ -30,6 +34,8 @@ func NewRedisController(addr string, password string, db int, protocol int, ttl 
 	}
 }
 
+// GetPostsByChannels retrieves posts from specified channels using sorted-set union
+// with cursor-based pagination. Creates a temporary sorted set per user per channel combination.
 func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []string, userID int64, cursor *models.Cursor, limit int64) ([]models.Post, *models.Cursor, error) {
 	const op = "Recommendation_Service.internal.storage.redis.GetPostsByChannels"
 	hash := getChannelsHash(channels)
@@ -76,6 +82,7 @@ func (r *RedisController) GetPostsByChannels(ctx context.Context, channels []str
 	return posts, nextCursor, nil
 }
 
+// unmarshalToPosts converts raw Redis values to Post domain models.
 func unmarshalToPosts(vals []any) []models.Post {
 	posts := make([]models.Post, 0, len(vals))
 	for _, val := range vals {
@@ -96,6 +103,7 @@ func unmarshalToPosts(vals []any) []models.Post {
 	return posts
 }
 
+// initilizeNewZUnion creates a temporary union of sorted sets for the given channels.
 func (r *RedisController) initilizeNewZUnion(ctx context.Context, tmpKey string, channels []string) error {
 	const op = "Recommendation_Service.internal.storage.redis.inicilizeNewZUnion"
 	channelKeys := make([]string, 0, len(channels))
@@ -118,6 +126,7 @@ func (r *RedisController) initilizeNewZUnion(ctx context.Context, tmpKey string,
 	return nil
 }
 
+// configureNewCursor creates a cursor from the last element of a sorted set result.
 func configureNewCursor(zPosts []redis.Z) (*models.Cursor, error) {
 	const op = "Recommendation_Service.internal.storage.redis.configureNewCursor"
 
@@ -133,6 +142,7 @@ func configureNewCursor(zPosts []redis.Z) (*models.Cursor, error) {
 	return nextCursor, nil
 }
 
+// preparePostKeys converts sorted set members to Redis key names, skipping the cursor item.
 func preparePostKeys(zPosts []redis.Z, cursor *models.Cursor) []string {
 	postKeys := make([]string, 0, len(zPosts))
 	for _, post := range zPosts {
@@ -148,6 +158,7 @@ func preparePostKeys(zPosts []redis.Z, cursor *models.Cursor) []string {
 	return postKeys
 }
 
+// getSortedPosts retrieves sorted set entries from Redis in reverse score order.
 func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, maxScore string, offset int64, count int64) ([]redis.Z, error) {
 	posts, err := r.redis.ZRevRangeByScoreWithScores(
 		ctx,
@@ -165,12 +176,14 @@ func (r *RedisController) getSortedPosts(ctx context.Context, tmpKey string, max
 	return posts, nil
 }
 
+// getChannelsHash generates an MD5 hash for a sorted list of channel names.
 func getChannelsHash(channels []string) string {
 	sort.Strings(channels)
 	data := strings.Join(channels, ",")
 	return fmt.Sprintf("%x", md5.Sum([]byte(data)))
 }
 
+// Ping checks the Redis connection health.
 func (r *RedisController) Ping(ctx context.Context) error {
 	return r.redis.Ping(ctx).Err()
 }

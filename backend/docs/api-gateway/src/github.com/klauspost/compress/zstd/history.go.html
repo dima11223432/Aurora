@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: history.go in package github.com/klauspost/compress/zstd</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	history.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/zstd.html">github.com/klauspost/compress/zstd</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2019+ Klaus Post. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// License information can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// Based on work by Yann Collet, released under BSD License.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="keyword">package</span> zstd</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-8"><code>	<label for="i0"><span class="lit-string i0">"github.com/klauspost/compress/huff0"</span></label></code></span>
+<span class="codeline" id="line-9"><code>)</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// history contains the information transferred between blocks.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/klauspost/compress/zstd.html#name-history" class="ident">history</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-13"><code>	<span class="comment">// Literal decompression</span></code></span>
+<span class="codeline" id="line-14"><code>	huffTree *<a href="../../../../../pkg/github.com/klauspost/compress/huff0.html" class="ident i0">huff0</a>.<a href="../huff0/huff0.go.html#line-64" class="ident">Scratch</a></code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code>	<span class="comment">// Sequence decompression</span></code></span>
+<span class="codeline" id="line-17"><code>	decoders      <a href="seqdec.go.html#line-63" class="ident">sequenceDecs</a></code></span>
+<span class="codeline" id="line-18"><code>	recentOffsets [<span class="lit-number">3</span>]<a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code>	<span class="comment">// History buffer...</span></code></span>
+<span class="codeline" id="line-21"><code>	b []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code>	<span class="comment">// ignoreBuffer is meant to ignore a number of bytes</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	// when checking for matches in history</span></code></span>
+<span class="codeline" id="line-25"><code>	ignoreBuffer <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code>	windowSize       <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-28"><code>	allocFrameBuffer <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a> <span class="comment">// needed?</span></code></span>
+<span class="codeline" id="line-29"><code>	error            <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-30"><code>	dict             *<a href="dict.go.html#line-15" class="ident">dict</a></code></span>
+<span class="codeline" id="line-31"><code>}</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// reset will reset the history to initial state of a frame.</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">// The history must already have been initialized to the desired size.</span></code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">func</span> (<label for="r0" class="ident">h</label> *<a href="#line-12" class="ident">history</a>) <label for="r1" class="ident">reset</label>() {</code></span>
+<span class="codeline" id="line-36"><code>	<label for="r0" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <label for="r0" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[:<span class="lit-number">0</span>]</code></span>
+<span class="codeline" id="line-37"><code>	<label for="r0" class="ident">h</label>.<a href="#line-25" class="ident">ignoreBuffer</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-38"><code>	<label for="r0" class="ident">h</label>.<a href="#line-29" class="ident">error</a> = <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-39"><code>	<label for="r0" class="ident">h</label>.<a href="#line-18" class="ident">recentOffsets</a> = [<span class="lit-number">3</span>]<a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>{<span class="lit-number">1</span>, <span class="lit-number">4</span>, <span class="lit-number">8</span>}</code></span>
+<span class="codeline" id="line-40"><code>	<label for="r0" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a>.<a href="seqdec.go.html#line-102" class="ident">freeDecoders</a>()</code></span>
+<span class="codeline" id="line-41"><code>	<label for="r0" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a> = <a href="seqdec.go.html#line-63" class="ident">sequenceDecs</a>{<a href="seqdec.go.html#line-72" class="ident">br</a>: <label for="r0" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a>.<a href="seqdec.go.html#line-72" class="ident">br</a>}</code></span>
+<span class="codeline" id="line-42"><code>	<label for="r0" class="ident">h</label>.<a href="#line-48" class="ident">freeHuffDecoder</a>()</code></span>
+<span class="codeline" id="line-43"><code>	<label for="r0" class="ident">h</label>.<a href="#line-14" class="ident">huffTree</a> = <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-44"><code>	<label for="r0" class="ident">h</label>.<a href="#line-30" class="ident">dict</a> = <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-45"><code>	<span class="comment">//printf("history created: %+v (l: %d, c: %d)", *h, len(h.b), cap(h.b))</span></code></span>
+<span class="codeline" id="line-46"><code>}</code></span>
+<span class="codeline" id="line-47"><code></code></span>
+<span class="codeline" id="line-48"><code><span class="keyword">func</span> (<label for="r2" class="ident">h</label> *<a href="#line-12" class="ident">history</a>) <label for="r3" class="ident">freeHuffDecoder</label>() {</code></span>
+<span class="codeline" id="line-49"><code>	<span class="keyword">if</span> <label for="r2" class="ident">h</label>.<a href="#line-14" class="ident">huffTree</a> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-50"><code>		<span class="keyword">if</span> <label for="r2" class="ident">h</label>.<a href="#line-30" class="ident">dict</a> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> || <label for="r2" class="ident">h</label>.<a href="#line-30" class="ident">dict</a>.<a href="dict.go.html#line-18" class="ident">litEnc</a> != <label for="r2" class="ident">h</label>.<a href="#line-14" class="ident">huffTree</a> {</code></span>
+<span class="codeline" id="line-51"><code>			<a href="blockdec.go.html#line-57" class="ident">huffDecoderPool</a>.<a href="../../../../sync/pool.go.html#line-99" class="ident">Put</a>(<label for="r2" class="ident">h</label>.<a href="#line-14" class="ident">huffTree</a>)</code></span>
+<span class="codeline" id="line-52"><code>			<label for="r2" class="ident">h</label>.<a href="#line-14" class="ident">huffTree</a> = <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-53"><code>		}</code></span>
+<span class="codeline" id="line-54"><code>	}</code></span>
+<span class="codeline" id="line-55"><code>}</code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code><span class="keyword">func</span> (<label for="r4" class="ident">h</label> *<a href="#line-12" class="ident">history</a>) <label for="r5" class="ident">setDict</label>(<label for="r6" class="ident">dict</label> *<a href="dict.go.html#line-15" class="ident">dict</a>) {</code></span>
+<span class="codeline" id="line-58"><code>	<span class="keyword">if</span> <label for="r6" class="ident">dict</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-59"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-60"><code>	}</code></span>
+<span class="codeline" id="line-61"><code>	<label for="r4" class="ident">h</label>.<a href="#line-30" class="ident">dict</a> = <label for="r6" class="ident">dict</label></code></span>
+<span class="codeline" id="line-62"><code>	<label for="r4" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a>.<a href="seqdec.go.html#line-64" class="ident">litLengths</a> = <label for="r6" class="ident">dict</label>.<a href="dict.go.html#line-19" class="ident">llDec</a></code></span>
+<span class="codeline" id="line-63"><code>	<label for="r4" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a>.<a href="seqdec.go.html#line-65" class="ident">offsets</a> = <label for="r6" class="ident">dict</label>.<a href="dict.go.html#line-19" class="ident">ofDec</a></code></span>
+<span class="codeline" id="line-64"><code>	<label for="r4" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a>.<a href="seqdec.go.html#line-66" class="ident">matchLengths</a> = <label for="r6" class="ident">dict</label>.<a href="dict.go.html#line-19" class="ident">mlDec</a></code></span>
+<span class="codeline" id="line-65"><code>	<label for="r4" class="ident">h</label>.<a href="#line-17" class="ident">decoders</a>.<a href="seqdec.go.html#line-68" class="ident">dict</a> = <label for="r6" class="ident">dict</label>.<a href="dict.go.html#line-21" class="ident">content</a></code></span>
+<span class="codeline" id="line-66"><code>	<label for="r4" class="ident">h</label>.<a href="#line-18" class="ident">recentOffsets</a> = <label for="r6" class="ident">dict</label>.<a href="dict.go.html#line-20" class="ident">offsets</a></code></span>
+<span class="codeline" id="line-67"><code>	<label for="r4" class="ident">h</label>.<a href="#line-14" class="ident">huffTree</a> = <label for="r6" class="ident">dict</label>.<a href="dict.go.html#line-18" class="ident">litEnc</a></code></span>
+<span class="codeline" id="line-68"><code>}</code></span>
+<span class="codeline" id="line-69"><code></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">// append bytes to history.</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">// This function will make sure there is space for it,</span></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">// if the buffer has been allocated with enough extra space.</span></code></span>
+<span class="codeline" id="line-73"><code><span class="keyword">func</span> (<label for="r7" class="ident">h</label> *<a href="#line-12" class="ident">history</a>) <label for="r8" class="ident">append</label>(<label for="r9" class="ident">b</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) {</code></span>
+<span class="codeline" id="line-74"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">b</label>) &gt;= <label for="r7" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a> {</code></span>
+<span class="codeline" id="line-75"><code>		<span class="comment">// Discard all history by simply overwriting</span></code></span>
+<span class="codeline" id="line-76"><code>		<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[:<label for="r7" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a>]</code></span>
+<span class="codeline" id="line-77"><code>		<a href="../../../../../pkg/builtin.html#name-copy" class="ident">copy</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>, <label for="r9" class="ident">b</label>[<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">b</label>)-<label for="r7" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a>:])</code></span>
+<span class="codeline" id="line-78"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-79"><code>	}</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>	<span class="comment">// If there is space, append it.</span></code></span>
+<span class="codeline" id="line-82"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">b</label>) &lt; <a href="../../../../../pkg/builtin.html#name-cap" class="ident">cap</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>)-<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>) {</code></span>
+<span class="codeline" id="line-83"><code>		<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>, <label for="r9" class="ident">b</label>...)</code></span>
+<span class="codeline" id="line-84"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-85"><code>	}</code></span>
+<span class="codeline" id="line-86"><code></code></span>
+<span class="codeline" id="line-87"><code>	<span class="comment">// Move data down so we only have window size left.</span></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">	// We know we have less than window size in b at this point.</span></code></span>
+<span class="codeline" id="line-89"><code>	<label for="r10" class="ident">discard</label> := <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">b</label>) + <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>) - <label for="r7" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a></code></span>
+<span class="codeline" id="line-90"><code>	<a href="../../../../../pkg/builtin.html#name-copy" class="ident">copy</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>, <label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[<label for="r10" class="ident">discard</label>:])</code></span>
+<span class="codeline" id="line-91"><code>	<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[:<label for="r7" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a>]</code></span>
+<span class="codeline" id="line-92"><code>	<a href="../../../../../pkg/builtin.html#name-copy" class="ident">copy</a>(<label for="r7" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[<label for="r7" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a>-<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r9" class="ident">b</label>):], <label for="r9" class="ident">b</label>)</code></span>
+<span class="codeline" id="line-93"><code>}</code></span>
+<span class="codeline" id="line-94"><code></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">// ensureBlock will ensure there is space for at least one block...</span></code></span>
+<span class="codeline" id="line-96"><code><span class="keyword">func</span> (<label for="r11" class="ident">h</label> *<a href="#line-12" class="ident">history</a>) <label for="r12" class="ident">ensureBlock</label>() {</code></span>
+<span class="codeline" id="line-97"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-cap" class="ident">cap</a>(<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>) &lt; <label for="r11" class="ident">h</label>.<a href="#line-28" class="ident">allocFrameBuffer</a> {</code></span>
+<span class="codeline" id="line-98"><code>		<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <span class="lit-number">0</span>, <label for="r11" class="ident">h</label>.<a href="#line-28" class="ident">allocFrameBuffer</a>)</code></span>
+<span class="codeline" id="line-99"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-100"><code>	}</code></span>
+<span class="codeline" id="line-101"><code></code></span>
+<span class="codeline" id="line-102"><code>	<label for="r13" class="ident">avail</label> := <a href="../../../../../pkg/builtin.html#name-cap" class="ident">cap</a>(<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>) - <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>)</code></span>
+<span class="codeline" id="line-103"><code>	<span class="keyword">if</span> <label for="r13" class="ident">avail</label> &gt;= <label for="r11" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a> || <label for="r13" class="ident">avail</label> &gt; <a href="blockdec.go.html#line-40" class="ident">maxCompressedBlockSize</a> {</code></span>
+<span class="codeline" id="line-104"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-105"><code>	}</code></span>
+<span class="codeline" id="line-106"><code>	<span class="comment">// Move data down so we only have window size left.</span></code></span>
+<span class="codeline" id="line-107"><code><span class="comment">	// We know we have less than window size in b at this point.</span></code></span>
+<span class="codeline" id="line-108"><code>	<label for="r14" class="ident">discard</label> := <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>) - <label for="r11" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a></code></span>
+<span class="codeline" id="line-109"><code>	<a href="../../../../../pkg/builtin.html#name-copy" class="ident">copy</a>(<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>, <label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[<label for="r14" class="ident">discard</label>:])</code></span>
+<span class="codeline" id="line-110"><code>	<label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <label for="r11" class="ident">h</label>.<a href="#line-21" class="ident">b</a>[:<label for="r11" class="ident">h</label>.<a href="#line-27" class="ident">windowSize</a>]</code></span>
+<span class="codeline" id="line-111"><code>}</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">// append bytes to history without ever discarding anything.</span></code></span>
+<span class="codeline" id="line-114"><code><span class="keyword">func</span> (<label for="r15" class="ident">h</label> *<a href="#line-12" class="ident">history</a>) <label for="r16" class="ident">appendKeep</label>(<label for="r17" class="ident">b</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) {</code></span>
+<span class="codeline" id="line-115"><code>	<label for="r15" class="ident">h</label>.<a href="#line-21" class="ident">b</a> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r15" class="ident">h</label>.<a href="#line-21" class="ident">b</a>, <label for="r17" class="ident">b</label>...)</code></span>
+<span class="codeline" id="line-116"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

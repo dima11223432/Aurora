@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: rawproduce.go in package github.com/segmentio/kafka-go</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	rawproduce.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> kafka</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"errors"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"fmt"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"net"</span></label></code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i4"><span class="lit-string i4">"github.com/segmentio/kafka-go/protocol"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/produce.html" class="ident i5">produceAPI</a> <label for="i5"><span class="lit-string i5">"github.com/segmentio/kafka-go/protocol/produce"</span></label></code></span>
+<span class="codeline" id="line-11"><code>	<label for="i6"><span class="lit-string i6">"github.com/segmentio/kafka-go/protocol/rawproduce"</span></label></code></span>
+<span class="codeline" id="line-12"><code>)</code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// RawProduceRequest represents a request sent to a kafka broker to produce records</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// to a topic partition. The request contains a pre-encoded/raw record set.</span></code></span>
+<span class="codeline" id="line-16"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RawProduceRequest" class="ident">RawProduceRequest</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-17"><code>	<span class="comment">// Address of the kafka broker to send the request to.</span></code></span>
+<span class="codeline" id="line-18"><code>	Addr <a href="../../../../pkg/net.html" class="ident i3">net</a>.<a href="../../../net/net.go.html#line-116" class="ident">Addr</a></code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code>	<span class="comment">// The topic to produce the records to.</span></code></span>
+<span class="codeline" id="line-21"><code>	Topic <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code>	<span class="comment">// The partition to produce the records to.</span></code></span>
+<span class="codeline" id="line-24"><code>	Partition <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code>	<span class="comment">// The level of required acknowledgements to ask the kafka broker for.</span></code></span>
+<span class="codeline" id="line-27"><code>	RequiredAcks <a href="produce.go.html#line-17" class="ident">RequiredAcks</a></code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code>	<span class="comment">// The message format version used when encoding the records.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">	// By default, the client automatically determine which version should be</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">	// used based on the version of the Produce API supported by the server.</span></code></span>
+<span class="codeline" id="line-33"><code>	MessageVersion <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code>	<span class="comment">// An optional transaction id when producing to the kafka broker is part of</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">	// a transaction.</span></code></span>
+<span class="codeline" id="line-37"><code>	TransactionalID <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code>	<span class="comment">// The sequence of records to produce to the topic partition.</span></code></span>
+<span class="codeline" id="line-40"><code>	RawRecords <a href="../../../../pkg/github.com/segmentio/kafka-go/protocol.html" class="ident i4">protocol</a>.<a href="protocol/record.go.html#line-297" class="ident">RawRecordSet</a></code></span>
+<span class="codeline" id="line-41"><code>}</code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// RawProduce sends a raw produce request to a kafka broker and returns the response.</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">// If the request contained no records, an error wrapping protocol.ErrNoRecord</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">// is returned.</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// When the request is configured with RequiredAcks=none, both the response and</span></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">// the error will be nil on success.</span></code></span>
+<span class="codeline" id="line-50"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> *<a href="client.go.html#line-28" class="ident">Client</a>) <label for="r1" class="ident">RawProduce</label>(<label for="r2" class="ident">ctx</label> <a href="../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r3" class="ident">req</label> *<a href="#line-16" class="ident">RawProduceRequest</a>) (*<a href="produce.go.html#line-101" class="ident">ProduceResponse</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-51"><code>	<label for="r4" class="ident">m</label>, <label for="r5" class="ident">err</label> := <label for="r0" class="ident">c</label>.<a href="client.go.html#line-102" class="ident">roundTrip</a>(<label for="r2" class="ident">ctx</label>, <label for="r3" class="ident">req</label>.<a href="#line-18" class="ident">Addr</a>, &amp;<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/rawproduce.html" class="ident i6">rawproduce</a>.<a href="protocol/rawproduce/rawproduce.go.html#line-16" class="ident">Request</a>{</code></span>
+<span class="codeline" id="line-52"><code>		<a href="protocol/rawproduce/rawproduce.go.html#line-17" class="ident">TransactionalID</a>: <label for="r3" class="ident">req</label>.<a href="#line-37" class="ident">TransactionalID</a>,</code></span>
+<span class="codeline" id="line-53"><code>		<a href="protocol/rawproduce/rawproduce.go.html#line-18" class="ident">Acks</a>:            <a href="../../../../pkg/builtin.html#name-int16" class="ident">int16</a>(<label for="r3" class="ident">req</label>.<a href="#line-27" class="ident">RequiredAcks</a>),</code></span>
+<span class="codeline" id="line-54"><code>		<a href="protocol/rawproduce/rawproduce.go.html#line-19" class="ident">Timeout</a>:         <label for="r0" class="ident">c</label>.<a href="client.go.html#line-144" class="ident">timeoutMs</a>(<label for="r2" class="ident">ctx</label>, <a href="client.go.html#line-17" class="ident">defaultProduceTimeout</a>),</code></span>
+<span class="codeline" id="line-55"><code>		<a href="protocol/rawproduce/rawproduce.go.html#line-20" class="ident">Topics</a>: []<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/rawproduce.html" class="ident i6">rawproduce</a>.<a href="protocol/rawproduce/rawproduce.go.html#line-63" class="ident">RequestTopic</a>{{</code></span>
+<span class="codeline" id="line-56"><code>			<a href="protocol/rawproduce/rawproduce.go.html#line-64" class="ident">Topic</a>: <label for="r3" class="ident">req</label>.<a href="#line-21" class="ident">Topic</a>,</code></span>
+<span class="codeline" id="line-57"><code>			<a href="protocol/rawproduce/rawproduce.go.html#line-65" class="ident">Partitions</a>: []<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/rawproduce.html" class="ident i6">rawproduce</a>.<a href="protocol/rawproduce/rawproduce.go.html#line-68" class="ident">RequestPartition</a>{{</code></span>
+<span class="codeline" id="line-58"><code>				<a href="protocol/rawproduce/rawproduce.go.html#line-69" class="ident">Partition</a>: <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<label for="r3" class="ident">req</label>.<a href="#line-24" class="ident">Partition</a>),</code></span>
+<span class="codeline" id="line-59"><code>				<a href="protocol/rawproduce/rawproduce.go.html#line-70" class="ident">RecordSet</a>: <label for="r3" class="ident">req</label>.<a href="#line-40" class="ident">RawRecords</a>,</code></span>
+<span class="codeline" id="line-60"><code>			}},</code></span>
+<span class="codeline" id="line-61"><code>		}},</code></span>
+<span class="codeline" id="line-62"><code>	})</code></span>
+<span class="codeline" id="line-63"><code></code></span>
+<span class="codeline" id="line-64"><code>	<span class="keyword">switch</span> {</code></span>
+<span class="codeline" id="line-65"><code>	<span class="keyword">case</span> <label for="r5" class="ident">err</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>:</code></span>
+<span class="codeline" id="line-66"><code>	<span class="keyword">case</span> <a href="../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r5" class="ident">err</label>, <a href="../../../../pkg/github.com/segmentio/kafka-go/protocol.html" class="ident i4">protocol</a>.<a href="protocol/error.go.html#line-35" class="ident">ErrNoRecord</a>):</code></span>
+<span class="codeline" id="line-67"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-new" class="ident">new</a>(<a href="produce.go.html#line-101" class="ident">ProduceResponse</a>), <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-68"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-69"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"kafka.(*Client).RawProduce: %w"</span>, <label for="r5" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-70"><code>	}</code></span>
+<span class="codeline" id="line-71"><code></code></span>
+<span class="codeline" id="line-72"><code>	<span class="keyword">if</span> <label for="r3" class="ident">req</label>.<a href="#line-27" class="ident">RequiredAcks</a> == <a href="produce.go.html#line-20" class="ident">RequireNone</a> {</code></span>
+<span class="codeline" id="line-73"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-74"><code>	}</code></span>
+<span class="codeline" id="line-75"><code></code></span>
+<span class="codeline" id="line-76"><code>	<label for="r6" class="ident">res</label> := <label for="r4" class="ident">m</label>.(*<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/produce.html" class="ident i5">produceAPI</a>.<a href="protocol/produce/produce.go.html#line-101" class="ident">Response</a>)</code></span>
+<span class="codeline" id="line-77"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r6" class="ident">res</label>.<a href="protocol/produce/produce.go.html#line-102" class="ident">Topics</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-78"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"kafka.(*Client).RawProduce: %w"</span>, <a href="../../../../pkg/github.com/segmentio/kafka-go/protocol.html" class="ident i4">protocol</a>.<a href="protocol/error.go.html#line-18" class="ident">ErrNoTopic</a>)</code></span>
+<span class="codeline" id="line-79"><code>	}</code></span>
+<span class="codeline" id="line-80"><code>	<label for="r7" class="ident">topic</label> := &amp;<label for="r6" class="ident">res</label>.<a href="protocol/produce/produce.go.html#line-102" class="ident">Topics</a>[<span class="lit-number">0</span>]</code></span>
+<span class="codeline" id="line-81"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r7" class="ident">topic</label>.<a href="protocol/produce/produce.go.html#line-110" class="ident">Partitions</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-82"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"kafka.(*Client).RawProduce: %w"</span>, <a href="../../../../pkg/github.com/segmentio/kafka-go/protocol.html" class="ident i4">protocol</a>.<a href="protocol/error.go.html#line-22" class="ident">ErrNoPartition</a>)</code></span>
+<span class="codeline" id="line-83"><code>	}</code></span>
+<span class="codeline" id="line-84"><code>	<label for="r8" class="ident">partition</label> := &amp;<label for="r7" class="ident">topic</label>.<a href="protocol/produce/produce.go.html#line-110" class="ident">Partitions</a>[<span class="lit-number">0</span>]</code></span>
+<span class="codeline" id="line-85"><code></code></span>
+<span class="codeline" id="line-86"><code>	<label for="r9" class="ident">ret</label> := &amp;<a href="produce.go.html#line-101" class="ident">ProduceResponse</a>{</code></span>
+<span class="codeline" id="line-87"><code>		<a href="produce.go.html#line-103" class="ident">Throttle</a>:       <a href="time.go.html#line-28" class="ident">makeDuration</a>(<label for="r6" class="ident">res</label>.<a href="protocol/produce/produce.go.html#line-103" class="ident">ThrottleTimeMs</a>),</code></span>
+<span class="codeline" id="line-88"><code>		<a href="produce.go.html#line-110" class="ident">Error</a>:          <a href="error.go.html#line-667" class="ident">makeError</a>(<label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-115" class="ident">ErrorCode</a>, <label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-120" class="ident">ErrorMessage</a>),</code></span>
+<span class="codeline" id="line-89"><code>		<a href="produce.go.html#line-116" class="ident">BaseOffset</a>:     <label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-116" class="ident">BaseOffset</a>,</code></span>
+<span class="codeline" id="line-90"><code>		<a href="produce.go.html#line-122" class="ident">LogAppendTime</a>:  <a href="time.go.html#line-14" class="ident">makeTime</a>(<label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-117" class="ident">LogAppendTime</a>),</code></span>
+<span class="codeline" id="line-91"><code>		<a href="produce.go.html#line-128" class="ident">LogStartOffset</a>: <label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-118" class="ident">LogStartOffset</a>,</code></span>
+<span class="codeline" id="line-92"><code>	}</code></span>
+<span class="codeline" id="line-93"><code></code></span>
+<span class="codeline" id="line-94"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-119" class="ident">RecordErrors</a>) != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-95"><code>		<label for="r9" class="ident">ret</label>.<a href="produce.go.html#line-135" class="ident">RecordErrors</a> = <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>]<a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>, <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-119" class="ident">RecordErrors</a>))</code></span>
+<span class="codeline" id="line-96"><code></code></span>
+<span class="codeline" id="line-97"><code>		<span class="keyword">for</span> <label for="r10" class="ident">_</label>, <label for="r11" class="ident">recErr</label> := <span class="keyword">range</span> <label for="r8" class="ident">partition</label>.<a href="protocol/produce/produce.go.html#line-119" class="ident">RecordErrors</a> {</code></span>
+<span class="codeline" id="line-98"><code>			<label for="r9" class="ident">ret</label>.<a href="produce.go.html#line-135" class="ident">RecordErrors</a>[<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r11" class="ident">recErr</label>.<a href="protocol/produce/produce.go.html#line-124" class="ident">BatchIndex</a>)] = <a href="../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../errors/errors.go.html#line-64" class="ident">New</a>(<label for="r11" class="ident">recErr</label>.<a href="protocol/produce/produce.go.html#line-125" class="ident">BatchIndexErrorMessage</a>)</code></span>
+<span class="codeline" id="line-99"><code>		}</code></span>
+<span class="codeline" id="line-100"><code>	}</code></span>
+<span class="codeline" id="line-101"><code></code></span>
+<span class="codeline" id="line-102"><code>	<span class="keyword">return</span> <label for="r9" class="ident">ret</label>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-103"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

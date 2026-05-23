@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: constraints.go in package github.com/samber/lo/internal/constraints</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	constraints.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/samber/lo/internal/constraints.html">github.com/samber/lo/internal/constraints</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2021 The Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-5"><code><span class="comment">// Package constraints defines a set of useful constraints to be used</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// with type parameters.</span></code></span></div><span class="codeline" id="line-7"><code><span class="keyword">package</span> constraints</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// Signed is a constraint that permits any signed integer type.</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// If future releases of Go add new predeclared signed integer types,</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// this constraint will be modified to include them.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/samber/lo/internal/constraints.html#name-Signed" class="ident">Signed</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-13"><code>	~<a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a> | ~<a href="../../../../../../pkg/builtin.html#name-int8" class="ident">int8</a> | ~<a href="../../../../../../pkg/builtin.html#name-int16" class="ident">int16</a> | ~<a href="../../../../../../pkg/builtin.html#name-int32" class="ident">int32</a> | ~<a href="../../../../../../pkg/builtin.html#name-int64" class="ident">int64</a></code></span>
+<span class="codeline" id="line-14"><code>}</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// Unsigned is a constraint that permits any unsigned integer type.</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">// If future releases of Go add new predeclared unsigned integer types,</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// this constraint will be modified to include them.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/samber/lo/internal/constraints.html#name-Unsigned" class="ident">Unsigned</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-20"><code>	~<a href="../../../../../../pkg/builtin.html#name-uint" class="ident">uint</a> | ~<a href="../../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a> | ~<a href="../../../../../../pkg/builtin.html#name-uint16" class="ident">uint16</a> | ~<a href="../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> | ~<a href="../../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a> | ~<a href="../../../../../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a></code></span>
+<span class="codeline" id="line-21"><code>}</code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">// Integer is a constraint that permits any integer type.</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// If future releases of Go add new predeclared integer types,</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">// this constraint will be modified to include them.</span></code></span>
+<span class="codeline" id="line-26"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/samber/lo/internal/constraints.html#name-Integer" class="ident">Integer</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-27"><code>	<a href="#line-12" class="ident">Signed</a> | <a href="#line-19" class="ident">Unsigned</a></code></span>
+<span class="codeline" id="line-28"><code>}</code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// Float is a constraint that permits any floating-point type.</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">// If future releases of Go add new predeclared floating-point types,</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">// this constraint will be modified to include them.</span></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/samber/lo/internal/constraints.html#name-Float" class="ident">Float</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-34"><code>	~<a href="../../../../../../pkg/builtin.html#name-float32" class="ident">float32</a> | ~<a href="../../../../../../pkg/builtin.html#name-float64" class="ident">float64</a></code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// Complex is a constraint that permits any complex numeric type.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">// If future releases of Go add new predeclared complex numeric types,</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// this constraint will be modified to include them.</span></code></span>
+<span class="codeline" id="line-40"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/samber/lo/internal/constraints.html#name-Complex" class="ident">Complex</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-41"><code>	~<a href="../../../../../../pkg/builtin.html#name-complex64" class="ident">complex64</a> | ~<a href="../../../../../../pkg/builtin.html#name-complex128" class="ident">complex128</a></code></span>
+<span class="codeline" id="line-42"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

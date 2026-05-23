@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: snappy.go in package github.com/klauspost/compress/internal/snapref</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	snappy.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html">github.com/klauspost/compress/internal/snapref</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2011 The Snappy-Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-5"><code><span class="comment">// Package snapref implements the Snappy compression format. It aims for very</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// high speeds and reasonable compression.</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// There are actually two Snappy formats: block and stream. They are related,</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// but different: trying to decompress block-compressed data as a Snappy stream</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// will fail, and vice versa. The block format is the Decode and Encode</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// functions and the stream format is the Reader and Writer types.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// The block format, the more common case, is used when the complete size (the</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// number of bytes) of the original data is known upfront, at the time</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// compression starts. The stream format, also known as the framing format, is</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// for when that isn't always true.</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// The canonical, C++ implementation is at https://github.com/google/snappy and</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">// it only implements the block format.</span></code></span></div><span class="codeline" id="line-20"><code><span class="keyword">package</span> snapref</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-23"><code>	<label for="i0"><span class="lit-string i0">"hash/crc32"</span></label></code></span>
+<span class="codeline" id="line-24"><code>)</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">/*</span></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">Each encoded block begins with the varint-encoded length of the decoded data,</span></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">followed by a sequence of chunks. Chunks begin and end on byte boundaries. The</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">first byte of each chunk is broken into its 2 least and 6 most significant bits</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">called l and m: l ranges in [0, 4) and m ranges in [0, 64). l is the chunk tag.</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">Zero means a literal tag. All other values mean a copy tag.</span></code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">For literal tags:</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">  - If m &lt; 60, the next 1 + m bytes are literal bytes.</span></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">  - Otherwise, let n be the little-endian unsigned integer denoted by the next</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">    m - 59 bytes. The next 1 + n bytes after that are literal bytes.</span></code></span>
+<span class="codeline" id="line-37"><code></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">For copy tags, length bytes are copied from offset bytes ago, in the style of</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">Lempel-Ziv compression algorithms. In particular:</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">  - For l == 1, the offset ranges in [0, 1&lt;&lt;11) and the length in [4, 12).</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">    The length is 4 + the low 3 bits of m. The high 3 bits of m form bits 8-10</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">    of the offset. The next byte is bits 0-7 of the offset.</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">  - For l == 2, the offset ranges in [0, 1&lt;&lt;16) and the length in [1, 65).</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">    The length is 1 + m. The offset is the little-endian unsigned integer</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">    denoted by the next 2 bytes.</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">  - For l == 3, this tag is a legacy format that is no longer issued by most</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">    encoders. Nonetheless, the offset ranges in [0, 1&lt;&lt;32) and the length in</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">    [1, 65). The length is 1 + m. The offset is the little-endian unsigned</span></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">    integer denoted by the next 4 bytes.</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">*/</span></code></span>
+<span class="codeline" id="line-51"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-tagLiteral" class="ident">tagLiteral</a> = <span class="lit-number">0x00</span></code></span>
+<span class="codeline" id="line-53"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-tagCopy1" class="ident">tagCopy1</a>   = <span class="lit-number">0x01</span></code></span>
+<span class="codeline" id="line-54"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-tagCopy2" class="ident">tagCopy2</a>   = <span class="lit-number">0x02</span></code></span>
+<span class="codeline" id="line-55"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-tagCopy4" class="ident">tagCopy4</a>   = <span class="lit-number">0x03</span></code></span>
+<span class="codeline" id="line-56"><code>)</code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-59"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-checksumSize" class="ident">checksumSize</a>    = <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-60"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-chunkHeaderSize" class="ident">chunkHeaderSize</a> = <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-61"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-magicChunk" class="ident">magicChunk</a>      = <span class="lit-string">"\xff\x06\x00\x00"</span> + <a href="#line-62" class="ident">magicBody</a></code></span>
+<span class="codeline" id="line-62"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-magicBody" class="ident">magicBody</a>       = <span class="lit-string">"sNaPpY"</span></code></span>
+<span class="codeline" id="line-63"><code></code></span>
+<span class="codeline" id="line-64"><code>	<span class="comment">// maxBlockSize is the maximum size of the input to encodeBlock. It is not</span></code></span>
+<span class="codeline" id="line-65"><code><span class="comment">	// part of the wire format per se, but some parts of the encoder assume</span></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">	// that an offset fits into a uint16.</span></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-68"><code><span class="comment">	// Also, for the framing format (Writer type instead of Encode function),</span></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">	// https://github.com/google/snappy/blob/master/framing_format.txt says</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">	// that "the uncompressed data in a chunk must be no longer than 65536</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">	// bytes".</span></code></span>
+<span class="codeline" id="line-72"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-maxBlockSize" class="ident">maxBlockSize</a> = <span class="lit-number">65536</span></code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code>	<span class="comment">// maxEncodedLenOfMaxBlockSize equals MaxEncodedLen(maxBlockSize), but is</span></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">	// hard coded to be a const instead of a variable, so that obufLen can also</span></code></span>
+<span class="codeline" id="line-76"><code><span class="comment">	// be a const. Their equivalence is confirmed by</span></code></span>
+<span class="codeline" id="line-77"><code><span class="comment">	// TestMaxEncodedLenOfMaxBlockSize.</span></code></span>
+<span class="codeline" id="line-78"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-maxEncodedLenOfMaxBlockSize" class="ident">maxEncodedLenOfMaxBlockSize</a> = <span class="lit-number">76490</span></code></span>
+<span class="codeline" id="line-79"><code></code></span>
+<span class="codeline" id="line-80"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-obufHeaderLen" class="ident">obufHeaderLen</a> = <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<a href="#line-61" class="ident">magicChunk</a>) + <a href="#line-59" class="ident">checksumSize</a> + <a href="#line-60" class="ident">chunkHeaderSize</a></code></span>
+<span class="codeline" id="line-81"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-obufLen" class="ident">obufLen</a>       = <a href="#line-80" class="ident">obufHeaderLen</a> + <a href="#line-78" class="ident">maxEncodedLenOfMaxBlockSize</a></code></span>
+<span class="codeline" id="line-82"><code>)</code></span>
+<span class="codeline" id="line-83"><code></code></span>
+<span class="codeline" id="line-84"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-85"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-chunkTypeCompressedData" class="ident">chunkTypeCompressedData</a>   = <span class="lit-number">0x00</span></code></span>
+<span class="codeline" id="line-86"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-chunkTypeUncompressedData" class="ident">chunkTypeUncompressedData</a> = <span class="lit-number">0x01</span></code></span>
+<span class="codeline" id="line-87"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-chunkTypePadding" class="ident">chunkTypePadding</a>          = <span class="lit-number">0xfe</span></code></span>
+<span class="codeline" id="line-88"><code>	<a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-chunkTypeStreamIdentifier" class="ident">chunkTypeStreamIdentifier</a> = <span class="lit-number">0xff</span></code></span>
+<span class="codeline" id="line-89"><code>)</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code><span class="keyword">var</span> <a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-crcTable" class="ident">crcTable</a> = <a href="../../../../../../pkg/hash/crc32.html" class="ident i0">crc32</a>.<a href="../../../../../hash/crc32/crc32.go.html#line-122" class="ident">MakeTable</a>(<a href="../../../../../../pkg/hash/crc32.html" class="ident i0">crc32</a>.<a href="../../../../../hash/crc32/crc32.go.html#line-35" class="ident">Castagnoli</a>)</code></span>
+<span class="codeline" id="line-92"><code></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// crc implements the checksum specified in section 3 of</span></code></span>
+<span class="codeline" id="line-94"><code><span class="comment">// https://github.com/google/snappy/blob/master/framing_format.txt</span></code></span>
+<span class="codeline" id="line-95"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../pkg/github.com/klauspost/compress/internal/snapref.html#name-crc" class="ident">crc</a></label>(<label for="r1" class="ident">b</label> []<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) <a href="../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-96"><code>	<label for="r2" class="ident">c</label> := <a href="../../../../../../pkg/hash/crc32.html" class="ident i0">crc32</a>.<a href="../../../../../hash/crc32/crc32.go.html#line-217" class="ident">Update</a>(<span class="lit-number">0</span>, <a href="#line-91" class="ident">crcTable</a>, <label for="r1" class="ident">b</label>)</code></span>
+<span class="codeline" id="line-97"><code>	<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r2" class="ident">c</label>&gt;&gt;<span class="lit-number">15</span>|<label for="r2" class="ident">c</label>&lt;&lt;<span class="lit-number">17</span>) + <span class="lit-number">0xa282ead8</span></code></span>
+<span class="codeline" id="line-98"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: error.go in package github.com/segmentio/kafka-go</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	error.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> kafka</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"errors"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"fmt"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"io"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"syscall"</span></label></code></span>
+<span class="codeline" id="line-8"><code>)</code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// Error represents the different error codes that may be returned by kafka.</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// https://kafka.apache.org/protocol#protocol_error_codes</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-Error" class="ident">Error</a> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-Unknown" class="ident">Unknown</a>                            <a href="#line-12" class="ident">Error</a> = -<span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-16"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-OffsetOutOfRange" class="ident">OffsetOutOfRange</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidMessage" class="ident">InvalidMessage</a>                     <a href="#line-12" class="ident">Error</a> = <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-18"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnknownTopicOrPartition" class="ident">UnknownTopicOrPartition</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-19"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidMessageSize" class="ident">InvalidMessageSize</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-20"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-LeaderNotAvailable" class="ident">LeaderNotAvailable</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">5</span></code></span>
+<span class="codeline" id="line-21"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NotLeaderForPartition" class="ident">NotLeaderForPartition</a>              <a href="#line-12" class="ident">Error</a> = <span class="lit-number">6</span></code></span>
+<span class="codeline" id="line-22"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RequestTimedOut" class="ident">RequestTimedOut</a>                    <a href="#line-12" class="ident">Error</a> = <span class="lit-number">7</span></code></span>
+<span class="codeline" id="line-23"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-BrokerNotAvailable" class="ident">BrokerNotAvailable</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-24"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ReplicaNotAvailable" class="ident">ReplicaNotAvailable</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">9</span></code></span>
+<span class="codeline" id="line-25"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-MessageSizeTooLarge" class="ident">MessageSizeTooLarge</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">10</span></code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-StaleControllerEpoch" class="ident">StaleControllerEpoch</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">11</span></code></span>
+<span class="codeline" id="line-27"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-OffsetMetadataTooLarge" class="ident">OffsetMetadataTooLarge</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">12</span></code></span>
+<span class="codeline" id="line-28"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NetworkException" class="ident">NetworkException</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">13</span></code></span>
+<span class="codeline" id="line-29"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupLoadInProgress" class="ident">GroupLoadInProgress</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">14</span></code></span>
+<span class="codeline" id="line-30"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupCoordinatorNotAvailable" class="ident">GroupCoordinatorNotAvailable</a>       <a href="#line-12" class="ident">Error</a> = <span class="lit-number">15</span></code></span>
+<span class="codeline" id="line-31"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NotCoordinatorForGroup" class="ident">NotCoordinatorForGroup</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">16</span></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidTopic" class="ident">InvalidTopic</a>                       <a href="#line-12" class="ident">Error</a> = <span class="lit-number">17</span></code></span>
+<span class="codeline" id="line-33"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RecordListTooLarge" class="ident">RecordListTooLarge</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">18</span></code></span>
+<span class="codeline" id="line-34"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NotEnoughReplicas" class="ident">NotEnoughReplicas</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">19</span></code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NotEnoughReplicasAfterAppend" class="ident">NotEnoughReplicasAfterAppend</a>       <a href="#line-12" class="ident">Error</a> = <span class="lit-number">20</span></code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidRequiredAcks" class="ident">InvalidRequiredAcks</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">21</span></code></span>
+<span class="codeline" id="line-37"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-IllegalGeneration" class="ident">IllegalGeneration</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">22</span></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InconsistentGroupProtocol" class="ident">InconsistentGroupProtocol</a>          <a href="#line-12" class="ident">Error</a> = <span class="lit-number">23</span></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidGroupId" class="ident">InvalidGroupId</a>                     <a href="#line-12" class="ident">Error</a> = <span class="lit-number">24</span></code></span>
+<span class="codeline" id="line-40"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnknownMemberId" class="ident">UnknownMemberId</a>                    <a href="#line-12" class="ident">Error</a> = <span class="lit-number">25</span></code></span>
+<span class="codeline" id="line-41"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidSessionTimeout" class="ident">InvalidSessionTimeout</a>              <a href="#line-12" class="ident">Error</a> = <span class="lit-number">26</span></code></span>
+<span class="codeline" id="line-42"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RebalanceInProgress" class="ident">RebalanceInProgress</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">27</span></code></span>
+<span class="codeline" id="line-43"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidCommitOffsetSize" class="ident">InvalidCommitOffsetSize</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">28</span></code></span>
+<span class="codeline" id="line-44"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-TopicAuthorizationFailed" class="ident">TopicAuthorizationFailed</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">29</span></code></span>
+<span class="codeline" id="line-45"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupAuthorizationFailed" class="ident">GroupAuthorizationFailed</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">30</span></code></span>
+<span class="codeline" id="line-46"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ClusterAuthorizationFailed" class="ident">ClusterAuthorizationFailed</a>         <a href="#line-12" class="ident">Error</a> = <span class="lit-number">31</span></code></span>
+<span class="codeline" id="line-47"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidTimestamp" class="ident">InvalidTimestamp</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">32</span></code></span>
+<span class="codeline" id="line-48"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnsupportedSASLMechanism" class="ident">UnsupportedSASLMechanism</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">33</span></code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-IllegalSASLState" class="ident">IllegalSASLState</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">34</span></code></span>
+<span class="codeline" id="line-50"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnsupportedVersion" class="ident">UnsupportedVersion</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">35</span></code></span>
+<span class="codeline" id="line-51"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-TopicAlreadyExists" class="ident">TopicAlreadyExists</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">36</span></code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidPartitionNumber" class="ident">InvalidPartitionNumber</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">37</span></code></span>
+<span class="codeline" id="line-53"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidReplicationFactor" class="ident">InvalidReplicationFactor</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">38</span></code></span>
+<span class="codeline" id="line-54"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidReplicaAssignment" class="ident">InvalidReplicaAssignment</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">39</span></code></span>
+<span class="codeline" id="line-55"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidConfiguration" class="ident">InvalidConfiguration</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">40</span></code></span>
+<span class="codeline" id="line-56"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NotController" class="ident">NotController</a>                      <a href="#line-12" class="ident">Error</a> = <span class="lit-number">41</span></code></span>
+<span class="codeline" id="line-57"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidRequest" class="ident">InvalidRequest</a>                     <a href="#line-12" class="ident">Error</a> = <span class="lit-number">42</span></code></span>
+<span class="codeline" id="line-58"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnsupportedForMessageFormat" class="ident">UnsupportedForMessageFormat</a>        <a href="#line-12" class="ident">Error</a> = <span class="lit-number">43</span></code></span>
+<span class="codeline" id="line-59"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-PolicyViolation" class="ident">PolicyViolation</a>                    <a href="#line-12" class="ident">Error</a> = <span class="lit-number">44</span></code></span>
+<span class="codeline" id="line-60"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-OutOfOrderSequenceNumber" class="ident">OutOfOrderSequenceNumber</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">45</span></code></span>
+<span class="codeline" id="line-61"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DuplicateSequenceNumber" class="ident">DuplicateSequenceNumber</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">46</span></code></span>
+<span class="codeline" id="line-62"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidProducerEpoch" class="ident">InvalidProducerEpoch</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">47</span></code></span>
+<span class="codeline" id="line-63"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidTransactionState" class="ident">InvalidTransactionState</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">48</span></code></span>
+<span class="codeline" id="line-64"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidProducerIDMapping" class="ident">InvalidProducerIDMapping</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">49</span></code></span>
+<span class="codeline" id="line-65"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidTransactionTimeout" class="ident">InvalidTransactionTimeout</a>          <a href="#line-12" class="ident">Error</a> = <span class="lit-number">50</span></code></span>
+<span class="codeline" id="line-66"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ConcurrentTransactions" class="ident">ConcurrentTransactions</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">51</span></code></span>
+<span class="codeline" id="line-67"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-TransactionCoordinatorFenced" class="ident">TransactionCoordinatorFenced</a>       <a href="#line-12" class="ident">Error</a> = <span class="lit-number">52</span></code></span>
+<span class="codeline" id="line-68"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-TransactionalIDAuthorizationFailed" class="ident">TransactionalIDAuthorizationFailed</a> <a href="#line-12" class="ident">Error</a> = <span class="lit-number">53</span></code></span>
+<span class="codeline" id="line-69"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-SecurityDisabled" class="ident">SecurityDisabled</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">54</span></code></span>
+<span class="codeline" id="line-70"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-BrokerAuthorizationFailed" class="ident">BrokerAuthorizationFailed</a>          <a href="#line-12" class="ident">Error</a> = <span class="lit-number">55</span></code></span>
+<span class="codeline" id="line-71"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-KafkaStorageError" class="ident">KafkaStorageError</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">56</span></code></span>
+<span class="codeline" id="line-72"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-LogDirNotFound" class="ident">LogDirNotFound</a>                     <a href="#line-12" class="ident">Error</a> = <span class="lit-number">57</span></code></span>
+<span class="codeline" id="line-73"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-SASLAuthenticationFailed" class="ident">SASLAuthenticationFailed</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">58</span></code></span>
+<span class="codeline" id="line-74"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnknownProducerId" class="ident">UnknownProducerId</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">59</span></code></span>
+<span class="codeline" id="line-75"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ReassignmentInProgress" class="ident">ReassignmentInProgress</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">60</span></code></span>
+<span class="codeline" id="line-76"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DelegationTokenAuthDisabled" class="ident">DelegationTokenAuthDisabled</a>        <a href="#line-12" class="ident">Error</a> = <span class="lit-number">61</span></code></span>
+<span class="codeline" id="line-77"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DelegationTokenNotFound" class="ident">DelegationTokenNotFound</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">62</span></code></span>
+<span class="codeline" id="line-78"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DelegationTokenOwnerMismatch" class="ident">DelegationTokenOwnerMismatch</a>       <a href="#line-12" class="ident">Error</a> = <span class="lit-number">63</span></code></span>
+<span class="codeline" id="line-79"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DelegationTokenRequestNotAllowed" class="ident">DelegationTokenRequestNotAllowed</a>   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">64</span></code></span>
+<span class="codeline" id="line-80"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DelegationTokenAuthorizationFailed" class="ident">DelegationTokenAuthorizationFailed</a> <a href="#line-12" class="ident">Error</a> = <span class="lit-number">65</span></code></span>
+<span class="codeline" id="line-81"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DelegationTokenExpired" class="ident">DelegationTokenExpired</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">66</span></code></span>
+<span class="codeline" id="line-82"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidPrincipalType" class="ident">InvalidPrincipalType</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">67</span></code></span>
+<span class="codeline" id="line-83"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NonEmptyGroup" class="ident">NonEmptyGroup</a>                      <a href="#line-12" class="ident">Error</a> = <span class="lit-number">68</span></code></span>
+<span class="codeline" id="line-84"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupIdNotFound" class="ident">GroupIdNotFound</a>                    <a href="#line-12" class="ident">Error</a> = <span class="lit-number">69</span></code></span>
+<span class="codeline" id="line-85"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-FetchSessionIDNotFound" class="ident">FetchSessionIDNotFound</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">70</span></code></span>
+<span class="codeline" id="line-86"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidFetchSessionEpoch" class="ident">InvalidFetchSessionEpoch</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">71</span></code></span>
+<span class="codeline" id="line-87"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ListenerNotFound" class="ident">ListenerNotFound</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">72</span></code></span>
+<span class="codeline" id="line-88"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-TopicDeletionDisabled" class="ident">TopicDeletionDisabled</a>              <a href="#line-12" class="ident">Error</a> = <span class="lit-number">73</span></code></span>
+<span class="codeline" id="line-89"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-FencedLeaderEpoch" class="ident">FencedLeaderEpoch</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">74</span></code></span>
+<span class="codeline" id="line-90"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnknownLeaderEpoch" class="ident">UnknownLeaderEpoch</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">75</span></code></span>
+<span class="codeline" id="line-91"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnsupportedCompressionType" class="ident">UnsupportedCompressionType</a>         <a href="#line-12" class="ident">Error</a> = <span class="lit-number">76</span></code></span>
+<span class="codeline" id="line-92"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-StaleBrokerEpoch" class="ident">StaleBrokerEpoch</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">77</span></code></span>
+<span class="codeline" id="line-93"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-OffsetNotAvailable" class="ident">OffsetNotAvailable</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">78</span></code></span>
+<span class="codeline" id="line-94"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-MemberIDRequired" class="ident">MemberIDRequired</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">79</span></code></span>
+<span class="codeline" id="line-95"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-PreferredLeaderNotAvailable" class="ident">PreferredLeaderNotAvailable</a>        <a href="#line-12" class="ident">Error</a> = <span class="lit-number">80</span></code></span>
+<span class="codeline" id="line-96"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupMaxSizeReached" class="ident">GroupMaxSizeReached</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">81</span></code></span>
+<span class="codeline" id="line-97"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-FencedInstanceID" class="ident">FencedInstanceID</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">82</span></code></span>
+<span class="codeline" id="line-98"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-EligibleLeadersNotAvailable" class="ident">EligibleLeadersNotAvailable</a>        <a href="#line-12" class="ident">Error</a> = <span class="lit-number">83</span></code></span>
+<span class="codeline" id="line-99"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ElectionNotNeeded" class="ident">ElectionNotNeeded</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">84</span></code></span>
+<span class="codeline" id="line-100"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-NoReassignmentInProgress" class="ident">NoReassignmentInProgress</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">85</span></code></span>
+<span class="codeline" id="line-101"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupSubscribedToTopic" class="ident">GroupSubscribedToTopic</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">86</span></code></span>
+<span class="codeline" id="line-102"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidRecord" class="ident">InvalidRecord</a>                      <a href="#line-12" class="ident">Error</a> = <span class="lit-number">87</span></code></span>
+<span class="codeline" id="line-103"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnstableOffsetCommit" class="ident">UnstableOffsetCommit</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">88</span></code></span>
+<span class="codeline" id="line-104"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ThrottlingQuotaExceeded" class="ident">ThrottlingQuotaExceeded</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">89</span></code></span>
+<span class="codeline" id="line-105"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ProducerFenced" class="ident">ProducerFenced</a>                     <a href="#line-12" class="ident">Error</a> = <span class="lit-number">90</span></code></span>
+<span class="codeline" id="line-106"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ResourceNotFound" class="ident">ResourceNotFound</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">91</span></code></span>
+<span class="codeline" id="line-107"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DuplicateResource" class="ident">DuplicateResource</a>                  <a href="#line-12" class="ident">Error</a> = <span class="lit-number">92</span></code></span>
+<span class="codeline" id="line-108"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnacceptableCredential" class="ident">UnacceptableCredential</a>             <a href="#line-12" class="ident">Error</a> = <span class="lit-number">93</span></code></span>
+<span class="codeline" id="line-109"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InconsistentVoterSet" class="ident">InconsistentVoterSet</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">94</span></code></span>
+<span class="codeline" id="line-110"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InvalidUpdateVersion" class="ident">InvalidUpdateVersion</a>               <a href="#line-12" class="ident">Error</a> = <span class="lit-number">95</span></code></span>
+<span class="codeline" id="line-111"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-FeatureUpdateFailed" class="ident">FeatureUpdateFailed</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">96</span></code></span>
+<span class="codeline" id="line-112"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-PrincipalDeserializationFailure" class="ident">PrincipalDeserializationFailure</a>    <a href="#line-12" class="ident">Error</a> = <span class="lit-number">97</span></code></span>
+<span class="codeline" id="line-113"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-SnapshotNotFound" class="ident">SnapshotNotFound</a>                   <a href="#line-12" class="ident">Error</a> = <span class="lit-number">98</span></code></span>
+<span class="codeline" id="line-114"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-PositionOutOfRange" class="ident">PositionOutOfRange</a>                 <a href="#line-12" class="ident">Error</a> = <span class="lit-number">99</span></code></span>
+<span class="codeline" id="line-115"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-UnknownTopicID" class="ident">UnknownTopicID</a>                     <a href="#line-12" class="ident">Error</a> = <span class="lit-number">100</span></code></span>
+<span class="codeline" id="line-116"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-DuplicateBrokerRegistration" class="ident">DuplicateBrokerRegistration</a>        <a href="#line-12" class="ident">Error</a> = <span class="lit-number">101</span></code></span>
+<span class="codeline" id="line-117"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-BrokerIDNotRegistered" class="ident">BrokerIDNotRegistered</a>              <a href="#line-12" class="ident">Error</a> = <span class="lit-number">102</span></code></span>
+<span class="codeline" id="line-118"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InconsistentTopicID" class="ident">InconsistentTopicID</a>                <a href="#line-12" class="ident">Error</a> = <span class="lit-number">103</span></code></span>
+<span class="codeline" id="line-119"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InconsistentClusterID" class="ident">InconsistentClusterID</a>              <a href="#line-12" class="ident">Error</a> = <span class="lit-number">104</span></code></span>
+<span class="codeline" id="line-120"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-TransactionalIDNotFound" class="ident">TransactionalIDNotFound</a>            <a href="#line-12" class="ident">Error</a> = <span class="lit-number">105</span></code></span>
+<span class="codeline" id="line-121"><code>	<a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-FetchSessionTopicIDError" class="ident">FetchSessionTopicIDError</a>           <a href="#line-12" class="ident">Error</a> = <span class="lit-number">106</span></code></span>
+<span class="codeline" id="line-122"><code>)</code></span>
+<span class="codeline" id="line-123"><code></code></span>
+<span class="codeline" id="line-124"><code><span class="comment">// Error satisfies the error interface.</span></code></span>
+<span class="codeline" id="line-125"><code><span class="keyword">func</span> (<label for="r0" class="ident">e</label> <a href="#line-12" class="ident">Error</a>) <label for="r1" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.Error.html#name-.Error" class="ident">Error</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-126"><code>	<span class="keyword">return</span> <a href="../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"[%d] %s: %s"</span>, <label for="r0" class="ident">e</label>, <label for="r0" class="ident">e</label>.<a href="#line-176" class="ident">Title</a>(), <label for="r0" class="ident">e</label>.<a href="#line-387" class="ident">Description</a>())</code></span>
+<span class="codeline" id="line-127"><code>}</code></span>
+<span class="codeline" id="line-128"><code></code></span>
+<span class="codeline" id="line-129"><code><span class="comment">// Timeout returns true if the error was due to a timeout.</span></code></span>
+<span class="codeline" id="line-130"><code><span class="keyword">func</span> (<label for="r2" class="ident">e</label> <a href="#line-12" class="ident">Error</a>) <label for="r3" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.Error.html#name-.Timeout" class="ident">Timeout</a></label>() <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-131"><code>	<span class="keyword">return</span> <label for="r2" class="ident">e</label> == <a href="#line-22" class="ident">RequestTimedOut</a></code></span>
+<span class="codeline" id="line-132"><code>}</code></span>
+<span class="codeline" id="line-133"><code></code></span>
+<span class="codeline" id="line-134"><code><span class="comment">// Temporary returns true if the operation that generated the error may succeed</span></code></span>
+<span class="codeline" id="line-135"><code><span class="comment">// if retried at a later time.</span></code></span>
+<span class="codeline" id="line-136"><code><span class="comment">// Kafka error documentation specifies these as "retriable"</span></code></span>
+<span class="codeline" id="line-137"><code><span class="comment">// https://kafka.apache.org/protocol#protocol_error_codes</span></code></span>
+<span class="codeline" id="line-138"><code><span class="keyword">func</span> (<label for="r4" class="ident">e</label> <a href="#line-12" class="ident">Error</a>) <label for="r5" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.Error.html#name-.Temporary" class="ident">Temporary</a></label>() <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-139"><code>	<span class="keyword">switch</span> <label for="r4" class="ident">e</label> {</code></span>
+<span class="codeline" id="line-140"><code>	<span class="keyword">case</span> <a href="#line-17" class="ident">InvalidMessage</a>,</code></span>
+<span class="codeline" id="line-141"><code>		<a href="#line-18" class="ident">UnknownTopicOrPartition</a>,</code></span>
+<span class="codeline" id="line-142"><code>		<a href="#line-20" class="ident">LeaderNotAvailable</a>,</code></span>
+<span class="codeline" id="line-143"><code>		<a href="#line-21" class="ident">NotLeaderForPartition</a>,</code></span>
+<span class="codeline" id="line-144"><code>		<a href="#line-22" class="ident">RequestTimedOut</a>,</code></span>
+<span class="codeline" id="line-145"><code>		<a href="#line-28" class="ident">NetworkException</a>,</code></span>
+<span class="codeline" id="line-146"><code>		<a href="#line-29" class="ident">GroupLoadInProgress</a>,</code></span>
+<span class="codeline" id="line-147"><code>		<a href="#line-30" class="ident">GroupCoordinatorNotAvailable</a>,</code></span>
+<span class="codeline" id="line-148"><code>		<a href="#line-31" class="ident">NotCoordinatorForGroup</a>,</code></span>
+<span class="codeline" id="line-149"><code>		<a href="#line-34" class="ident">NotEnoughReplicas</a>,</code></span>
+<span class="codeline" id="line-150"><code>		<a href="#line-35" class="ident">NotEnoughReplicasAfterAppend</a>,</code></span>
+<span class="codeline" id="line-151"><code>		<a href="#line-56" class="ident">NotController</a>,</code></span>
+<span class="codeline" id="line-152"><code>		<a href="#line-71" class="ident">KafkaStorageError</a>,</code></span>
+<span class="codeline" id="line-153"><code>		<a href="#line-85" class="ident">FetchSessionIDNotFound</a>,</code></span>
+<span class="codeline" id="line-154"><code>		<a href="#line-86" class="ident">InvalidFetchSessionEpoch</a>,</code></span>
+<span class="codeline" id="line-155"><code>		<a href="#line-87" class="ident">ListenerNotFound</a>,</code></span>
+<span class="codeline" id="line-156"><code>		<a href="#line-89" class="ident">FencedLeaderEpoch</a>,</code></span>
+<span class="codeline" id="line-157"><code>		<a href="#line-90" class="ident">UnknownLeaderEpoch</a>,</code></span>
+<span class="codeline" id="line-158"><code>		<a href="#line-93" class="ident">OffsetNotAvailable</a>,</code></span>
+<span class="codeline" id="line-159"><code>		<a href="#line-95" class="ident">PreferredLeaderNotAvailable</a>,</code></span>
+<span class="codeline" id="line-160"><code>		<a href="#line-98" class="ident">EligibleLeadersNotAvailable</a>,</code></span>
+<span class="codeline" id="line-161"><code>		<a href="#line-99" class="ident">ElectionNotNeeded</a>,</code></span>
+<span class="codeline" id="line-162"><code>		<a href="#line-100" class="ident">NoReassignmentInProgress</a>,</code></span>
+<span class="codeline" id="line-163"><code>		<a href="#line-101" class="ident">GroupSubscribedToTopic</a>,</code></span>
+<span class="codeline" id="line-164"><code>		<a href="#line-103" class="ident">UnstableOffsetCommit</a>,</code></span>
+<span class="codeline" id="line-165"><code>		<a href="#line-104" class="ident">ThrottlingQuotaExceeded</a>,</code></span>
+<span class="codeline" id="line-166"><code>		<a href="#line-115" class="ident">UnknownTopicID</a>,</code></span>
+<span class="codeline" id="line-167"><code>		<a href="#line-118" class="ident">InconsistentTopicID</a>,</code></span>
+<span class="codeline" id="line-168"><code>		<a href="#line-121" class="ident">FetchSessionTopicIDError</a>:</code></span>
+<span class="codeline" id="line-169"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-170"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-171"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-172"><code>	}</code></span>
+<span class="codeline" id="line-173"><code>}</code></span>
+<span class="codeline" id="line-174"><code></code></span>
+<span class="codeline" id="line-175"><code><span class="comment">// Title returns a human readable title for the error.</span></code></span>
+<span class="codeline" id="line-176"><code><span class="keyword">func</span> (<label for="r6" class="ident">e</label> <a href="#line-12" class="ident">Error</a>) <label for="r7" class="ident">Title</label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-177"><code>	<span class="keyword">switch</span> <label for="r6" class="ident">e</label> {</code></span>
+<span class="codeline" id="line-178"><code>	<span class="keyword">case</span> <a href="#line-15" class="ident">Unknown</a>:</code></span>
+<span class="codeline" id="line-179"><code>		<span class="keyword">return</span> <span class="lit-string">"Unknown"</span></code></span>
+<span class="codeline" id="line-180"><code>	<span class="keyword">case</span> <a href="#line-16" class="ident">OffsetOutOfRange</a>:</code></span>
+<span class="codeline" id="line-181"><code>		<span class="keyword">return</span> <span class="lit-string">"Offset Out Of Range"</span></code></span>
+<span class="codeline" id="line-182"><code>	<span class="keyword">case</span> <a href="#line-17" class="ident">InvalidMessage</a>:</code></span>
+<span class="codeline" id="line-183"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Message"</span></code></span>
+<span class="codeline" id="line-184"><code>	<span class="keyword">case</span> <a href="#line-18" class="ident">UnknownTopicOrPartition</a>:</code></span>
+<span class="codeline" id="line-185"><code>		<span class="keyword">return</span> <span class="lit-string">"Unknown Topic Or Partition"</span></code></span>
+<span class="codeline" id="line-186"><code>	<span class="keyword">case</span> <a href="#line-19" class="ident">InvalidMessageSize</a>:</code></span>
+<span class="codeline" id="line-187"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Message Size"</span></code></span>
+<span class="codeline" id="line-188"><code>	<span class="keyword">case</span> <a href="#line-20" class="ident">LeaderNotAvailable</a>:</code></span>
+<span class="codeline" id="line-189"><code>		<span class="keyword">return</span> <span class="lit-string">"Leader Not Available"</span></code></span>
+<span class="codeline" id="line-190"><code>	<span class="keyword">case</span> <a href="#line-21" class="ident">NotLeaderForPartition</a>:</code></span>
+<span class="codeline" id="line-191"><code>		<span class="keyword">return</span> <span class="lit-string">"Not Leader For Partition"</span></code></span>
+<span class="codeline" id="line-192"><code>	<span class="keyword">case</span> <a href="#line-22" class="ident">RequestTimedOut</a>:</code></span>
+<span class="codeline" id="line-193"><code>		<span class="keyword">return</span> <span class="lit-string">"Request Timed Out"</span></code></span>
+<span class="codeline" id="line-194"><code>	<span class="keyword">case</span> <a href="#line-23" class="ident">BrokerNotAvailable</a>:</code></span>
+<span class="codeline" id="line-195"><code>		<span class="keyword">return</span> <span class="lit-string">"Broker Not Available"</span></code></span>
+<span class="codeline" id="line-196"><code>	<span class="keyword">case</span> <a href="#line-24" class="ident">ReplicaNotAvailable</a>:</code></span>
+<span class="codeline" id="line-197"><code>		<span class="keyword">return</span> <span class="lit-string">"Replica Not Available"</span></code></span>
+<span class="codeline" id="line-198"><code>	<span class="keyword">case</span> <a href="#line-25" class="ident">MessageSizeTooLarge</a>:</code></span>
+<span class="codeline" id="line-199"><code>		<span class="keyword">return</span> <span class="lit-string">"Message Size Too Large"</span></code></span>
+<span class="codeline" id="line-200"><code>	<span class="keyword">case</span> <a href="#line-26" class="ident">StaleControllerEpoch</a>:</code></span>
+<span class="codeline" id="line-201"><code>		<span class="keyword">return</span> <span class="lit-string">"Stale Controller Epoch"</span></code></span>
+<span class="codeline" id="line-202"><code>	<span class="keyword">case</span> <a href="#line-27" class="ident">OffsetMetadataTooLarge</a>:</code></span>
+<span class="codeline" id="line-203"><code>		<span class="keyword">return</span> <span class="lit-string">"Offset Metadata Too Large"</span></code></span>
+<span class="codeline" id="line-204"><code>	<span class="keyword">case</span> <a href="#line-29" class="ident">GroupLoadInProgress</a>:</code></span>
+<span class="codeline" id="line-205"><code>		<span class="keyword">return</span> <span class="lit-string">"Group Load In Progress"</span></code></span>
+<span class="codeline" id="line-206"><code>	<span class="keyword">case</span> <a href="#line-30" class="ident">GroupCoordinatorNotAvailable</a>:</code></span>
+<span class="codeline" id="line-207"><code>		<span class="keyword">return</span> <span class="lit-string">"Group Coordinator Not Available"</span></code></span>
+<span class="codeline" id="line-208"><code>	<span class="keyword">case</span> <a href="#line-31" class="ident">NotCoordinatorForGroup</a>:</code></span>
+<span class="codeline" id="line-209"><code>		<span class="keyword">return</span> <span class="lit-string">"Not Coordinator For Group"</span></code></span>
+<span class="codeline" id="line-210"><code>	<span class="keyword">case</span> <a href="#line-32" class="ident">InvalidTopic</a>:</code></span>
+<span class="codeline" id="line-211"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Topic"</span></code></span>
+<span class="codeline" id="line-212"><code>	<span class="keyword">case</span> <a href="#line-33" class="ident">RecordListTooLarge</a>:</code></span>
+<span class="codeline" id="line-213"><code>		<span class="keyword">return</span> <span class="lit-string">"Record List Too Large"</span></code></span>
+<span class="codeline" id="line-214"><code>	<span class="keyword">case</span> <a href="#line-34" class="ident">NotEnoughReplicas</a>:</code></span>
+<span class="codeline" id="line-215"><code>		<span class="keyword">return</span> <span class="lit-string">"Not Enough Replicas"</span></code></span>
+<span class="codeline" id="line-216"><code>	<span class="keyword">case</span> <a href="#line-35" class="ident">NotEnoughReplicasAfterAppend</a>:</code></span>
+<span class="codeline" id="line-217"><code>		<span class="keyword">return</span> <span class="lit-string">"Not Enough Replicas After Append"</span></code></span>
+<span class="codeline" id="line-218"><code>	<span class="keyword">case</span> <a href="#line-36" class="ident">InvalidRequiredAcks</a>:</code></span>
+<span class="codeline" id="line-219"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Required Acks"</span></code></span>
+<span class="codeline" id="line-220"><code>	<span class="keyword">case</span> <a href="#line-37" class="ident">IllegalGeneration</a>:</code></span>
+<span class="codeline" id="line-221"><code>		<span class="keyword">return</span> <span class="lit-string">"Illegal Generation"</span></code></span>
+<span class="codeline" id="line-222"><code>	<span class="keyword">case</span> <a href="#line-38" class="ident">InconsistentGroupProtocol</a>:</code></span>
+<span class="codeline" id="line-223"><code>		<span class="keyword">return</span> <span class="lit-string">"Inconsistent Group Protocol"</span></code></span>
+<span class="codeline" id="line-224"><code>	<span class="keyword">case</span> <a href="#line-39" class="ident">InvalidGroupId</a>:</code></span>
+<span class="codeline" id="line-225"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Group ID"</span></code></span>
+<span class="codeline" id="line-226"><code>	<span class="keyword">case</span> <a href="#line-40" class="ident">UnknownMemberId</a>:</code></span>
+<span class="codeline" id="line-227"><code>		<span class="keyword">return</span> <span class="lit-string">"Unknown Member ID"</span></code></span>
+<span class="codeline" id="line-228"><code>	<span class="keyword">case</span> <a href="#line-41" class="ident">InvalidSessionTimeout</a>:</code></span>
+<span class="codeline" id="line-229"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Session Timeout"</span></code></span>
+<span class="codeline" id="line-230"><code>	<span class="keyword">case</span> <a href="#line-42" class="ident">RebalanceInProgress</a>:</code></span>
+<span class="codeline" id="line-231"><code>		<span class="keyword">return</span> <span class="lit-string">"Rebalance In Progress"</span></code></span>
+<span class="codeline" id="line-232"><code>	<span class="keyword">case</span> <a href="#line-43" class="ident">InvalidCommitOffsetSize</a>:</code></span>
+<span class="codeline" id="line-233"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Commit Offset Size"</span></code></span>
+<span class="codeline" id="line-234"><code>	<span class="keyword">case</span> <a href="#line-44" class="ident">TopicAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-235"><code>		<span class="keyword">return</span> <span class="lit-string">"Topic Authorization Failed"</span></code></span>
+<span class="codeline" id="line-236"><code>	<span class="keyword">case</span> <a href="#line-45" class="ident">GroupAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-237"><code>		<span class="keyword">return</span> <span class="lit-string">"Group Authorization Failed"</span></code></span>
+<span class="codeline" id="line-238"><code>	<span class="keyword">case</span> <a href="#line-46" class="ident">ClusterAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-239"><code>		<span class="keyword">return</span> <span class="lit-string">"Cluster Authorization Failed"</span></code></span>
+<span class="codeline" id="line-240"><code>	<span class="keyword">case</span> <a href="#line-47" class="ident">InvalidTimestamp</a>:</code></span>
+<span class="codeline" id="line-241"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Timestamp"</span></code></span>
+<span class="codeline" id="line-242"><code>	<span class="keyword">case</span> <a href="#line-48" class="ident">UnsupportedSASLMechanism</a>:</code></span>
+<span class="codeline" id="line-243"><code>		<span class="keyword">return</span> <span class="lit-string">"Unsupported SASL Mechanism"</span></code></span>
+<span class="codeline" id="line-244"><code>	<span class="keyword">case</span> <a href="#line-49" class="ident">IllegalSASLState</a>:</code></span>
+<span class="codeline" id="line-245"><code>		<span class="keyword">return</span> <span class="lit-string">"Illegal SASL State"</span></code></span>
+<span class="codeline" id="line-246"><code>	<span class="keyword">case</span> <a href="#line-50" class="ident">UnsupportedVersion</a>:</code></span>
+<span class="codeline" id="line-247"><code>		<span class="keyword">return</span> <span class="lit-string">"Unsupported Version"</span></code></span>
+<span class="codeline" id="line-248"><code>	<span class="keyword">case</span> <a href="#line-51" class="ident">TopicAlreadyExists</a>:</code></span>
+<span class="codeline" id="line-249"><code>		<span class="keyword">return</span> <span class="lit-string">"Topic Already Exists"</span></code></span>
+<span class="codeline" id="line-250"><code>	<span class="keyword">case</span> <a href="#line-52" class="ident">InvalidPartitionNumber</a>:</code></span>
+<span class="codeline" id="line-251"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Partition Number"</span></code></span>
+<span class="codeline" id="line-252"><code>	<span class="keyword">case</span> <a href="#line-53" class="ident">InvalidReplicationFactor</a>:</code></span>
+<span class="codeline" id="line-253"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Replication Factor"</span></code></span>
+<span class="codeline" id="line-254"><code>	<span class="keyword">case</span> <a href="#line-54" class="ident">InvalidReplicaAssignment</a>:</code></span>
+<span class="codeline" id="line-255"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Replica Assignment"</span></code></span>
+<span class="codeline" id="line-256"><code>	<span class="keyword">case</span> <a href="#line-55" class="ident">InvalidConfiguration</a>:</code></span>
+<span class="codeline" id="line-257"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Configuration"</span></code></span>
+<span class="codeline" id="line-258"><code>	<span class="keyword">case</span> <a href="#line-56" class="ident">NotController</a>:</code></span>
+<span class="codeline" id="line-259"><code>		<span class="keyword">return</span> <span class="lit-string">"Not Controller"</span></code></span>
+<span class="codeline" id="line-260"><code>	<span class="keyword">case</span> <a href="#line-57" class="ident">InvalidRequest</a>:</code></span>
+<span class="codeline" id="line-261"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Request"</span></code></span>
+<span class="codeline" id="line-262"><code>	<span class="keyword">case</span> <a href="#line-58" class="ident">UnsupportedForMessageFormat</a>:</code></span>
+<span class="codeline" id="line-263"><code>		<span class="keyword">return</span> <span class="lit-string">"Unsupported For Message Format"</span></code></span>
+<span class="codeline" id="line-264"><code>	<span class="keyword">case</span> <a href="#line-59" class="ident">PolicyViolation</a>:</code></span>
+<span class="codeline" id="line-265"><code>		<span class="keyword">return</span> <span class="lit-string">"Policy Violation"</span></code></span>
+<span class="codeline" id="line-266"><code>	<span class="keyword">case</span> <a href="#line-60" class="ident">OutOfOrderSequenceNumber</a>:</code></span>
+<span class="codeline" id="line-267"><code>		<span class="keyword">return</span> <span class="lit-string">"Out Of Order Sequence Number"</span></code></span>
+<span class="codeline" id="line-268"><code>	<span class="keyword">case</span> <a href="#line-61" class="ident">DuplicateSequenceNumber</a>:</code></span>
+<span class="codeline" id="line-269"><code>		<span class="keyword">return</span> <span class="lit-string">"Duplicate Sequence Number"</span></code></span>
+<span class="codeline" id="line-270"><code>	<span class="keyword">case</span> <a href="#line-62" class="ident">InvalidProducerEpoch</a>:</code></span>
+<span class="codeline" id="line-271"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Producer Epoch"</span></code></span>
+<span class="codeline" id="line-272"><code>	<span class="keyword">case</span> <a href="#line-63" class="ident">InvalidTransactionState</a>:</code></span>
+<span class="codeline" id="line-273"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Transaction State"</span></code></span>
+<span class="codeline" id="line-274"><code>	<span class="keyword">case</span> <a href="#line-64" class="ident">InvalidProducerIDMapping</a>:</code></span>
+<span class="codeline" id="line-275"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Producer ID Mapping"</span></code></span>
+<span class="codeline" id="line-276"><code>	<span class="keyword">case</span> <a href="#line-65" class="ident">InvalidTransactionTimeout</a>:</code></span>
+<span class="codeline" id="line-277"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Transaction Timeout"</span></code></span>
+<span class="codeline" id="line-278"><code>	<span class="keyword">case</span> <a href="#line-66" class="ident">ConcurrentTransactions</a>:</code></span>
+<span class="codeline" id="line-279"><code>		<span class="keyword">return</span> <span class="lit-string">"Concurrent Transactions"</span></code></span>
+<span class="codeline" id="line-280"><code>	<span class="keyword">case</span> <a href="#line-67" class="ident">TransactionCoordinatorFenced</a>:</code></span>
+<span class="codeline" id="line-281"><code>		<span class="keyword">return</span> <span class="lit-string">"Transaction Coordinator Fenced"</span></code></span>
+<span class="codeline" id="line-282"><code>	<span class="keyword">case</span> <a href="#line-68" class="ident">TransactionalIDAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-283"><code>		<span class="keyword">return</span> <span class="lit-string">"Transactional ID Authorization Failed"</span></code></span>
+<span class="codeline" id="line-284"><code>	<span class="keyword">case</span> <a href="#line-69" class="ident">SecurityDisabled</a>:</code></span>
+<span class="codeline" id="line-285"><code>		<span class="keyword">return</span> <span class="lit-string">"Security Disabled"</span></code></span>
+<span class="codeline" id="line-286"><code>	<span class="keyword">case</span> <a href="#line-70" class="ident">BrokerAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-287"><code>		<span class="keyword">return</span> <span class="lit-string">"Broker Authorization Failed"</span></code></span>
+<span class="codeline" id="line-288"><code>	<span class="keyword">case</span> <a href="#line-71" class="ident">KafkaStorageError</a>:</code></span>
+<span class="codeline" id="line-289"><code>		<span class="keyword">return</span> <span class="lit-string">"Kafka Storage Error"</span></code></span>
+<span class="codeline" id="line-290"><code>	<span class="keyword">case</span> <a href="#line-72" class="ident">LogDirNotFound</a>:</code></span>
+<span class="codeline" id="line-291"><code>		<span class="keyword">return</span> <span class="lit-string">"Log Dir Not Found"</span></code></span>
+<span class="codeline" id="line-292"><code>	<span class="keyword">case</span> <a href="#line-73" class="ident">SASLAuthenticationFailed</a>:</code></span>
+<span class="codeline" id="line-293"><code>		<span class="keyword">return</span> <span class="lit-string">"SASL Authentication Failed"</span></code></span>
+<span class="codeline" id="line-294"><code>	<span class="keyword">case</span> <a href="#line-74" class="ident">UnknownProducerId</a>:</code></span>
+<span class="codeline" id="line-295"><code>		<span class="keyword">return</span> <span class="lit-string">"Unknown Producer ID"</span></code></span>
+<span class="codeline" id="line-296"><code>	<span class="keyword">case</span> <a href="#line-75" class="ident">ReassignmentInProgress</a>:</code></span>
+<span class="codeline" id="line-297"><code>		<span class="keyword">return</span> <span class="lit-string">"Reassignment In Progress"</span></code></span>
+<span class="codeline" id="line-298"><code>	<span class="keyword">case</span> <a href="#line-76" class="ident">DelegationTokenAuthDisabled</a>:</code></span>
+<span class="codeline" id="line-299"><code>		<span class="keyword">return</span> <span class="lit-string">"Delegation Token Auth Disabled"</span></code></span>
+<span class="codeline" id="line-300"><code>	<span class="keyword">case</span> <a href="#line-77" class="ident">DelegationTokenNotFound</a>:</code></span>
+<span class="codeline" id="line-301"><code>		<span class="keyword">return</span> <span class="lit-string">"Delegation Token Not Found"</span></code></span>
+<span class="codeline" id="line-302"><code>	<span class="keyword">case</span> <a href="#line-78" class="ident">DelegationTokenOwnerMismatch</a>:</code></span>
+<span class="codeline" id="line-303"><code>		<span class="keyword">return</span> <span class="lit-string">"Delegation Token Owner Mismatch"</span></code></span>
+<span class="codeline" id="line-304"><code>	<span class="keyword">case</span> <a href="#line-79" class="ident">DelegationTokenRequestNotAllowed</a>:</code></span>
+<span class="codeline" id="line-305"><code>		<span class="keyword">return</span> <span class="lit-string">"Delegation Token Request Not Allowed"</span></code></span>
+<span class="codeline" id="line-306"><code>	<span class="keyword">case</span> <a href="#line-80" class="ident">DelegationTokenAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-307"><code>		<span class="keyword">return</span> <span class="lit-string">"Delegation Token Authorization Failed"</span></code></span>
+<span class="codeline" id="line-308"><code>	<span class="keyword">case</span> <a href="#line-81" class="ident">DelegationTokenExpired</a>:</code></span>
+<span class="codeline" id="line-309"><code>		<span class="keyword">return</span> <span class="lit-string">"Delegation Token Expired"</span></code></span>
+<span class="codeline" id="line-310"><code>	<span class="keyword">case</span> <a href="#line-82" class="ident">InvalidPrincipalType</a>:</code></span>
+<span class="codeline" id="line-311"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Principal Type"</span></code></span>
+<span class="codeline" id="line-312"><code>	<span class="keyword">case</span> <a href="#line-83" class="ident">NonEmptyGroup</a>:</code></span>
+<span class="codeline" id="line-313"><code>		<span class="keyword">return</span> <span class="lit-string">"Non Empty Group"</span></code></span>
+<span class="codeline" id="line-314"><code>	<span class="keyword">case</span> <a href="#line-84" class="ident">GroupIdNotFound</a>:</code></span>
+<span class="codeline" id="line-315"><code>		<span class="keyword">return</span> <span class="lit-string">"Group ID Not Found"</span></code></span>
+<span class="codeline" id="line-316"><code>	<span class="keyword">case</span> <a href="#line-85" class="ident">FetchSessionIDNotFound</a>:</code></span>
+<span class="codeline" id="line-317"><code>		<span class="keyword">return</span> <span class="lit-string">"Fetch Session ID Not Found"</span></code></span>
+<span class="codeline" id="line-318"><code>	<span class="keyword">case</span> <a href="#line-86" class="ident">InvalidFetchSessionEpoch</a>:</code></span>
+<span class="codeline" id="line-319"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Fetch Session Epoch"</span></code></span>
+<span class="codeline" id="line-320"><code>	<span class="keyword">case</span> <a href="#line-87" class="ident">ListenerNotFound</a>:</code></span>
+<span class="codeline" id="line-321"><code>		<span class="keyword">return</span> <span class="lit-string">"Listener Not Found"</span></code></span>
+<span class="codeline" id="line-322"><code>	<span class="keyword">case</span> <a href="#line-88" class="ident">TopicDeletionDisabled</a>:</code></span>
+<span class="codeline" id="line-323"><code>		<span class="keyword">return</span> <span class="lit-string">"Topic Deletion Disabled"</span></code></span>
+<span class="codeline" id="line-324"><code>	<span class="keyword">case</span> <a href="#line-89" class="ident">FencedLeaderEpoch</a>:</code></span>
+<span class="codeline" id="line-325"><code>		<span class="keyword">return</span> <span class="lit-string">"Fenced Leader Epoch"</span></code></span>
+<span class="codeline" id="line-326"><code>	<span class="keyword">case</span> <a href="#line-90" class="ident">UnknownLeaderEpoch</a>:</code></span>
+<span class="codeline" id="line-327"><code>		<span class="keyword">return</span> <span class="lit-string">"Unknown Leader Epoch"</span></code></span>
+<span class="codeline" id="line-328"><code>	<span class="keyword">case</span> <a href="#line-91" class="ident">UnsupportedCompressionType</a>:</code></span>
+<span class="codeline" id="line-329"><code>		<span class="keyword">return</span> <span class="lit-string">"Unsupported Compression Type"</span></code></span>
+<span class="codeline" id="line-330"><code>	<span class="keyword">case</span> <a href="#line-94" class="ident">MemberIDRequired</a>:</code></span>
+<span class="codeline" id="line-331"><code>		<span class="keyword">return</span> <span class="lit-string">"Member ID Required"</span></code></span>
+<span class="codeline" id="line-332"><code>	<span class="keyword">case</span> <a href="#line-97" class="ident">FencedInstanceID</a>:</code></span>
+<span class="codeline" id="line-333"><code>		<span class="keyword">return</span> <span class="lit-string">"Fenced Instance ID"</span></code></span>
+<span class="codeline" id="line-334"><code>	<span class="keyword">case</span> <a href="#line-98" class="ident">EligibleLeadersNotAvailable</a>:</code></span>
+<span class="codeline" id="line-335"><code>		<span class="keyword">return</span> <span class="lit-string">"Eligible Leader Not Available"</span></code></span>
+<span class="codeline" id="line-336"><code>	<span class="keyword">case</span> <a href="#line-99" class="ident">ElectionNotNeeded</a>:</code></span>
+<span class="codeline" id="line-337"><code>		<span class="keyword">return</span> <span class="lit-string">"Election Not Needed"</span></code></span>
+<span class="codeline" id="line-338"><code>	<span class="keyword">case</span> <a href="#line-100" class="ident">NoReassignmentInProgress</a>:</code></span>
+<span class="codeline" id="line-339"><code>		<span class="keyword">return</span> <span class="lit-string">"No Reassignment In Progress"</span></code></span>
+<span class="codeline" id="line-340"><code>	<span class="keyword">case</span> <a href="#line-101" class="ident">GroupSubscribedToTopic</a>:</code></span>
+<span class="codeline" id="line-341"><code>		<span class="keyword">return</span> <span class="lit-string">"Group Subscribed To Topic"</span></code></span>
+<span class="codeline" id="line-342"><code>	<span class="keyword">case</span> <a href="#line-102" class="ident">InvalidRecord</a>:</code></span>
+<span class="codeline" id="line-343"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Record"</span></code></span>
+<span class="codeline" id="line-344"><code>	<span class="keyword">case</span> <a href="#line-103" class="ident">UnstableOffsetCommit</a>:</code></span>
+<span class="codeline" id="line-345"><code>		<span class="keyword">return</span> <span class="lit-string">"Unstable Offset Commit"</span></code></span>
+<span class="codeline" id="line-346"><code>	<span class="keyword">case</span> <a href="#line-104" class="ident">ThrottlingQuotaExceeded</a>:</code></span>
+<span class="codeline" id="line-347"><code>		<span class="keyword">return</span> <span class="lit-string">"Throttling Quota Exceeded"</span></code></span>
+<span class="codeline" id="line-348"><code>	<span class="keyword">case</span> <a href="#line-105" class="ident">ProducerFenced</a>:</code></span>
+<span class="codeline" id="line-349"><code>		<span class="keyword">return</span> <span class="lit-string">"Producer Fenced"</span></code></span>
+<span class="codeline" id="line-350"><code>	<span class="keyword">case</span> <a href="#line-106" class="ident">ResourceNotFound</a>:</code></span>
+<span class="codeline" id="line-351"><code>		<span class="keyword">return</span> <span class="lit-string">"Resource Not Found"</span></code></span>
+<span class="codeline" id="line-352"><code>	<span class="keyword">case</span> <a href="#line-107" class="ident">DuplicateResource</a>:</code></span>
+<span class="codeline" id="line-353"><code>		<span class="keyword">return</span> <span class="lit-string">"Duplicate Resource"</span></code></span>
+<span class="codeline" id="line-354"><code>	<span class="keyword">case</span> <a href="#line-108" class="ident">UnacceptableCredential</a>:</code></span>
+<span class="codeline" id="line-355"><code>		<span class="keyword">return</span> <span class="lit-string">"Unacceptable Credential"</span></code></span>
+<span class="codeline" id="line-356"><code>	<span class="keyword">case</span> <a href="#line-109" class="ident">InconsistentVoterSet</a>:</code></span>
+<span class="codeline" id="line-357"><code>		<span class="keyword">return</span> <span class="lit-string">"Inconsistent Voter Set"</span></code></span>
+<span class="codeline" id="line-358"><code>	<span class="keyword">case</span> <a href="#line-110" class="ident">InvalidUpdateVersion</a>:</code></span>
+<span class="codeline" id="line-359"><code>		<span class="keyword">return</span> <span class="lit-string">"Invalid Update Version"</span></code></span>
+<span class="codeline" id="line-360"><code>	<span class="keyword">case</span> <a href="#line-111" class="ident">FeatureUpdateFailed</a>:</code></span>
+<span class="codeline" id="line-361"><code>		<span class="keyword">return</span> <span class="lit-string">"Feature Update Failed"</span></code></span>
+<span class="codeline" id="line-362"><code>	<span class="keyword">case</span> <a href="#line-112" class="ident">PrincipalDeserializationFailure</a>:</code></span>
+<span class="codeline" id="line-363"><code>		<span class="keyword">return</span> <span class="lit-string">"Principal Deserialization Failure"</span></code></span>
+<span class="codeline" id="line-364"><code>	<span class="keyword">case</span> <a href="#line-113" class="ident">SnapshotNotFound</a>:</code></span>
+<span class="codeline" id="line-365"><code>		<span class="keyword">return</span> <span class="lit-string">"Snapshot Not Found"</span></code></span>
+<span class="codeline" id="line-366"><code>	<span class="keyword">case</span> <a href="#line-114" class="ident">PositionOutOfRange</a>:</code></span>
+<span class="codeline" id="line-367"><code>		<span class="keyword">return</span> <span class="lit-string">"Position Out Of Range"</span></code></span>
+<span class="codeline" id="line-368"><code>	<span class="keyword">case</span> <a href="#line-115" class="ident">UnknownTopicID</a>:</code></span>
+<span class="codeline" id="line-369"><code>		<span class="keyword">return</span> <span class="lit-string">"Unknown Topic ID"</span></code></span>
+<span class="codeline" id="line-370"><code>	<span class="keyword">case</span> <a href="#line-116" class="ident">DuplicateBrokerRegistration</a>:</code></span>
+<span class="codeline" id="line-371"><code>		<span class="keyword">return</span> <span class="lit-string">"Duplicate Broker Registration"</span></code></span>
+<span class="codeline" id="line-372"><code>	<span class="keyword">case</span> <a href="#line-117" class="ident">BrokerIDNotRegistered</a>:</code></span>
+<span class="codeline" id="line-373"><code>		<span class="keyword">return</span> <span class="lit-string">"Broker ID Not Registered"</span></code></span>
+<span class="codeline" id="line-374"><code>	<span class="keyword">case</span> <a href="#line-118" class="ident">InconsistentTopicID</a>:</code></span>
+<span class="codeline" id="line-375"><code>		<span class="keyword">return</span> <span class="lit-string">"Inconsistent Topic ID"</span></code></span>
+<span class="codeline" id="line-376"><code>	<span class="keyword">case</span> <a href="#line-119" class="ident">InconsistentClusterID</a>:</code></span>
+<span class="codeline" id="line-377"><code>		<span class="keyword">return</span> <span class="lit-string">"Inconsistent Cluster ID"</span></code></span>
+<span class="codeline" id="line-378"><code>	<span class="keyword">case</span> <a href="#line-120" class="ident">TransactionalIDNotFound</a>:</code></span>
+<span class="codeline" id="line-379"><code>		<span class="keyword">return</span> <span class="lit-string">"Transactional ID Not Found"</span></code></span>
+<span class="codeline" id="line-380"><code>	<span class="keyword">case</span> <a href="#line-121" class="ident">FetchSessionTopicIDError</a>:</code></span>
+<span class="codeline" id="line-381"><code>		<span class="keyword">return</span> <span class="lit-string">"Fetch Session Topic ID Error"</span></code></span>
+<span class="codeline" id="line-382"><code>	}</code></span>
+<span class="codeline" id="line-383"><code>	<span class="keyword">return</span> <span class="lit-string">""</span></code></span>
+<span class="codeline" id="line-384"><code>}</code></span>
+<span class="codeline" id="line-385"><code></code></span>
+<span class="codeline" id="line-386"><code><span class="comment">// Description returns a human readable description of cause of the error.</span></code></span>
+<span class="codeline" id="line-387"><code><span class="keyword">func</span> (<label for="r8" class="ident">e</label> <a href="#line-12" class="ident">Error</a>) <label for="r9" class="ident">Description</label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-388"><code>	<span class="keyword">switch</span> <label for="r8" class="ident">e</label> {</code></span>
+<span class="codeline" id="line-389"><code>	<span class="keyword">case</span> <a href="#line-15" class="ident">Unknown</a>:</code></span>
+<span class="codeline" id="line-390"><code>		<span class="keyword">return</span> <span class="lit-string">"an unexpected server error occurred"</span></code></span>
+<span class="codeline" id="line-391"><code>	<span class="keyword">case</span> <a href="#line-16" class="ident">OffsetOutOfRange</a>:</code></span>
+<span class="codeline" id="line-392"><code>		<span class="keyword">return</span> <span class="lit-string">"the requested offset is outside the range of offsets maintained by the server for the given topic/partition"</span></code></span>
+<span class="codeline" id="line-393"><code>	<span class="keyword">case</span> <a href="#line-17" class="ident">InvalidMessage</a>:</code></span>
+<span class="codeline" id="line-394"><code>		<span class="keyword">return</span> <span class="lit-string">"the message contents does not match its CRC"</span></code></span>
+<span class="codeline" id="line-395"><code>	<span class="keyword">case</span> <a href="#line-18" class="ident">UnknownTopicOrPartition</a>:</code></span>
+<span class="codeline" id="line-396"><code>		<span class="keyword">return</span> <span class="lit-string">"the request is for a topic or partition that does not exist on this broker"</span></code></span>
+<span class="codeline" id="line-397"><code>	<span class="keyword">case</span> <a href="#line-19" class="ident">InvalidMessageSize</a>:</code></span>
+<span class="codeline" id="line-398"><code>		<span class="keyword">return</span> <span class="lit-string">"the message has a negative size"</span></code></span>
+<span class="codeline" id="line-399"><code>	<span class="keyword">case</span> <a href="#line-20" class="ident">LeaderNotAvailable</a>:</code></span>
+<span class="codeline" id="line-400"><code>		<span class="keyword">return</span> <span class="lit-string">"the cluster is in the middle of a leadership election and there is currently no leader for this partition and hence it is unavailable for writes"</span></code></span>
+<span class="codeline" id="line-401"><code>	<span class="keyword">case</span> <a href="#line-21" class="ident">NotLeaderForPartition</a>:</code></span>
+<span class="codeline" id="line-402"><code>		<span class="keyword">return</span> <span class="lit-string">"the client attempted to send messages to a replica that is not the leader for some partition, the client's metadata are likely out of date"</span></code></span>
+<span class="codeline" id="line-403"><code>	<span class="keyword">case</span> <a href="#line-22" class="ident">RequestTimedOut</a>:</code></span>
+<span class="codeline" id="line-404"><code>		<span class="keyword">return</span> <span class="lit-string">"the request exceeded the user-specified time limit in the request"</span></code></span>
+<span class="codeline" id="line-405"><code>	<span class="keyword">case</span> <a href="#line-23" class="ident">BrokerNotAvailable</a>:</code></span>
+<span class="codeline" id="line-406"><code>		<span class="keyword">return</span> <span class="lit-string">"not a client facing error and is used mostly by tools when a broker is not alive"</span></code></span>
+<span class="codeline" id="line-407"><code>	<span class="keyword">case</span> <a href="#line-24" class="ident">ReplicaNotAvailable</a>:</code></span>
+<span class="codeline" id="line-408"><code>		<span class="keyword">return</span> <span class="lit-string">"a replica is expected on a broker, but is not (this can be safely ignored)"</span></code></span>
+<span class="codeline" id="line-409"><code>	<span class="keyword">case</span> <a href="#line-25" class="ident">MessageSizeTooLarge</a>:</code></span>
+<span class="codeline" id="line-410"><code>		<span class="keyword">return</span> <span class="lit-string">"the server has a configurable maximum message size to avoid unbounded memory allocation and the client attempted to produce a message larger than this maximum"</span></code></span>
+<span class="codeline" id="line-411"><code>	<span class="keyword">case</span> <a href="#line-26" class="ident">StaleControllerEpoch</a>:</code></span>
+<span class="codeline" id="line-412"><code>		<span class="keyword">return</span> <span class="lit-string">"internal error code for broker-to-broker communication"</span></code></span>
+<span class="codeline" id="line-413"><code>	<span class="keyword">case</span> <a href="#line-27" class="ident">OffsetMetadataTooLarge</a>:</code></span>
+<span class="codeline" id="line-414"><code>		<span class="keyword">return</span> <span class="lit-string">"the client specified a string larger than configured maximum for offset metadata"</span></code></span>
+<span class="codeline" id="line-415"><code>	<span class="keyword">case</span> <a href="#line-29" class="ident">GroupLoadInProgress</a>:</code></span>
+<span class="codeline" id="line-416"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker returns this error code for an offset fetch request if it is still loading offsets (after a leader change for that offsets topic partition), or in response to group membership requests (such as heartbeats) when group metadata is being loaded by the coordinator"</span></code></span>
+<span class="codeline" id="line-417"><code>	<span class="keyword">case</span> <a href="#line-30" class="ident">GroupCoordinatorNotAvailable</a>:</code></span>
+<span class="codeline" id="line-418"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker returns this error code for group coordinator requests, offset commits, and most group management requests if the offsets topic has not yet been created, or if the group coordinator is not active"</span></code></span>
+<span class="codeline" id="line-419"><code>	<span class="keyword">case</span> <a href="#line-31" class="ident">NotCoordinatorForGroup</a>:</code></span>
+<span class="codeline" id="line-420"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker returns this error code if it receives an offset fetch or commit request for a group that it is not a coordinator for"</span></code></span>
+<span class="codeline" id="line-421"><code>	<span class="keyword">case</span> <a href="#line-32" class="ident">InvalidTopic</a>:</code></span>
+<span class="codeline" id="line-422"><code>		<span class="keyword">return</span> <span class="lit-string">"a request which attempted to access an invalid topic (e.g. one which has an illegal name), or if an attempt was made to write to an internal topic (such as the consumer offsets topic)"</span></code></span>
+<span class="codeline" id="line-423"><code>	<span class="keyword">case</span> <a href="#line-33" class="ident">RecordListTooLarge</a>:</code></span>
+<span class="codeline" id="line-424"><code>		<span class="keyword">return</span> <span class="lit-string">"a message batch in a produce request exceeds the maximum configured segment size"</span></code></span>
+<span class="codeline" id="line-425"><code>	<span class="keyword">case</span> <a href="#line-34" class="ident">NotEnoughReplicas</a>:</code></span>
+<span class="codeline" id="line-426"><code>		<span class="keyword">return</span> <span class="lit-string">"the number of in-sync replicas is lower than the configured minimum and requiredAcks is -1"</span></code></span>
+<span class="codeline" id="line-427"><code>	<span class="keyword">case</span> <a href="#line-35" class="ident">NotEnoughReplicasAfterAppend</a>:</code></span>
+<span class="codeline" id="line-428"><code>		<span class="keyword">return</span> <span class="lit-string">"the message was written to the log, but with fewer in-sync replicas than required."</span></code></span>
+<span class="codeline" id="line-429"><code>	<span class="keyword">case</span> <a href="#line-36" class="ident">InvalidRequiredAcks</a>:</code></span>
+<span class="codeline" id="line-430"><code>		<span class="keyword">return</span> <span class="lit-string">"the requested requiredAcks is invalid (anything other than -1, 1, or 0)"</span></code></span>
+<span class="codeline" id="line-431"><code>	<span class="keyword">case</span> <a href="#line-37" class="ident">IllegalGeneration</a>:</code></span>
+<span class="codeline" id="line-432"><code>		<span class="keyword">return</span> <span class="lit-string">"the generation id provided in the request is not the current generation"</span></code></span>
+<span class="codeline" id="line-433"><code>	<span class="keyword">case</span> <a href="#line-38" class="ident">InconsistentGroupProtocol</a>:</code></span>
+<span class="codeline" id="line-434"><code>		<span class="keyword">return</span> <span class="lit-string">"the member provided a protocol type or set of protocols which is not compatible with the current group"</span></code></span>
+<span class="codeline" id="line-435"><code>	<span class="keyword">case</span> <a href="#line-39" class="ident">InvalidGroupId</a>:</code></span>
+<span class="codeline" id="line-436"><code>		<span class="keyword">return</span> <span class="lit-string">"the group id is empty or null"</span></code></span>
+<span class="codeline" id="line-437"><code>	<span class="keyword">case</span> <a href="#line-40" class="ident">UnknownMemberId</a>:</code></span>
+<span class="codeline" id="line-438"><code>		<span class="keyword">return</span> <span class="lit-string">"the member id is not in the current generation"</span></code></span>
+<span class="codeline" id="line-439"><code>	<span class="keyword">case</span> <a href="#line-41" class="ident">InvalidSessionTimeout</a>:</code></span>
+<span class="codeline" id="line-440"><code>		<span class="keyword">return</span> <span class="lit-string">"the requested session timeout is outside of the allowed range on the broker"</span></code></span>
+<span class="codeline" id="line-441"><code>	<span class="keyword">case</span> <a href="#line-42" class="ident">RebalanceInProgress</a>:</code></span>
+<span class="codeline" id="line-442"><code>		<span class="keyword">return</span> <span class="lit-string">"the coordinator has begun rebalancing the group, the client should rejoin the group"</span></code></span>
+<span class="codeline" id="line-443"><code>	<span class="keyword">case</span> <a href="#line-43" class="ident">InvalidCommitOffsetSize</a>:</code></span>
+<span class="codeline" id="line-444"><code>		<span class="keyword">return</span> <span class="lit-string">"an offset commit was rejected because of oversize metadata"</span></code></span>
+<span class="codeline" id="line-445"><code>	<span class="keyword">case</span> <a href="#line-44" class="ident">TopicAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-446"><code>		<span class="keyword">return</span> <span class="lit-string">"the client is not authorized to access the requested topic"</span></code></span>
+<span class="codeline" id="line-447"><code>	<span class="keyword">case</span> <a href="#line-45" class="ident">GroupAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-448"><code>		<span class="keyword">return</span> <span class="lit-string">"the client is not authorized to access a particular group id"</span></code></span>
+<span class="codeline" id="line-449"><code>	<span class="keyword">case</span> <a href="#line-46" class="ident">ClusterAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-450"><code>		<span class="keyword">return</span> <span class="lit-string">"the client is not authorized to use an inter-broker or administrative API"</span></code></span>
+<span class="codeline" id="line-451"><code>	<span class="keyword">case</span> <a href="#line-47" class="ident">InvalidTimestamp</a>:</code></span>
+<span class="codeline" id="line-452"><code>		<span class="keyword">return</span> <span class="lit-string">"the timestamp of the message is out of acceptable range"</span></code></span>
+<span class="codeline" id="line-453"><code>	<span class="keyword">case</span> <a href="#line-48" class="ident">UnsupportedSASLMechanism</a>:</code></span>
+<span class="codeline" id="line-454"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker does not support the requested SASL mechanism"</span></code></span>
+<span class="codeline" id="line-455"><code>	<span class="keyword">case</span> <a href="#line-49" class="ident">IllegalSASLState</a>:</code></span>
+<span class="codeline" id="line-456"><code>		<span class="keyword">return</span> <span class="lit-string">"the request is not valid given the current SASL state"</span></code></span>
+<span class="codeline" id="line-457"><code>	<span class="keyword">case</span> <a href="#line-50" class="ident">UnsupportedVersion</a>:</code></span>
+<span class="codeline" id="line-458"><code>		<span class="keyword">return</span> <span class="lit-string">"the version of API is not supported"</span></code></span>
+<span class="codeline" id="line-459"><code>	<span class="keyword">case</span> <a href="#line-51" class="ident">TopicAlreadyExists</a>:</code></span>
+<span class="codeline" id="line-460"><code>		<span class="keyword">return</span> <span class="lit-string">"a topic with this name already exists"</span></code></span>
+<span class="codeline" id="line-461"><code>	<span class="keyword">case</span> <a href="#line-52" class="ident">InvalidPartitionNumber</a>:</code></span>
+<span class="codeline" id="line-462"><code>		<span class="keyword">return</span> <span class="lit-string">"the number of partitions is invalid"</span></code></span>
+<span class="codeline" id="line-463"><code>	<span class="keyword">case</span> <a href="#line-53" class="ident">InvalidReplicationFactor</a>:</code></span>
+<span class="codeline" id="line-464"><code>		<span class="keyword">return</span> <span class="lit-string">"the replication-factor is invalid"</span></code></span>
+<span class="codeline" id="line-465"><code>	<span class="keyword">case</span> <a href="#line-54" class="ident">InvalidReplicaAssignment</a>:</code></span>
+<span class="codeline" id="line-466"><code>		<span class="keyword">return</span> <span class="lit-string">"the replica assignment is invalid"</span></code></span>
+<span class="codeline" id="line-467"><code>	<span class="keyword">case</span> <a href="#line-55" class="ident">InvalidConfiguration</a>:</code></span>
+<span class="codeline" id="line-468"><code>		<span class="keyword">return</span> <span class="lit-string">"the configuration is invalid"</span></code></span>
+<span class="codeline" id="line-469"><code>	<span class="keyword">case</span> <a href="#line-56" class="ident">NotController</a>:</code></span>
+<span class="codeline" id="line-470"><code>		<span class="keyword">return</span> <span class="lit-string">"this is not the correct controller for this cluster"</span></code></span>
+<span class="codeline" id="line-471"><code>	<span class="keyword">case</span> <a href="#line-57" class="ident">InvalidRequest</a>:</code></span>
+<span class="codeline" id="line-472"><code>		<span class="keyword">return</span> <span class="lit-string">"this most likely occurs because of a request being malformed by the client library or the message was sent to an incompatible broker, se the broker logs for more details"</span></code></span>
+<span class="codeline" id="line-473"><code>	<span class="keyword">case</span> <a href="#line-58" class="ident">UnsupportedForMessageFormat</a>:</code></span>
+<span class="codeline" id="line-474"><code>		<span class="keyword">return</span> <span class="lit-string">"the message format version on the broker does not support the request"</span></code></span>
+<span class="codeline" id="line-475"><code>	<span class="keyword">case</span> <a href="#line-59" class="ident">PolicyViolation</a>:</code></span>
+<span class="codeline" id="line-476"><code>		<span class="keyword">return</span> <span class="lit-string">"the request parameters do not satisfy the configured policy"</span></code></span>
+<span class="codeline" id="line-477"><code>	<span class="keyword">case</span> <a href="#line-60" class="ident">OutOfOrderSequenceNumber</a>:</code></span>
+<span class="codeline" id="line-478"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker received an out of order sequence number"</span></code></span>
+<span class="codeline" id="line-479"><code>	<span class="keyword">case</span> <a href="#line-61" class="ident">DuplicateSequenceNumber</a>:</code></span>
+<span class="codeline" id="line-480"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker received a duplicate sequence number"</span></code></span>
+<span class="codeline" id="line-481"><code>	<span class="keyword">case</span> <a href="#line-62" class="ident">InvalidProducerEpoch</a>:</code></span>
+<span class="codeline" id="line-482"><code>		<span class="keyword">return</span> <span class="lit-string">"the producer attempted an operation with an old epoch, either there is a newer producer with the same transactional ID, or the producer's transaction has been expired by the broker"</span></code></span>
+<span class="codeline" id="line-483"><code>	<span class="keyword">case</span> <a href="#line-63" class="ident">InvalidTransactionState</a>:</code></span>
+<span class="codeline" id="line-484"><code>		<span class="keyword">return</span> <span class="lit-string">"the producer attempted a transactional operation in an invalid state"</span></code></span>
+<span class="codeline" id="line-485"><code>	<span class="keyword">case</span> <a href="#line-64" class="ident">InvalidProducerIDMapping</a>:</code></span>
+<span class="codeline" id="line-486"><code>		<span class="keyword">return</span> <span class="lit-string">"the producer attempted to use a producer id which is not currently assigned to its transactional ID"</span></code></span>
+<span class="codeline" id="line-487"><code>	<span class="keyword">case</span> <a href="#line-65" class="ident">InvalidTransactionTimeout</a>:</code></span>
+<span class="codeline" id="line-488"><code>		<span class="keyword">return</span> <span class="lit-string">"the transaction timeout is larger than the maximum value allowed by the broker (as configured by max.transaction.timeout.ms)"</span></code></span>
+<span class="codeline" id="line-489"><code>	<span class="keyword">case</span> <a href="#line-66" class="ident">ConcurrentTransactions</a>:</code></span>
+<span class="codeline" id="line-490"><code>		<span class="keyword">return</span> <span class="lit-string">"the producer attempted to update a transaction while another concurrent operation on the same transaction was ongoing"</span></code></span>
+<span class="codeline" id="line-491"><code>	<span class="keyword">case</span> <a href="#line-67" class="ident">TransactionCoordinatorFenced</a>:</code></span>
+<span class="codeline" id="line-492"><code>		<span class="keyword">return</span> <span class="lit-string">"the transaction coordinator sending a WriteTxnMarker is no longer the current coordinator for a given producer"</span></code></span>
+<span class="codeline" id="line-493"><code>	<span class="keyword">case</span> <a href="#line-68" class="ident">TransactionalIDAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-494"><code>		<span class="keyword">return</span> <span class="lit-string">"the transactional ID authorization failed"</span></code></span>
+<span class="codeline" id="line-495"><code>	<span class="keyword">case</span> <a href="#line-69" class="ident">SecurityDisabled</a>:</code></span>
+<span class="codeline" id="line-496"><code>		<span class="keyword">return</span> <span class="lit-string">"the security features are disabled"</span></code></span>
+<span class="codeline" id="line-497"><code>	<span class="keyword">case</span> <a href="#line-70" class="ident">BrokerAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-498"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker authorization failed"</span></code></span>
+<span class="codeline" id="line-499"><code>	<span class="keyword">case</span> <a href="#line-71" class="ident">KafkaStorageError</a>:</code></span>
+<span class="codeline" id="line-500"><code>		<span class="keyword">return</span> <span class="lit-string">"disk error when trying to access log file on the disk"</span></code></span>
+<span class="codeline" id="line-501"><code>	<span class="keyword">case</span> <a href="#line-72" class="ident">LogDirNotFound</a>:</code></span>
+<span class="codeline" id="line-502"><code>		<span class="keyword">return</span> <span class="lit-string">"the user-specified log directory is not found in the broker config"</span></code></span>
+<span class="codeline" id="line-503"><code>	<span class="keyword">case</span> <a href="#line-73" class="ident">SASLAuthenticationFailed</a>:</code></span>
+<span class="codeline" id="line-504"><code>		<span class="keyword">return</span> <span class="lit-string">"SASL Authentication failed"</span></code></span>
+<span class="codeline" id="line-505"><code>	<span class="keyword">case</span> <a href="#line-74" class="ident">UnknownProducerId</a>:</code></span>
+<span class="codeline" id="line-506"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker could not locate the producer metadata associated with the producer ID"</span></code></span>
+<span class="codeline" id="line-507"><code>	<span class="keyword">case</span> <a href="#line-75" class="ident">ReassignmentInProgress</a>:</code></span>
+<span class="codeline" id="line-508"><code>		<span class="keyword">return</span> <span class="lit-string">"a partition reassignment is in progress"</span></code></span>
+<span class="codeline" id="line-509"><code>	<span class="keyword">case</span> <a href="#line-76" class="ident">DelegationTokenAuthDisabled</a>:</code></span>
+<span class="codeline" id="line-510"><code>		<span class="keyword">return</span> <span class="lit-string">"delegation token feature is not enabled"</span></code></span>
+<span class="codeline" id="line-511"><code>	<span class="keyword">case</span> <a href="#line-77" class="ident">DelegationTokenNotFound</a>:</code></span>
+<span class="codeline" id="line-512"><code>		<span class="keyword">return</span> <span class="lit-string">"delegation token is not found on server"</span></code></span>
+<span class="codeline" id="line-513"><code>	<span class="keyword">case</span> <a href="#line-78" class="ident">DelegationTokenOwnerMismatch</a>:</code></span>
+<span class="codeline" id="line-514"><code>		<span class="keyword">return</span> <span class="lit-string">"specified principal is not valid owner/renewer"</span></code></span>
+<span class="codeline" id="line-515"><code>	<span class="keyword">case</span> <a href="#line-79" class="ident">DelegationTokenRequestNotAllowed</a>:</code></span>
+<span class="codeline" id="line-516"><code>		<span class="keyword">return</span> <span class="lit-string">"delegation token requests are not allowed on plaintext/1-way ssl channels and on delegation token authenticated channels"</span></code></span>
+<span class="codeline" id="line-517"><code>	<span class="keyword">case</span> <a href="#line-80" class="ident">DelegationTokenAuthorizationFailed</a>:</code></span>
+<span class="codeline" id="line-518"><code>		<span class="keyword">return</span> <span class="lit-string">"delegation token authorization failed"</span></code></span>
+<span class="codeline" id="line-519"><code>	<span class="keyword">case</span> <a href="#line-81" class="ident">DelegationTokenExpired</a>:</code></span>
+<span class="codeline" id="line-520"><code>		<span class="keyword">return</span> <span class="lit-string">"delegation token is expired"</span></code></span>
+<span class="codeline" id="line-521"><code>	<span class="keyword">case</span> <a href="#line-82" class="ident">InvalidPrincipalType</a>:</code></span>
+<span class="codeline" id="line-522"><code>		<span class="keyword">return</span> <span class="lit-string">"supplied principaltype is not supported"</span></code></span>
+<span class="codeline" id="line-523"><code>	<span class="keyword">case</span> <a href="#line-83" class="ident">NonEmptyGroup</a>:</code></span>
+<span class="codeline" id="line-524"><code>		<span class="keyword">return</span> <span class="lit-string">"the group is not empty"</span></code></span>
+<span class="codeline" id="line-525"><code>	<span class="keyword">case</span> <a href="#line-84" class="ident">GroupIdNotFound</a>:</code></span>
+<span class="codeline" id="line-526"><code>		<span class="keyword">return</span> <span class="lit-string">"the group ID does not exist"</span></code></span>
+<span class="codeline" id="line-527"><code>	<span class="keyword">case</span> <a href="#line-85" class="ident">FetchSessionIDNotFound</a>:</code></span>
+<span class="codeline" id="line-528"><code>		<span class="keyword">return</span> <span class="lit-string">"the fetch session ID was not found"</span></code></span>
+<span class="codeline" id="line-529"><code>	<span class="keyword">case</span> <a href="#line-86" class="ident">InvalidFetchSessionEpoch</a>:</code></span>
+<span class="codeline" id="line-530"><code>		<span class="keyword">return</span> <span class="lit-string">"the fetch session epoch is invalid"</span></code></span>
+<span class="codeline" id="line-531"><code>	<span class="keyword">case</span> <a href="#line-87" class="ident">ListenerNotFound</a>:</code></span>
+<span class="codeline" id="line-532"><code>		<span class="keyword">return</span> <span class="lit-string">"there is no listener on the leader broker that matches the listener on which metadata request was processed"</span></code></span>
+<span class="codeline" id="line-533"><code>	<span class="keyword">case</span> <a href="#line-88" class="ident">TopicDeletionDisabled</a>:</code></span>
+<span class="codeline" id="line-534"><code>		<span class="keyword">return</span> <span class="lit-string">"topic deletion is disabled"</span></code></span>
+<span class="codeline" id="line-535"><code>	<span class="keyword">case</span> <a href="#line-89" class="ident">FencedLeaderEpoch</a>:</code></span>
+<span class="codeline" id="line-536"><code>		<span class="keyword">return</span> <span class="lit-string">"the leader epoch in the request is older than the epoch on the broker"</span></code></span>
+<span class="codeline" id="line-537"><code>	<span class="keyword">case</span> <a href="#line-90" class="ident">UnknownLeaderEpoch</a>:</code></span>
+<span class="codeline" id="line-538"><code>		<span class="keyword">return</span> <span class="lit-string">"the leader epoch in the request is newer than the epoch on the broker"</span></code></span>
+<span class="codeline" id="line-539"><code>	<span class="keyword">case</span> <a href="#line-91" class="ident">UnsupportedCompressionType</a>:</code></span>
+<span class="codeline" id="line-540"><code>		<span class="keyword">return</span> <span class="lit-string">"the requesting client does not support the compression type of given partition"</span></code></span>
+<span class="codeline" id="line-541"><code>	<span class="keyword">case</span> <a href="#line-94" class="ident">MemberIDRequired</a>:</code></span>
+<span class="codeline" id="line-542"><code>		<span class="keyword">return</span> <span class="lit-string">"the group member needs to have a valid member id before actually entering a consumer group"</span></code></span>
+<span class="codeline" id="line-543"><code>	<span class="keyword">case</span> <a href="#line-97" class="ident">FencedInstanceID</a>:</code></span>
+<span class="codeline" id="line-544"><code>		<span class="keyword">return</span> <span class="lit-string">"the broker rejected this static consumer since another consumer with the same group.instance.id has registered with a different member.id"</span></code></span>
+<span class="codeline" id="line-545"><code>	<span class="keyword">case</span> <a href="#line-98" class="ident">EligibleLeadersNotAvailable</a>:</code></span>
+<span class="codeline" id="line-546"><code>		<span class="keyword">return</span> <span class="lit-string">"eligible topic partition leaders are not available"</span></code></span>
+<span class="codeline" id="line-547"><code>	<span class="keyword">case</span> <a href="#line-99" class="ident">ElectionNotNeeded</a>:</code></span>
+<span class="codeline" id="line-548"><code>		<span class="keyword">return</span> <span class="lit-string">"leader election not needed for topic partition"</span></code></span>
+<span class="codeline" id="line-549"><code>	<span class="keyword">case</span> <a href="#line-100" class="ident">NoReassignmentInProgress</a>:</code></span>
+<span class="codeline" id="line-550"><code>		<span class="keyword">return</span> <span class="lit-string">"no partition reassignment is in progress"</span></code></span>
+<span class="codeline" id="line-551"><code>	<span class="keyword">case</span> <a href="#line-101" class="ident">GroupSubscribedToTopic</a>:</code></span>
+<span class="codeline" id="line-552"><code>		<span class="keyword">return</span> <span class="lit-string">"deleting offsets of a topic is forbidden while the consumer group is actively subscribed to it"</span></code></span>
+<span class="codeline" id="line-553"><code>	<span class="keyword">case</span> <a href="#line-102" class="ident">InvalidRecord</a>:</code></span>
+<span class="codeline" id="line-554"><code>		<span class="keyword">return</span> <span class="lit-string">"this record has failed the validation on broker and hence be rejected"</span></code></span>
+<span class="codeline" id="line-555"><code>	<span class="keyword">case</span> <a href="#line-103" class="ident">UnstableOffsetCommit</a>:</code></span>
+<span class="codeline" id="line-556"><code>		<span class="keyword">return</span> <span class="lit-string">"there are unstable offsets that need to be cleared"</span></code></span>
+<span class="codeline" id="line-557"><code>	<span class="keyword">case</span> <a href="#line-104" class="ident">ThrottlingQuotaExceeded</a>:</code></span>
+<span class="codeline" id="line-558"><code>		<span class="keyword">return</span> <span class="lit-string">"The throttling quota has been exceeded"</span></code></span>
+<span class="codeline" id="line-559"><code>	<span class="keyword">case</span> <a href="#line-105" class="ident">ProducerFenced</a>:</code></span>
+<span class="codeline" id="line-560"><code>		<span class="keyword">return</span> <span class="lit-string">"There is a newer producer with the same transactionalId which fences the current one"</span></code></span>
+<span class="codeline" id="line-561"><code>	<span class="keyword">case</span> <a href="#line-106" class="ident">ResourceNotFound</a>:</code></span>
+<span class="codeline" id="line-562"><code>		<span class="keyword">return</span> <span class="lit-string">"A request illegally referred to a resource that does not exist"</span></code></span>
+<span class="codeline" id="line-563"><code>	<span class="keyword">case</span> <a href="#line-107" class="ident">DuplicateResource</a>:</code></span>
+<span class="codeline" id="line-564"><code>		<span class="keyword">return</span> <span class="lit-string">"A request illegally referred to the same resource twice"</span></code></span>
+<span class="codeline" id="line-565"><code>	<span class="keyword">case</span> <a href="#line-108" class="ident">UnacceptableCredential</a>:</code></span>
+<span class="codeline" id="line-566"><code>		<span class="keyword">return</span> <span class="lit-string">"Requested credential would not meet criteria for acceptability"</span></code></span>
+<span class="codeline" id="line-567"><code>	<span class="keyword">case</span> <a href="#line-109" class="ident">InconsistentVoterSet</a>:</code></span>
+<span class="codeline" id="line-568"><code>		<span class="keyword">return</span> <span class="lit-string">"Indicates that the either the sender or recipient of a voter-only request is not one of the expected voters"</span></code></span>
+<span class="codeline" id="line-569"><code>	<span class="keyword">case</span> <a href="#line-110" class="ident">InvalidUpdateVersion</a>:</code></span>
+<span class="codeline" id="line-570"><code>		<span class="keyword">return</span> <span class="lit-string">"The given update version was invalid"</span></code></span>
+<span class="codeline" id="line-571"><code>	<span class="keyword">case</span> <a href="#line-111" class="ident">FeatureUpdateFailed</a>:</code></span>
+<span class="codeline" id="line-572"><code>		<span class="keyword">return</span> <span class="lit-string">"Unable to update finalized features due to an unexpected server error"</span></code></span>
+<span class="codeline" id="line-573"><code>	<span class="keyword">case</span> <a href="#line-112" class="ident">PrincipalDeserializationFailure</a>:</code></span>
+<span class="codeline" id="line-574"><code>		<span class="keyword">return</span> <span class="lit-string">"Request principal deserialization failed during forwarding. This indicates an internal error on the broker cluster security setup"</span></code></span>
+<span class="codeline" id="line-575"><code>	<span class="keyword">case</span> <a href="#line-113" class="ident">SnapshotNotFound</a>:</code></span>
+<span class="codeline" id="line-576"><code>		<span class="keyword">return</span> <span class="lit-string">"Requested snapshot was not found"</span></code></span>
+<span class="codeline" id="line-577"><code>	<span class="keyword">case</span> <a href="#line-114" class="ident">PositionOutOfRange</a>:</code></span>
+<span class="codeline" id="line-578"><code>		<span class="keyword">return</span> <span class="lit-string">"Requested position is not greater than or equal to zero, and less than the size of the snapshot"</span></code></span>
+<span class="codeline" id="line-579"><code>	<span class="keyword">case</span> <a href="#line-115" class="ident">UnknownTopicID</a>:</code></span>
+<span class="codeline" id="line-580"><code>		<span class="keyword">return</span> <span class="lit-string">"This server does not host this topic ID"</span></code></span>
+<span class="codeline" id="line-581"><code>	<span class="keyword">case</span> <a href="#line-116" class="ident">DuplicateBrokerRegistration</a>:</code></span>
+<span class="codeline" id="line-582"><code>		<span class="keyword">return</span> <span class="lit-string">"This broker ID is already in use"</span></code></span>
+<span class="codeline" id="line-583"><code>	<span class="keyword">case</span> <a href="#line-117" class="ident">BrokerIDNotRegistered</a>:</code></span>
+<span class="codeline" id="line-584"><code>		<span class="keyword">return</span> <span class="lit-string">"The given broker ID was not registered"</span></code></span>
+<span class="codeline" id="line-585"><code>	<span class="keyword">case</span> <a href="#line-118" class="ident">InconsistentTopicID</a>:</code></span>
+<span class="codeline" id="line-586"><code>		<span class="keyword">return</span> <span class="lit-string">"The log's topic ID did not match the topic ID in the request"</span></code></span>
+<span class="codeline" id="line-587"><code>	<span class="keyword">case</span> <a href="#line-119" class="ident">InconsistentClusterID</a>:</code></span>
+<span class="codeline" id="line-588"><code>		<span class="keyword">return</span> <span class="lit-string">"The clusterId in the request does not match that found on the server"</span></code></span>
+<span class="codeline" id="line-589"><code>	<span class="keyword">case</span> <a href="#line-120" class="ident">TransactionalIDNotFound</a>:</code></span>
+<span class="codeline" id="line-590"><code>		<span class="keyword">return</span> <span class="lit-string">"The transactionalId could not be found"</span></code></span>
+<span class="codeline" id="line-591"><code>	<span class="keyword">case</span> <a href="#line-121" class="ident">FetchSessionTopicIDError</a>:</code></span>
+<span class="codeline" id="line-592"><code>		<span class="keyword">return</span> <span class="lit-string">"The fetch session encountered inconsistent topic ID usage"</span></code></span>
+<span class="codeline" id="line-593"><code>	}</code></span>
+<span class="codeline" id="line-594"><code>	<span class="keyword">return</span> <span class="lit-string">""</span></code></span>
+<span class="codeline" id="line-595"><code>}</code></span>
+<span class="codeline" id="line-596"><code></code></span>
+<span class="codeline" id="line-597"><code><span class="keyword">func</span> <label for="r10" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-isTimeout" class="ident">isTimeout</a></label>(<label for="r11" class="ident">err</label> <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-598"><code>	<span class="keyword">var</span> <label for="r12" class="ident">timeoutError</label> <span class="keyword">interface</span>{ <label for="r13" class="ident">Timeout</label>() <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> }</code></span>
+<span class="codeline" id="line-599"><code>	<span class="keyword">if</span> <a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-102" class="ident">As</a>(<label for="r11" class="ident">err</label>, &amp;<label for="r12" class="ident">timeoutError</label>) {</code></span>
+<span class="codeline" id="line-600"><code>		<span class="keyword">return</span> <label for="r12" class="ident">timeoutError</label>.<label for="r13" class="ident">Timeout</label>()</code></span>
+<span class="codeline" id="line-601"><code>	}</code></span>
+<span class="codeline" id="line-602"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-603"><code>}</code></span>
+<span class="codeline" id="line-604"><code></code></span>
+<span class="codeline" id="line-605"><code><span class="keyword">func</span> <label for="r14" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-isTemporary" class="ident">isTemporary</a></label>(<label for="r15" class="ident">err</label> <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-606"><code>	<span class="keyword">var</span> <label for="r16" class="ident">tempError</label> <span class="keyword">interface</span>{ <label for="r17" class="ident">Temporary</label>() <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> }</code></span>
+<span class="codeline" id="line-607"><code>	<span class="keyword">if</span> <a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-102" class="ident">As</a>(<label for="r15" class="ident">err</label>, &amp;<label for="r16" class="ident">tempError</label>) {</code></span>
+<span class="codeline" id="line-608"><code>		<span class="keyword">return</span> <label for="r16" class="ident">tempError</label>.<label for="r17" class="ident">Temporary</label>()</code></span>
+<span class="codeline" id="line-609"><code>	}</code></span>
+<span class="codeline" id="line-610"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-611"><code>}</code></span>
+<span class="codeline" id="line-612"><code></code></span>
+<span class="codeline" id="line-613"><code><span class="keyword">func</span> <label for="r18" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-isTransientNetworkError" class="ident">isTransientNetworkError</a></label>(<label for="r19" class="ident">err</label> <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-614"><code>	<span class="keyword">return</span> <a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r19" class="ident">err</label>, <a href="../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a>) ||</code></span>
+<span class="codeline" id="line-615"><code>		<a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r19" class="ident">err</label>, <a href="../../../../pkg/syscall.html" class="ident i3">syscall</a>.<a href="../../../syscall/zerrors_darwin_arm64.go.html#line-1163" class="ident">ECONNREFUSED</a>) ||</code></span>
+<span class="codeline" id="line-616"><code>		<a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r19" class="ident">err</label>, <a href="../../../../pkg/syscall.html" class="ident i3">syscall</a>.<a href="../../../syscall/zerrors_darwin_arm64.go.html#line-1164" class="ident">ECONNRESET</a>) ||</code></span>
+<span class="codeline" id="line-617"><code>		<a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r19" class="ident">err</label>, <a href="../../../../pkg/syscall.html" class="ident i3">syscall</a>.<a href="../../../syscall/zerrors_darwin_arm64.go.html#line-1226" class="ident">EPIPE</a>)</code></span>
+<span class="codeline" id="line-618"><code>}</code></span>
+<span class="codeline" id="line-619"><code></code></span>
+<span class="codeline" id="line-620"><code><span class="keyword">func</span> <label for="r20" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-silentEOF" class="ident">silentEOF</a></label>(<label for="r21" class="ident">err</label> <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-621"><code>	<span class="keyword">if</span> <a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r21" class="ident">err</label>, <a href="../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../io/io.go.html#line-44" class="ident">EOF</a>) {</code></span>
+<span class="codeline" id="line-622"><code>		<label for="r21" class="ident">err</label> = <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-623"><code>	}</code></span>
+<span class="codeline" id="line-624"><code>	<span class="keyword">return</span> <label for="r21" class="ident">err</label></code></span>
+<span class="codeline" id="line-625"><code>}</code></span>
+<span class="codeline" id="line-626"><code></code></span>
+<span class="codeline" id="line-627"><code><span class="keyword">func</span> <label for="r22" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-dontExpectEOF" class="ident">dontExpectEOF</a></label>(<label for="r23" class="ident">err</label> <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-628"><code>	<span class="keyword">if</span> <a href="../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r23" class="ident">err</label>, <a href="../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../io/io.go.html#line-44" class="ident">EOF</a>) {</code></span>
+<span class="codeline" id="line-629"><code>		<span class="keyword">return</span> <a href="../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-630"><code>	}</code></span>
+<span class="codeline" id="line-631"><code>	<span class="keyword">return</span> <label for="r23" class="ident">err</label></code></span>
+<span class="codeline" id="line-632"><code>}</code></span>
+<span class="codeline" id="line-633"><code></code></span>
+<span class="codeline" id="line-634"><code><span class="keyword">func</span> <label for="r24" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-coalesceErrors" class="ident">coalesceErrors</a></label>(<label for="r25" class="ident">errs</label> ...<a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-635"><code>	<span class="keyword">for</span> <label for="r26" class="ident">_</label>, <label for="r27" class="ident">err</label> := <span class="keyword">range</span> <label for="r25" class="ident">errs</label> {</code></span>
+<span class="codeline" id="line-636"><code>		<span class="keyword">if</span> <label for="r27" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-637"><code>			<span class="keyword">return</span> <label for="r27" class="ident">err</label></code></span>
+<span class="codeline" id="line-638"><code>		}</code></span>
+<span class="codeline" id="line-639"><code>	}</code></span>
+<span class="codeline" id="line-640"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-641"><code>}</code></span>
+<span class="codeline" id="line-642"><code></code></span>
+<span class="codeline" id="line-643"><code><span class="comment">// MessageTooLargeError is returned when a message is too large to fit within the allowed size.</span></code></span>
+<span class="codeline" id="line-644"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-MessageTooLargeError" class="ident">MessageTooLargeError</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-645"><code>	Message   <a href="message.go.html#line-8" class="ident">Message</a></code></span>
+<span class="codeline" id="line-646"><code>	Remaining []<a href="message.go.html#line-8" class="ident">Message</a></code></span>
+<span class="codeline" id="line-647"><code>}</code></span>
+<span class="codeline" id="line-648"><code></code></span>
+<span class="codeline" id="line-649"><code><span class="keyword">func</span> <label for="r28" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-messageTooLarge" class="ident">messageTooLarge</a></label>(<label for="r29" class="ident">msgs</label> []<a href="message.go.html#line-8" class="ident">Message</a>, <label for="r30" class="ident">i</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="#line-644" class="ident">MessageTooLargeError</a> {</code></span>
+<span class="codeline" id="line-650"><code>	<label for="r31" class="ident">remain</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="message.go.html#line-8" class="ident">Message</a>, <span class="lit-number">0</span>, <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r29" class="ident">msgs</label>)-<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-651"><code>	<label for="r31" class="ident">remain</label> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r31" class="ident">remain</label>, <label for="r29" class="ident">msgs</label>[:<label for="r30" class="ident">i</label>]...)</code></span>
+<span class="codeline" id="line-652"><code>	<label for="r31" class="ident">remain</label> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r31" class="ident">remain</label>, <label for="r29" class="ident">msgs</label>[<label for="r30" class="ident">i</label>+<span class="lit-number">1</span>:]...)</code></span>
+<span class="codeline" id="line-653"><code>	<span class="keyword">return</span> <a href="#line-644" class="ident">MessageTooLargeError</a>{</code></span>
+<span class="codeline" id="line-654"><code>		<a href="#line-645" class="ident">Message</a>:   <label for="r29" class="ident">msgs</label>[<label for="r30" class="ident">i</label>],</code></span>
+<span class="codeline" id="line-655"><code>		<a href="#line-646" class="ident">Remaining</a>: <label for="r31" class="ident">remain</label>,</code></span>
+<span class="codeline" id="line-656"><code>	}</code></span>
+<span class="codeline" id="line-657"><code>}</code></span>
+<span class="codeline" id="line-658"><code></code></span>
+<span class="codeline" id="line-659"><code><span class="keyword">func</span> (<label for="r32" class="ident">e</label> <a href="#line-644" class="ident">MessageTooLargeError</a>) <label for="r33" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.MessageTooLargeError.html#name-.Error" class="ident">Error</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-660"><code>	<span class="keyword">return</span> <a href="#line-25" class="ident">MessageSizeTooLarge</a>.<a href="#line-125" class="ident">Error</a>()</code></span>
+<span class="codeline" id="line-661"><code>}</code></span>
+<span class="codeline" id="line-662"><code></code></span>
+<span class="codeline" id="line-663"><code><span class="keyword">func</span> (<label for="r34" class="ident">e</label> <a href="#line-644" class="ident">MessageTooLargeError</a>) <label for="r35" class="ident">Unwrap</label>() <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-664"><code>	<span class="keyword">return</span> <a href="#line-25" class="ident">MessageSizeTooLarge</a></code></span>
+<span class="codeline" id="line-665"><code>}</code></span>
+<span class="codeline" id="line-666"><code></code></span>
+<span class="codeline" id="line-667"><code><span class="keyword">func</span> <label for="r36" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-makeError" class="ident">makeError</a></label>(<label for="r37" class="ident">code</label> <a href="../../../../pkg/builtin.html#name-int16" class="ident">int16</a>, <label for="r38" class="ident">message</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-668"><code>	<span class="keyword">if</span> <label for="r37" class="ident">code</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-669"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-670"><code>	}</code></span>
+<span class="codeline" id="line-671"><code>	<span class="keyword">if</span> <label for="r38" class="ident">message</label> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-672"><code>		<span class="keyword">return</span> <a href="#line-12" class="ident">Error</a>(<label for="r37" class="ident">code</label>)</code></span>
+<span class="codeline" id="line-673"><code>	}</code></span>
+<span class="codeline" id="line-674"><code>	<span class="keyword">return</span> <a href="../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"%w: %s"</span>, <a href="#line-12" class="ident">Error</a>(<label for="r37" class="ident">code</label>), <label for="r38" class="ident">message</label>)</code></span>
+<span class="codeline" id="line-675"><code>}</code></span>
+<span class="codeline" id="line-676"><code></code></span>
+<span class="codeline" id="line-677"><code><span class="comment">// WriteError is returned by kafka.(*Writer).WriteMessages when the writer is</span></code></span>
+<span class="codeline" id="line-678"><code><span class="comment">// not configured to write messages asynchronously. WriteError values contain</span></code></span>
+<span class="codeline" id="line-679"><code><span class="comment">// a list of errors where each entry matches the position of a message in the</span></code></span>
+<span class="codeline" id="line-680"><code><span class="comment">// WriteMessages call. The program can determine the status of each message by</span></code></span>
+<span class="codeline" id="line-681"><code><span class="comment">// looping over the error:</span></code></span>
+<span class="codeline" id="line-682"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-683"><code><span class="comment">//	switch err := w.WriteMessages(ctx, msgs...).(type) {</span></code></span>
+<span class="codeline" id="line-684"><code><span class="comment">//	case nil:</span></code></span>
+<span class="codeline" id="line-685"><code><span class="comment">//	case kafka.WriteErrors:</span></code></span>
+<span class="codeline" id="line-686"><code><span class="comment">//		for i := range msgs {</span></code></span>
+<span class="codeline" id="line-687"><code><span class="comment">//			if err[i] != nil {</span></code></span>
+<span class="codeline" id="line-688"><code><span class="comment">//				// handle the error writing msgs[i]</span></code></span>
+<span class="codeline" id="line-689"><code><span class="comment">//				...</span></code></span>
+<span class="codeline" id="line-690"><code><span class="comment">//			}</span></code></span>
+<span class="codeline" id="line-691"><code><span class="comment">//		}</span></code></span>
+<span class="codeline" id="line-692"><code><span class="comment">//	default:</span></code></span>
+<span class="codeline" id="line-693"><code><span class="comment">//		// handle other errors</span></code></span>
+<span class="codeline" id="line-694"><code><span class="comment">//		...</span></code></span>
+<span class="codeline" id="line-695"><code><span class="comment">//	}</span></code></span>
+<span class="codeline" id="line-696"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-WriteErrors" class="ident">WriteErrors</a> []<a href="../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-697"><code></code></span>
+<span class="codeline" id="line-698"><code><span class="comment">// Count counts the number of non-nil errors in err.</span></code></span>
+<span class="codeline" id="line-699"><code><span class="keyword">func</span> (<label for="r39" class="ident">err</label> <a href="#line-696" class="ident">WriteErrors</a>) <label for="r40" class="ident">Count</label>() <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-700"><code>	<label for="r41" class="ident">n</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-701"><code></code></span>
+<span class="codeline" id="line-702"><code>	<span class="keyword">for</span> <label for="r42" class="ident">_</label>, <label for="r43" class="ident">e</label> := <span class="keyword">range</span> <label for="r39" class="ident">err</label> {</code></span>
+<span class="codeline" id="line-703"><code>		<span class="keyword">if</span> <label for="r43" class="ident">e</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-704"><code>			<label for="r41" class="ident">n</label>++</code></span>
+<span class="codeline" id="line-705"><code>		}</code></span>
+<span class="codeline" id="line-706"><code>	}</code></span>
+<span class="codeline" id="line-707"><code></code></span>
+<span class="codeline" id="line-708"><code>	<span class="keyword">return</span> <label for="r41" class="ident">n</label></code></span>
+<span class="codeline" id="line-709"><code>}</code></span>
+<span class="codeline" id="line-710"><code></code></span>
+<span class="codeline" id="line-711"><code><span class="keyword">func</span> (<label for="r44" class="ident">err</label> <a href="#line-696" class="ident">WriteErrors</a>) <label for="r45" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.WriteErrors.html#name-.Error" class="ident">Error</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-712"><code>	<label for="r46" class="ident">errCount</label> := <label for="r44" class="ident">err</label>.<a href="#line-699" class="ident">Count</a>()</code></span>
+<span class="codeline" id="line-713"><code>	<label for="r47" class="ident">errors</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <span class="lit-number">0</span>, <label for="r46" class="ident">errCount</label>)</code></span>
+<span class="codeline" id="line-714"><code>	<span class="keyword">for</span> <label for="r48" class="ident">_</label>, <label for="r49" class="ident">writeError</label> := <span class="keyword">range</span> <label for="r44" class="ident">err</label> {</code></span>
+<span class="codeline" id="line-715"><code>		<span class="keyword">if</span> <label for="r49" class="ident">writeError</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-716"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-717"><code>		}</code></span>
+<span class="codeline" id="line-718"><code>		<label for="r47" class="ident">errors</label> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r47" class="ident">errors</label>, <label for="r49" class="ident">writeError</label>.Error())</code></span>
+<span class="codeline" id="line-719"><code>	}</code></span>
+<span class="codeline" id="line-720"><code>	<span class="keyword">return</span> <a href="../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"Kafka write errors (%d/%d), errors: %v"</span>, <label for="r46" class="ident">errCount</label>, <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r44" class="ident">err</label>), <label for="r47" class="ident">errors</label>)</code></span>
+<span class="codeline" id="line-721"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

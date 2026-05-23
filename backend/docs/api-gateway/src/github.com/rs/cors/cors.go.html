@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: cors.go in package github.com/rs/cors</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	cors.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/rs/cors.html">github.com/rs/cors</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">/*</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">Package cors is net/http handler to handle CORS related requests</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">as defined by http://www.w3.org/TR/cors/</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">You can configure it by passing an option struct to cors.New:</span></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">	c := cors.New(cors.Options{</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">	    AllowedOrigins:   []string{"foo.com"},</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">	    AllowedMethods:   []string{http.MethodGet, http.MethodPost, http.MethodDelete},</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">	    AllowCredentials: true,</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">	})</span></code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">Then insert the handler in the chain:</span></code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">	handler = c.Handler(handler)</span></code></span>
+<span class="codeline" id="line-16"><code></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">See Options documentation for more options.</span></code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">The resulting handler is a standard net/http handler.</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">*/</span></code></span></div><span class="codeline" id="line-21"><code><span class="keyword">package</span> cors</code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-24"><code>	<label for="i0"><span class="lit-string i0">"log"</span></label></code></span>
+<span class="codeline" id="line-25"><code>	<label for="i1"><span class="lit-string i1">"net/http"</span></label></code></span>
+<span class="codeline" id="line-26"><code>	<label for="i2"><span class="lit-string i2">"os"</span></label></code></span>
+<span class="codeline" id="line-27"><code>	<label for="i3"><span class="lit-string i3">"strconv"</span></label></code></span>
+<span class="codeline" id="line-28"><code>	<label for="i4"><span class="lit-string i4">"strings"</span></label></code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code>	<label for="i5"><span class="lit-string i5">"github.com/rs/cors/internal"</span></label></code></span>
+<span class="codeline" id="line-31"><code>)</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">var</span> <a href="../../../../pkg/github.com/rs/cors.html#name-headerVaryOrigin" class="ident">headerVaryOrigin</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"Origin"</span>}</code></span>
+<span class="codeline" id="line-34"><code><span class="keyword">var</span> <a href="../../../../pkg/github.com/rs/cors.html#name-headerOriginAll" class="ident">headerOriginAll</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"*"</span>}</code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">var</span> <a href="../../../../pkg/github.com/rs/cors.html#name-headerTrue" class="ident">headerTrue</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"true"</span>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// Options is a configuration container to setup the CORS middleware.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/rs/cors.html#name-Options" class="ident">Options</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-39"><code>	<span class="comment">// AllowedOrigins is a list of origins a cross-domain request can be executed from.</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">	// If the special "*" value is present in the list, all origins will be allowed.</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">	// An origin may contain a wildcard (*) to replace 0 or more characters</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">	// (i.e.: http://*.domain.com). Usage of wildcards implies a small performance penalty.</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">	// Only one wildcard can be used per origin.</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">	// Default value is ["*"]</span></code></span>
+<span class="codeline" id="line-45"><code>	AllowedOrigins []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-46"><code>	<span class="comment">// AllowOriginFunc is a custom function to validate the origin. It take the</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">	// origin as argument and returns true if allowed or false otherwise. If</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">	// this option is set, the content of `AllowedOrigins` is ignored.</span></code></span>
+<span class="codeline" id="line-49"><code>	AllowOriginFunc <span class="keyword">func</span>(origin <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-50"><code>	<span class="comment">// AllowOriginRequestFunc is a custom function to validate the origin. It</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	// takes the HTTP Request object and the origin as argument and returns true</span></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">	// if allowed or false otherwise. If headers are used take the decision,</span></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">	// consider using AllowOriginVaryRequestFunc instead. If this option is set,</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">	// the contents of `AllowedOrigins`, `AllowOriginFunc` are ignored.</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">	// Deprecated: use `AllowOriginVaryRequestFunc` instead.</span></code></span>
+<span class="codeline" id="line-57"><code>	AllowOriginRequestFunc <span class="keyword">func</span>(r *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, origin <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-58"><code>	<span class="comment">// AllowOriginVaryRequestFunc is a custom function to validate the origin.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">	// It takes the HTTP Request object and the origin as argument and returns</span></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">	// true if allowed or false otherwise with a list of headers used to take</span></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">	// that decision if any so they can be added to the Vary header. If this</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">	// option is set, the contents of `AllowedOrigins`, `AllowOriginFunc` and</span></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">	// `AllowOriginRequestFunc` are ignored.</span></code></span>
+<span class="codeline" id="line-64"><code>	AllowOriginVaryRequestFunc <span class="keyword">func</span>(r *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, origin <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a>, []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-65"><code>	<span class="comment">// AllowedMethods is a list of methods the client is allowed to use with</span></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">	// cross-domain requests. Default value is simple methods (HEAD, GET and POST).</span></code></span>
+<span class="codeline" id="line-67"><code>	AllowedMethods []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-68"><code>	<span class="comment">// AllowedHeaders is list of non simple headers the client is allowed to use with</span></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">	// cross-domain requests.</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">	// If the special "*" value is present in the list, all headers will be allowed.</span></code></span>
+<span class="codeline" id="line-71"><code><span class="comment">	// Default value is [].</span></code></span>
+<span class="codeline" id="line-72"><code>	AllowedHeaders []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-73"><code>	<span class="comment">// ExposedHeaders indicates which headers are safe to expose to the API of a CORS</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">	// API specification</span></code></span>
+<span class="codeline" id="line-75"><code>	ExposedHeaders []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-76"><code>	<span class="comment">// MaxAge indicates how long (in seconds) the results of a preflight request</span></code></span>
+<span class="codeline" id="line-77"><code><span class="comment">	// can be cached. Default value is 0, which stands for no</span></code></span>
+<span class="codeline" id="line-78"><code><span class="comment">	// Access-Control-Max-Age header to be sent back, resulting in browsers</span></code></span>
+<span class="codeline" id="line-79"><code><span class="comment">	// using their default value (5s by spec). If you need to force a 0 max-age,</span></code></span>
+<span class="codeline" id="line-80"><code><span class="comment">	// set `MaxAge` to a negative value (ie: -1).</span></code></span>
+<span class="codeline" id="line-81"><code>	MaxAge <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-82"><code>	<span class="comment">// AllowCredentials indicates whether the request can include user credentials like</span></code></span>
+<span class="codeline" id="line-83"><code><span class="comment">	// cookies, HTTP authentication or client side SSL certificates.</span></code></span>
+<span class="codeline" id="line-84"><code>	AllowCredentials <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-85"><code>	<span class="comment">// AllowPrivateNetwork indicates whether to accept cross-origin requests over a</span></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">	// private network.</span></code></span>
+<span class="codeline" id="line-87"><code>	AllowPrivateNetwork <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-88"><code>	<span class="comment">// OptionsPassthrough instructs preflight to let other potential next handlers to</span></code></span>
+<span class="codeline" id="line-89"><code><span class="comment">	// process the OPTIONS method. Turn this on if your application handles OPTIONS.</span></code></span>
+<span class="codeline" id="line-90"><code>	OptionsPassthrough <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-91"><code>	<span class="comment">// Provides a status code to use for successful OPTIONS requests.</span></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">	// Default value is http.StatusNoContent (204).</span></code></span>
+<span class="codeline" id="line-93"><code>	OptionsSuccessStatus <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-94"><code>	<span class="comment">// Debugging flag adds additional output to debug server side CORS issues</span></code></span>
+<span class="codeline" id="line-95"><code>	Debug <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-96"><code>	<span class="comment">// Adds a custom logger, implies Debug is true</span></code></span>
+<span class="codeline" id="line-97"><code>	Logger <a href="#line-101" class="ident">Logger</a></code></span>
+<span class="codeline" id="line-98"><code>}</code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code><span class="comment">// Logger generic interface for logger</span></code></span>
+<span class="codeline" id="line-101"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/rs/cors.html#name-Logger" class="ident">Logger</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-102"><code>	<a href="../../../../imp/github.com/rs/cors.Logger.html#name-Printf" class="ident">Printf</a>(<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, ...<span class="keyword">interface</span>{})</code></span>
+<span class="codeline" id="line-103"><code>}</code></span>
+<span class="codeline" id="line-104"><code></code></span>
+<span class="codeline" id="line-105"><code><span class="comment">// Cors http handler</span></code></span>
+<span class="codeline" id="line-106"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/rs/cors.html#name-Cors" class="ident">Cors</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-107"><code>	<span class="comment">// Debug logger</span></code></span>
+<span class="codeline" id="line-108"><code>	Log <a href="#line-101" class="ident">Logger</a></code></span>
+<span class="codeline" id="line-109"><code>	<span class="comment">// Normalized list of plain allowed origins</span></code></span>
+<span class="codeline" id="line-110"><code>	allowedOrigins []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-111"><code>	<span class="comment">// List of allowed origins containing wildcards</span></code></span>
+<span class="codeline" id="line-112"><code>	allowedWOrigins []<a href="utils.go.html#line-7" class="ident">wildcard</a></code></span>
+<span class="codeline" id="line-113"><code>	<span class="comment">// Optional origin validator function</span></code></span>
+<span class="codeline" id="line-114"><code>	allowOriginFunc <span class="keyword">func</span>(r *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, origin <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a>, []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-115"><code>	<span class="comment">// Normalized list of allowed headers</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">	// Note: the Fetch standard guarantees that CORS-unsafe request-header names</span></code></span>
+<span class="codeline" id="line-117"><code><span class="comment">	// (i.e. the values listed in the Access-Control-Request-Headers header)</span></code></span>
+<span class="codeline" id="line-118"><code><span class="comment">	// are unique and sorted;</span></code></span>
+<span class="codeline" id="line-119"><code><span class="comment">	// see https://fetch.spec.whatwg.org/#cors-unsafe-request-header-names.</span></code></span>
+<span class="codeline" id="line-120"><code>	allowedHeaders <a href="../../../../pkg/github.com/rs/cors/internal.html" class="ident i5">internal</a>.<a href="internal/sortedset.go.html#line-14" class="ident">SortedSet</a></code></span>
+<span class="codeline" id="line-121"><code>	<span class="comment">// Normalized list of allowed methods</span></code></span>
+<span class="codeline" id="line-122"><code>	allowedMethods []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-123"><code>	<span class="comment">// Pre-computed normalized list of exposed headers</span></code></span>
+<span class="codeline" id="line-124"><code>	exposedHeaders []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-125"><code>	<span class="comment">// Pre-computed maxAge header value</span></code></span>
+<span class="codeline" id="line-126"><code>	maxAge []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-127"><code>	<span class="comment">// Set to true when allowed origins contains a "*"</span></code></span>
+<span class="codeline" id="line-128"><code>	allowedOriginsAll <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-129"><code>	<span class="comment">// Set to true when allowed headers contains a "*"</span></code></span>
+<span class="codeline" id="line-130"><code>	allowedHeadersAll <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-131"><code>	<span class="comment">// Status code to use for successful OPTIONS requests</span></code></span>
+<span class="codeline" id="line-132"><code>	optionsSuccessStatus <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-133"><code>	allowCredentials     <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-134"><code>	allowPrivateNetwork  <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-135"><code>	optionPassthrough    <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-136"><code>	preflightVary        []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-137"><code>}</code></span>
+<span class="codeline" id="line-138"><code></code></span>
+<span class="codeline" id="line-139"><code><span class="comment">// New creates a new Cors handler with the provided options.</span></code></span>
+<span class="codeline" id="line-140"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../pkg/github.com/rs/cors.html#name-New" class="ident">New</a></label>(<label for="r1" class="ident">options</label> <a href="#line-38" class="ident">Options</a>) *<a href="#line-106" class="ident">Cors</a> {</code></span>
+<span class="codeline" id="line-141"><code>	<label for="r2" class="ident">c</label> := &amp;<a href="#line-106" class="ident">Cors</a>{</code></span>
+<span class="codeline" id="line-142"><code>		<a href="#line-133" class="ident">allowCredentials</a>:    <label for="r1" class="ident">options</label>.<a href="#line-84" class="ident">AllowCredentials</a>,</code></span>
+<span class="codeline" id="line-143"><code>		<a href="#line-134" class="ident">allowPrivateNetwork</a>: <label for="r1" class="ident">options</label>.<a href="#line-87" class="ident">AllowPrivateNetwork</a>,</code></span>
+<span class="codeline" id="line-144"><code>		<a href="#line-135" class="ident">optionPassthrough</a>:   <label for="r1" class="ident">options</label>.<a href="#line-90" class="ident">OptionsPassthrough</a>,</code></span>
+<span class="codeline" id="line-145"><code>		<a href="#line-108" class="ident">Log</a>:                 <label for="r1" class="ident">options</label>.<a href="#line-97" class="ident">Logger</a>,</code></span>
+<span class="codeline" id="line-146"><code>	}</code></span>
+<span class="codeline" id="line-147"><code>	<span class="keyword">if</span> <label for="r1" class="ident">options</label>.<a href="#line-95" class="ident">Debug</a> &amp;&amp; <label for="r2" class="ident">c</label>.<a href="#line-108" class="ident">Log</a> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-148"><code>		<label for="r2" class="ident">c</label>.<a href="#line-108" class="ident">Log</a> = <a href="../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../log/log.go.html#line-71" class="ident">New</a>(<a href="../../../../pkg/os.html" class="ident i2">os</a>.<a href="../../../os/file.go.html#line-73" class="ident">Stdout</a>, <span class="lit-string">"[cors] "</span>, <a href="../../../../pkg/log.html" class="ident i0">log</a>.<a href="../../../log/log.go.html#line-50" class="ident">LstdFlags</a>)</code></span>
+<span class="codeline" id="line-149"><code>	}</code></span>
+<span class="codeline" id="line-150"><code></code></span>
+<span class="codeline" id="line-151"><code>	<span class="comment">// Allowed origins</span></code></span>
+<span class="codeline" id="line-152"><code>	<span class="keyword">switch</span> {</code></span>
+<span class="codeline" id="line-153"><code>	<span class="keyword">case</span> <label for="r1" class="ident">options</label>.<a href="#line-64" class="ident">AllowOriginVaryRequestFunc</a> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>:</code></span>
+<span class="codeline" id="line-154"><code>		<label for="r2" class="ident">c</label>.<a href="#line-114" class="ident">allowOriginFunc</a> = <label for="r1" class="ident">options</label>.<a href="#line-64" class="ident">AllowOriginVaryRequestFunc</a></code></span>
+<span class="codeline" id="line-155"><code>	<span class="keyword">case</span> <label for="r1" class="ident">options</label>.<a href="#line-57" class="ident">AllowOriginRequestFunc</a> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>:</code></span>
+<span class="codeline" id="line-156"><code>		<label for="r2" class="ident">c</label>.<a href="#line-114" class="ident">allowOriginFunc</a> = <span class="keyword">func</span>(<label for="r3" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, <label for="r4" class="ident">origin</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a>, []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-157"><code>			<span class="keyword">return</span> <label for="r1" class="ident">options</label>.<a href="#line-57" class="ident">AllowOriginRequestFunc</a>(<label for="r3" class="ident">r</label>, <label for="r4" class="ident">origin</label>), <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-158"><code>		}</code></span>
+<span class="codeline" id="line-159"><code>	<span class="keyword">case</span> <label for="r1" class="ident">options</label>.<a href="#line-49" class="ident">AllowOriginFunc</a> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>:</code></span>
+<span class="codeline" id="line-160"><code>		<label for="r2" class="ident">c</label>.<a href="#line-114" class="ident">allowOriginFunc</a> = <span class="keyword">func</span>(<label for="r5" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, <label for="r6" class="ident">origin</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a>, []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-161"><code>			<span class="keyword">return</span> <label for="r1" class="ident">options</label>.<a href="#line-49" class="ident">AllowOriginFunc</a>(<label for="r6" class="ident">origin</label>), <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-162"><code>		}</code></span>
+<span class="codeline" id="line-163"><code>	<span class="keyword">case</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">options</label>.<a href="#line-45" class="ident">AllowedOrigins</a>) == <span class="lit-number">0</span>:</code></span>
+<span class="codeline" id="line-164"><code>		<span class="keyword">if</span> <label for="r2" class="ident">c</label>.<a href="#line-114" class="ident">allowOriginFunc</a> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-165"><code>			<span class="comment">// Default is all origins</span></code></span>
+<span class="codeline" id="line-166"><code>			<label for="r2" class="ident">c</label>.<a href="#line-128" class="ident">allowedOriginsAll</a> = <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-167"><code>		}</code></span>
+<span class="codeline" id="line-168"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-169"><code>		<label for="r2" class="ident">c</label>.<a href="#line-110" class="ident">allowedOrigins</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{}</code></span>
+<span class="codeline" id="line-170"><code>		<label for="r2" class="ident">c</label>.<a href="#line-112" class="ident">allowedWOrigins</a> = []<a href="utils.go.html#line-7" class="ident">wildcard</a>{}</code></span>
+<span class="codeline" id="line-171"><code>		<span class="keyword">for</span> <label for="r7" class="ident">_</label>, <label for="r8" class="ident">origin</label> := <span class="keyword">range</span> <label for="r1" class="ident">options</label>.<a href="#line-45" class="ident">AllowedOrigins</a> {</code></span>
+<span class="codeline" id="line-172"><code>			<span class="comment">// Note: for origins matching, the spec requires a case-sensitive matching.</span></code></span>
+<span class="codeline" id="line-173"><code><span class="comment">			// As it may error prone, we chose to ignore the spec here.</span></code></span>
+<span class="codeline" id="line-174"><code>			<label for="r8" class="ident">origin</label> = <a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-727" class="ident">ToLower</a>(<label for="r8" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-175"><code>			<span class="keyword">if</span> <label for="r8" class="ident">origin</label> == <span class="lit-string">"*"</span> {</code></span>
+<span class="codeline" id="line-176"><code>				<span class="comment">// If "*" is present in the list, turn the whole list into a match all</span></code></span>
+<span class="codeline" id="line-177"><code>				<label for="r2" class="ident">c</label>.<a href="#line-128" class="ident">allowedOriginsAll</a> = <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-178"><code>				<label for="r2" class="ident">c</label>.<a href="#line-110" class="ident">allowedOrigins</a> = <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-179"><code>				<label for="r2" class="ident">c</label>.<a href="#line-112" class="ident">allowedWOrigins</a> = <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-180"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-181"><code>			} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r9" class="ident">i</label> := <a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-119" class="ident">IndexByte</a>(<label for="r8" class="ident">origin</label>, <span class="lit-number">'*'</span>); <label for="r9" class="ident">i</label> &gt;= <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-182"><code>				<span class="comment">// Split the origin in two: start and end string without the *</span></code></span>
+<span class="codeline" id="line-183"><code>				<label for="r10" class="ident">w</label> := <a href="utils.go.html#line-7" class="ident">wildcard</a>{<label for="r8" class="ident">origin</label>[<span class="lit-number">0</span>:<label for="r9" class="ident">i</label>], <label for="r8" class="ident">origin</label>[<label for="r9" class="ident">i</label>+<span class="lit-number">1</span>:]}</code></span>
+<span class="codeline" id="line-184"><code>				<label for="r2" class="ident">c</label>.<a href="#line-112" class="ident">allowedWOrigins</a> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r2" class="ident">c</label>.<a href="#line-112" class="ident">allowedWOrigins</a>, <label for="r10" class="ident">w</label>)</code></span>
+<span class="codeline" id="line-185"><code>			} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-186"><code>				<label for="r2" class="ident">c</label>.<a href="#line-110" class="ident">allowedOrigins</a> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r2" class="ident">c</label>.<a href="#line-110" class="ident">allowedOrigins</a>, <label for="r8" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-187"><code>			}</code></span>
+<span class="codeline" id="line-188"><code>		}</code></span>
+<span class="codeline" id="line-189"><code>	}</code></span>
+<span class="codeline" id="line-190"><code></code></span>
+<span class="codeline" id="line-191"><code>	<span class="comment">// Allowed Headers</span></code></span>
+<span class="codeline" id="line-192"><code><span class="comment">	// Note: the Fetch standard guarantees that CORS-unsafe request-header names</span></code></span>
+<span class="codeline" id="line-193"><code><span class="comment">	// (i.e. the values listed in the Access-Control-Request-Headers header)</span></code></span>
+<span class="codeline" id="line-194"><code><span class="comment">	// are lowercase; see https://fetch.spec.whatwg.org/#cors-unsafe-request-header-names.</span></code></span>
+<span class="codeline" id="line-195"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">options</label>.<a href="#line-72" class="ident">AllowedHeaders</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-196"><code>		<span class="comment">// Use sensible defaults</span></code></span>
+<span class="codeline" id="line-197"><code>		<label for="r2" class="ident">c</label>.<a href="#line-120" class="ident">allowedHeaders</a> = <a href="../../../../pkg/github.com/rs/cors/internal.html" class="ident i5">internal</a>.<a href="internal/sortedset.go.html#line-21" class="ident">NewSortedSet</a>(<span class="lit-string">"accept"</span>, <span class="lit-string">"content-type"</span>, <span class="lit-string">"x-requested-with"</span>)</code></span>
+<span class="codeline" id="line-198"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-199"><code>		<label for="r11" class="ident">normalized</label> := <a href="utils.go.html#line-19" class="ident">convert</a>(<label for="r1" class="ident">options</label>.<a href="#line-72" class="ident">AllowedHeaders</a>, <a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-727" class="ident">ToLower</a>)</code></span>
+<span class="codeline" id="line-200"><code>		<label for="r2" class="ident">c</label>.<a href="#line-120" class="ident">allowedHeaders</a> = <a href="../../../../pkg/github.com/rs/cors/internal.html" class="ident i5">internal</a>.<a href="internal/sortedset.go.html#line-21" class="ident">NewSortedSet</a>(<label for="r11" class="ident">normalized</label>...)</code></span>
+<span class="codeline" id="line-201"><code>		<span class="keyword">for</span> <label for="r12" class="ident">_</label>, <label for="r13" class="ident">h</label> := <span class="keyword">range</span> <label for="r1" class="ident">options</label>.<a href="#line-72" class="ident">AllowedHeaders</a> {</code></span>
+<span class="codeline" id="line-202"><code>			<span class="keyword">if</span> <label for="r13" class="ident">h</label> == <span class="lit-string">"*"</span> {</code></span>
+<span class="codeline" id="line-203"><code>				<label for="r2" class="ident">c</label>.<a href="#line-130" class="ident">allowedHeadersAll</a> = <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-204"><code>				<label for="r2" class="ident">c</label>.<a href="#line-120" class="ident">allowedHeaders</a> = <a href="../../../../pkg/github.com/rs/cors/internal.html" class="ident i5">internal</a>.<a href="internal/sortedset.go.html#line-14" class="ident">SortedSet</a>{}</code></span>
+<span class="codeline" id="line-205"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-206"><code>			}</code></span>
+<span class="codeline" id="line-207"><code>		}</code></span>
+<span class="codeline" id="line-208"><code>	}</code></span>
+<span class="codeline" id="line-209"><code></code></span>
+<span class="codeline" id="line-210"><code>	<span class="comment">// Allowed Methods</span></code></span>
+<span class="codeline" id="line-211"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">options</label>.<a href="#line-67" class="ident">AllowedMethods</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-212"><code>		<span class="comment">// Default is spec's "simple" methods</span></code></span>
+<span class="codeline" id="line-213"><code>		<label for="r2" class="ident">c</label>.<a href="#line-122" class="ident">allowedMethods</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-11" class="ident">MethodGet</a>, <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-13" class="ident">MethodPost</a>, <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-12" class="ident">MethodHead</a>}</code></span>
+<span class="codeline" id="line-214"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-215"><code>		<label for="r2" class="ident">c</label>.<a href="#line-122" class="ident">allowedMethods</a> = <label for="r1" class="ident">options</label>.<a href="#line-67" class="ident">AllowedMethods</a></code></span>
+<span class="codeline" id="line-216"><code>	}</code></span>
+<span class="codeline" id="line-217"><code></code></span>
+<span class="codeline" id="line-218"><code>	<span class="comment">// Options Success Status Code</span></code></span>
+<span class="codeline" id="line-219"><code>	<span class="keyword">if</span> <label for="r1" class="ident">options</label>.<a href="#line-93" class="ident">OptionsSuccessStatus</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-220"><code>		<label for="r2" class="ident">c</label>.<a href="#line-132" class="ident">optionsSuccessStatus</a> = <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/status.go.html#line-19" class="ident">StatusNoContent</a></code></span>
+<span class="codeline" id="line-221"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-222"><code>		<label for="r2" class="ident">c</label>.<a href="#line-132" class="ident">optionsSuccessStatus</a> = <label for="r1" class="ident">options</label>.<a href="#line-93" class="ident">OptionsSuccessStatus</a></code></span>
+<span class="codeline" id="line-223"><code>	}</code></span>
+<span class="codeline" id="line-224"><code></code></span>
+<span class="codeline" id="line-225"><code>	<span class="comment">// Pre-compute exposed headers header value</span></code></span>
+<span class="codeline" id="line-226"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r1" class="ident">options</label>.<a href="#line-75" class="ident">ExposedHeaders</a>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-227"><code>		<label for="r2" class="ident">c</label>.<a href="#line-124" class="ident">exposedHeaders</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-487" class="ident">Join</a>(<a href="utils.go.html#line-19" class="ident">convert</a>(<label for="r1" class="ident">options</label>.<a href="#line-75" class="ident">ExposedHeaders</a>, <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/header.go.html#line-234" class="ident">CanonicalHeaderKey</a>), <span class="lit-string">", "</span>)}</code></span>
+<span class="codeline" id="line-228"><code>	}</code></span>
+<span class="codeline" id="line-229"><code></code></span>
+<span class="codeline" id="line-230"><code>	<span class="comment">// Pre-compute prefight Vary header to save allocations</span></code></span>
+<span class="codeline" id="line-231"><code>	<span class="keyword">if</span> <label for="r2" class="ident">c</label>.<a href="#line-134" class="ident">allowPrivateNetwork</a> {</code></span>
+<span class="codeline" id="line-232"><code>		<label for="r2" class="ident">c</label>.<a href="#line-136" class="ident">preflightVary</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"Origin, Access-Control-Request-Method, Access-Control-Request-Headers, Access-Control-Request-Private-Network"</span>}</code></span>
+<span class="codeline" id="line-233"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-234"><code>		<label for="r2" class="ident">c</label>.<a href="#line-136" class="ident">preflightVary</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"Origin, Access-Control-Request-Method, Access-Control-Request-Headers"</span>}</code></span>
+<span class="codeline" id="line-235"><code>	}</code></span>
+<span class="codeline" id="line-236"><code></code></span>
+<span class="codeline" id="line-237"><code>	<span class="comment">// Precompute max-age</span></code></span>
+<span class="codeline" id="line-238"><code>	<span class="keyword">if</span> <label for="r1" class="ident">options</label>.<a href="#line-81" class="ident">MaxAge</a> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-239"><code>		<label for="r2" class="ident">c</label>.<a href="#line-126" class="ident">maxAge</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<a href="../../../../pkg/strconv.html" class="ident i3">strconv</a>.<a href="../../../strconv/number.go.html#line-214" class="ident">Itoa</a>(<label for="r1" class="ident">options</label>.<a href="#line-81" class="ident">MaxAge</a>)}</code></span>
+<span class="codeline" id="line-240"><code>	} <span class="keyword">else</span> <span class="keyword">if</span> <label for="r1" class="ident">options</label>.<a href="#line-81" class="ident">MaxAge</a> &lt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-241"><code>		<label for="r2" class="ident">c</label>.<a href="#line-126" class="ident">maxAge</a> = []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"0"</span>}</code></span>
+<span class="codeline" id="line-242"><code>	}</code></span>
+<span class="codeline" id="line-243"><code></code></span>
+<span class="codeline" id="line-244"><code>	<span class="keyword">return</span> <label for="r2" class="ident">c</label></code></span>
+<span class="codeline" id="line-245"><code>}</code></span>
+<span class="codeline" id="line-246"><code></code></span>
+<span class="codeline" id="line-247"><code><span class="comment">// Default creates a new Cors handler with default options.</span></code></span>
+<span class="codeline" id="line-248"><code><span class="keyword">func</span> <label for="r14" class="ident"><a href="../../../../pkg/github.com/rs/cors.html#name-Default" class="ident">Default</a></label>() *<a href="#line-106" class="ident">Cors</a> {</code></span>
+<span class="codeline" id="line-249"><code>	<span class="keyword">return</span> <a href="#line-140" class="ident">New</a>(<a href="#line-38" class="ident">Options</a>{})</code></span>
+<span class="codeline" id="line-250"><code>}</code></span>
+<span class="codeline" id="line-251"><code></code></span>
+<span class="codeline" id="line-252"><code><span class="comment">// AllowAll create a new Cors handler with permissive configuration allowing all</span></code></span>
+<span class="codeline" id="line-253"><code><span class="comment">// origins with all standard methods with any header and credentials.</span></code></span>
+<span class="codeline" id="line-254"><code><span class="keyword">func</span> <label for="r15" class="ident"><a href="../../../../pkg/github.com/rs/cors.html#name-AllowAll" class="ident">AllowAll</a></label>() *<a href="#line-106" class="ident">Cors</a> {</code></span>
+<span class="codeline" id="line-255"><code>	<span class="keyword">return</span> <a href="#line-140" class="ident">New</a>(<a href="#line-38" class="ident">Options</a>{</code></span>
+<span class="codeline" id="line-256"><code>		<a href="#line-45" class="ident">AllowedOrigins</a>: []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"*"</span>},</code></span>
+<span class="codeline" id="line-257"><code>		<a href="#line-67" class="ident">AllowedMethods</a>: []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{</code></span>
+<span class="codeline" id="line-258"><code>			<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-12" class="ident">MethodHead</a>,</code></span>
+<span class="codeline" id="line-259"><code>			<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-11" class="ident">MethodGet</a>,</code></span>
+<span class="codeline" id="line-260"><code>			<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-13" class="ident">MethodPost</a>,</code></span>
+<span class="codeline" id="line-261"><code>			<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-14" class="ident">MethodPut</a>,</code></span>
+<span class="codeline" id="line-262"><code>			<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-15" class="ident">MethodPatch</a>,</code></span>
+<span class="codeline" id="line-263"><code>			<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-16" class="ident">MethodDelete</a>,</code></span>
+<span class="codeline" id="line-264"><code>		},</code></span>
+<span class="codeline" id="line-265"><code>		<a href="#line-72" class="ident">AllowedHeaders</a>:   []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>{<span class="lit-string">"*"</span>},</code></span>
+<span class="codeline" id="line-266"><code>		<a href="#line-84" class="ident">AllowCredentials</a>: <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a>,</code></span>
+<span class="codeline" id="line-267"><code>	})</code></span>
+<span class="codeline" id="line-268"><code>}</code></span>
+<span class="codeline" id="line-269"><code></code></span>
+<span class="codeline" id="line-270"><code><span class="comment">// Handler apply the CORS specification on the request, and add relevant CORS headers</span></code></span>
+<span class="codeline" id="line-271"><code><span class="comment">// as necessary.</span></code></span>
+<span class="codeline" id="line-272"><code><span class="keyword">func</span> (<label for="r16" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r17" class="ident">Handler</label>(<label for="r18" class="ident">h</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-88" class="ident">Handler</a>) <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-88" class="ident">Handler</a> {</code></span>
+<span class="codeline" id="line-273"><code>	<span class="keyword">return</span> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-2282" class="ident">HandlerFunc</a>(<span class="keyword">func</span>(<label for="r19" class="ident">w</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r20" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>) {</code></span>
+<span class="codeline" id="line-274"><code>		<span class="keyword">if</span> <label for="r20" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a> == <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-18" class="ident">MethodOptions</a> &amp;&amp; <label for="r20" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Access-Control-Request-Method"</span>) != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-275"><code>			<label for="r16" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"Handler: Preflight request"</span>)</code></span>
+<span class="codeline" id="line-276"><code>			<label for="r16" class="ident">c</label>.<a href="#line-329" class="ident">handlePreflight</a>(<label for="r19" class="ident">w</label>, <label for="r20" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-277"><code>			<span class="comment">// Preflight requests are standalone and should stop the chain as some other</span></code></span>
+<span class="codeline" id="line-278"><code><span class="comment">			// middleware may not handle OPTIONS requests correctly. One typical example</span></code></span>
+<span class="codeline" id="line-279"><code><span class="comment">			// is authentication middleware ; OPTIONS requests won't carry authentication</span></code></span>
+<span class="codeline" id="line-280"><code><span class="comment">			// headers (see #1)</span></code></span>
+<span class="codeline" id="line-281"><code>			<span class="keyword">if</span> <label for="r16" class="ident">c</label>.<a href="#line-135" class="ident">optionPassthrough</a> {</code></span>
+<span class="codeline" id="line-282"><code>				<label for="r18" class="ident">h</label>.<a href="../../../net/http/server.go.html#line-89" class="ident">ServeHTTP</a>(<label for="r19" class="ident">w</label>, <label for="r20" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-283"><code>			} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-284"><code>				<label for="r19" class="ident">w</label>.<a href="../../../net/http/server.go.html#line-160" class="ident">WriteHeader</a>(<label for="r16" class="ident">c</label>.<a href="#line-132" class="ident">optionsSuccessStatus</a>)</code></span>
+<span class="codeline" id="line-285"><code>			}</code></span>
+<span class="codeline" id="line-286"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-287"><code>			<label for="r16" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"Handler: Actual request"</span>)</code></span>
+<span class="codeline" id="line-288"><code>			<label for="r16" class="ident">c</label>.<a href="#line-400" class="ident">handleActualRequest</a>(<label for="r19" class="ident">w</label>, <label for="r20" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-289"><code>			<label for="r18" class="ident">h</label>.<a href="../../../net/http/server.go.html#line-89" class="ident">ServeHTTP</a>(<label for="r19" class="ident">w</label>, <label for="r20" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-290"><code>		}</code></span>
+<span class="codeline" id="line-291"><code>	})</code></span>
+<span class="codeline" id="line-292"><code>}</code></span>
+<span class="codeline" id="line-293"><code></code></span>
+<span class="codeline" id="line-294"><code><span class="comment">// HandlerFunc provides Martini compatible handler</span></code></span>
+<span class="codeline" id="line-295"><code><span class="keyword">func</span> (<label for="r21" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r22" class="ident">HandlerFunc</label>(<label for="r23" class="ident">w</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r24" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>) {</code></span>
+<span class="codeline" id="line-296"><code>	<span class="keyword">if</span> <label for="r24" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a> == <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-18" class="ident">MethodOptions</a> &amp;&amp; <label for="r24" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Access-Control-Request-Method"</span>) != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-297"><code>		<label for="r21" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"HandlerFunc: Preflight request"</span>)</code></span>
+<span class="codeline" id="line-298"><code>		<label for="r21" class="ident">c</label>.<a href="#line-329" class="ident">handlePreflight</a>(<label for="r23" class="ident">w</label>, <label for="r24" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-299"><code></code></span>
+<span class="codeline" id="line-300"><code>		<label for="r23" class="ident">w</label>.<a href="../../../net/http/server.go.html#line-160" class="ident">WriteHeader</a>(<label for="r21" class="ident">c</label>.<a href="#line-132" class="ident">optionsSuccessStatus</a>)</code></span>
+<span class="codeline" id="line-301"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-302"><code>		<label for="r21" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"HandlerFunc: Actual request"</span>)</code></span>
+<span class="codeline" id="line-303"><code>		<label for="r21" class="ident">c</label>.<a href="#line-400" class="ident">handleActualRequest</a>(<label for="r23" class="ident">w</label>, <label for="r24" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-304"><code>	}</code></span>
+<span class="codeline" id="line-305"><code>}</code></span>
+<span class="codeline" id="line-306"><code></code></span>
+<span class="codeline" id="line-307"><code><span class="comment">// Negroni compatible interface</span></code></span>
+<span class="codeline" id="line-308"><code><span class="keyword">func</span> (<label for="r25" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r26" class="ident">ServeHTTP</label>(<label for="r27" class="ident">w</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r28" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, <label for="r29" class="ident">next</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-2282" class="ident">HandlerFunc</a>) {</code></span>
+<span class="codeline" id="line-309"><code>	<span class="keyword">if</span> <label for="r28" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a> == <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-18" class="ident">MethodOptions</a> &amp;&amp; <label for="r28" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Access-Control-Request-Method"</span>) != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-310"><code>		<label for="r25" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"ServeHTTP: Preflight request"</span>)</code></span>
+<span class="codeline" id="line-311"><code>		<label for="r25" class="ident">c</label>.<a href="#line-329" class="ident">handlePreflight</a>(<label for="r27" class="ident">w</label>, <label for="r28" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-312"><code>		<span class="comment">// Preflight requests are standalone and should stop the chain as some other</span></code></span>
+<span class="codeline" id="line-313"><code><span class="comment">		// middleware may not handle OPTIONS requests correctly. One typical example</span></code></span>
+<span class="codeline" id="line-314"><code><span class="comment">		// is authentication middleware ; OPTIONS requests won't carry authentication</span></code></span>
+<span class="codeline" id="line-315"><code><span class="comment">		// headers (see #1)</span></code></span>
+<span class="codeline" id="line-316"><code>		<span class="keyword">if</span> <label for="r25" class="ident">c</label>.<a href="#line-135" class="ident">optionPassthrough</a> {</code></span>
+<span class="codeline" id="line-317"><code>			<label for="r29" class="ident">next</label>(<label for="r27" class="ident">w</label>, <label for="r28" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-318"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-319"><code>			<label for="r27" class="ident">w</label>.<a href="../../../net/http/server.go.html#line-160" class="ident">WriteHeader</a>(<label for="r25" class="ident">c</label>.<a href="#line-132" class="ident">optionsSuccessStatus</a>)</code></span>
+<span class="codeline" id="line-320"><code>		}</code></span>
+<span class="codeline" id="line-321"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-322"><code>		<label for="r25" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"ServeHTTP: Actual request"</span>)</code></span>
+<span class="codeline" id="line-323"><code>		<label for="r25" class="ident">c</label>.<a href="#line-400" class="ident">handleActualRequest</a>(<label for="r27" class="ident">w</label>, <label for="r28" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-324"><code>		<label for="r29" class="ident">next</label>(<label for="r27" class="ident">w</label>, <label for="r28" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-325"><code>	}</code></span>
+<span class="codeline" id="line-326"><code>}</code></span>
+<span class="codeline" id="line-327"><code></code></span>
+<span class="codeline" id="line-328"><code><span class="comment">// handlePreflight handles pre-flight CORS requests</span></code></span>
+<span class="codeline" id="line-329"><code><span class="keyword">func</span> (<label for="r30" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r31" class="ident">handlePreflight</label>(<label for="r32" class="ident">w</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r33" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>) {</code></span>
+<span class="codeline" id="line-330"><code>	<label for="r34" class="ident">headers</label> := <label for="r32" class="ident">w</label>.<a href="../../../net/http/server.go.html#line-117" class="ident">Header</a>()</code></span>
+<span class="codeline" id="line-331"><code>	<label for="r35" class="ident">origin</label> := <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Origin"</span>)</code></span>
+<span class="codeline" id="line-332"><code></code></span>
+<span class="codeline" id="line-333"><code>	<span class="keyword">if</span> <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a> != <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-18" class="ident">MethodOptions</a> {</code></span>
+<span class="codeline" id="line-334"><code>		<label for="r30" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Preflight aborted: %s!=OPTIONS"</span>, <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a>)</code></span>
+<span class="codeline" id="line-335"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-336"><code>	}</code></span>
+<span class="codeline" id="line-337"><code>	<span class="comment">// Always set Vary headers</span></code></span>
+<span class="codeline" id="line-338"><code><span class="comment">	// see https://github.com/rs/cors/issues/10,</span></code></span>
+<span class="codeline" id="line-339"><code><span class="comment">	//     https://github.com/rs/cors/commit/dbdca4d95feaa7511a46e6f1efb3b3aa505bc43f#commitcomment-12352001</span></code></span>
+<span class="codeline" id="line-340"><code>	<span class="keyword">if</span> <label for="r36" class="ident">vary</label>, <label for="r37" class="ident">found</label> := <label for="r34" class="ident">headers</label>[<span class="lit-string">"Vary"</span>]; <label for="r37" class="ident">found</label> {</code></span>
+<span class="codeline" id="line-341"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Vary"</span>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r36" class="ident">vary</label>, <label for="r30" class="ident">c</label>.<a href="#line-136" class="ident">preflightVary</a>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-342"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-343"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Vary"</span>] = <label for="r30" class="ident">c</label>.<a href="#line-136" class="ident">preflightVary</a></code></span>
+<span class="codeline" id="line-344"><code>	}</code></span>
+<span class="codeline" id="line-345"><code>	<label for="r38" class="ident">allowed</label>, <label for="r39" class="ident">additionalVaryHeaders</label> := <label for="r30" class="ident">c</label>.<a href="#line-462" class="ident">isOriginAllowed</a>(<label for="r33" class="ident">r</label>, <label for="r35" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-346"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r39" class="ident">additionalVaryHeaders</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-347"><code>		<label for="r34" class="ident">headers</label>.<a href="../../../net/http/header.go.html#line-30" class="ident">Add</a>(<span class="lit-string">"Vary"</span>, <a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-487" class="ident">Join</a>(<a href="utils.go.html#line-19" class="ident">convert</a>(<label for="r39" class="ident">additionalVaryHeaders</label>, <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/header.go.html#line-234" class="ident">CanonicalHeaderKey</a>), <span class="lit-string">", "</span>))</code></span>
+<span class="codeline" id="line-348"><code>	}</code></span>
+<span class="codeline" id="line-349"><code></code></span>
+<span class="codeline" id="line-350"><code>	<span class="keyword">if</span> <label for="r35" class="ident">origin</label> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-351"><code>		<label for="r30" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Preflight aborted: empty origin"</span>)</code></span>
+<span class="codeline" id="line-352"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-353"><code>	}</code></span>
+<span class="codeline" id="line-354"><code>	<span class="keyword">if</span> !<label for="r38" class="ident">allowed</label> {</code></span>
+<span class="codeline" id="line-355"><code>		<label for="r30" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Preflight aborted: origin '%s' not allowed"</span>, <label for="r35" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-356"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-357"><code>	}</code></span>
+<span class="codeline" id="line-358"><code></code></span>
+<span class="codeline" id="line-359"><code>	<label for="r40" class="ident">reqMethod</label> := <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Access-Control-Request-Method"</span>)</code></span>
+<span class="codeline" id="line-360"><code>	<span class="keyword">if</span> !<label for="r30" class="ident">c</label>.<a href="#line-485" class="ident">isMethodAllowed</a>(<label for="r40" class="ident">reqMethod</label>) {</code></span>
+<span class="codeline" id="line-361"><code>		<label for="r30" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Preflight aborted: method '%s' not allowed"</span>, <label for="r40" class="ident">reqMethod</label>)</code></span>
+<span class="codeline" id="line-362"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-363"><code>	}</code></span>
+<span class="codeline" id="line-364"><code>	<span class="comment">// Note: the Fetch standard guarantees that at most one</span></code></span>
+<span class="codeline" id="line-365"><code><span class="comment">	// Access-Control-Request-Headers header is present in the preflight request;</span></code></span>
+<span class="codeline" id="line-366"><code><span class="comment">	// see step 5.2 in https://fetch.spec.whatwg.org/#cors-preflight-fetch-0.</span></code></span>
+<span class="codeline" id="line-367"><code><span class="comment">	// However, some gateways split that header into multiple headers of the same name;</span></code></span>
+<span class="codeline" id="line-368"><code><span class="comment">	// see https://github.com/rs/cors/issues/184.</span></code></span>
+<span class="codeline" id="line-369"><code>	<label for="r41" class="ident">reqHeaders</label>, <label for="r42" class="ident">found</label> := <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>[<span class="lit-string">"Access-Control-Request-Headers"</span>]</code></span>
+<span class="codeline" id="line-370"><code>	<span class="keyword">if</span> <label for="r42" class="ident">found</label> &amp;&amp; !<label for="r30" class="ident">c</label>.<a href="#line-130" class="ident">allowedHeadersAll</a> &amp;&amp; !<label for="r30" class="ident">c</label>.<a href="#line-120" class="ident">allowedHeaders</a>.<a href="internal/sortedset.go.html#line-60" class="ident">Accepts</a>(<label for="r41" class="ident">reqHeaders</label>) {</code></span>
+<span class="codeline" id="line-371"><code>		<label for="r30" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Preflight aborted: headers '%v' not allowed"</span>, <label for="r41" class="ident">reqHeaders</label>)</code></span>
+<span class="codeline" id="line-372"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-373"><code>	}</code></span>
+<span class="codeline" id="line-374"><code>	<span class="keyword">if</span> <label for="r30" class="ident">c</label>.<a href="#line-128" class="ident">allowedOriginsAll</a> {</code></span>
+<span class="codeline" id="line-375"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Origin"</span>] = <a href="#line-34" class="ident">headerOriginAll</a></code></span>
+<span class="codeline" id="line-376"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-377"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Origin"</span>] = <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>[<span class="lit-string">"Origin"</span>]</code></span>
+<span class="codeline" id="line-378"><code>	}</code></span>
+<span class="codeline" id="line-379"><code>	<span class="comment">// Spec says: Since the list of methods can be unbounded, simply returning the method indicated</span></code></span>
+<span class="codeline" id="line-380"><code><span class="comment">	// by Access-Control-Request-Method (if supported) can be enough</span></code></span>
+<span class="codeline" id="line-381"><code>	<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Methods"</span>] = <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>[<span class="lit-string">"Access-Control-Request-Method"</span>]</code></span>
+<span class="codeline" id="line-382"><code>	<span class="keyword">if</span> <label for="r42" class="ident">found</label> &amp;&amp; <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r41" class="ident">reqHeaders</label>[<span class="lit-number">0</span>]) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-383"><code>		<span class="comment">// Spec says: Since the list of headers can be unbounded, simply returning supported headers</span></code></span>
+<span class="codeline" id="line-384"><code><span class="comment">		// from Access-Control-Request-Headers can be enough</span></code></span>
+<span class="codeline" id="line-385"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Headers"</span>] = <label for="r41" class="ident">reqHeaders</label></code></span>
+<span class="codeline" id="line-386"><code>	}</code></span>
+<span class="codeline" id="line-387"><code>	<span class="keyword">if</span> <label for="r30" class="ident">c</label>.<a href="#line-133" class="ident">allowCredentials</a> {</code></span>
+<span class="codeline" id="line-388"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Credentials"</span>] = <a href="#line-35" class="ident">headerTrue</a></code></span>
+<span class="codeline" id="line-389"><code>	}</code></span>
+<span class="codeline" id="line-390"><code>	<span class="keyword">if</span> <label for="r30" class="ident">c</label>.<a href="#line-134" class="ident">allowPrivateNetwork</a> &amp;&amp; <label for="r33" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Access-Control-Request-Private-Network"</span>) == <span class="lit-string">"true"</span> {</code></span>
+<span class="codeline" id="line-391"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Private-Network"</span>] = <a href="#line-35" class="ident">headerTrue</a></code></span>
+<span class="codeline" id="line-392"><code>	}</code></span>
+<span class="codeline" id="line-393"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r30" class="ident">c</label>.<a href="#line-126" class="ident">maxAge</a>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-394"><code>		<label for="r34" class="ident">headers</label>[<span class="lit-string">"Access-Control-Max-Age"</span>] = <label for="r30" class="ident">c</label>.<a href="#line-126" class="ident">maxAge</a></code></span>
+<span class="codeline" id="line-395"><code>	}</code></span>
+<span class="codeline" id="line-396"><code>	<label for="r30" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Preflight response headers: %v"</span>, <label for="r34" class="ident">headers</label>)</code></span>
+<span class="codeline" id="line-397"><code>}</code></span>
+<span class="codeline" id="line-398"><code></code></span>
+<span class="codeline" id="line-399"><code><span class="comment">// handleActualRequest handles simple cross-origin requests, actual request or redirects</span></code></span>
+<span class="codeline" id="line-400"><code><span class="keyword">func</span> (<label for="r43" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r44" class="ident">handleActualRequest</label>(<label for="r45" class="ident">w</label> <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r46" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>) {</code></span>
+<span class="codeline" id="line-401"><code>	<label for="r47" class="ident">headers</label> := <label for="r45" class="ident">w</label>.<a href="../../../net/http/server.go.html#line-117" class="ident">Header</a>()</code></span>
+<span class="codeline" id="line-402"><code>	<label for="r48" class="ident">origin</label> := <label for="r46" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Origin"</span>)</code></span>
+<span class="codeline" id="line-403"><code></code></span>
+<span class="codeline" id="line-404"><code>	<label for="r49" class="ident">allowed</label>, <label for="r50" class="ident">additionalVaryHeaders</label> := <label for="r43" class="ident">c</label>.<a href="#line-462" class="ident">isOriginAllowed</a>(<label for="r46" class="ident">r</label>, <label for="r48" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-405"><code></code></span>
+<span class="codeline" id="line-406"><code>	<span class="comment">// Always set Vary, see https://github.com/rs/cors/issues/10</span></code></span>
+<span class="codeline" id="line-407"><code>	<span class="keyword">if</span> <label for="r51" class="ident">vary</label> := <label for="r47" class="ident">headers</label>[<span class="lit-string">"Vary"</span>]; <label for="r51" class="ident">vary</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-408"><code>		<label for="r47" class="ident">headers</label>[<span class="lit-string">"Vary"</span>] = <a href="#line-33" class="ident">headerVaryOrigin</a></code></span>
+<span class="codeline" id="line-409"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-410"><code>		<label for="r47" class="ident">headers</label>[<span class="lit-string">"Vary"</span>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r51" class="ident">vary</label>, <a href="#line-33" class="ident">headerVaryOrigin</a>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-411"><code>	}</code></span>
+<span class="codeline" id="line-412"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r50" class="ident">additionalVaryHeaders</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-413"><code>		<label for="r47" class="ident">headers</label>.<a href="../../../net/http/header.go.html#line-30" class="ident">Add</a>(<span class="lit-string">"Vary"</span>, <a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-487" class="ident">Join</a>(<a href="utils.go.html#line-19" class="ident">convert</a>(<label for="r50" class="ident">additionalVaryHeaders</label>, <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/header.go.html#line-234" class="ident">CanonicalHeaderKey</a>), <span class="lit-string">", "</span>))</code></span>
+<span class="codeline" id="line-414"><code>	}</code></span>
+<span class="codeline" id="line-415"><code>	<span class="keyword">if</span> <label for="r48" class="ident">origin</label> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-416"><code>		<label for="r43" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Actual request no headers added: missing origin"</span>)</code></span>
+<span class="codeline" id="line-417"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-418"><code>	}</code></span>
+<span class="codeline" id="line-419"><code>	<span class="keyword">if</span> !<label for="r49" class="ident">allowed</label> {</code></span>
+<span class="codeline" id="line-420"><code>		<label for="r43" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Actual request no headers added: origin '%s' not allowed"</span>, <label for="r48" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-421"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-422"><code>	}</code></span>
+<span class="codeline" id="line-423"><code></code></span>
+<span class="codeline" id="line-424"><code>	<span class="comment">// Note that spec does define a way to specifically disallow a simple method like GET or</span></code></span>
+<span class="codeline" id="line-425"><code><span class="comment">	// POST. Access-Control-Allow-Methods is only used for pre-flight requests and the</span></code></span>
+<span class="codeline" id="line-426"><code><span class="comment">	// spec doesn't instruct to check the allowed methods for simple cross-origin requests.</span></code></span>
+<span class="codeline" id="line-427"><code><span class="comment">	// We think it's a nice feature to be able to have control on those methods though.</span></code></span>
+<span class="codeline" id="line-428"><code>	<span class="keyword">if</span> !<label for="r43" class="ident">c</label>.<a href="#line-485" class="ident">isMethodAllowed</a>(<label for="r46" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a>) {</code></span>
+<span class="codeline" id="line-429"><code>		<label for="r43" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Actual request no headers added: method '%s' not allowed"</span>, <label for="r46" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-116" class="ident">Method</a>)</code></span>
+<span class="codeline" id="line-430"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-431"><code>	}</code></span>
+<span class="codeline" id="line-432"><code>	<span class="keyword">if</span> <label for="r43" class="ident">c</label>.<a href="#line-128" class="ident">allowedOriginsAll</a> {</code></span>
+<span class="codeline" id="line-433"><code>		<label for="r47" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Origin"</span>] = <a href="#line-34" class="ident">headerOriginAll</a></code></span>
+<span class="codeline" id="line-434"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-435"><code>		<label for="r47" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Origin"</span>] = <label for="r46" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>[<span class="lit-string">"Origin"</span>]</code></span>
+<span class="codeline" id="line-436"><code>	}</code></span>
+<span class="codeline" id="line-437"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r43" class="ident">c</label>.<a href="#line-124" class="ident">exposedHeaders</a>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-438"><code>		<label for="r47" class="ident">headers</label>[<span class="lit-string">"Access-Control-Expose-Headers"</span>] = <label for="r43" class="ident">c</label>.<a href="#line-124" class="ident">exposedHeaders</a></code></span>
+<span class="codeline" id="line-439"><code>	}</code></span>
+<span class="codeline" id="line-440"><code>	<span class="keyword">if</span> <label for="r43" class="ident">c</label>.<a href="#line-133" class="ident">allowCredentials</a> {</code></span>
+<span class="codeline" id="line-441"><code>		<label for="r47" class="ident">headers</label>[<span class="lit-string">"Access-Control-Allow-Credentials"</span>] = <a href="#line-35" class="ident">headerTrue</a></code></span>
+<span class="codeline" id="line-442"><code>	}</code></span>
+<span class="codeline" id="line-443"><code>	<label for="r43" class="ident">c</label>.<a href="#line-447" class="ident">logf</a>(<span class="lit-string">"  Actual response added headers: %v"</span>, <label for="r47" class="ident">headers</label>)</code></span>
+<span class="codeline" id="line-444"><code>}</code></span>
+<span class="codeline" id="line-445"><code></code></span>
+<span class="codeline" id="line-446"><code><span class="comment">// convenience method. checks if a logger is set.</span></code></span>
+<span class="codeline" id="line-447"><code><span class="keyword">func</span> (<label for="r52" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r53" class="ident">logf</label>(<label for="r54" class="ident">format</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r55" class="ident">a</label> ...<span class="keyword">interface</span>{}) {</code></span>
+<span class="codeline" id="line-448"><code>	<span class="keyword">if</span> <label for="r52" class="ident">c</label>.<a href="#line-108" class="ident">Log</a> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-449"><code>		<label for="r52" class="ident">c</label>.<a href="#line-108" class="ident">Log</a>.<a href="#line-102" class="ident">Printf</a>(<label for="r54" class="ident">format</label>, <label for="r55" class="ident">a</label>...)</code></span>
+<span class="codeline" id="line-450"><code>	}</code></span>
+<span class="codeline" id="line-451"><code>}</code></span>
+<span class="codeline" id="line-452"><code></code></span>
+<span class="codeline" id="line-453"><code><span class="comment">// check the Origin of a request. No origin at all is also allowed.</span></code></span>
+<span class="codeline" id="line-454"><code><span class="keyword">func</span> (<label for="r56" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r57" class="ident">OriginAllowed</label>(<label for="r58" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-455"><code>	<label for="r59" class="ident">origin</label> := <label for="r58" class="ident">r</label>.<a href="../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Origin"</span>)</code></span>
+<span class="codeline" id="line-456"><code>	<label for="r60" class="ident">allowed</label>, <label for="r61" class="ident">_</label> := <label for="r56" class="ident">c</label>.<a href="#line-462" class="ident">isOriginAllowed</a>(<label for="r58" class="ident">r</label>, <label for="r59" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-457"><code>	<span class="keyword">return</span> <label for="r60" class="ident">allowed</label></code></span>
+<span class="codeline" id="line-458"><code>}</code></span>
+<span class="codeline" id="line-459"><code></code></span>
+<span class="codeline" id="line-460"><code><span class="comment">// isOriginAllowed checks if a given origin is allowed to perform cross-domain requests</span></code></span>
+<span class="codeline" id="line-461"><code><span class="comment">// on the endpoint</span></code></span>
+<span class="codeline" id="line-462"><code><span class="keyword">func</span> (<label for="r62" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r63" class="ident">isOriginAllowed</label>(<label for="r64" class="ident">r</label> *<a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/request.go.html#line-113" class="ident">Request</a>, <label for="r65" class="ident">origin</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<label for="r66" class="ident">allowed</label> <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a>, <label for="r67" class="ident">varyHeaders</label> []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-463"><code>	<span class="keyword">if</span> <label for="r62" class="ident">c</label>.<a href="#line-114" class="ident">allowOriginFunc</a> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-464"><code>		<span class="keyword">return</span> <label for="r62" class="ident">c</label>.<a href="#line-114" class="ident">allowOriginFunc</a>(<label for="r64" class="ident">r</label>, <label for="r65" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-465"><code>	}</code></span>
+<span class="codeline" id="line-466"><code>	<span class="keyword">if</span> <label for="r62" class="ident">c</label>.<a href="#line-128" class="ident">allowedOriginsAll</a> {</code></span>
+<span class="codeline" id="line-467"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-468"><code>	}</code></span>
+<span class="codeline" id="line-469"><code>	<label for="r65" class="ident">origin</label> = <a href="../../../../pkg/strings.html" class="ident i4">strings</a>.<a href="../../../strings/strings.go.html#line-727" class="ident">ToLower</a>(<label for="r65" class="ident">origin</label>)</code></span>
+<span class="codeline" id="line-470"><code>	<span class="keyword">for</span> <label for="r68" class="ident">_</label>, <label for="r69" class="ident">o</label> := <span class="keyword">range</span> <label for="r62" class="ident">c</label>.<a href="#line-110" class="ident">allowedOrigins</a> {</code></span>
+<span class="codeline" id="line-471"><code>		<span class="keyword">if</span> <label for="r69" class="ident">o</label> == <label for="r65" class="ident">origin</label> {</code></span>
+<span class="codeline" id="line-472"><code>			<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-473"><code>		}</code></span>
+<span class="codeline" id="line-474"><code>	}</code></span>
+<span class="codeline" id="line-475"><code>	<span class="keyword">for</span> <label for="r70" class="ident">_</label>, <label for="r71" class="ident">w</label> := <span class="keyword">range</span> <label for="r62" class="ident">c</label>.<a href="#line-112" class="ident">allowedWOrigins</a> {</code></span>
+<span class="codeline" id="line-476"><code>		<span class="keyword">if</span> <label for="r71" class="ident">w</label>.<a href="utils.go.html#line-12" class="ident">match</a>(<label for="r65" class="ident">origin</label>) {</code></span>
+<span class="codeline" id="line-477"><code>			<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-478"><code>		}</code></span>
+<span class="codeline" id="line-479"><code>	}</code></span>
+<span class="codeline" id="line-480"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-481"><code>}</code></span>
+<span class="codeline" id="line-482"><code></code></span>
+<span class="codeline" id="line-483"><code><span class="comment">// isMethodAllowed checks if a given method can be used as part of a cross-domain request</span></code></span>
+<span class="codeline" id="line-484"><code><span class="comment">// on the endpoint</span></code></span>
+<span class="codeline" id="line-485"><code><span class="keyword">func</span> (<label for="r72" class="ident">c</label> *<a href="#line-106" class="ident">Cors</a>) <label for="r73" class="ident">isMethodAllowed</label>(<label for="r74" class="ident">method</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-486"><code>	<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r72" class="ident">c</label>.<a href="#line-122" class="ident">allowedMethods</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-487"><code>		<span class="comment">// If no method allowed, always return false, even for preflight request</span></code></span>
+<span class="codeline" id="line-488"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-489"><code>	}</code></span>
+<span class="codeline" id="line-490"><code>	<span class="keyword">if</span> <label for="r74" class="ident">method</label> == <a href="../../../../pkg/net/http.html" class="ident i1">http</a>.<a href="../../../net/http/method.go.html#line-18" class="ident">MethodOptions</a> {</code></span>
+<span class="codeline" id="line-491"><code>		<span class="comment">// Always allow preflight requests</span></code></span>
+<span class="codeline" id="line-492"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-493"><code>	}</code></span>
+<span class="codeline" id="line-494"><code>	<span class="keyword">for</span> <label for="r75" class="ident">_</label>, <label for="r76" class="ident">m</label> := <span class="keyword">range</span> <label for="r72" class="ident">c</label>.<a href="#line-122" class="ident">allowedMethods</a> {</code></span>
+<span class="codeline" id="line-495"><code>		<span class="keyword">if</span> <label for="r76" class="ident">m</label> == <label for="r74" class="ident">method</label> {</code></span>
+<span class="codeline" id="line-496"><code>			<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-497"><code>		}</code></span>
+<span class="codeline" id="line-498"><code>	}</code></span>
+<span class="codeline" id="line-499"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-500"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,3 +1,4 @@
+// Package postgres implements the PostgreSQL storage for the Recommendation Service.
 package postgres
 
 import (
@@ -11,6 +12,8 @@ import (
 	pq "github.com/lib/pq"
 )
 
+// Storage implements PostgreSQL-based storage for priority channels,
+// parsing channels, and channel categories.
 type Storage struct {
 	db       *sql.DB
 	parserDB *sql.DB
@@ -39,6 +42,7 @@ func New(storagePath string, parsingServicePath string) (*Storage, error) {
 	}, nil
 }
 
+// GetPriorityChannelsByUserID retrieves priority channels for a user.
 func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	const op = "internal.storage.postgres.GetPriorityChannelsByUserID"
 
@@ -62,6 +66,7 @@ func (s *Storage) GetPriorityChannelsByUserID(ctx context.Context, userID int64)
 	return channels, nil
 }
 
+// GetAllDefaultParsingChannels returns all system-wide default parsing channels.
 func (s *Storage) GetAllDefaultParsingChannels(ctx context.Context) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllParsingChannels"
 
@@ -84,6 +89,7 @@ func (s *Storage) GetAllDefaultParsingChannels(ctx context.Context) ([]string, e
 
 }
 
+// IsChannelExistsInDefaultParsingChannels checks if a channel exists in default channels.
 func (s *Storage) IsChannelExistsInDefaultParsingChannels(ctx context.Context, channel string) (bool, error) {
 	const op = "internal.storage.postgres.IsChannelExistsInDefaultParsingChannels"
 
@@ -99,6 +105,7 @@ func (s *Storage) IsChannelExistsInDefaultParsingChannels(ctx context.Context, c
 	return true, nil
 }
 
+// AddNewUserCustomParsingChannel adds a custom parsing channel for a user.
 func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.storage.postgres.AddNewUserCustomParsingChannel"
 	q := `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`
@@ -126,6 +133,7 @@ func (s *Storage) AddNewUserCustomParsingChannel(ctx context.Context, userID int
 	return nil
 }
 
+// GetAllCategories returns all channel category names.
 func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllCategories"
 
@@ -147,6 +155,7 @@ func (s *Storage) GetAllCategories(ctx context.Context) ([]string, error) {
 	return categories, nil
 }
 
+// AddNewParsingChannelWithoutDublicate adds a channel, silently skipping duplicates.
 func (s *Storage) AddNewParsingChannelWithoutDublicate(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
 	q := `INSERT INTO channels (username) VALUES ($1)`
@@ -160,6 +169,7 @@ func (s *Storage) AddNewParsingChannelWithoutDublicate(ctx context.Context, chan
 	return nil
 }
 
+// AddNewParsingChannel adds a new parsing channel, returning ErrChannelExists on duplicate.
 func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.AddOnlyNewParsingChannel"
 	q := `INSERT INTO channels (username) VALUES ($1)`
@@ -173,6 +183,7 @@ func (s *Storage) AddNewParsingChannel(ctx context.Context, channel string) erro
 	return nil
 }
 
+// AddNewDefaultParsingChannel adds a new system-wide default parsing channel.
 func (s *Storage) AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error {
 	const op = "internal.storage.postgres.AddNewParsingChannel"
 
@@ -188,6 +199,7 @@ func (s *Storage) AddNewDefaultParsingChannel(ctx context.Context, channel strin
 	return nil
 }
 
+// SetChannelCategory assigns a category to a default parsing channel.
 func (s *Storage) SetChannelCategory(ctx context.Context, channel string, category string) error {
 	const op = "internal.storage.postgres.SetChannelCategory"
 
@@ -200,6 +212,7 @@ func (s *Storage) SetChannelCategory(ctx context.Context, channel string, catego
 	return nil
 }
 
+// DeleteUserCustomParsingChannel removes a user's custom parsing channel.
 func (s *Storage) DeleteUserCustomParsingChannel(ctx context.Context, userID int64, channel string) error {
 	const op = "internal.storage.postgres.DeleteUserCustomParsingChannel"
 	q := `DELETE FROM user_custom_parsing_channels WHERE user_id = $1 AND channel_username = $2`
@@ -214,6 +227,7 @@ func (s *Storage) DeleteUserCustomParsingChannel(ctx context.Context, userID int
 	return nil
 }
 
+// DeleteParsingChannel removes a channel from the global channels table.
 func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.DeleteParsingChannel"
 
@@ -226,6 +240,7 @@ func (s *Storage) DeleteParsingChannel(ctx context.Context, channel string) erro
 	return nil
 }
 
+// DeleteDefaultParsingChannel removes a channel from the default channels table.
 func (s *Storage) DeleteDefaultParsingChannel(ctx context.Context, channel string) error {
 	const op = "internal.storage.postgres.DeleteParsingChannel"
 
@@ -237,6 +252,7 @@ func (s *Storage) DeleteDefaultParsingChannel(ctx context.Context, channel strin
 	return nil
 }
 
+// GetDefaultParsingChannelsByCategory retrieves default channels filtered by category.
 func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, category string) ([]string, error) {
 	const op = "internal.storage.postgres.GetParsingChannelsByCategory"
 
@@ -256,6 +272,7 @@ func (s *Storage) GetDefaultParsingChannelsByCategory(ctx context.Context, categ
 	return channelsUsernames, nil
 }
 
+// GetAllUserCustomParsingChannels returns all custom parsing channels for a user.
 func (s *Storage) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
 	const op = "internal.storage.postgres.GetAllUserCustomParsingChannels"
 
@@ -277,6 +294,7 @@ func (s *Storage) GetAllUserCustomParsingChannels(ctx context.Context, userID in
 	return channels, nil
 }
 
+// GetDublicateError checks if an error is a PostgreSQL unique constraint violation (code 23505).
 func GetDublicateError(err error) bool {
 	var pqErr *pq.Error
 	if errors.As(err, &pqErr) {

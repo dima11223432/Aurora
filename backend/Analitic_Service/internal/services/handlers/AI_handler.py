@@ -1,12 +1,16 @@
-# import globals
+"""AI handler that orchestrates multiple LLM models for stock analysis.
+
+Runs configured AI models (DeepSeek, YandexGPT) on incoming post text,
+aggregates their responses, executes LSTM-based technical analysis,
+and returns a final structured answer.
+"""
+
 import os
 import threading
-
 from os import getenv
 from dotenv import load_dotenv, find_dotenv
 from telethon.helpers import Path
 from loguru import logger
-
 
 from ..AI_API.DeepSeek import answer as ds
 from ..AI_API.GemmaAI import answer as ge
@@ -17,10 +21,17 @@ from ..AI_API.QwenAnalis import answer as qw
 from ..LSTM_Laura.Laura_LSTM_savepredict import run, predict
 from ..AI_API.QwenAI import answer as qws
 
-# from AnaliticKafka import getMessage
-
 
 def AI_handler(context):
+    """Run AI analysis pipeline on a post context.
+
+    Args:
+        context: Raw text or dict of the Telegram post.
+
+    Returns:
+        dict: Final analysis with ``ds.answer`` (ticker-signal) and
+              ``ds.reason`` (explanation).
+    """
     AI_answer = {
         "ds": {},
         "ge": {},
@@ -28,7 +39,7 @@ def AI_handler(context):
         "ya": {},
         "qw": {},
         "qws": {},
-    }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex, qws - qwenSecond
+    }
     AI_list = {"ds", "ya"}
 
     for i in AI_list:

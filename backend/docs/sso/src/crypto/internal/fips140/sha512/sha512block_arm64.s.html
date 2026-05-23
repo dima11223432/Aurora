@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: sha512block_arm64.s in package crypto/internal/fips140/sha512</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	sha512block_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/crypto/internal/fips140/sha512.html">crypto/internal/fips140/sha512</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2022 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>//go:build !purego</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>// Based on the Linux Kernel with the following comment:</code></span>
+<span class="codeline" id="line-8"><code>// Algorithm based on https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fb87127bcefc17efab757606e1b1e333fd614dd0</code></span>
+<span class="codeline" id="line-9"><code>// Originally written by Ard Biesheuvel &lt;ard.biesheuvel@linaro.org&gt;</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code>#define SHA512TRANS(i0, i1, i2, i3, i4, rc0, in0) \</code></span>
+<span class="codeline" id="line-14"><code>	VADD	in0.D2, rc0.D2, V5.D2 \</code></span>
+<span class="codeline" id="line-15"><code>	VEXT	$8, i3.B16, i2.B16, V6.B16 \</code></span>
+<span class="codeline" id="line-16"><code>	VEXT	$8, V5.B16, V5.B16, V5.B16 \</code></span>
+<span class="codeline" id="line-17"><code>	VEXT	$8, i2.B16, i1.B16, V7.B16 \</code></span>
+<span class="codeline" id="line-18"><code>	VADD	V5.D2, i3.D2, i3.D2 \</code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code>#define SHA512ROUND(i0, i1, i2, i3, i4, rc0, rc1, in0, in1, in2, in3, in4) \</code></span>
+<span class="codeline" id="line-21"><code>	VLD1.P	16(R4), [rc1.D2] \</code></span>
+<span class="codeline" id="line-22"><code>	SHA512TRANS(i0, i1, i2, i3, i4, rc0, in0) \</code></span>
+<span class="codeline" id="line-23"><code>	VEXT	$8, in4.B16, in3.B16, V5.B16 \</code></span>
+<span class="codeline" id="line-24"><code>	SHA512SU0	in1.D2, in0.D2 \</code></span>
+<span class="codeline" id="line-25"><code>	SHA512H	V7.D2, V6, i3 \</code></span>
+<span class="codeline" id="line-26"><code>	SHA512SU1	V5.D2, in2.D2, in0.D2 \</code></span>
+<span class="codeline" id="line-27"><code>	VADD	i3.D2, i1.D2, i4.D2 \</code></span>
+<span class="codeline" id="line-28"><code>	SHA512H2	i0.D2, i1, i3</code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code>#define SHA512ROUND_NO_UPDATE(i0, i1, i2, i3, i4, rc0, rc1, in0) \</code></span>
+<span class="codeline" id="line-31"><code>	VLD1.P	16(R4), [rc1.D2] \</code></span>
+<span class="codeline" id="line-32"><code>	SHA512TRANS(i0, i1, i2, i3, i4, rc0, in0) \</code></span>
+<span class="codeline" id="line-33"><code>	SHA512H	V7.D2, V6, i3 \</code></span>
+<span class="codeline" id="line-34"><code>	VADD	i3.D2, i1.D2, i4.D2 \</code></span>
+<span class="codeline" id="line-35"><code>	SHA512H2	i0.D2, i1, i3</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code>#define SHA512ROUND_LAST(i0, i1, i2, i3, i4, rc0, in0) \</code></span>
+<span class="codeline" id="line-38"><code>	SHA512TRANS(i0, i1, i2, i3, i4, rc0, in0) \</code></span>
+<span class="codeline" id="line-39"><code>	SHA512H	V7.D2, V6, i3 \</code></span>
+<span class="codeline" id="line-40"><code>	VADD	i3.D2, i1.D2, i4.D2 \</code></span>
+<span class="codeline" id="line-41"><code>	SHA512H2	i0.D2, i1, i3</code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code>// func blockSHA512(dig *Digest, p []byte)</code></span>
+<span class="codeline" id="line-44"><code>TEXT ·blockSHA512(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-45"><code>	MOVD	dig+0(FP), R0</code></span>
+<span class="codeline" id="line-46"><code>	MOVD	p_base+8(FP), R1</code></span>
+<span class="codeline" id="line-47"><code>	MOVD	p_len+16(FP), R2</code></span>
+<span class="codeline" id="line-48"><code>	MOVD	$·_K+0(SB), R3</code></span>
+<span class="codeline" id="line-49"><code></code></span>
+<span class="codeline" id="line-50"><code>	// long enough to prefetch</code></span>
+<span class="codeline" id="line-51"><code>	PRFM	(R3), PLDL3KEEP</code></span>
+<span class="codeline" id="line-52"><code>	// load digest</code></span>
+<span class="codeline" id="line-53"><code>	VLD1	(R0), [V8.D2, V9.D2, V10.D2, V11.D2]</code></span>
+<span class="codeline" id="line-54"><code>loop:</code></span>
+<span class="codeline" id="line-55"><code>	// load digest in V0-V3 keeping original in V8-V11</code></span>
+<span class="codeline" id="line-56"><code>	VMOV	V8.B16, V0.B16</code></span>
+<span class="codeline" id="line-57"><code>	VMOV	V9.B16, V1.B16</code></span>
+<span class="codeline" id="line-58"><code>	VMOV	V10.B16, V2.B16</code></span>
+<span class="codeline" id="line-59"><code>	VMOV	V11.B16, V3.B16</code></span>
+<span class="codeline" id="line-60"><code></code></span>
+<span class="codeline" id="line-61"><code>	// load message data in V12-V19</code></span>
+<span class="codeline" id="line-62"><code>	VLD1.P	64(R1), [V12.D2, V13.D2, V14.D2, V15.D2]</code></span>
+<span class="codeline" id="line-63"><code>	VLD1.P	64(R1), [V16.D2, V17.D2, V18.D2, V19.D2]</code></span>
+<span class="codeline" id="line-64"><code></code></span>
+<span class="codeline" id="line-65"><code>	// convert message into big endian format</code></span>
+<span class="codeline" id="line-66"><code>	VREV64	V12.B16, V12.B16</code></span>
+<span class="codeline" id="line-67"><code>	VREV64	V13.B16, V13.B16</code></span>
+<span class="codeline" id="line-68"><code>	VREV64	V14.B16, V14.B16</code></span>
+<span class="codeline" id="line-69"><code>	VREV64	V15.B16, V15.B16</code></span>
+<span class="codeline" id="line-70"><code>	VREV64	V16.B16, V16.B16</code></span>
+<span class="codeline" id="line-71"><code>	VREV64	V17.B16, V17.B16</code></span>
+<span class="codeline" id="line-72"><code>	VREV64	V18.B16, V18.B16</code></span>
+<span class="codeline" id="line-73"><code>	VREV64	V19.B16, V19.B16</code></span>
+<span class="codeline" id="line-74"><code></code></span>
+<span class="codeline" id="line-75"><code>	MOVD	R3, R4</code></span>
+<span class="codeline" id="line-76"><code>	// load first 4 round consts in V20-V23</code></span>
+<span class="codeline" id="line-77"><code>	VLD1.P	64(R4), [V20.D2, V21.D2, V22.D2, V23.D2]</code></span>
+<span class="codeline" id="line-78"><code></code></span>
+<span class="codeline" id="line-79"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V20, V24, V12, V13, V19, V16, V17)</code></span>
+<span class="codeline" id="line-80"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V21, V25, V13, V14, V12, V17, V18)</code></span>
+<span class="codeline" id="line-81"><code>	SHA512ROUND(V2, V3, V1, V4, V0, V22, V26, V14, V15, V13, V18, V19)</code></span>
+<span class="codeline" id="line-82"><code>	SHA512ROUND(V4, V2, V0, V1, V3, V23, V27, V15, V16, V14, V19, V12)</code></span>
+<span class="codeline" id="line-83"><code>	SHA512ROUND(V1, V4, V3, V0, V2, V24, V28, V16, V17, V15, V12, V13)</code></span>
+<span class="codeline" id="line-84"><code></code></span>
+<span class="codeline" id="line-85"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V25, V29, V17, V18, V16, V13, V14)</code></span>
+<span class="codeline" id="line-86"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V26, V30, V18, V19, V17, V14, V15)</code></span>
+<span class="codeline" id="line-87"><code>	SHA512ROUND(V2, V3, V1, V4, V0, V27, V31, V19, V12, V18, V15, V16)</code></span>
+<span class="codeline" id="line-88"><code>	SHA512ROUND(V4, V2, V0, V1, V3, V28, V24, V12, V13, V19, V16, V17)</code></span>
+<span class="codeline" id="line-89"><code>	SHA512ROUND(V1, V4, V3, V0, V2, V29, V25, V13, V14, V12, V17, V18)</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V30, V26, V14, V15, V13, V18, V19)</code></span>
+<span class="codeline" id="line-92"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V31, V27, V15, V16, V14, V19, V12)</code></span>
+<span class="codeline" id="line-93"><code>	SHA512ROUND(V2, V3, V1, V4, V0, V24, V28, V16, V17, V15, V12, V13)</code></span>
+<span class="codeline" id="line-94"><code>	SHA512ROUND(V4, V2, V0, V1, V3, V25, V29, V17, V18, V16, V13, V14)</code></span>
+<span class="codeline" id="line-95"><code>	SHA512ROUND(V1, V4, V3, V0, V2, V26, V30, V18, V19, V17, V14, V15)</code></span>
+<span class="codeline" id="line-96"><code></code></span>
+<span class="codeline" id="line-97"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V27, V31, V19, V12, V18, V15, V16)</code></span>
+<span class="codeline" id="line-98"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V28, V24, V12, V13, V19, V16, V17)</code></span>
+<span class="codeline" id="line-99"><code>	SHA512ROUND(V2, V3, V1, V4, V0, V29, V25, V13, V14, V12, V17, V18)</code></span>
+<span class="codeline" id="line-100"><code>	SHA512ROUND(V4, V2, V0, V1, V3, V30, V26, V14, V15, V13, V18, V19)</code></span>
+<span class="codeline" id="line-101"><code>	SHA512ROUND(V1, V4, V3, V0, V2, V31, V27, V15, V16, V14, V19, V12)</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V24, V28, V16, V17, V15, V12, V13)</code></span>
+<span class="codeline" id="line-104"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V25, V29, V17, V18, V16, V13, V14)</code></span>
+<span class="codeline" id="line-105"><code>	SHA512ROUND(V2, V3, V1, V4, V0, V26, V30, V18, V19, V17, V14, V15)</code></span>
+<span class="codeline" id="line-106"><code>	SHA512ROUND(V4, V2, V0, V1, V3, V27, V31, V19, V12, V18, V15, V16)</code></span>
+<span class="codeline" id="line-107"><code>	SHA512ROUND(V1, V4, V3, V0, V2, V28, V24, V12, V13, V19, V16, V17)</code></span>
+<span class="codeline" id="line-108"><code></code></span>
+<span class="codeline" id="line-109"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V29, V25, V13, V14, V12, V17, V18)</code></span>
+<span class="codeline" id="line-110"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V30, V26, V14, V15, V13, V18, V19)</code></span>
+<span class="codeline" id="line-111"><code>	SHA512ROUND(V2, V3, V1, V4, V0, V31, V27, V15, V16, V14, V19, V12)</code></span>
+<span class="codeline" id="line-112"><code>	SHA512ROUND(V4, V2, V0, V1, V3, V24, V28, V16, V17, V15, V12, V13)</code></span>
+<span class="codeline" id="line-113"><code>	SHA512ROUND(V1, V4, V3, V0, V2, V25, V29, V17, V18, V16, V13, V14)</code></span>
+<span class="codeline" id="line-114"><code></code></span>
+<span class="codeline" id="line-115"><code>	SHA512ROUND(V0, V1, V2, V3, V4, V26, V30, V18, V19, V17, V14, V15)</code></span>
+<span class="codeline" id="line-116"><code>	SHA512ROUND(V3, V0, V4, V2, V1, V27, V31, V19, V12, V18, V15, V16)</code></span>
+<span class="codeline" id="line-117"><code></code></span>
+<span class="codeline" id="line-118"><code>	SHA512ROUND_NO_UPDATE(V2, V3, V1, V4, V0, V28, V24, V12)</code></span>
+<span class="codeline" id="line-119"><code>	SHA512ROUND_NO_UPDATE(V4, V2, V0, V1, V3, V29, V25, V13)</code></span>
+<span class="codeline" id="line-120"><code>	SHA512ROUND_NO_UPDATE(V1, V4, V3, V0, V2, V30, V26, V14)</code></span>
+<span class="codeline" id="line-121"><code>	SHA512ROUND_NO_UPDATE(V0, V1, V2, V3, V4, V31, V27, V15)</code></span>
+<span class="codeline" id="line-122"><code></code></span>
+<span class="codeline" id="line-123"><code>	SHA512ROUND_LAST(V3, V0, V4, V2, V1, V24, V16)</code></span>
+<span class="codeline" id="line-124"><code>	SHA512ROUND_LAST(V2, V3, V1, V4, V0, V25, V17)</code></span>
+<span class="codeline" id="line-125"><code>	SHA512ROUND_LAST(V4, V2, V0, V1, V3, V26, V18)</code></span>
+<span class="codeline" id="line-126"><code>	SHA512ROUND_LAST(V1, V4, V3, V0, V2, V27, V19)</code></span>
+<span class="codeline" id="line-127"><code></code></span>
+<span class="codeline" id="line-128"><code>	// add result to digest</code></span>
+<span class="codeline" id="line-129"><code>	VADD	V0.D2, V8.D2, V8.D2</code></span>
+<span class="codeline" id="line-130"><code>	VADD	V1.D2, V9.D2, V9.D2</code></span>
+<span class="codeline" id="line-131"><code>	VADD	V2.D2, V10.D2, V10.D2</code></span>
+<span class="codeline" id="line-132"><code>	VADD	V3.D2, V11.D2, V11.D2</code></span>
+<span class="codeline" id="line-133"><code>	SUB	$128, R2</code></span>
+<span class="codeline" id="line-134"><code>	CBNZ	R2, loop</code></span>
+<span class="codeline" id="line-135"><code></code></span>
+<span class="codeline" id="line-136"><code>	VST1	[V8.D2, V9.D2, V10.D2, V11.D2], (R0)</code></span>
+<span class="codeline" id="line-137"><code>	RET</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

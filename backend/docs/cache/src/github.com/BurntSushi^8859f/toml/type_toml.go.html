@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: type_toml.go in package github.com/BurntSushi/toml</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	type_toml.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html">github.com/BurntSushi/toml</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11]
+{background: #226; color: #ff8;}
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> toml</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// tomlType represents any Go type that corresponds to a TOML type.</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// While the first draft of the TOML spec has a simplistic type system that</span></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">// probably doesn't need this level of sophistication, we seem to be militating</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// toward adding real composite types.</span></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlType" class="ident">tomlType</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-8"><code>	<a href="../../../../imp/github.com/BurntSushi^8859f/toml.tomlType^3c3c0.html#name-github.com/BurntSushi/toml.typeString" class="ident">typeString</a>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-9"><code>}</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// typeEqual accepts any two types and returns true if they are equal.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-typeEqual" class="ident">typeEqual</a></label>(<label for="r1" class="ident">t1</label>, <label for="r2" class="ident">t2</label> <a href="#line-7" class="ident">tomlType</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-13"><code>	<span class="keyword">if</span> <label for="r1" class="ident">t1</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> || <label for="r2" class="ident">t2</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-14"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-15"><code>	}</code></span>
+<span class="codeline" id="line-16"><code>	<span class="keyword">return</span> <label for="r1" class="ident">t1</label>.<a href="#line-8" class="ident">typeString</a>() == <label for="r2" class="ident">t2</label>.<a href="#line-8" class="ident">typeString</a>()</code></span>
+<span class="codeline" id="line-17"><code>}</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code><span class="keyword">func</span> <label for="r3" class="ident"><a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-typeIsTable" class="ident">typeIsTable</a></label>(<label for="r4" class="ident">t</label> <a href="#line-7" class="ident">tomlType</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-20"><code>	<span class="keyword">return</span> <a href="#line-12" class="ident">typeEqual</a>(<label for="r4" class="ident">t</label>, <a href="#line-40" class="ident">tomlHash</a>) || <a href="#line-12" class="ident">typeEqual</a>(<label for="r4" class="ident">t</label>, <a href="#line-41" class="ident">tomlArrayHash</a>)</code></span>
+<span class="codeline" id="line-21"><code>}</code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlBaseType" class="ident">tomlBaseType</a> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-24"><code></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">func</span> (<label for="r5" class="ident">btype</label> <a href="#line-23" class="ident">tomlBaseType</a>) <label for="r6" class="ident"><a href="../../../../imp/github.com/BurntSushi^8859f/toml.tomlBaseType^c8284.html#name-typeString" class="ident">typeString</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-26"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>(<label for="r5" class="ident">btype</label>)</code></span>
+<span class="codeline" id="line-27"><code>}</code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code><span class="keyword">func</span> (<label for="r7" class="ident">btype</label> <a href="#line-23" class="ident">tomlBaseType</a>) <label for="r8" class="ident"><a href="../../../../imp/github.com/BurntSushi^8859f/toml.tomlBaseType^c8284.html#name-.String" class="ident">String</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-30"><code>	<span class="keyword">return</span> <label for="r7" class="ident">btype</label>.<a href="#line-25" class="ident">typeString</a>()</code></span>
+<span class="codeline" id="line-31"><code>}</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-34"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlInteger" class="ident">tomlInteger</a>   <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"Integer"</span></code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlFloat" class="ident">tomlFloat</a>     <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"Float"</span></code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlDatetime" class="ident">tomlDatetime</a>  <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"Datetime"</span></code></span>
+<span class="codeline" id="line-37"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlString" class="ident">tomlString</a>    <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"String"</span></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlBool" class="ident">tomlBool</a>      <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"Bool"</span></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlArray" class="ident">tomlArray</a>     <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"Array"</span></code></span>
+<span class="codeline" id="line-40"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlHash" class="ident">tomlHash</a>      <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"Hash"</span></code></span>
+<span class="codeline" id="line-41"><code>	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-tomlArrayHash" class="ident">tomlArrayHash</a> <a href="#line-23" class="ident">tomlBaseType</a> = <span class="lit-string">"ArrayHash"</span></code></span>
+<span class="codeline" id="line-42"><code>)</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// typeOfPrimitive returns a tomlType of any primitive value in TOML.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">// Primitive values are: Integer, Float, Datetime, String and Bool.</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">// Passing a lexer item other than the following will cause a BUG message</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// to occur: itemString, itemBool, itemInteger, itemFloat, itemDatetime.</span></code></span>
+<span class="codeline" id="line-49"><code><span class="keyword">func</span> (<label for="r9" class="ident">p</label> *<a href="parse.go.html#line-13" class="ident">parser</a>) <label for="r10" class="ident">typeOfPrimitive</label>(<label for="r11" class="ident">lexItem</label> <a href="lex.go.html#line-71" class="ident">item</a>) <a href="#line-7" class="ident">tomlType</a> {</code></span>
+<span class="codeline" id="line-50"><code>	<span class="keyword">switch</span> <label for="r11" class="ident">lexItem</label>.<a href="lex.go.html#line-72" class="ident">typ</a> {</code></span>
+<span class="codeline" id="line-51"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-24" class="ident">itemInteger</a>:</code></span>
+<span class="codeline" id="line-52"><code>		<span class="keyword">return</span> <a href="#line-34" class="ident">tomlInteger</a></code></span>
+<span class="codeline" id="line-53"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-25" class="ident">itemFloat</a>:</code></span>
+<span class="codeline" id="line-54"><code>		<span class="keyword">return</span> <a href="#line-35" class="ident">tomlFloat</a></code></span>
+<span class="codeline" id="line-55"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-26" class="ident">itemDatetime</a>:</code></span>
+<span class="codeline" id="line-56"><code>		<span class="keyword">return</span> <a href="#line-36" class="ident">tomlDatetime</a></code></span>
+<span class="codeline" id="line-57"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-19" class="ident">itemString</a>:</code></span>
+<span class="codeline" id="line-58"><code>		<span class="keyword">return</span> <a href="#line-37" class="ident">tomlString</a></code></span>
+<span class="codeline" id="line-59"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-21" class="ident">itemMultilineString</a>:</code></span>
+<span class="codeline" id="line-60"><code>		<span class="keyword">return</span> <a href="#line-37" class="ident">tomlString</a></code></span>
+<span class="codeline" id="line-61"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-20" class="ident">itemRawString</a>:</code></span>
+<span class="codeline" id="line-62"><code>		<span class="keyword">return</span> <a href="#line-37" class="ident">tomlString</a></code></span>
+<span class="codeline" id="line-63"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-22" class="ident">itemRawMultilineString</a>:</code></span>
+<span class="codeline" id="line-64"><code>		<span class="keyword">return</span> <a href="#line-37" class="ident">tomlString</a></code></span>
+<span class="codeline" id="line-65"><code>	<span class="keyword">case</span> <a href="lex.go.html#line-23" class="ident">itemBool</a>:</code></span>
+<span class="codeline" id="line-66"><code>		<span class="keyword">return</span> <a href="#line-38" class="ident">tomlBool</a></code></span>
+<span class="codeline" id="line-67"><code>	}</code></span>
+<span class="codeline" id="line-68"><code>	<label for="r9" class="ident">p</label>.<a href="parse.go.html#line-134" class="ident">bug</a>(<span class="lit-string">"Cannot infer primitive type of lex item '%s'."</span>, <label for="r11" class="ident">lexItem</label>)</code></span>
+<span class="codeline" id="line-69"><code>	<a href="../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"unreachable"</span>)</code></span>
+<span class="codeline" id="line-70"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

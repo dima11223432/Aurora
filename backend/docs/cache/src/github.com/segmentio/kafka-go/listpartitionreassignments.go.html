@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: listpartitionreassignments.go in package github.com/segmentio/kafka-go</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	listpartitionreassignments.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> kafka</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"net"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"time"</span></label></code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i3"><span class="lit-string i3">"github.com/segmentio/kafka-go/protocol/listpartitionreassignments"</span></label></code></span>
+<span class="codeline" id="line-9"><code>)</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// ListPartitionReassignmentsRequest is a request to the ListPartitionReassignments API.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ListPartitionReassignmentsRequest" class="ident">ListPartitionReassignmentsRequest</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-13"><code>	<span class="comment">// Address of the kafka broker to send the request to.</span></code></span>
+<span class="codeline" id="line-14"><code>	Addr <a href="../../../../pkg/net.html" class="ident i1">net</a>.<a href="../../../net/net.go.html#line-116" class="ident">Addr</a></code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code>	<span class="comment">// Topics we want reassignments for, mapped by their name, or nil to list everything.</span></code></span>
+<span class="codeline" id="line-17"><code>	Topics <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="#line-25" class="ident">ListPartitionReassignmentsRequestTopic</a></code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code>	<span class="comment">// Timeout is the amount of time to wait for the request to complete.</span></code></span>
+<span class="codeline" id="line-20"><code>	Timeout <a href="../../../../pkg/time.html" class="ident i2">time</a>.<a href="../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-21"><code>}</code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">// ListPartitionReassignmentsRequestTopic contains the requested partitions for a single</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// topic.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ListPartitionReassignmentsRequestTopic" class="ident">ListPartitionReassignmentsRequestTopic</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-26"><code>	<span class="comment">// The partitions to list partition reassignments for.</span></code></span>
+<span class="codeline" id="line-27"><code>	PartitionIndexes []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-28"><code>}</code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// ListPartitionReassignmentsResponse is a response from the ListPartitionReassignments API.</span></code></span>
+<span class="codeline" id="line-31"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ListPartitionReassignmentsResponse" class="ident">ListPartitionReassignmentsResponse</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-32"><code>	<span class="comment">// Error is set to a non-nil value including the code and message if a top-level</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">	// error was encountered.</span></code></span>
+<span class="codeline" id="line-34"><code>	Error <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code>	<span class="comment">// Topics contains results for each topic, mapped by their name.</span></code></span>
+<span class="codeline" id="line-37"><code>	Topics <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="#line-42" class="ident">ListPartitionReassignmentsResponseTopic</a></code></span>
+<span class="codeline" id="line-38"><code>}</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">// ListPartitionReassignmentsResponseTopic contains the detailed result of</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">// ongoing reassignments for a topic.</span></code></span>
+<span class="codeline" id="line-42"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ListPartitionReassignmentsResponseTopic" class="ident">ListPartitionReassignmentsResponseTopic</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-43"><code>	<span class="comment">// Partitions contains result for topic partitions.</span></code></span>
+<span class="codeline" id="line-44"><code>	Partitions []<a href="#line-49" class="ident">ListPartitionReassignmentsResponsePartition</a></code></span>
+<span class="codeline" id="line-45"><code>}</code></span>
+<span class="codeline" id="line-46"><code></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">// ListPartitionReassignmentsResponsePartition contains the detailed result of</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// ongoing reassignments for a single partition.</span></code></span>
+<span class="codeline" id="line-49"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ListPartitionReassignmentsResponsePartition" class="ident">ListPartitionReassignmentsResponsePartition</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-50"><code>	<span class="comment">// PartitionIndex contains index of the partition.</span></code></span>
+<span class="codeline" id="line-51"><code>	PartitionIndex <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code>	<span class="comment">// Replicas contains the current replica set.</span></code></span>
+<span class="codeline" id="line-54"><code>	Replicas []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-55"><code></code></span>
+<span class="codeline" id="line-56"><code>	<span class="comment">// AddingReplicas contains the set of replicas we are currently adding.</span></code></span>
+<span class="codeline" id="line-57"><code>	AddingReplicas []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code>	<span class="comment">// RemovingReplicas contains the set of replicas we are currently removing.</span></code></span>
+<span class="codeline" id="line-60"><code>	RemovingReplicas []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-61"><code>}</code></span>
+<span class="codeline" id="line-62"><code></code></span>
+<span class="codeline" id="line-63"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> *<a href="client.go.html#line-28" class="ident">Client</a>) <label for="r1" class="ident">ListPartitionReassignments</label>(</code></span>
+<span class="codeline" id="line-64"><code>	<label for="r2" class="ident">ctx</label> <a href="../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../context/context.go.html#line-71" class="ident">Context</a>,</code></span>
+<span class="codeline" id="line-65"><code>	<label for="r3" class="ident">req</label> *<a href="#line-12" class="ident">ListPartitionReassignmentsRequest</a>,</code></span>
+<span class="codeline" id="line-66"><code>) (*<a href="#line-31" class="ident">ListPartitionReassignmentsResponse</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-67"><code>	<label for="r4" class="ident">apiReq</label> := &amp;<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/listpartitionreassignments.html" class="ident i3">listpartitionreassignments</a>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-11" class="ident">Request</a>{</code></span>
+<span class="codeline" id="line-68"><code>		<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-16" class="ident">TimeoutMs</a>: <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<label for="r3" class="ident">req</label>.<a href="#line-20" class="ident">Timeout</a>.<a href="../../../time/time.go.html#line-1078" class="ident">Milliseconds</a>()),</code></span>
+<span class="codeline" id="line-69"><code>	}</code></span>
+<span class="codeline" id="line-70"><code></code></span>
+<span class="codeline" id="line-71"><code>	<span class="keyword">for</span> <label for="r5" class="ident">topicName</label>, <label for="r6" class="ident">topicReq</label> := <span class="keyword">range</span> <label for="r3" class="ident">req</label>.<a href="#line-17" class="ident">Topics</a> {</code></span>
+<span class="codeline" id="line-72"><code>		<label for="r4" class="ident">apiReq</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-17" class="ident">Topics</a> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(</code></span>
+<span class="codeline" id="line-73"><code>			<label for="r4" class="ident">apiReq</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-17" class="ident">Topics</a>,</code></span>
+<span class="codeline" id="line-74"><code>			<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/listpartitionreassignments.html" class="ident i3">listpartitionreassignments</a>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-20" class="ident">RequestTopic</a>{</code></span>
+<span class="codeline" id="line-75"><code>				<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-25" class="ident">Name</a>:             <label for="r5" class="ident">topicName</label>,</code></span>
+<span class="codeline" id="line-76"><code>				<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-26" class="ident">PartitionIndexes</a>: <a href="#line-115" class="ident">intToInt32Array</a>(<label for="r6" class="ident">topicReq</label>.<a href="#line-27" class="ident">PartitionIndexes</a>),</code></span>
+<span class="codeline" id="line-77"><code>			},</code></span>
+<span class="codeline" id="line-78"><code>		)</code></span>
+<span class="codeline" id="line-79"><code>	}</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>	<label for="r7" class="ident">protoResp</label>, <label for="r8" class="ident">err</label> := <label for="r0" class="ident">c</label>.<a href="client.go.html#line-102" class="ident">roundTrip</a>(</code></span>
+<span class="codeline" id="line-82"><code>		<label for="r2" class="ident">ctx</label>,</code></span>
+<span class="codeline" id="line-83"><code>		<label for="r3" class="ident">req</label>.<a href="#line-14" class="ident">Addr</a>,</code></span>
+<span class="codeline" id="line-84"><code>		<label for="r4" class="ident">apiReq</label>,</code></span>
+<span class="codeline" id="line-85"><code>	)</code></span>
+<span class="codeline" id="line-86"><code>	<span class="keyword">if</span> <label for="r8" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-87"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r8" class="ident">err</label></code></span>
+<span class="codeline" id="line-88"><code>	}</code></span>
+<span class="codeline" id="line-89"><code>	<label for="r9" class="ident">apiResp</label> := <label for="r7" class="ident">protoResp</label>.(*<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/listpartitionreassignments.html" class="ident i3">listpartitionreassignments</a>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-37" class="ident">Response</a>)</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code>	<label for="r10" class="ident">resp</label> := &amp;<a href="#line-31" class="ident">ListPartitionReassignmentsResponse</a>{</code></span>
+<span class="codeline" id="line-92"><code>		<a href="#line-34" class="ident">Error</a>:  <a href="error.go.html#line-667" class="ident">makeError</a>(<label for="r9" class="ident">apiResp</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-43" class="ident">ErrorCode</a>, <label for="r9" class="ident">apiResp</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-44" class="ident">ErrorMessage</a>),</code></span>
+<span class="codeline" id="line-93"><code>		<a href="#line-37" class="ident">Topics</a>: <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="#line-42" class="ident">ListPartitionReassignmentsResponseTopic</a>),</code></span>
+<span class="codeline" id="line-94"><code>	}</code></span>
+<span class="codeline" id="line-95"><code></code></span>
+<span class="codeline" id="line-96"><code>	<span class="keyword">for</span> <label for="r11" class="ident">_</label>, <label for="r12" class="ident">topicResult</label> := <span class="keyword">range</span> <label for="r9" class="ident">apiResp</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-45" class="ident">Topics</a> {</code></span>
+<span class="codeline" id="line-97"><code>		<label for="r13" class="ident">respTopic</label> := <a href="#line-42" class="ident">ListPartitionReassignmentsResponseTopic</a>{}</code></span>
+<span class="codeline" id="line-98"><code>		<span class="keyword">for</span> <label for="r14" class="ident">_</label>, <label for="r15" class="ident">partitionResult</label> := <span class="keyword">range</span> <label for="r12" class="ident">topicResult</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-54" class="ident">Partitions</a> {</code></span>
+<span class="codeline" id="line-99"><code>			<label for="r13" class="ident">respTopic</label>.<a href="#line-44" class="ident">Partitions</a> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(</code></span>
+<span class="codeline" id="line-100"><code>				<label for="r13" class="ident">respTopic</label>.<a href="#line-44" class="ident">Partitions</a>,</code></span>
+<span class="codeline" id="line-101"><code>				<a href="#line-49" class="ident">ListPartitionReassignmentsResponsePartition</a>{</code></span>
+<span class="codeline" id="line-102"><code>					<a href="#line-51" class="ident">PartitionIndex</a>:   <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r15" class="ident">partitionResult</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-62" class="ident">PartitionIndex</a>),</code></span>
+<span class="codeline" id="line-103"><code>					<a href="#line-54" class="ident">Replicas</a>:         <a href="#line-126" class="ident">int32ToIntArray</a>(<label for="r15" class="ident">partitionResult</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-63" class="ident">Replicas</a>),</code></span>
+<span class="codeline" id="line-104"><code>					<a href="#line-57" class="ident">AddingReplicas</a>:   <a href="#line-126" class="ident">int32ToIntArray</a>(<label for="r15" class="ident">partitionResult</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-64" class="ident">AddingReplicas</a>),</code></span>
+<span class="codeline" id="line-105"><code>					<a href="#line-60" class="ident">RemovingReplicas</a>: <a href="#line-126" class="ident">int32ToIntArray</a>(<label for="r15" class="ident">partitionResult</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-65" class="ident">RemovingReplicas</a>),</code></span>
+<span class="codeline" id="line-106"><code>				},</code></span>
+<span class="codeline" id="line-107"><code>			)</code></span>
+<span class="codeline" id="line-108"><code>		}</code></span>
+<span class="codeline" id="line-109"><code>		<label for="r10" class="ident">resp</label>.<a href="#line-37" class="ident">Topics</a>[<label for="r12" class="ident">topicResult</label>.<a href="protocol/listpartitionreassignments/listpartitionreassignments.go.html#line-53" class="ident">Name</a>] = <label for="r13" class="ident">respTopic</label></code></span>
+<span class="codeline" id="line-110"><code>	}</code></span>
+<span class="codeline" id="line-111"><code></code></span>
+<span class="codeline" id="line-112"><code>	<span class="keyword">return</span> <label for="r10" class="ident">resp</label>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-113"><code>}</code></span>
+<span class="codeline" id="line-114"><code></code></span>
+<span class="codeline" id="line-115"><code><span class="keyword">func</span> <label for="r16" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-intToInt32Array" class="ident">intToInt32Array</a></label>(<label for="r17" class="ident">arr</label> []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) []<a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a> {</code></span>
+<span class="codeline" id="line-116"><code>	<span class="keyword">if</span> <label for="r17" class="ident">arr</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-117"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-118"><code>	}</code></span>
+<span class="codeline" id="line-119"><code>	<label for="r18" class="ident">res</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>, <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r17" class="ident">arr</label>))</code></span>
+<span class="codeline" id="line-120"><code>	<span class="keyword">for</span> <label for="r19" class="ident">i</label> := <span class="keyword">range</span> <label for="r17" class="ident">arr</label> {</code></span>
+<span class="codeline" id="line-121"><code>		<label for="r18" class="ident">res</label>[<label for="r19" class="ident">i</label>] = <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<label for="r17" class="ident">arr</label>[<label for="r19" class="ident">i</label>])</code></span>
+<span class="codeline" id="line-122"><code>	}</code></span>
+<span class="codeline" id="line-123"><code>	<span class="keyword">return</span> <label for="r18" class="ident">res</label></code></span>
+<span class="codeline" id="line-124"><code>}</code></span>
+<span class="codeline" id="line-125"><code></code></span>
+<span class="codeline" id="line-126"><code><span class="keyword">func</span> <label for="r20" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-int32ToIntArray" class="ident">int32ToIntArray</a></label>(<label for="r21" class="ident">arr</label> []<a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>) []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-127"><code>	<span class="keyword">if</span> <label for="r21" class="ident">arr</label> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-128"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-129"><code>	}</code></span>
+<span class="codeline" id="line-130"><code>	<label for="r22" class="ident">res</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r21" class="ident">arr</label>))</code></span>
+<span class="codeline" id="line-131"><code>	<span class="keyword">for</span> <label for="r23" class="ident">i</label> := <span class="keyword">range</span> <label for="r21" class="ident">arr</label> {</code></span>
+<span class="codeline" id="line-132"><code>		<label for="r22" class="ident">res</label>[<label for="r23" class="ident">i</label>] = <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r21" class="ident">arr</label>[<label for="r23" class="ident">i</label>])</code></span>
+<span class="codeline" id="line-133"><code>	}</code></span>
+<span class="codeline" id="line-134"><code>	<span class="keyword">return</span> <label for="r22" class="ident">res</label></code></span>
+<span class="codeline" id="line-135"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

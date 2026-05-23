@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: conn_state.go in package github.com/redis/go-redis/v9/internal/pool</title>
+<link href="../../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	conn_state.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html">github.com/redis/go-redis/v9/internal/pool</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> pool</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"container/list"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"context"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"errors"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"fmt"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i4"><span class="lit-string i4">"sync"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i5"><span class="lit-string i5">"sync/atomic"</span></label></code></span>
+<span class="codeline" id="line-10"><code>)</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// ConnState represents the connection state in the state machine.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// States are designed to be lightweight and fast to check.</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// State Transitions:</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">//	CREATED → INITIALIZING → IDLE ⇄ IN_USE</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">//	                           ↓</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">//	                       UNUSABLE (handoff/reauth)</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">//	                           ↓</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">//	                        IDLE/CLOSED</span></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ConnState" class="ident">ConnState</a> <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-25"><code>	<span class="comment">// StateCreated - Connection just created, not yet initialized</span></code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-StateCreated" class="ident">StateCreated</a> <a href="#line-22" class="ident">ConnState</a> = <a href="../../../../../../../pkg/builtin.html#name-iota" class="ident">iota</a></code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	<span class="comment">// StateInitializing - Connection initialization in progress</span></code></span>
+<span class="codeline" id="line-29"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-StateInitializing" class="ident">StateInitializing</a></code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code>	<span class="comment">// StateIdle - Connection initialized and idle in pool, ready to be acquired</span></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-StateIdle" class="ident">StateIdle</a></code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code>	<span class="comment">// StateInUse - Connection actively processing a command (retrieved from pool)</span></code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-StateInUse" class="ident">StateInUse</a></code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code>	<span class="comment">// StateUnusable - Connection temporarily unusable due to background operation</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">	// (handoff, reauth, etc.). Cannot be acquired from pool.</span></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-StateUnusable" class="ident">StateUnusable</a></code></span>
+<span class="codeline" id="line-40"><code></code></span>
+<span class="codeline" id="line-41"><code>	<span class="comment">// StateClosed - Connection closed</span></code></span>
+<span class="codeline" id="line-42"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-StateClosed" class="ident">StateClosed</a></code></span>
+<span class="codeline" id="line-43"><code>)</code></span>
+<span class="codeline" id="line-44"><code></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">// Predefined state slices to avoid allocations in hot paths</span></code></span>
+<span class="codeline" id="line-46"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-47"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-validFromInUse" class="ident">validFromInUse</a>              = []<a href="#line-22" class="ident">ConnState</a>{<a href="#line-35" class="ident">StateInUse</a>}</code></span>
+<span class="codeline" id="line-48"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-validFromCreatedOrIdle" class="ident">validFromCreatedOrIdle</a>      = []<a href="#line-22" class="ident">ConnState</a>{<a href="#line-26" class="ident">StateCreated</a>, <a href="#line-32" class="ident">StateIdle</a>}</code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-validFromCreatedInUseOrIdle" class="ident">validFromCreatedInUseOrIdle</a> = []<a href="#line-22" class="ident">ConnState</a>{<a href="#line-26" class="ident">StateCreated</a>, <a href="#line-35" class="ident">StateInUse</a>, <a href="#line-32" class="ident">StateIdle</a>}</code></span>
+<span class="codeline" id="line-50"><code>	<span class="comment">// For AwaitAndTransition calls</span></code></span>
+<span class="codeline" id="line-51"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-validFromCreatedIdleOrUnusable" class="ident">validFromCreatedIdleOrUnusable</a> = []<a href="#line-22" class="ident">ConnState</a>{<a href="#line-26" class="ident">StateCreated</a>, <a href="#line-32" class="ident">StateIdle</a>, <a href="#line-39" class="ident">StateUnusable</a>}</code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-validFromIdle" class="ident">validFromIdle</a>                  = []<a href="#line-22" class="ident">ConnState</a>{<a href="#line-32" class="ident">StateIdle</a>}</code></span>
+<span class="codeline" id="line-53"><code>	<span class="comment">// For CompareAndSwapUsable</span></code></span>
+<span class="codeline" id="line-54"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-validFromInitializingOrUnusable" class="ident">validFromInitializingOrUnusable</a> = []<a href="#line-22" class="ident">ConnState</a>{<a href="#line-29" class="ident">StateInitializing</a>, <a href="#line-39" class="ident">StateUnusable</a>}</code></span>
+<span class="codeline" id="line-55"><code>)</code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">// Accessor functions for predefined slices to avoid allocations in external packages</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">// These return the same slice instance, so they're zero-allocation</span></code></span>
+<span class="codeline" id="line-59"><code></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">// ValidFromIdle returns a predefined slice containing only StateIdle.</span></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">// Use this to avoid allocations when calling AwaitAndTransition or TryTransition.</span></code></span>
+<span class="codeline" id="line-62"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ValidFromIdle" class="ident">ValidFromIdle</a></label>() []<a href="#line-22" class="ident">ConnState</a> {</code></span>
+<span class="codeline" id="line-63"><code>	<span class="keyword">return</span> <a href="#line-52" class="ident">validFromIdle</a></code></span>
+<span class="codeline" id="line-64"><code>}</code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">// ValidFromCreatedIdleOrUnusable returns a predefined slice for initialization transitions.</span></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">// Use this to avoid allocations when calling AwaitAndTransition or TryTransition.</span></code></span>
+<span class="codeline" id="line-68"><code><span class="keyword">func</span> <label for="r1" class="ident"><a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ValidFromCreatedIdleOrUnusable" class="ident">ValidFromCreatedIdleOrUnusable</a></label>() []<a href="#line-22" class="ident">ConnState</a> {</code></span>
+<span class="codeline" id="line-69"><code>	<span class="keyword">return</span> <a href="#line-51" class="ident">validFromCreatedIdleOrUnusable</a></code></span>
+<span class="codeline" id="line-70"><code>}</code></span>
+<span class="codeline" id="line-71"><code></code></span>
+<span class="codeline" id="line-72"><code><span class="comment">// String returns a human-readable string representation of the state.</span></code></span>
+<span class="codeline" id="line-73"><code><span class="keyword">func</span> (<label for="r2" class="ident">s</label> <a href="#line-22" class="ident">ConnState</a>) <label for="r3" class="ident"><a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/pool.ConnState.html#name-.String" class="ident">String</a></label>() <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-74"><code>	<span class="keyword">switch</span> <label for="r2" class="ident">s</label> {</code></span>
+<span class="codeline" id="line-75"><code>	<span class="keyword">case</span> <a href="#line-26" class="ident">StateCreated</a>:</code></span>
+<span class="codeline" id="line-76"><code>		<span class="keyword">return</span> <span class="lit-string">"CREATED"</span></code></span>
+<span class="codeline" id="line-77"><code>	<span class="keyword">case</span> <a href="#line-29" class="ident">StateInitializing</a>:</code></span>
+<span class="codeline" id="line-78"><code>		<span class="keyword">return</span> <span class="lit-string">"INITIALIZING"</span></code></span>
+<span class="codeline" id="line-79"><code>	<span class="keyword">case</span> <a href="#line-32" class="ident">StateIdle</a>:</code></span>
+<span class="codeline" id="line-80"><code>		<span class="keyword">return</span> <span class="lit-string">"IDLE"</span></code></span>
+<span class="codeline" id="line-81"><code>	<span class="keyword">case</span> <a href="#line-35" class="ident">StateInUse</a>:</code></span>
+<span class="codeline" id="line-82"><code>		<span class="keyword">return</span> <span class="lit-string">"IN_USE"</span></code></span>
+<span class="codeline" id="line-83"><code>	<span class="keyword">case</span> <a href="#line-39" class="ident">StateUnusable</a>:</code></span>
+<span class="codeline" id="line-84"><code>		<span class="keyword">return</span> <span class="lit-string">"UNUSABLE"</span></code></span>
+<span class="codeline" id="line-85"><code>	<span class="keyword">case</span> <a href="#line-42" class="ident">StateClosed</a>:</code></span>
+<span class="codeline" id="line-86"><code>		<span class="keyword">return</span> <span class="lit-string">"CLOSED"</span></code></span>
+<span class="codeline" id="line-87"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-88"><code>		<span class="keyword">return</span> <a href="../../../../../../../pkg/fmt.html" class="ident i3">fmt</a>.<a href="../../../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"UNKNOWN(%d)"</span>, <label for="r2" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-89"><code>	}</code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-93"><code>	<span class="comment">// ErrInvalidStateTransition is returned when a state transition is not allowed</span></code></span>
+<span class="codeline" id="line-94"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ErrInvalidStateTransition" class="ident">ErrInvalidStateTransition</a> = <a href="../../../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"invalid state transition"</span>)</code></span>
+<span class="codeline" id="line-95"><code></code></span>
+<span class="codeline" id="line-96"><code>	<span class="comment">// ErrStateMachineClosed is returned when operating on a closed state machine</span></code></span>
+<span class="codeline" id="line-97"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ErrStateMachineClosed" class="ident">ErrStateMachineClosed</a> = <a href="../../../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"state machine is closed"</span>)</code></span>
+<span class="codeline" id="line-98"><code></code></span>
+<span class="codeline" id="line-99"><code>	<span class="comment">// ErrTimeout is returned when a state transition times out</span></code></span>
+<span class="codeline" id="line-100"><code>	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ErrTimeout" class="ident">ErrTimeout</a> = <a href="../../../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"state transition timeout"</span>)</code></span>
+<span class="codeline" id="line-101"><code>)</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code><span class="comment">// waiter represents a goroutine waiting for a state transition.</span></code></span>
+<span class="codeline" id="line-104"><code><span class="comment">// Designed for minimal allocations and fast processing.</span></code></span>
+<span class="codeline" id="line-105"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-waiter" class="ident">waiter</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-106"><code>	validStates <span class="keyword">map</span>[<a href="#line-22" class="ident">ConnState</a>]<span class="keyword">struct</span>{} <span class="comment">// States we're waiting for</span></code></span>
+<span class="codeline" id="line-107"><code>	targetState <a href="#line-22" class="ident">ConnState</a>              <span class="comment">// State to transition to</span></code></span>
+<span class="codeline" id="line-108"><code>	done        <span class="keyword">chan</span> <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>             <span class="comment">// Signaled when transition completes or times out</span></code></span>
+<span class="codeline" id="line-109"><code>}</code></span>
+<span class="codeline" id="line-110"><code></code></span>
+<span class="codeline" id="line-111"><code><span class="comment">// ConnStateMachine manages connection state transitions with FIFO waiting queue.</span></code></span>
+<span class="codeline" id="line-112"><code><span class="comment">// Optimized for:</span></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">// - Lock-free reads (hot path)</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">// - Minimal allocations</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">// - Fast state transitions</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">// - FIFO fairness for waiters</span></code></span>
+<span class="codeline" id="line-117"><code><span class="comment">// Note: Handoff metadata (endpoint, seqID, retries) is managed separately in the Conn struct.</span></code></span>
+<span class="codeline" id="line-118"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-ConnStateMachine" class="ident">ConnStateMachine</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-119"><code>	<span class="comment">// Current state - atomic for lock-free reads</span></code></span>
+<span class="codeline" id="line-120"><code>	state <a href="../../../../../../../pkg/sync/atomic.html" class="ident i5">atomic</a>.<a href="../../../../../../sync/atomic/type.go.html#line-141" class="ident">Uint32</a></code></span>
+<span class="codeline" id="line-121"><code></code></span>
+<span class="codeline" id="line-122"><code>	<span class="comment">// FIFO queue for waiters - only locked during waiter add/remove/notify</span></code></span>
+<span class="codeline" id="line-123"><code>	mu          <a href="../../../../../../../pkg/sync.html" class="ident i4">sync</a>.<a href="../../../../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-124"><code>	waiters     *<a href="../../../../../../../pkg/container/list.html" class="ident i0">list</a>.<a href="../../../../../../container/list/list.go.html#line-48" class="ident">List</a>   <span class="comment">// List of *waiter</span></code></span>
+<span class="codeline" id="line-125"><code>	waiterCount <a href="../../../../../../../pkg/sync/atomic.html" class="ident i5">atomic</a>.<a href="../../../../../../sync/atomic/type.go.html#line-74" class="ident">Int32</a> <span class="comment">// Fast lock-free check for waiters (avoids mutex in hot path)</span></code></span>
+<span class="codeline" id="line-126"><code>}</code></span>
+<span class="codeline" id="line-127"><code></code></span>
+<span class="codeline" id="line-128"><code><span class="comment">// NewConnStateMachine creates a new connection state machine.</span></code></span>
+<span class="codeline" id="line-129"><code><span class="comment">// Initial state is StateCreated.</span></code></span>
+<span class="codeline" id="line-130"><code><span class="keyword">func</span> <label for="r4" class="ident"><a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html#name-NewConnStateMachine" class="ident">NewConnStateMachine</a></label>() *<a href="#line-118" class="ident">ConnStateMachine</a> {</code></span>
+<span class="codeline" id="line-131"><code>	<label for="r5" class="ident">sm</label> := &amp;<a href="#line-118" class="ident">ConnStateMachine</a>{</code></span>
+<span class="codeline" id="line-132"><code>		<a href="#line-124" class="ident">waiters</a>: <a href="../../../../../../../pkg/container/list.html" class="ident i0">list</a>.<a href="../../../../../../container/list/list.go.html#line-62" class="ident">New</a>(),</code></span>
+<span class="codeline" id="line-133"><code>	}</code></span>
+<span class="codeline" id="line-134"><code>	<label for="r5" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-150" class="ident">Store</a>(<a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<a href="#line-26" class="ident">StateCreated</a>))</code></span>
+<span class="codeline" id="line-135"><code>	<span class="keyword">return</span> <label for="r5" class="ident">sm</label></code></span>
+<span class="codeline" id="line-136"><code>}</code></span>
+<span class="codeline" id="line-137"><code></code></span>
+<span class="codeline" id="line-138"><code><span class="comment">// GetState returns the current state (lock-free read).</span></code></span>
+<span class="codeline" id="line-139"><code><span class="comment">// This is the hot path - optimized for zero allocations and minimal overhead.</span></code></span>
+<span class="codeline" id="line-140"><code><span class="comment">// Note: Zero allocations applies to state reads; converting the returned state to a string</span></code></span>
+<span class="codeline" id="line-141"><code><span class="comment">// (via String()) may allocate if the state is unknown.</span></code></span>
+<span class="codeline" id="line-142"><code><span class="keyword">func</span> (<label for="r6" class="ident">sm</label> *<a href="#line-118" class="ident">ConnStateMachine</a>) <label for="r7" class="ident">GetState</label>() <a href="#line-22" class="ident">ConnState</a> {</code></span>
+<span class="codeline" id="line-143"><code>	<span class="keyword">return</span> <a href="#line-22" class="ident">ConnState</a>(<label for="r6" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-147" class="ident">Load</a>())</code></span>
+<span class="codeline" id="line-144"><code>}</code></span>
+<span class="codeline" id="line-145"><code></code></span>
+<span class="codeline" id="line-146"><code><span class="comment">// TryTransitionFast is an optimized version for the hot path (Get/Put operations).</span></code></span>
+<span class="codeline" id="line-147"><code><span class="comment">// It only handles simple state transitions without waiter notification.</span></code></span>
+<span class="codeline" id="line-148"><code><span class="comment">// This is safe because:</span></code></span>
+<span class="codeline" id="line-149"><code><span class="comment">// 1. Get/Put don't need to wait for state changes</span></code></span>
+<span class="codeline" id="line-150"><code><span class="comment">// 2. Background operations (handoff/reauth) use UNUSABLE state, which this won't match</span></code></span>
+<span class="codeline" id="line-151"><code><span class="comment">// 3. If a background operation is in progress (state is UNUSABLE), this fails fast</span></code></span>
+<span class="codeline" id="line-152"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-153"><code><span class="comment">// Returns true if transition succeeded, false otherwise.</span></code></span>
+<span class="codeline" id="line-154"><code><span class="comment">// Use this for performance-critical paths where you don't need error details.</span></code></span>
+<span class="codeline" id="line-155"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-156"><code><span class="comment">// Performance: Single CAS operation - as fast as the old atomic bool!</span></code></span>
+<span class="codeline" id="line-157"><code><span class="comment">// For multiple from states, use: sm.TryTransitionFast(State1, Target) || sm.TryTransitionFast(State2, Target)</span></code></span>
+<span class="codeline" id="line-158"><code><span class="comment">// The || operator short-circuits, so only 1 CAS is executed in the common case.</span></code></span>
+<span class="codeline" id="line-159"><code><span class="keyword">func</span> (<label for="r8" class="ident">sm</label> *<a href="#line-118" class="ident">ConnStateMachine</a>) <label for="r9" class="ident">TryTransitionFast</label>(<label for="r10" class="ident">fromState</label>, <label for="r11" class="ident">targetState</label> <a href="#line-22" class="ident">ConnState</a>) <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-160"><code>	<span class="keyword">return</span> <label for="r8" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-156" class="ident">CompareAndSwap</a>(<a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r10" class="ident">fromState</label>), <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r11" class="ident">targetState</label>))</code></span>
+<span class="codeline" id="line-161"><code>}</code></span>
+<span class="codeline" id="line-162"><code></code></span>
+<span class="codeline" id="line-163"><code><span class="comment">// TryTransition attempts an immediate state transition without waiting.</span></code></span>
+<span class="codeline" id="line-164"><code><span class="comment">// Returns the current state after the transition attempt and an error if the transition failed.</span></code></span>
+<span class="codeline" id="line-165"><code><span class="comment">// The returned state is the CURRENT state (after the attempt), not the previous state.</span></code></span>
+<span class="codeline" id="line-166"><code><span class="comment">// This is faster than AwaitAndTransition when you don't need to wait.</span></code></span>
+<span class="codeline" id="line-167"><code><span class="comment">// Uses compare-and-swap to atomically transition, preventing concurrent transitions.</span></code></span>
+<span class="codeline" id="line-168"><code><span class="comment">// This method does NOT wait - it fails immediately if the transition cannot be performed.</span></code></span>
+<span class="codeline" id="line-169"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-170"><code><span class="comment">// Performance: Zero allocations on success path (hot path).</span></code></span>
+<span class="codeline" id="line-171"><code><span class="keyword">func</span> (<label for="r12" class="ident">sm</label> *<a href="#line-118" class="ident">ConnStateMachine</a>) <label for="r13" class="ident">TryTransition</label>(<label for="r14" class="ident">validFromStates</label> []<a href="#line-22" class="ident">ConnState</a>, <label for="r15" class="ident">targetState</label> <a href="#line-22" class="ident">ConnState</a>) (<a href="#line-22" class="ident">ConnState</a>, <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-172"><code>	<span class="comment">// Try each valid from state with CAS</span></code></span>
+<span class="codeline" id="line-173"><code><span class="comment">	// This ensures only ONE goroutine can successfully transition at a time</span></code></span>
+<span class="codeline" id="line-174"><code>	<span class="keyword">for</span> <label for="r16" class="ident">_</label>, <label for="r17" class="ident">fromState</label> := <span class="keyword">range</span> <label for="r14" class="ident">validFromStates</label> {</code></span>
+<span class="codeline" id="line-175"><code>		<span class="comment">// Try to atomically swap from fromState to targetState</span></code></span>
+<span class="codeline" id="line-176"><code><span class="comment">		// If successful, we won the race and can proceed</span></code></span>
+<span class="codeline" id="line-177"><code>		<span class="keyword">if</span> <label for="r12" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-156" class="ident">CompareAndSwap</a>(<a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r17" class="ident">fromState</label>), <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r15" class="ident">targetState</label>)) {</code></span>
+<span class="codeline" id="line-178"><code>			<span class="comment">// Success! We transitioned atomically</span></code></span>
+<span class="codeline" id="line-179"><code><span class="comment">			// Hot path optimization: only check for waiters if transition succeeded</span></code></span>
+<span class="codeline" id="line-180"><code><span class="comment">			// This avoids atomic load on every Get/Put when no waiters exist</span></code></span>
+<span class="codeline" id="line-181"><code>			<span class="keyword">if</span> <label for="r12" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-80" class="ident">Load</a>() &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-182"><code>				<label for="r12" class="ident">sm</label>.<a href="#line-285" class="ident">notifyWaiters</a>()</code></span>
+<span class="codeline" id="line-183"><code>			}</code></span>
+<span class="codeline" id="line-184"><code>			<span class="keyword">return</span> <label for="r15" class="ident">targetState</label>, <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-185"><code>		}</code></span>
+<span class="codeline" id="line-186"><code>	}</code></span>
+<span class="codeline" id="line-187"><code></code></span>
+<span class="codeline" id="line-188"><code>	<span class="comment">// All CAS attempts failed - state is not valid for this transition</span></code></span>
+<span class="codeline" id="line-189"><code><span class="comment">	// Return the current state so caller can decide what to do</span></code></span>
+<span class="codeline" id="line-190"><code><span class="comment">	// Note: This error path allocates, but it's the exceptional case</span></code></span>
+<span class="codeline" id="line-191"><code>	<label for="r18" class="ident">currentState</label> := <label for="r12" class="ident">sm</label>.<a href="#line-142" class="ident">GetState</a>()</code></span>
+<span class="codeline" id="line-192"><code>	<span class="keyword">return</span> <label for="r18" class="ident">currentState</label>, <a href="../../../../../../../pkg/fmt.html" class="ident i3">fmt</a>.<a href="../../../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"%w: cannot transition from %s to %s (valid from: %v)"</span>,</code></span>
+<span class="codeline" id="line-193"><code>		<a href="#line-94" class="ident">ErrInvalidStateTransition</a>, <label for="r18" class="ident">currentState</label>, <label for="r15" class="ident">targetState</label>, <label for="r14" class="ident">validFromStates</label>)</code></span>
+<span class="codeline" id="line-194"><code>}</code></span>
+<span class="codeline" id="line-195"><code></code></span>
+<span class="codeline" id="line-196"><code><span class="comment">// Transition unconditionally transitions to the target state.</span></code></span>
+<span class="codeline" id="line-197"><code><span class="comment">// Use with caution - prefer AwaitAndTransition or TryTransition for safety.</span></code></span>
+<span class="codeline" id="line-198"><code><span class="comment">// This is useful for error paths or when you know the transition is valid.</span></code></span>
+<span class="codeline" id="line-199"><code><span class="keyword">func</span> (<label for="r19" class="ident">sm</label> *<a href="#line-118" class="ident">ConnStateMachine</a>) <label for="r20" class="ident">Transition</label>(<label for="r21" class="ident">targetState</label> <a href="#line-22" class="ident">ConnState</a>) {</code></span>
+<span class="codeline" id="line-200"><code>	<label for="r19" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-150" class="ident">Store</a>(<a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r21" class="ident">targetState</label>))</code></span>
+<span class="codeline" id="line-201"><code>	<label for="r19" class="ident">sm</label>.<a href="#line-285" class="ident">notifyWaiters</a>()</code></span>
+<span class="codeline" id="line-202"><code>}</code></span>
+<span class="codeline" id="line-203"><code></code></span>
+<span class="codeline" id="line-204"><code><span class="comment">// AwaitAndTransition waits for the connection to reach one of the valid states,</span></code></span>
+<span class="codeline" id="line-205"><code><span class="comment">// then atomically transitions to the target state.</span></code></span>
+<span class="codeline" id="line-206"><code><span class="comment">// Returns the current state after the transition attempt and an error if the operation failed.</span></code></span>
+<span class="codeline" id="line-207"><code><span class="comment">// The returned state is the CURRENT state (after the attempt), not the previous state.</span></code></span>
+<span class="codeline" id="line-208"><code><span class="comment">// Returns error if timeout expires or context is cancelled.</span></code></span>
+<span class="codeline" id="line-209"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-210"><code><span class="comment">// This method implements FIFO fairness - the first caller to wait gets priority</span></code></span>
+<span class="codeline" id="line-211"><code><span class="comment">// when the state becomes available.</span></code></span>
+<span class="codeline" id="line-212"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-213"><code><span class="comment">// Performance notes:</span></code></span>
+<span class="codeline" id="line-214"><code><span class="comment">// - If already in a valid state, this is very fast (no allocation, no waiting)</span></code></span>
+<span class="codeline" id="line-215"><code><span class="comment">// - If waiting is required, allocates one waiter struct and one channel</span></code></span>
+<span class="codeline" id="line-216"><code><span class="keyword">func</span> (<label for="r22" class="ident">sm</label> *<a href="#line-118" class="ident">ConnStateMachine</a>) <label for="r23" class="ident">AwaitAndTransition</label>(</code></span>
+<span class="codeline" id="line-217"><code>	<label for="r24" class="ident">ctx</label> <a href="../../../../../../../pkg/context.html" class="ident i1">context</a>.<a href="../../../../../../context/context.go.html#line-71" class="ident">Context</a>,</code></span>
+<span class="codeline" id="line-218"><code>	<label for="r25" class="ident">validFromStates</label> []<a href="#line-22" class="ident">ConnState</a>,</code></span>
+<span class="codeline" id="line-219"><code>	<label for="r26" class="ident">targetState</label> <a href="#line-22" class="ident">ConnState</a>,</code></span>
+<span class="codeline" id="line-220"><code>) (<a href="#line-22" class="ident">ConnState</a>, <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-221"><code>	<span class="comment">// Fast path: try immediate transition with CAS to prevent race conditions</span></code></span>
+<span class="codeline" id="line-222"><code><span class="comment">	// BUT: only if there are no waiters in the queue (to maintain FIFO ordering)</span></code></span>
+<span class="codeline" id="line-223"><code>	<span class="keyword">if</span> <label for="r22" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-80" class="ident">Load</a>() == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-224"><code>		<span class="keyword">for</span> <label for="r27" class="ident">_</label>, <label for="r28" class="ident">fromState</label> := <span class="keyword">range</span> <label for="r25" class="ident">validFromStates</label> {</code></span>
+<span class="codeline" id="line-225"><code>			<span class="comment">// Check if we're already in target state</span></code></span>
+<span class="codeline" id="line-226"><code>			<span class="keyword">if</span> <label for="r28" class="ident">fromState</label> == <label for="r26" class="ident">targetState</label> &amp;&amp; <label for="r22" class="ident">sm</label>.<a href="#line-142" class="ident">GetState</a>() == <label for="r26" class="ident">targetState</label> {</code></span>
+<span class="codeline" id="line-227"><code>				<span class="keyword">return</span> <label for="r26" class="ident">targetState</label>, <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-228"><code>			}</code></span>
+<span class="codeline" id="line-229"><code></code></span>
+<span class="codeline" id="line-230"><code>			<span class="comment">// Try to atomically swap from fromState to targetState</span></code></span>
+<span class="codeline" id="line-231"><code>			<span class="keyword">if</span> <label for="r22" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-156" class="ident">CompareAndSwap</a>(<a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r28" class="ident">fromState</label>), <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r26" class="ident">targetState</label>)) {</code></span>
+<span class="codeline" id="line-232"><code>				<span class="comment">// Success! We transitioned atomically</span></code></span>
+<span class="codeline" id="line-233"><code>				<label for="r22" class="ident">sm</label>.<a href="#line-285" class="ident">notifyWaiters</a>()</code></span>
+<span class="codeline" id="line-234"><code>				<span class="keyword">return</span> <label for="r26" class="ident">targetState</label>, <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-235"><code>			}</code></span>
+<span class="codeline" id="line-236"><code>		}</code></span>
+<span class="codeline" id="line-237"><code>	}</code></span>
+<span class="codeline" id="line-238"><code></code></span>
+<span class="codeline" id="line-239"><code>	<span class="comment">// Fast path failed - check if we should wait or fail</span></code></span>
+<span class="codeline" id="line-240"><code>	<label for="r29" class="ident">currentState</label> := <label for="r22" class="ident">sm</label>.<a href="#line-142" class="ident">GetState</a>()</code></span>
+<span class="codeline" id="line-241"><code></code></span>
+<span class="codeline" id="line-242"><code>	<span class="comment">// Check if closed</span></code></span>
+<span class="codeline" id="line-243"><code>	<span class="keyword">if</span> <label for="r29" class="ident">currentState</label> == <a href="#line-42" class="ident">StateClosed</a> {</code></span>
+<span class="codeline" id="line-244"><code>		<span class="keyword">return</span> <label for="r29" class="ident">currentState</label>, <a href="#line-97" class="ident">ErrStateMachineClosed</a></code></span>
+<span class="codeline" id="line-245"><code>	}</code></span>
+<span class="codeline" id="line-246"><code></code></span>
+<span class="codeline" id="line-247"><code>	<span class="comment">// Slow path: need to wait for state change</span></code></span>
+<span class="codeline" id="line-248"><code><span class="comment">	// Create waiter with valid states map for fast lookup</span></code></span>
+<span class="codeline" id="line-249"><code>	<label for="r30" class="ident">validStatesMap</label> := <a href="../../../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="#line-22" class="ident">ConnState</a>]<span class="keyword">struct</span>{}, <a href="../../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r25" class="ident">validFromStates</label>))</code></span>
+<span class="codeline" id="line-250"><code>	<span class="keyword">for</span> <label for="r31" class="ident">_</label>, <label for="r32" class="ident">s</label> := <span class="keyword">range</span> <label for="r25" class="ident">validFromStates</label> {</code></span>
+<span class="codeline" id="line-251"><code>		<label for="r30" class="ident">validStatesMap</label>[<label for="r32" class="ident">s</label>] = <span class="keyword">struct</span>{}{}</code></span>
+<span class="codeline" id="line-252"><code>	}</code></span>
+<span class="codeline" id="line-253"><code></code></span>
+<span class="codeline" id="line-254"><code>	<label for="r33" class="ident">w</label> := &amp;<a href="#line-105" class="ident">waiter</a>{</code></span>
+<span class="codeline" id="line-255"><code>		<a href="#line-106" class="ident">validStates</a>: <label for="r30" class="ident">validStatesMap</label>,</code></span>
+<span class="codeline" id="line-256"><code>		<a href="#line-107" class="ident">targetState</a>: <label for="r26" class="ident">targetState</label>,</code></span>
+<span class="codeline" id="line-257"><code>		<a href="#line-108" class="ident">done</a>:        <a href="../../../../../../runtime/chan.go.html#line-75">make</a>(<span class="keyword">chan</span> <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>, <span class="lit-number">1</span>), <span class="comment">// Buffered to avoid goroutine leak</span></code></span>
+<span class="codeline" id="line-258"><code>	}</code></span>
+<span class="codeline" id="line-259"><code></code></span>
+<span class="codeline" id="line-260"><code>	<span class="comment">// Add to FIFO queue</span></code></span>
+<span class="codeline" id="line-261"><code>	<label for="r22" class="ident">sm</label>.<a href="#line-123" class="ident">mu</a>.<a href="../../../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-262"><code>	<label for="r34" class="ident">elem</label> := <label for="r22" class="ident">sm</label>.<a href="#line-124" class="ident">waiters</a>.<a href="../../../../../../container/list/list.go.html#line-150" class="ident">PushBack</a>(<label for="r33" class="ident">w</label>)</code></span>
+<span class="codeline" id="line-263"><code>	<label for="r22" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-94" class="ident">Add</a>(<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-264"><code>	<label for="r22" class="ident">sm</label>.<a href="#line-123" class="ident">mu</a>.<a href="../../../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-265"><code></code></span>
+<span class="codeline" id="line-266"><code>	<span class="comment">// Wait for state change or timeout</span></code></span>
+<span class="codeline" id="line-267"><code>	<a href="../../../../../../runtime/select.go.html#line-122"><span class="keyword">select</span></a> {</code></span>
+<span class="codeline" id="line-268"><code>	<span class="keyword">case</span> <a href="../../../../../../runtime/chan.go.html#line-508">&lt;-</a><label for="r24" class="ident">ctx</label>.<a href="../../../../../../context/context.go.html#line-108" class="ident">Done</a>():</code></span>
+<span class="codeline" id="line-269"><code>		<span class="comment">// Timeout or cancellation - remove from queue</span></code></span>
+<span class="codeline" id="line-270"><code>		<label for="r22" class="ident">sm</label>.<a href="#line-123" class="ident">mu</a>.<a href="../../../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-271"><code>		<label for="r22" class="ident">sm</label>.<a href="#line-124" class="ident">waiters</a>.<a href="../../../../../../container/list/list.go.html#line-134" class="ident">Remove</a>(<label for="r34" class="ident">elem</label>)</code></span>
+<span class="codeline" id="line-272"><code>		<label for="r22" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-94" class="ident">Add</a>(-<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-273"><code>		<label for="r22" class="ident">sm</label>.<a href="#line-123" class="ident">mu</a>.<a href="../../../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-274"><code>		<span class="keyword">return</span> <label for="r22" class="ident">sm</label>.<a href="#line-142" class="ident">GetState</a>(), <label for="r24" class="ident">ctx</label>.<a href="../../../../../../context/context.go.html#line-115" class="ident">Err</a>()</code></span>
+<span class="codeline" id="line-275"><code>	<span class="keyword">case</span> <label for="r35" class="ident">err</label> := <a href="../../../../../../runtime/chan.go.html#line-508">&lt;-</a><label for="r33" class="ident">w</label>.<a href="#line-108" class="ident">done</a>:</code></span>
+<span class="codeline" id="line-276"><code>		<span class="comment">// Transition completed (or failed)</span></code></span>
+<span class="codeline" id="line-277"><code><span class="comment">		// Note: waiterCount is decremented either in notifyWaiters (when the waiter is notified and removed)</span></code></span>
+<span class="codeline" id="line-278"><code><span class="comment">		// or here (on timeout/cancellation).</span></code></span>
+<span class="codeline" id="line-279"><code>		<span class="keyword">return</span> <label for="r22" class="ident">sm</label>.<a href="#line-142" class="ident">GetState</a>(), <label for="r35" class="ident">err</label></code></span>
+<span class="codeline" id="line-280"><code>	}</code></span>
+<span class="codeline" id="line-281"><code>}</code></span>
+<span class="codeline" id="line-282"><code></code></span>
+<span class="codeline" id="line-283"><code><span class="comment">// notifyWaiters checks if any waiters can proceed and notifies them in FIFO order.</span></code></span>
+<span class="codeline" id="line-284"><code><span class="comment">// This is called after every state transition.</span></code></span>
+<span class="codeline" id="line-285"><code><span class="keyword">func</span> (<label for="r36" class="ident">sm</label> *<a href="#line-118" class="ident">ConnStateMachine</a>) <label for="r37" class="ident">notifyWaiters</label>() {</code></span>
+<span class="codeline" id="line-286"><code>	<span class="comment">// Fast path: check atomic counter without acquiring lock</span></code></span>
+<span class="codeline" id="line-287"><code><span class="comment">	// This eliminates mutex overhead in the common case (no waiters)</span></code></span>
+<span class="codeline" id="line-288"><code>	<span class="keyword">if</span> <label for="r36" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-80" class="ident">Load</a>() == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-289"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-290"><code>	}</code></span>
+<span class="codeline" id="line-291"><code></code></span>
+<span class="codeline" id="line-292"><code>	<label for="r36" class="ident">sm</label>.<a href="#line-123" class="ident">mu</a>.<a href="../../../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-293"><code>	<span class="keyword">defer</span> <label for="r36" class="ident">sm</label>.<a href="#line-123" class="ident">mu</a>.<a href="../../../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-294"><code></code></span>
+<span class="codeline" id="line-295"><code>	<span class="comment">// Double-check after acquiring lock (waiters might have been processed)</span></code></span>
+<span class="codeline" id="line-296"><code>	<span class="keyword">if</span> <label for="r36" class="ident">sm</label>.<a href="#line-124" class="ident">waiters</a>.<a href="../../../../../../container/list/list.go.html#line-66" class="ident">Len</a>() == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-297"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-298"><code>	}</code></span>
+<span class="codeline" id="line-299"><code></code></span>
+<span class="codeline" id="line-300"><code>	<span class="comment">// Process waiters in FIFO order until no more can be processed</span></code></span>
+<span class="codeline" id="line-301"><code><span class="comment">	// We loop instead of recursing to avoid stack overflow and mutex issues</span></code></span>
+<span class="codeline" id="line-302"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-303"><code>		<label for="r38" class="ident">processed</label> := <a href="../../../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-304"><code></code></span>
+<span class="codeline" id="line-305"><code>		<span class="comment">// Find the first waiter that can proceed</span></code></span>
+<span class="codeline" id="line-306"><code>		<span class="keyword">for</span> <label for="r39" class="ident">elem</label> := <label for="r36" class="ident">sm</label>.<a href="#line-124" class="ident">waiters</a>.<a href="../../../../../../container/list/list.go.html#line-69" class="ident">Front</a>(); <label for="r39" class="ident">elem</label> != <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>; <label for="r39" class="ident">elem</label> = <label for="r39" class="ident">elem</label>.<a href="../../../../../../container/list/list.go.html#line-31" class="ident">Next</a>() {</code></span>
+<span class="codeline" id="line-307"><code>			<label for="r40" class="ident">w</label> := <label for="r39" class="ident">elem</label>.<a href="../../../../../../container/list/list.go.html#line-27" class="ident">Value</a>.(*<a href="#line-105" class="ident">waiter</a>)</code></span>
+<span class="codeline" id="line-308"><code></code></span>
+<span class="codeline" id="line-309"><code>			<span class="comment">// Read current state inside the loop to get the latest value</span></code></span>
+<span class="codeline" id="line-310"><code>			<label for="r41" class="ident">currentState</label> := <label for="r36" class="ident">sm</label>.<a href="#line-142" class="ident">GetState</a>()</code></span>
+<span class="codeline" id="line-311"><code></code></span>
+<span class="codeline" id="line-312"><code>			<span class="comment">// Check if current state is valid for this waiter</span></code></span>
+<span class="codeline" id="line-313"><code>			<span class="keyword">if</span> <label for="r42" class="ident">_</label>, <label for="r43" class="ident">valid</label> := <label for="r40" class="ident">w</label>.<a href="#line-106" class="ident">validStates</a>[<label for="r41" class="ident">currentState</label>]; <label for="r43" class="ident">valid</label> {</code></span>
+<span class="codeline" id="line-314"><code>				<span class="comment">// Remove from queue first</span></code></span>
+<span class="codeline" id="line-315"><code>				<label for="r36" class="ident">sm</label>.<a href="#line-124" class="ident">waiters</a>.<a href="../../../../../../container/list/list.go.html#line-134" class="ident">Remove</a>(<label for="r39" class="ident">elem</label>)</code></span>
+<span class="codeline" id="line-316"><code>				<label for="r36" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-94" class="ident">Add</a>(-<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-317"><code></code></span>
+<span class="codeline" id="line-318"><code>				<span class="comment">// Use CAS to ensure state hasn't changed since we checked</span></code></span>
+<span class="codeline" id="line-319"><code><span class="comment">				// This prevents race condition where another thread changes state</span></code></span>
+<span class="codeline" id="line-320"><code><span class="comment">				// between our check and our transition</span></code></span>
+<span class="codeline" id="line-321"><code>				<span class="keyword">if</span> <label for="r36" class="ident">sm</label>.<a href="#line-120" class="ident">state</a>.<a href="../../../../../../sync/atomic/type.go.html#line-156" class="ident">CompareAndSwap</a>(<a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r41" class="ident">currentState</label>), <a href="../../../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r40" class="ident">w</label>.<a href="#line-107" class="ident">targetState</a>)) {</code></span>
+<span class="codeline" id="line-322"><code>					<span class="comment">// Successfully transitioned - notify waiter</span></code></span>
+<span class="codeline" id="line-323"><code>					<label for="r40" class="ident">w</label>.<a href="#line-108" class="ident">done</a> &lt;- <a href="../../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-324"><code>					<label for="r38" class="ident">processed</label> = <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-325"><code>					<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-326"><code>				} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-327"><code>					<span class="comment">// State changed - re-add waiter to front of queue to maintain FIFO ordering</span></code></span>
+<span class="codeline" id="line-328"><code><span class="comment">					// This waiter was first in line and should retain priority</span></code></span>
+<span class="codeline" id="line-329"><code>					<label for="r36" class="ident">sm</label>.<a href="#line-124" class="ident">waiters</a>.<a href="../../../../../../container/list/list.go.html#line-144" class="ident">PushFront</a>(<label for="r40" class="ident">w</label>)</code></span>
+<span class="codeline" id="line-330"><code>					<label for="r36" class="ident">sm</label>.<a href="#line-125" class="ident">waiterCount</a>.<a href="../../../../../../sync/atomic/type.go.html#line-94" class="ident">Add</a>(<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-331"><code>					<span class="comment">// Continue to next iteration to re-read state</span></code></span>
+<span class="codeline" id="line-332"><code>					<label for="r38" class="ident">processed</label> = <a href="../../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-333"><code>					<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-334"><code>				}</code></span>
+<span class="codeline" id="line-335"><code>			}</code></span>
+<span class="codeline" id="line-336"><code>		}</code></span>
+<span class="codeline" id="line-337"><code></code></span>
+<span class="codeline" id="line-338"><code>		<span class="comment">// If we didn't process any waiter, we're done</span></code></span>
+<span class="codeline" id="line-339"><code>		<span class="keyword">if</span> !<label for="r38" class="ident">processed</label> {</code></span>
+<span class="codeline" id="line-340"><code>			<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-341"><code>		}</code></span>
+<span class="codeline" id="line-342"><code>	}</code></span>
+<span class="codeline" id="line-343"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

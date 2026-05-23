@@ -1,3 +1,4 @@
+// Package grpcApp sets up the gRPC server for the Recommendation Service.
 package grpcApp
 
 import (
@@ -12,6 +13,7 @@ import (
 	grpcUserDataProvider "recommendationService/internal/grpc/userDataProvider"
 )
 
+// ParsingChannelsProvider defines operations for parsing channel management.
 type ParsingChannelsProvider interface {
 	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
 	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
@@ -31,12 +33,14 @@ type NewsDataProvider interface {
 	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
 
+// App represents the gRPC server for the Recommendation Service.
 type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
 	port       int
 }
 
+// New creates a new gRPC App with the given service providers.
 func New(log *slog.Logger, userDataProvider userDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsDataProvider NewsDataProvider, port int) *App {
 	gRPCServer := grpc.NewServer()
 	grpcUserDataProvider.Register(gRPCServer, userDataProvider, parsingChannelsProvider, newsDataProvider)
@@ -49,12 +53,14 @@ func New(log *slog.Logger, userDataProvider userDataProvider, parsingChannelsPro
 	}
 }
 
+// MustRun starts the gRPC server and panics on error.
 func (a *App) MustRun() {
 	if err := a.Run(); err != nil {
 		panic(err)
 	}
 }
 
+// Run starts the gRPC server on the configured port.
 func (a *App) Run() error {
 	const op = "grpcApp.Run"
 	log := a.log.With(
@@ -76,6 +82,7 @@ func (a *App) Run() error {
 	return nil
 }
 
+// Stop gracefully stops the gRPC server.
 func (a *App) Stop() {
 	const op = "grpcApp"
 

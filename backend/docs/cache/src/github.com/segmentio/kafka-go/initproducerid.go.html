@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: initproducerid.go in package github.com/segmentio/kafka-go</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	initproducerid.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> kafka</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"fmt"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"net"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"time"</span></label></code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i4"><span class="lit-string i4">"github.com/segmentio/kafka-go/protocol/initproducerid"</span></label></code></span>
+<span class="codeline" id="line-10"><code>)</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// InitProducerIDRequest is the request structure for the InitProducerId function.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InitProducerIDRequest" class="ident">InitProducerIDRequest</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-14"><code>	<span class="comment">// Address of the kafka broker to send the request to.</span></code></span>
+<span class="codeline" id="line-15"><code>	Addr <a href="../../../../pkg/net.html" class="ident i2">net</a>.<a href="../../../net/net.go.html#line-116" class="ident">Addr</a></code></span>
+<span class="codeline" id="line-16"><code></code></span>
+<span class="codeline" id="line-17"><code>	<span class="comment">// The transactional id key.</span></code></span>
+<span class="codeline" id="line-18"><code>	TransactionalID <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code>	<span class="comment">// Time after which a transaction should time out</span></code></span>
+<span class="codeline" id="line-21"><code>	TransactionTimeoutMs <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code>	<span class="comment">// The Producer ID (PID).</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	// This is used to disambiguate requests if a transactional id is reused following its expiration.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">	// Only supported in version &gt;=3 of the request, will be ignore otherwise.</span></code></span>
+<span class="codeline" id="line-26"><code>	ProducerID <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	<span class="comment">// The producer's current epoch.</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">	// This will be checked against the producer epoch on the broker,</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">	// and the request will return an error if they do not match.</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">	// Only supported in version &gt;=3 of the request, will be ignore otherwise.</span></code></span>
+<span class="codeline" id="line-32"><code>	ProducerEpoch <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-33"><code>}</code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">// ProducerSession contains useful information about the producer session from the broker's response.</span></code></span>
+<span class="codeline" id="line-36"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-ProducerSession" class="ident">ProducerSession</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-37"><code>	<span class="comment">// The Producer ID (PID) for the current producer session</span></code></span>
+<span class="codeline" id="line-38"><code>	ProducerID <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code>	<span class="comment">// The epoch associated with the current producer session for the given PID</span></code></span>
+<span class="codeline" id="line-41"><code>	ProducerEpoch <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-42"><code>}</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// InitProducerIDResponse is the response structure for the InitProducerId function.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-InitProducerIDResponse" class="ident">InitProducerIDResponse</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-46"><code>	<span class="comment">// The Transaction/Group Coordinator details</span></code></span>
+<span class="codeline" id="line-47"><code>	Producer *<a href="#line-36" class="ident">ProducerSession</a></code></span>
+<span class="codeline" id="line-48"><code></code></span>
+<span class="codeline" id="line-49"><code>	<span class="comment">// The amount of time that the broker throttled the request.</span></code></span>
+<span class="codeline" id="line-50"><code>	Throttle <a href="../../../../pkg/time.html" class="ident i3">time</a>.<a href="../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-51"><code></code></span>
+<span class="codeline" id="line-52"><code>	<span class="comment">// An error that may have occurred while attempting to retrieve initProducerId</span></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">	// The error contains both the kafka error code, and an error message</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">	// returned by the kafka broker.</span></code></span>
+<span class="codeline" id="line-56"><code>	Error <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-57"><code>}</code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">// InitProducerID sends a initProducerId request to a kafka broker and returns the</span></code></span>
+<span class="codeline" id="line-60"><code><span class="comment">// response.</span></code></span>
+<span class="codeline" id="line-61"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> *<a href="client.go.html#line-28" class="ident">Client</a>) <label for="r1" class="ident">InitProducerID</label>(<label for="r2" class="ident">ctx</label> <a href="../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r3" class="ident">req</label> *<a href="#line-13" class="ident">InitProducerIDRequest</a>) (*<a href="#line-45" class="ident">InitProducerIDResponse</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-62"><code>	<label for="r4" class="ident">m</label>, <label for="r5" class="ident">err</label> := <label for="r0" class="ident">c</label>.<a href="client.go.html#line-102" class="ident">roundTrip</a>(<label for="r2" class="ident">ctx</label>, <label for="r3" class="ident">req</label>.<a href="#line-15" class="ident">Addr</a>, &amp;<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/initproducerid.html" class="ident i4">initproducerid</a>.<a href="protocol/initproducerid/initproducerid.go.html#line-9" class="ident">Request</a>{</code></span>
+<span class="codeline" id="line-63"><code>		<a href="protocol/initproducerid/initproducerid.go.html#line-14" class="ident">TransactionalID</a>:      <label for="r3" class="ident">req</label>.<a href="#line-18" class="ident">TransactionalID</a>,</code></span>
+<span class="codeline" id="line-64"><code>		<a href="protocol/initproducerid/initproducerid.go.html#line-15" class="ident">TransactionTimeoutMs</a>: <a href="../../../../pkg/builtin.html#name-int32" class="ident">int32</a>(<label for="r3" class="ident">req</label>.<a href="#line-21" class="ident">TransactionTimeoutMs</a>),</code></span>
+<span class="codeline" id="line-65"><code>		<a href="protocol/initproducerid/initproducerid.go.html#line-16" class="ident">ProducerID</a>:           <a href="../../../../pkg/builtin.html#name-int64" class="ident">int64</a>(<label for="r3" class="ident">req</label>.<a href="#line-26" class="ident">ProducerID</a>),</code></span>
+<span class="codeline" id="line-66"><code>		<a href="protocol/initproducerid/initproducerid.go.html#line-17" class="ident">ProducerEpoch</a>:        <a href="../../../../pkg/builtin.html#name-int16" class="ident">int16</a>(<label for="r3" class="ident">req</label>.<a href="#line-32" class="ident">ProducerEpoch</a>),</code></span>
+<span class="codeline" id="line-67"><code>	})</code></span>
+<span class="codeline" id="line-68"><code>	<span class="keyword">if</span> <label for="r5" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-69"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"kafka.(*Client).InitProducerId: %w"</span>, <label for="r5" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-70"><code>	}</code></span>
+<span class="codeline" id="line-71"><code></code></span>
+<span class="codeline" id="line-72"><code>	<label for="r6" class="ident">res</label> := <label for="r4" class="ident">m</label>.(*<a href="../../../../pkg/github.com/segmentio/kafka-go/protocol/initproducerid.html" class="ident i4">initproducerid</a>.<a href="protocol/initproducerid/initproducerid.go.html#line-26" class="ident">Response</a>)</code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code>	<span class="keyword">return</span> &amp;<a href="#line-45" class="ident">InitProducerIDResponse</a>{</code></span>
+<span class="codeline" id="line-75"><code>		<a href="#line-47" class="ident">Producer</a>: &amp;<a href="#line-36" class="ident">ProducerSession</a>{</code></span>
+<span class="codeline" id="line-76"><code>			<a href="#line-38" class="ident">ProducerID</a>:    <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r6" class="ident">res</label>.<a href="protocol/initproducerid/initproducerid.go.html#line-33" class="ident">ProducerID</a>),</code></span>
+<span class="codeline" id="line-77"><code>			<a href="#line-41" class="ident">ProducerEpoch</a>: <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r6" class="ident">res</label>.<a href="protocol/initproducerid/initproducerid.go.html#line-34" class="ident">ProducerEpoch</a>),</code></span>
+<span class="codeline" id="line-78"><code>		},</code></span>
+<span class="codeline" id="line-79"><code>		<a href="#line-50" class="ident">Throttle</a>: <a href="time.go.html#line-28" class="ident">makeDuration</a>(<label for="r6" class="ident">res</label>.<a href="protocol/initproducerid/initproducerid.go.html#line-31" class="ident">ThrottleTimeMs</a>),</code></span>
+<span class="codeline" id="line-80"><code>		<a href="#line-56" class="ident">Error</a>:    <a href="error.go.html#line-667" class="ident">makeError</a>(<label for="r6" class="ident">res</label>.<a href="protocol/initproducerid/initproducerid.go.html#line-32" class="ident">ErrorCode</a>, <span class="lit-string">""</span>),</code></span>
+<span class="codeline" id="line-81"><code>	}, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-82"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
