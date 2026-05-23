@@ -22,4 +22,4 @@ USER appuser
 
 EXPOSE 44042
 
-CMD ["python", "src/main.py"]
+CMD sh -c "xray version && xray run -c /app/vpn.json > /dev/null 2>&1 & sleep 3 && python3 src/main.py"
