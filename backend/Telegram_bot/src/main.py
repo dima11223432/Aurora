@@ -9,6 +9,8 @@ from aiogram.enums import ParseMode
 from aiogram.filters import CommandStart
 from aiogram.types import Message
 from aiogram.filters import CommandStart
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiohttp_socks import ProxyConnector
 from aiogram.types import (
     Message,
     InlineKeyboardMarkup,
