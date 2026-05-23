@@ -135,6 +135,8 @@ parts/
 sdist/
 var/
 venv/
+*venv/
+__pycache__/
 wheels/
 share/python-wheels/
 *.egg-info/
