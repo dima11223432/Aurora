@@ -1,3 +1,6 @@
+// Package grpc implements the gRPC server for the API Gateway service.
+// It defines the ApiService struct that handles incoming gRPC requests,
+// delegating business logic to the Auth and RecommendationService interfaces.
 package grpc
 
 import (
@@ -16,6 +19,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// Auth defines the authentication operations available to the gRPC handler.
 type Auth interface {
 	Login(ctx context.Context, telegram_id int64, username string, firstName string, lastName string, appId int64) (string, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
@@ -25,6 +29,7 @@ type Auth interface {
 	IsAdminByContext(ctx context.Context) (bool, error)
 }
 
+// RecommendationService defines the recommendation operations available to the gRPC handler.
 type RecommendationService interface {
 	GetUserRecommendatedPosts(ctx context.Context, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
@@ -37,12 +42,15 @@ type RecommendationService interface {
 	GetAllDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error)
 }
 
+// ApiService implements the v1.ApiServiceServer gRPC interface.
+// It delegates requests to the Auth and RecommendationService layers.
 type ApiService struct {
 	v1.UnimplementedApiServiceServer
 	recommendationService RecommendationService
 	auth                  Auth
 }
 
+// RegisterGrpcServer registers the ApiService with the given gRPC server.
 func RegisterGrpcServer(gRPC *grpc.Server, auth Auth, recommendationService RecommendationService) {
 	v1.RegisterApiServiceServer(gRPC, &ApiService{
 		auth:                  auth,
@@ -50,6 +58,7 @@ func RegisterGrpcServer(gRPC *grpc.Server, auth Auth, recommendationService Reco
 	})
 }
 
+// Login handles user login requests via gRPC.
 func (a *ApiService) Login(
 	ctx context.Context,
 	req *v1.LoginRequest,
@@ -73,6 +82,7 @@ func (a *ApiService) Login(
 	}, nil
 }
 
+// DeletePriorityChannels handles priority channel deletion requests via gRPC.
 func (a *ApiService) DeletePriorityChannels(
 	ctx context.Context,
 	req *v1.DeletePriorityChannelRequest,
@@ -84,6 +94,7 @@ func (a *ApiService) DeletePriorityChannels(
 	return &v1.DeletePriorityChannelResponse{}, nil
 }
 
+// SetPriorityChannels handles priority channel setting requests via gRPC.
 func (a *ApiService) SetPriorityChannels(
 	ctx context.Context,
 	req *v1.SetPriorityChannelsRequest,
@@ -101,6 +112,7 @@ func (a *ApiService) SetPriorityChannels(
 	return &v1.SetPriorityChannelsResponse{}, nil
 }
 
+// IsAdmin handles admin status check requests via gRPC.
 func (a *ApiService) IsAdmin(
 	ctx context.Context,
 	req *v1.IsAdminRequest,
@@ -115,6 +127,7 @@ func (a *ApiService) IsAdmin(
 	}, nil
 }
 
+// GetRecommendatedPosts handles recommended posts retrieval via gRPC.
 func (a *ApiService) GetRecommendatedPosts(
 	ctx context.Context,
 	req *v1.GetRecommendatedPostsRequest,
@@ -162,6 +175,7 @@ func (a *ApiService) GetRecommendatedPosts(
 	}, nil
 }
 
+// GetAllUserCustomParsingChannels handles retrieval of user custom parsing channels via gRPC.
 func (a *ApiService) GetAllUserCustomParsingChannels(
 	ctx context.Context,
 	_ *v1.GetAllUserCustomParsingChannelsRequest,
@@ -175,6 +189,7 @@ func (a *ApiService) GetAllUserCustomParsingChannels(
 	}, nil
 }
 
+// GetAllDefaultParsingChannels handles retrieval of all default parsing channels via gRPC.
 func (a *ApiService) GetAllDefaultParsingChannels(
 	ctx context.Context,
 	_ *v1.GetAllDefaultParsingChannelsRequest,
@@ -189,6 +204,7 @@ func (a *ApiService) GetAllDefaultParsingChannels(
 	}, nil
 }
 
+// AddNewUserCustomParsingChannel handles adding a new user custom parsing channel via gRPC.
 func (a *ApiService) AddNewUserCustomParsingChannel(
 	ctx context.Context,
 	req *v1.AddNewUserCustomParsingChannelRequest,
@@ -204,6 +220,8 @@ func (a *ApiService) AddNewUserCustomParsingChannel(
 	return &v1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
+// AddNewDefaultParsingChannel handles adding a new default parsing channel via gRPC.
+// Requires admin privileges.
 func (a *ApiService) AddNewDefaultParsingChannel(
 	ctx context.Context,
 	req *v1.AddNewDefaultParsingChannelRequest,
@@ -225,6 +243,7 @@ func (a *ApiService) AddNewDefaultParsingChannel(
 	return &v1.AddNewDefaultParsingChannelResponse{}, nil
 }
 
+// DeleteUserCustomParsingChannel handles deletion of a user custom parsing channel via gRPC.
 func (a *ApiService) DeleteUserCustomParsingChannel(
 	ctx context.Context,
 	req *v1.DeleteUserCustomParsingChannelRequest,
@@ -236,6 +255,8 @@ func (a *ApiService) DeleteUserCustomParsingChannel(
 	return &v1.DeleteUserCustomParsingChannelResponse{}, nil
 }
 
+// DeleteDefaultParsingChannel handles deletion of a default parsing channel via gRPC.
+// Requires admin privileges.
 func (a *ApiService) DeleteDefaultParsingChannel(
 	ctx context.Context,
 	req *v1.DeleteDefaultParsingChannelRequest,
@@ -255,6 +276,7 @@ func (a *ApiService) DeleteDefaultParsingChannel(
 	return &v1.DeleteDefaultParsingChannelResponse{}, nil
 }
 
+// GetUserPriorityChannels handles retrieval of user priority channels via gRPC.
 func (a *ApiService) GetUserPriorityChannels(
 	ctx context.Context,
 	_ *v1.GetUserPriorityChannelsRequest,
@@ -269,6 +291,8 @@ func (a *ApiService) GetUserPriorityChannels(
 	}, nil
 }
 
+// GetAllDefaultParsingChannelsWithCategories handles retrieval of default parsing
+// channels grouped by category via gRPC.
 func (a *ApiService) GetAllDefaultParsingChannelsWithCategories(
 	ctx context.Context,
 	_ *v1.GetAllDefaultParsingChannelsWithCategoriesRequest,
@@ -291,6 +315,7 @@ func (a *ApiService) GetAllDefaultParsingChannelsWithCategories(
 	}, nil
 }
 
+// ConnectWallet handles wallet connection requests via gRPC.
 func (a *ApiService) ConnectWallet(
 	ctx context.Context,
 	req *v1.ConnectWalletRequest,

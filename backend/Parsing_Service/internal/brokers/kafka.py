@@ -1,4 +1,8 @@
-"""Kafka producer and consumer controller."""
+"""Kafka producer and consumer controller for the Parser Service.
+
+Provides message production to Kafka topics and offset-based
+retrieval of first/last messages from topics.
+"""
 
 import json
 import os
@@ -13,9 +17,23 @@ load_dotenv(env_path)
 
 
 class KafkaController:
-    """Kafka controller for producing and consuming messages."""
+    """Kafka controller for producing and consuming messages.
+
+    Attributes:
+        log: Logger instance.
+        producer: Confluent Kafka Producer.
+        consumer: Confluent Kafka Consumer (for offset inspection).
+    """
 
     def __init__(self, logger):
+        """Initialize Kafka producer and consumer.
+
+        Args:
+            logger: Logger instance.
+
+        Raises:
+            Exception: If Kafka client initialization fails.
+        """
         self.log = logger
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
 
@@ -42,7 +60,12 @@ class KafkaController:
             raise
 
     def _delivery_report(self, err, msg):
-        """Callback for message delivery reports."""
+        """Callback for message delivery reports.
+
+        Args:
+            err: Error if delivery failed, else None.
+            msg: Delivered message.
+        """
         if err is not None:
             self.log.error(f"Message delivery failed: {err}")
         else:
@@ -51,7 +74,16 @@ class KafkaController:
     def send_message(
         self, topic: str, message: TelegramPost, immediate: bool = False
     ) -> None:
-        """Send message to Kafka topic."""
+        """Send a TelegramPost message to a Kafka topic.
+
+        Args:
+            topic: Kafka topic name.
+            message: TelegramPost instance to send.
+            immediate: Whether to flush immediately.
+
+        Raises:
+            Exception: If producing fails.
+        """
         try:
             data = message.to_dict() if hasattr(message, "to_dict") else message
             self.producer.produce(
@@ -68,7 +100,15 @@ class KafkaController:
             raise
 
     def _fetch_from_offsets(self, topic: str, target_type: str = "last") -> dict:
-        """Fetch messages from first or last offsets."""
+        """Fetch messages from first or last offsets of each partition.
+
+        Args:
+            topic: Kafka topic name.
+            target_type: ``"first"`` or ``"last"``.
+
+        Returns:
+            dict: Partition -> message data mapping.
+        """
         result = {}
         try:
             metadata = self.consumer.list_topics(topic, timeout=10.0)
@@ -105,9 +145,23 @@ class KafkaController:
             self.consumer.unassign()
 
     def get_last_message(self, topic: str) -> dict:
-        """Get last message from topic."""
+        """Get the last message from each partition of a topic.
+
+        Args:
+            topic: Kafka topic name.
+
+        Returns:
+            dict: Partition -> message data.
+        """
         return self._fetch_from_offsets(topic, "last")
 
     def get_first_message(self, topic: str) -> dict:
-        """Get first message from topic."""
+        """Get the first message from each partition of a topic.
+
+        Args:
+            topic: Kafka topic name.
+
+        Returns:
+            dict: Partition -> message data.
+        """
         return self._fetch_from_offsets(topic, "first")

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: API_Service/internal/app/grpc</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>grpc</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-API_Service/internal/app/grpc">API_Service/internal/app/grpc</a><i> (on <a href="https://pkg.go.dev/API_Service/internal/app/grpc" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/API_Service^d53e1/internal/app/grpc.html">15 packages</a>, and imported by <a href="../../../../dep/API_Service^d53e1/internal/app/grpc.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#doc">d</a> <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html">app.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package grpc sets up the gRPC server for the API Gateway, including
+		authentication interceptor and connections to SSO and Recommendation services.</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-App" data-popularity="225">	<input type='checkbox' class="fold" id="App-fold-content"><label for="App-fold-content"> type <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-27">App</a> <i>(struct)</i></label><span id='App-fold-content-docs' class="fold-docs">
+<span class="md-text">		App represents the gRPC server application with its dependencies.</span>
+
+		<input type='checkbox' class="fold" id="App-fold-fields"><label for="App-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='App-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="App-showhide-fields"><i><label for="App-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="App-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-29">gRPC</a> <i>*<a href="../../../google.golang.org/grpc.html">grpc</a>.<a href="../../../google.golang.org/grpc.html#name-Server">Server</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-28">log</a> <i>*<a href="../../../log/slog.html">slog</a>.<a href="../../../log/slog.html#name-Logger">Logger</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-30">port</a> <i><a href="../../../builtin.html#name-int">int</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="App-fold-methods"><label for="App-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='App-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="App-fold-method-Close"><label for="App-fold-method-Close">(*App) <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-103">Close</a>()</label><span id='App-fold-method-Close-docs' class="fold-docs">
+<span class="md-text">				Close gracefully stops the gRPC server.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="App-fold-method-MustRun"><label for="App-fold-method-MustRun">(*App) <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-76">MustRun</a>()</label><span id='App-fold-method-MustRun-docs' class="fold-docs">
+<span class="md-text">				MustRun starts the gRPC server and panics on error.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="App-fold-method-Run"><label for="App-fold-method-Run">(*App) <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-84">Run</a>() <a href="../../../builtin.html#name-error">error</a></label><span id='App-fold-method-Run-docs' class="fold-docs">
+<span class="md-text">				Run starts the gRPC server on the configured port.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="App-fold-results"><label for="App-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='App-fold-results-items' class="fold-items"><span>
+			func <a href="#name-New">New</a>(port <a href="../../../builtin.html#name-int">int</a>, logger *<a href="../../../log/slog.html">slog</a>.<a href="../../../log/slog.html#name-Logger">Logger</a>, jwtSecret <a href="../../../builtin.html#name-string">string</a>, publicRoutes []<a href="../../../builtin.html#name-string">string</a>, ssoConfig <a href="../config.html">config</a>.<a href="../config.html#name-ServiceConfig">ServiceConfig</a>, recsConfig <a href="../config.html">config</a>.<a href="../config.html#name-ServiceConfig">ServiceConfig</a>) *<b>App</b></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-New">	<input type='checkbox' class="fold" id="New-fold-content"><label for="New-fold-content"> func <a href="../../../../src/API_Service^d53e1/internal/app/grpc/app.go.html#line-35">New</a>(port <a href="../../../builtin.html#name-int">int</a>, logger *<a href="../../../log/slog.html">slog</a>.<a href="../../../log/slog.html#name-Logger">Logger</a>, jwtSecret <a href="../../../builtin.html#name-string">string</a>, publicRoutes []<a href="../../../builtin.html#name-string">string</a>, ssoConfig <a href="../config.html">config</a>.<a href="../config.html#name-ServiceConfig">ServiceConfig</a>, recsConfig <a href="../config.html">config</a>.<a href="../config.html#name-ServiceConfig">ServiceConfig</a>) *<a href="#name-App">App</a></label><span id='New-fold-content-docs' class="fold-docs">
+<span class="md-text">		New creates a new gRPC App, initializing the gRPC server with auth interceptor,
+		and establishing connections to SSO and Recommendation services.</span>
+
+</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

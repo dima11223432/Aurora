@@ -1,3 +1,4 @@
+// Package grpcApp sets up the gRPC server for the SSO service.
 package grpcApp
 
 import (
@@ -10,12 +11,14 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+// App represents the gRPC server for the SSO service.
 type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
 	port       int
 }
 
+// New creates a new gRPC server App with the given auth service.
 func New(log *slog.Logger, authService grpcauth.Auth, port int) *App {
 	gRPCServer := grpc.NewServer()
 	grpcauth.Register(gRPCServer, authService)
@@ -28,12 +31,14 @@ func New(log *slog.Logger, authService grpcauth.Auth, port int) *App {
 	}
 }
 
+// MustRun starts the gRPC server and panics on error.
 func (a *App) MustRun() {
 	if err := a.Run(); err != nil {
 		panic(err)
 	}
 }
 
+// Run starts the gRPC server on the configured port.
 func (a *App) Run() error {
 	const op = "grpcApp.Run"
 	log := a.log.With(
@@ -55,6 +60,7 @@ func (a *App) Run() error {
 	return nil
 }
 
+// Stop gracefully stops the gRPC server.
 func (a *App) Stop() {
 	const op = "grpcApp"
 

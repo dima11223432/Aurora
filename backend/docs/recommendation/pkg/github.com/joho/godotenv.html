@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/joho/godotenv</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>godotenv</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../index.html#pkg-github.com/joho/godotenv">github.com/joho/godotenv</a><i> (on <a href="https://pkg.go.dev/github.com/joho/godotenv" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../dep/github.com/joho/godotenv.html">11 packages</a>, and imported by <a href="../../../dep/github.com/joho/godotenv.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#doc">d</a> <a href="../../../src/github.com/joho/godotenv/godotenv.go.html">godotenv.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package godotenv is a go port of the ruby dotenv library (https://github.com/bkeepers/dotenv)
+		
+		Examples/readme can be found on the GitHub page at https://github.com/joho/godotenv
+		
+		The TL;DR is that you make a .env file that looks something like
+		
+			SOME_ENV_VAR=somevalue
+		
+		and then in your go code you can call
+		
+			godotenv.Load()
+		
+		and all the env vars declared in .env will be available through os.Getenv("SOME_ENV_VAR")</span>
+</span>
+	<span class="nodocs">    <a href="../../../src/github.com/joho/godotenv/parser.go.html">parser.go</a></span></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 24, in which 9 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-Exec">	<input type='checkbox' class="fold" id="Exec-fold-content"><label for="Exec-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-128">Exec</a>(filenames []<a href="../../builtin.html#name-string">string</a>, cmd <a href="../../builtin.html#name-string">string</a>, cmdArgs []<a href="../../builtin.html#name-string">string</a>, overload <a href="../../builtin.html#name-bool">bool</a>) <a href="../../builtin.html#name-error">error</a></label><span id='Exec-fold-content-docs' class="fold-docs">
+<span class="md-text">		Exec loads env vars from the specified filenames (empty map falls back to default)
+		then executes the cmd specified.
+		
+		Simply hooks up os.Stdin/err/out to the command and calls Run().
+		
+		If you want more fine grained control over your command it's recommended
+		that you use `Load()`, `Overload()` or `Read()` and the `os/exec` package yourself.</span>
+
+</span></div><div class="anchor value-res" id="name-Load">	<input type='checkbox' class="fold" id="Load-fold-content"><label for="Load-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-51">Load</a>(filenames ...<a href="../../builtin.html#name-string">string</a>) (err <a href="../../builtin.html#name-error">error</a>)</label><span id='Load-fold-content-docs' class="fold-docs">
+<span class="md-text">		Load will read your env file(s) and load them into ENV for this process.
+		
+		Call this function as close as possible to the start of your program (ideally in main).
+		
+		If you call Load without any args it will default to loading .env in the current path.
+		
+		You can otherwise tell it which files to load (there can be more than one) like:
+		
+			godotenv.Load("fileone", "filetwo")
+		
+		It's important to note that it WILL NOT OVERRIDE an env variable that already exists - consider the .env file to set dev vars or sensible defaults.</span>
+
+</span></div><div class="anchor value-res" id="name-Marshal">	<input type='checkbox' class="fold" id="Marshal-fold-content"><label for="Marshal-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-164">Marshal</a>(envMap map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>) (<a href="../../builtin.html#name-string">string</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='Marshal-fold-content-docs' class="fold-docs">
+<span class="md-text">		Marshal outputs the given environment as a dotenv-formatted environment file.
+		Each line is in the format: KEY="VALUE" where VALUE is backslash-escaped.</span>
+
+</span></div><div class="anchor value-res" id="name-Overload">	<input type='checkbox' class="fold" id="Overload-fold-content"><label for="Overload-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-74">Overload</a>(filenames ...<a href="../../builtin.html#name-string">string</a>) (err <a href="../../builtin.html#name-error">error</a>)</label><span id='Overload-fold-content-docs' class="fold-docs">
+<span class="md-text">		Overload will read your env file(s) and load them into ENV for this process.
+		
+		Call this function as close as possible to the start of your program (ideally in main).
+		
+		If you call Overload without any args it will default to loading .env in the current path.
+		
+		You can otherwise tell it which files to load (there can be more than one) like:
+		
+			godotenv.Overload("fileone", "filetwo")
+		
+		It's important to note this WILL OVERRIDE an env variable that already exists - consider the .env file to forcefully set all vars.</span>
+
+</span></div><div class="anchor value-res" id="name-Parse">	<input type='checkbox' class="fold" id="Parse-fold-content"><label for="Parse-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-30">Parse</a>(r <a href="../../io.html">io</a>.<a href="../../io.html#name-Reader">Reader</a>) (map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='Parse-fold-content-docs' class="fold-docs">
+<span class="md-text">		Parse reads an env file from io.Reader, returning a map of keys and values.</span>
+
+</span></div><div class="anchor value-res" id="name-Read">	<input type='checkbox' class="fold" id="Read-fold-content"><label for="Read-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-88">Read</a>(filenames ...<a href="../../builtin.html#name-string">string</a>) (envMap map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>, err <a href="../../builtin.html#name-error">error</a>)</label><span id='Read-fold-content-docs' class="fold-docs">
+<span class="md-text">		Read all env (with same file loading semantics as Load) but return values as
+		a map rather than automatically writing values into env</span>
+
+</span></div><div class="anchor value-res" id="name-Unmarshal">	<input type='checkbox' class="fold" id="Unmarshal-fold-content"><label for="Unmarshal-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-109">Unmarshal</a>(str <a href="../../builtin.html#name-string">string</a>) (envMap map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>, err <a href="../../builtin.html#name-error">error</a>)</label><span id='Unmarshal-fold-content-docs' class="fold-docs">
+<span class="md-text">		Unmarshal reads an env file from a string, returning a map of keys and values.</span>
+
+</span></div><div class="anchor value-res" id="name-UnmarshalBytes">	<input type='checkbox' class="fold" id="UnmarshalBytes-fold-content"><label for="UnmarshalBytes-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-114">UnmarshalBytes</a>(src []<a href="../../builtin.html#name-byte">byte</a>) (map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>, <a href="../../builtin.html#name-error">error</a>)</label><span id='UnmarshalBytes-fold-content-docs' class="fold-docs">
+<span class="md-text">		UnmarshalBytes parses env file from byte slice of chars, returning a map of keys and values.</span>
+
+</span></div><div class="anchor value-res" id="name-Write">	<input type='checkbox' class="fold" id="Write-fold-content"><label for="Write-fold-content"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-145">Write</a>(envMap map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>, filename <a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-error">error</a></label><span id='Write-fold-content-docs' class="fold-docs">
+<span class="md-text">		Write serializes the given environment and writes it to a file.</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 15 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 15 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-doubleQuoteEscape"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-216">doubleQuoteEscape</a>(line <a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-expandEscapes"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-192">expandEscapes</a>(str <a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-expandVariables"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-257">expandVariables</a>(v <a href="../../builtin.html#name-string">string</a>, m map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-extractVarValue"><i>	<input type='checkbox' class="fold" id="extractVarValue-fold-content"><label for="extractVarValue-fold-content"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-120">extractVarValue</a>(src []<a href="../../builtin.html#name-byte">byte</a>, vars map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>) (value <a href="../../builtin.html#name-string">string</a>, rest []<a href="../../builtin.html#name-byte">byte</a>, err <a href="../../builtin.html#name-error">error</a>)</label><span id='extractVarValue-fold-content-docs' class="fold-docs">
+<span class="md-text">		extractVarValue extracts variable value and returns rest of slice</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-filenamesOrDefault"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-177">filenamesOrDefault</a>(filenames []<a href="../../builtin.html#name-string">string</a>) []<a href="../../builtin.html#name-string">string</a></span></i></div><div class="anchor value-res hidden" id="name-getStatementStart"><i>	<input type='checkbox' class="fold" id="getStatementStart-fold-content"><label for="getStatementStart-fold-content"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-50">getStatementStart</a>(src []<a href="../../builtin.html#name-byte">byte</a>) []<a href="../../builtin.html#name-byte">byte</a></label><span id='getStatementStart-fold-content-docs' class="fold-docs">
+<span class="md-text">		getStatementPosition returns position of statement begin.
+		
+		It skips any comment line or non-whitespace character.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-hasQuotePrefix"><i>	<input type='checkbox' class="fold" id="hasQuotePrefix-fold-content"><label for="hasQuotePrefix-fold-content"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-214">hasQuotePrefix</a>(src []<a href="../../builtin.html#name-byte">byte</a>) (prefix <a href="../../builtin.html#name-byte">byte</a>, isQuored <a href="../../builtin.html#name-bool">bool</a>)</label><span id='hasQuotePrefix-fold-content-docs' class="fold-docs">
+<span class="md-text">		hasQuotePrefix reports whether charset starts with single or double quote and returns quote character</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-indexOfNonSpaceChar"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-207">indexOfNonSpaceChar</a>(src []<a href="../../builtin.html#name-byte">byte</a>) <a href="../../builtin.html#name-int">int</a></span></i></div><div class="anchor value-res hidden" id="name-isCharFunc"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-227">isCharFunc</a>(char <a href="../../builtin.html#name-rune">rune</a>) func(<a href="../../builtin.html#name-rune">rune</a>) <a href="../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isLineEnd"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-244">isLineEnd</a>(r <a href="../../builtin.html#name-rune">rune</a>) <a href="../../builtin.html#name-bool">bool</a></span></i></div><div class="anchor value-res hidden" id="name-isSpace"><i>	<input type='checkbox' class="fold" id="isSpace-fold-content"><label for="isSpace-fold-content"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-236">isSpace</a>(r <a href="../../builtin.html#name-rune">rune</a>) <a href="../../builtin.html#name-bool">bool</a></label><span id='isSpace-fold-content-docs' class="fold-docs">
+<span class="md-text">		isSpace reports whether the rune is a space character but not line break character
+		
+		this differs from unicode.IsSpace, which also applies line break as space</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-loadFile"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-184">loadFile</a>(filename <a href="../../builtin.html#name-string">string</a>, overload <a href="../../builtin.html#name-bool">bool</a>) <a href="../../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-locateKeyName"><i>	<input type='checkbox' class="fold" id="locateKeyName-fold-content"><label for="locateKeyName-fold-content"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-71">locateKeyName</a>(src []<a href="../../builtin.html#name-byte">byte</a>) (key <a href="../../builtin.html#name-string">string</a>, cutset []<a href="../../builtin.html#name-byte">byte</a>, err <a href="../../builtin.html#name-error">error</a>)</label><span id='locateKeyName-fold-content-docs' class="fold-docs">
+<span class="md-text">		locateKeyName locates and parses key name and returns rest of slice</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-parseBytes"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-20">parseBytes</a>(src []<a href="../../builtin.html#name-byte">byte</a>, out map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>) <a href="../../builtin.html#name-error">error</a></span></i></div><div class="anchor value-res hidden" id="name-readFile"><i>	<span class="nodocs"> func <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-206">readFile</a>(filename <a href="../../builtin.html#name-string">string</a>) (envMap map[<a href="../../builtin.html#name-string">string</a>]<a href="../../builtin.html#name-string">string</a>, err <a href="../../builtin.html#name-error">error</a>)</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 3, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* 3 unexporteds ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* 3 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-escapeRegex"><i>	<span class="nodocs">  var <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-252">escapeRegex</a> *<a href="../../regexp.html">regexp</a>.<a href="../../regexp.html#name-Regexp">Regexp</a></span></i></div><div class="anchor value-res hidden" id="name-expandVarRegex"><i>	<span class="nodocs">  var <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-253">expandVarRegex</a> *<a href="../../regexp.html">regexp</a>.<a href="../../regexp.html#name-Regexp">Regexp</a></span></i></div><div class="anchor value-res hidden" id="name-unescapeCharsRegex"><i>	<span class="nodocs">  var <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-254">unescapeCharsRegex</a> *<a href="../../regexp.html">regexp</a>.<a href="../../regexp.html#name-Regexp">Regexp</a></span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 5, none are exported)</i></span></span>
+
+	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* 5 unexporteds ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* 5 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-charComment"><i>	<span class="nodocs">const <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-13">charComment</a> = 35</span></i></div><div class="anchor value-res hidden" id="name-doubleQuoteSpecialChars"><i>	<span class="nodocs">const <a href="../../../src/github.com/joho/godotenv/godotenv.go.html#line-27">doubleQuoteSpecialChars</a> = "\\\n\r\"!$`"</span></i></div><div class="anchor value-res hidden" id="name-exportPrefix"><i>	<span class="nodocs">const <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-17">exportPrefix</a> = "export"</span></i></div><div class="anchor value-res hidden" id="name-prefixDoubleQuote"><i>	<span class="nodocs">const <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-15">prefixDoubleQuote</a> = 34</span></i></div><div class="anchor value-res hidden" id="name-prefixSingleQuote"><i>	<span class="nodocs">const <a href="../../../src/github.com/joho/godotenv/parser.go.html#line-14">prefixSingleQuote</a> = 39</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

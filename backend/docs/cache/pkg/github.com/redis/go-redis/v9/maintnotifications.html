@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: github.com/redis/go-redis/v9/maintnotifications</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>maintnotifications</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-github.com/redis/go-redis/v9/maintnotifications">github.com/redis/go-redis/v9/maintnotifications</a><i> (on <a href="https://pkg.go.dev/github.com/redis/go-redis/v9/maintnotifications" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/github.com/redis/go-redis/v9/maintnotifications.html">15 packages</a>, and imported by <a href="../../../../../dep/github.com/redis/go-redis/v9/maintnotifications.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html">circuit_breaker.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html">config.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html">errors.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html">example_hooks.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html">handoff_worker.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/hooks.go.html">hooks.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html">manager.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html">pool_hook.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html">push_notification_handler.go</a></span>
+	<span class="nodocs">    <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/state.go.html">state.go</a></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 22, in which 20 are exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-CircuitBreaker" data-popularity="500">	<input type='checkbox' class="fold" id="CircuitBreaker-fold-content"><label for="CircuitBreaker-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-39">CircuitBreaker</a> <i>(struct)</i></label><span id='CircuitBreaker-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreaker implements the circuit breaker pattern for endpoint-specific failure handling</span>
+
+		<input type='checkbox' class="fold" id="CircuitBreaker-fold-fields"><label for="CircuitBreaker-fold-fields">Fields (<i>total 11, none are exported</i>)</label><span id='CircuitBreaker-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="CircuitBreaker-showhide-fields"><i><label for="CircuitBreaker-showhide-fields" class="show-inline">/* 11 unexporteds ... */</label><label for="CircuitBreaker-showhide-fields" class="hide-inline">/* 11 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-55">config</a> <i>*<a href="#name-Config">Config</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-endpoint"><label for="CircuitBreaker-fold-field-endpoint"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-54">endpoint</a> <i><a href="../../../../builtin.html#name-string">string</a></i></label><span id='CircuitBreaker-fold-field-endpoint-docs' class="fold-docs">
+<span class="md-text">				Endpoint identification</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-failureThreshold"><label for="CircuitBreaker-fold-field-failureThreshold"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-41">failureThreshold</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='CircuitBreaker-fold-field-failureThreshold-docs' class="fold-docs">
+<span class="md-text">				Configuration</span>
+<span class="md-text">				// Number of failures before opening</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-failures"><label for="CircuitBreaker-fold-field-failures"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-47">failures</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreaker-fold-field-failures-docs' class="fold-docs">
+<span class="md-text">				// Current failure count</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-lastFailureTime"><label for="CircuitBreaker-fold-field-lastFailureTime"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-50">lastFailureTime</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreaker-fold-field-lastFailureTime-docs' class="fold-docs">
+<span class="md-text">				// Unix timestamp of last failure</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-lastSuccessTime"><label for="CircuitBreaker-fold-field-lastSuccessTime"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-51">lastSuccessTime</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreaker-fold-field-lastSuccessTime-docs' class="fold-docs">
+<span class="md-text">				// Unix timestamp of last success</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-maxRequests"><label for="CircuitBreaker-fold-field-maxRequests"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-43">maxRequests</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='CircuitBreaker-fold-field-maxRequests-docs' class="fold-docs">
+<span class="md-text">				// Max requests allowed in half-open state</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-requests"><label for="CircuitBreaker-fold-field-requests"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-49">requests</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreaker-fold-field-requests-docs' class="fold-docs">
+<span class="md-text">				// Request count in half-open state</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-resetTimeout"><label for="CircuitBreaker-fold-field-resetTimeout"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-42">resetTimeout</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></label><span id='CircuitBreaker-fold-field-resetTimeout-docs' class="fold-docs">
+<span class="md-text">				// How long to stay open before testing</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-state"><label for="CircuitBreaker-fold-field-state"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-46">state</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int32">Int32</a></i></label><span id='CircuitBreaker-fold-field-state-docs' class="fold-docs">
+<span class="md-text">				State tracking (atomic for lock-free access)</span>
+<span class="md-text">				// CircuitBreakerState</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-field-successes"><label for="CircuitBreaker-fold-field-successes"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-48">successes</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreaker-fold-field-successes-docs' class="fold-docs">
+<span class="md-text">				// Success count in half-open state</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreaker-fold-methods"><label for="CircuitBreaker-fold-methods">Methods (<i>total 7, in which 4 are exported</i>)</label><span id='CircuitBreaker-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-Execute"><label for="CircuitBreaker-fold-method-Execute">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-94">Execute</a>(fn func() <a href="../../../../builtin.html#name-error">error</a>) <a href="../../../../builtin.html#name-error">error</a></label><span id='CircuitBreaker-fold-method-Execute-docs' class="fold-docs">
+<span class="md-text">				Execute runs the given function with circuit breaker protection</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-GetState"><label for="CircuitBreaker-fold-method-GetState">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-188">GetState</a>() <a href="#name-CircuitBreakerState">CircuitBreakerState</a></label><span id='CircuitBreaker-fold-method-GetState-docs' class="fold-docs">
+<span class="md-text">				GetState returns the current state of the circuit breaker</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-GetStats"><label for="CircuitBreaker-fold-method-GetStats">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-193">GetStats</a>() <a href="#name-CircuitBreakerStats">CircuitBreakerStats</a></label><span id='CircuitBreaker-fold-method-GetStats-docs' class="fold-docs">
+<span class="md-text">				GetStats returns current statistics for monitoring</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-IsOpen"><label for="CircuitBreaker-fold-method-IsOpen">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-82">IsOpen</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='CircuitBreaker-fold-method-IsOpen-docs' class="fold-docs">
+<span class="md-text">				IsOpen returns true if the circuit breaker is open (rejecting requests)</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="CircuitBreaker-showhide-methods"><i><label for="CircuitBreaker-showhide-methods" class="show-inline">/* 3 unexporteds ... */</label><label for="CircuitBreaker-showhide-methods" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-recordFailure"><label for="CircuitBreaker-fold-method-recordFailure">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-137">recordFailure</a>()</label><span id='CircuitBreaker-fold-method-recordFailure-docs' class="fold-docs">
+<span class="md-text">				recordFailure records a failure and potentially opens the circuit</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-recordSuccess"><label for="CircuitBreaker-fold-method-recordSuccess">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-163">recordSuccess</a>()</label><span id='CircuitBreaker-fold-method-recordSuccess-docs' class="fold-docs">
+<span class="md-text">				recordSuccess records a success and potentially closes the circuit</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreaker-fold-method-shouldAttemptReset"><label for="CircuitBreaker-fold-method-shouldAttemptReset">(*CircuitBreaker) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-88">shouldAttemptReset</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='CircuitBreaker-fold-method-shouldAttemptReset-docs' class="fold-docs">
+<span class="md-text">				shouldAttemptReset checks if enough time has passed to attempt reset</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreaker-fold-results"><label for="CircuitBreaker-fold-results">As Outputs Of (<i>at least 2, in which 1 is exported</i>)</label><span id='CircuitBreaker-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-CircuitBreakerManager">CircuitBreakerManager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-247">GetCircuitBreaker</a>(endpoint <a href="../../../../builtin.html#name-string">string</a>) *<b>CircuitBreaker</b></span>
+			<input type='checkbox' class="showhide" id="CircuitBreaker-showhide-inputofs"><i><label for="CircuitBreaker-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="CircuitBreaker-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-newCircuitBreaker">newCircuitBreaker</a>(endpoint <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>) *<b>CircuitBreaker</b></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-CircuitBreakerEntry" data-popularity="0">	<input type='checkbox' class="fold" id="CircuitBreakerEntry-fold-content"><label for="CircuitBreakerEntry-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-217">CircuitBreakerEntry</a> <i>(struct)</i></label><span id='CircuitBreakerEntry-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerEntry wraps a circuit breaker with access tracking</span>
+
+		<input type='checkbox' class="fold" id="CircuitBreakerEntry-fold-fields"><label for="CircuitBreakerEntry-fold-fields">Fields (<i>total 3, none are exported</i>)</label><span id='CircuitBreakerEntry-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="CircuitBreakerEntry-showhide-fields"><i><label for="CircuitBreakerEntry-showhide-fields" class="show-inline">/* 3 unexporteds ... */</label><label for="CircuitBreakerEntry-showhide-fields" class="hide-inline">/* 3 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-218">breaker</a> <i>*<a href="#name-CircuitBreaker">CircuitBreaker</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-220">created</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreakerEntry-fold-field-lastAccess"><label for="CircuitBreakerEntry-fold-field-lastAccess"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-219">lastAccess</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreakerEntry-fold-field-lastAccess-docs' class="fold-docs">
+<span class="md-text">				// Unix timestamp</span>
+</span></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-CircuitBreakerManager" data-popularity="375">	<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-content"><label for="CircuitBreakerManager-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-224">CircuitBreakerManager</a> <i>(struct)</i></label><span id='CircuitBreakerManager-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerManager manages circuit breakers for multiple endpoints</span>
+
+		<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-fields"><label for="CircuitBreakerManager-fold-fields">Fields (<i>total 5, none are exported</i>)</label><span id='CircuitBreakerManager-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="CircuitBreakerManager-showhide-fields"><i><label for="CircuitBreakerManager-showhide-fields" class="show-inline">/* 5 unexporteds ... */</label><label for="CircuitBreakerManager-showhide-fields" class="hide-inline">/* 5 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-field-breakers"><label for="CircuitBreakerManager-fold-field-breakers"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-225">breakers</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Map">Map</a></i></label><span id='CircuitBreakerManager-fold-field-breakers-docs' class="fold-docs">
+<span class="md-text">				// map[string]*CircuitBreakerEntry</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-228">cleanupMu</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Mutex">Mutex</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-227">cleanupStop</a> <i>chan struct{}</i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-226">config</a> <i>*<a href="#name-Config">Config</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-field-lastCleanup"><label for="CircuitBreakerManager-fold-field-lastCleanup"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-229">lastCleanup</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='CircuitBreakerManager-fold-field-lastCleanup-docs' class="fold-docs">
+<span class="md-text">				// Unix timestamp</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-methods"><label for="CircuitBreakerManager-fold-methods">Methods (<i>total 6, in which 4 are exported</i>)</label><span id='CircuitBreakerManager-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-method-GetAllStats"><label for="CircuitBreakerManager-fold-method-GetAllStats">(*CircuitBreakerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-269">GetAllStats</a>() []<a href="#name-CircuitBreakerStats">CircuitBreakerStats</a></label><span id='CircuitBreakerManager-fold-method-GetAllStats-docs' class="fold-docs">
+<span class="md-text">				GetAllStats returns statistics for all circuit breakers</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-method-GetCircuitBreaker"><label for="CircuitBreakerManager-fold-method-GetCircuitBreaker">(*CircuitBreakerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-247">GetCircuitBreaker</a>(endpoint <a href="../../../../builtin.html#name-string">string</a>) *<a href="#name-CircuitBreaker">CircuitBreaker</a></label><span id='CircuitBreakerManager-fold-method-GetCircuitBreaker-docs' class="fold-docs">
+<span class="md-text">				GetCircuitBreaker returns the circuit breaker for an endpoint, creating it if necessary</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-method-Reset"><label for="CircuitBreakerManager-fold-method-Reset">(*CircuitBreakerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-341">Reset</a>()</label><span id='CircuitBreakerManager-fold-method-Reset-docs' class="fold-docs">
+<span class="md-text">				Reset resets all circuit breakers (useful for testing)</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-method-Shutdown"><label for="CircuitBreakerManager-fold-method-Shutdown">(*CircuitBreakerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-336">Shutdown</a>()</label><span id='CircuitBreakerManager-fold-method-Shutdown-docs' class="fold-docs">
+<span class="md-text">				Shutdown stops the cleanup goroutine</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="CircuitBreakerManager-showhide-methods"><i><label for="CircuitBreakerManager-showhide-methods" class="show-inline">/* 2 unexporteds ... */</label><label for="CircuitBreakerManager-showhide-methods" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-method-cleanup"><label for="CircuitBreakerManager-fold-method-cleanup">(*CircuitBreakerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-295">cleanup</a>()</label><span id='CircuitBreakerManager-fold-method-cleanup-docs' class="fold-docs">
+<span class="md-text">				cleanup removes circuit breakers that haven't been accessed recently</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-method-cleanupLoop"><label for="CircuitBreakerManager-fold-method-cleanupLoop">(*CircuitBreakerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-280">cleanupLoop</a>()</label><span id='CircuitBreakerManager-fold-method-cleanupLoop-docs' class="fold-docs">
+<span class="md-text">				cleanupLoop runs background cleanup of unused circuit breakers</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreakerManager-fold-results"><label for="CircuitBreakerManager-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='CircuitBreakerManager-fold-results-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="CircuitBreakerManager-showhide-inputofs"><i><label for="CircuitBreakerManager-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="CircuitBreakerManager-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-newCircuitBreakerManager">newCircuitBreakerManager</a>(config *<a href="#name-Config">Config</a>) *<b>CircuitBreakerManager</b></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-CircuitBreakerState" data-popularity="340">	<input type='checkbox' class="fold" id="CircuitBreakerState-fold-content"><label for="CircuitBreakerState-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-14">CircuitBreakerState</a> <a href="../../../../builtin.html#name-int32">int32</a> <i>(basic type)</i></label><span id='CircuitBreakerState-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerState represents the state of a circuit breaker</span>
+
+		<input type='checkbox' class="fold" id="CircuitBreakerState-fold-methods"><label for="CircuitBreakerState-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='CircuitBreakerState-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( CircuitBreakerState) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-25">String</a>() <a href="../../../../builtin.html#name-string">string</a></span></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreakerState-fold-impls"><label for="CircuitBreakerState-fold-impls">Implements (<i>at least 4, in which 1 is exported</i>)</label><span id='CircuitBreakerState-fold-impls-items' class="fold-items"><span>
+			 CircuitBreakerState : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="CircuitBreakerState-showhide-impls"><i><label for="CircuitBreakerState-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="CircuitBreakerState-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 CircuitBreakerState : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 CircuitBreakerState : os/signal.<a href="../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 CircuitBreakerState : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreakerState-fold-results"><label for="CircuitBreakerState-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='CircuitBreakerState-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-CircuitBreaker">CircuitBreaker</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-188">GetState</a>() <b>CircuitBreakerState</b></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreakerState-fold-values"><label for="CircuitBreakerState-fold-values">As Types Of (<i>total 3, all are exported</i>)</label><span id='CircuitBreakerState-fold-values-items' class="fold-items"><span>
+			const <a href="#name-CircuitBreakerClosed">CircuitBreakerClosed</a></span><span>
+			const <a href="#name-CircuitBreakerHalfOpen">CircuitBreakerHalfOpen</a></span><span>
+			const <a href="#name-CircuitBreakerOpen">CircuitBreakerOpen</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-CircuitBreakerStats" data-popularity="225">	<input type='checkbox' class="fold" id="CircuitBreakerStats-fold-content"><label for="CircuitBreakerStats-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-206">CircuitBreakerStats</a> <i>(struct)</i></label><span id='CircuitBreakerStats-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerStats provides statistics about a circuit breaker</span>
+
+		<input type='checkbox' class="fold" id="CircuitBreakerStats-fold-fields"><label for="CircuitBreakerStats-fold-fields">Fields (<i>total 7, all are exported</i>)</label><span id='CircuitBreakerStats-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-207">Endpoint</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-209">Failures</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-212">LastFailureTime</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-213">LastSuccessTime</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-211">Requests</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-208">State</a> <i><a href="#name-CircuitBreakerState">CircuitBreakerState</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-210">Successes</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="CircuitBreakerStats-fold-results"><label for="CircuitBreakerStats-fold-results">As Outputs Of (<i>at least 3, all are exported</i>)</label><span id='CircuitBreakerStats-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-CircuitBreaker">CircuitBreaker</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-193">GetStats</a>() <b>CircuitBreakerStats</b></span><span>
+			func (*<a href="#name-CircuitBreakerManager">CircuitBreakerManager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-269">GetAllStats</a>() []<b>CircuitBreakerStats</b></span><span>
+			func (*<a href="#name-PoolHook">PoolHook</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-109">GetCircuitBreakerStats</a>() []<b>CircuitBreakerStats</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-ClusterStateReloadCallback" data-popularity="35">	<input type='checkbox' class="fold" id="ClusterStateReloadCallback-fold-content"><label for="ClusterStateReloadCallback-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-103">ClusterStateReloadCallback</a> <i>(func)</i></label><span id='ClusterStateReloadCallback-fold-content-docs' class="fold-docs">
+<span class="md-text">		ClusterStateReloadCallback is a callback function that triggers cluster state reload.
+		This is used by node clients to notify their parent ClusterClient about SMIGRATED notifications.
+		The hostPort parameter indicates the destination node (e.g., "127.0.0.1:6379").
+		The slotRanges parameter contains the migrated slots (e.g., ["1234", "5000-6000"]).
+		Currently, implementations typically reload the entire cluster state, but in the future
+		this could be optimized to reload only the specific slots.</span>
+
+		<input type='checkbox' class="fold" id="ClusterStateReloadCallback-fold-params"><label for="ClusterStateReloadCallback-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='ClusterStateReloadCallback-fold-params-items' class="fold-items"><span>
+			func (*<a href="#name-Manager">Manager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-352">SetClusterStateReloadCallback</a>(callback <b>ClusterStateReloadCallback</b>)</span></span>
+
+</span></div><div class="anchor type-res" id="name-Config" data-popularity="935">	<input type='checkbox' class="fold" id="Config-fold-content"><label for="Config-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-69">Config</a> <i>(struct)</i></label><span id='Config-fold-content-docs' class="fold-docs">
+<span class="md-text">		Config provides configuration options for maintenance notifications</span>
+
+		<input type='checkbox' class="fold" id="Config-fold-fields"><label for="Config-fold-fields">Fields (<i>total 11, all are exported</i>)</label><span id='Config-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-CircuitBreakerFailureThreshold"><label for="Config-fold-field-CircuitBreakerFailureThreshold"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-116">CircuitBreakerFailureThreshold</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Config-fold-field-CircuitBreakerFailureThreshold-docs' class="fold-docs">
+<span class="md-text">				Circuit breaker configuration for endpoint failure handling
+				CircuitBreakerFailureThreshold is the number of failures before opening the circuit.
+				Default: 5</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-CircuitBreakerMaxRequests"><label for="Config-fold-field-CircuitBreakerMaxRequests"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-124">CircuitBreakerMaxRequests</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Config-fold-field-CircuitBreakerMaxRequests-docs' class="fold-docs">
+<span class="md-text">				CircuitBreakerMaxRequests is the maximum number of requests allowed in half-open state.
+				Default: 3</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-CircuitBreakerResetTimeout"><label for="Config-fold-field-CircuitBreakerResetTimeout"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-120">CircuitBreakerResetTimeout</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></label><span id='Config-fold-field-CircuitBreakerResetTimeout-docs' class="fold-docs">
+<span class="md-text">				CircuitBreakerResetTimeout is how long to wait before testing if the endpoint recovered.
+				Default: 60 seconds</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-EndpointType"><label for="Config-fold-field-EndpointType"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-79">EndpointType</a> <i><a href="#name-EndpointType">EndpointType</a></i></label><span id='Config-fold-field-EndpointType-docs' class="fold-docs">
+<span class="md-text">				EndpointType specifies the type of endpoint to request in MOVING notifications.
+				Valid values: EndpointTypeAuto, EndpointTypeInternalIP, EndpointTypeInternalFQDN,
+				              EndpointTypeExternalIP, EndpointTypeExternalFQDN, EndpointTypeNone
+				Default: EndpointTypeAuto</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-HandoffQueueSize"><label for="Config-fold-field-HandoffQueueSize"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-106">HandoffQueueSize</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Config-fold-field-HandoffQueueSize-docs' class="fold-docs">
+<span class="md-text">				HandoffQueueSize is the size of the buffered channel used to queue handoff requests.
+				If the queue is full, new handoff requests will be rejected.
+				Scales with both worker count and pool size for better burst handling.
+				
+				Default: max(20×MaxWorkers, PoolSize), capped by MaxActiveConns+1 (if set) or 5×PoolSize
+				When set: minimum 200, capped by MaxActiveConns+1 (if set) or 5×PoolSize</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-HandoffTimeout"><label for="Config-fold-field-HandoffTimeout"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-90">HandoffTimeout</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></label><span id='Config-fold-field-HandoffTimeout-docs' class="fold-docs">
+<span class="md-text">				HandoffTimeout is the maximum time to wait for connection handoff to complete.
+				If handoff takes longer than this, the old connection will be forcibly closed.
+				Default: 15 seconds (matches server-side eviction timeout)</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-MaxHandoffRetries"><label for="Config-fold-field-MaxHandoffRetries"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-129">MaxHandoffRetries</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Config-fold-field-MaxHandoffRetries-docs' class="fold-docs">
+<span class="md-text">				MaxHandoffRetries is the maximum number of times to retry a failed handoff.
+				After this many retries, the connection will be removed from the pool.
+				Default: 3</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-MaxWorkers"><label for="Config-fold-field-MaxWorkers"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-98">MaxWorkers</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='Config-fold-field-MaxWorkers-docs' class="fold-docs">
+<span class="md-text">				MaxWorkers is the maximum number of worker goroutines for processing handoff requests.
+				Workers are created on-demand and automatically cleaned up when idle.
+				If zero, defaults to min(10, PoolSize/2) to handle bursts effectively.
+				If explicitly set, enforces minimum of PoolSize/2
+				
+				Default: min(PoolSize/2, max(10, PoolSize/3)), Minimum when set: PoolSize/2</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-Mode"><label for="Config-fold-field-Mode"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-73">Mode</a> <i><a href="#name-Mode">Mode</a></i></label><span id='Config-fold-field-Mode-docs' class="fold-docs">
+<span class="md-text">				Mode controls how client maintenance notifications are handled.
+				Valid values: ModeDisabled, ModeEnabled, ModeAuto
+				Default: ModeAuto</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-PostHandoffRelaxedDuration"><label for="Config-fold-field-PostHandoffRelaxedDuration"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-111">PostHandoffRelaxedDuration</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></label><span id='Config-fold-field-PostHandoffRelaxedDuration-docs' class="fold-docs">
+<span class="md-text">				PostHandoffRelaxedDuration is how long to keep relaxed timeouts on the new connection
+				after a handoff completes. This provides additional resilience during cluster transitions.
+				Default: 2 * RelaxedTimeout</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-field-RelaxedTimeout"><label for="Config-fold-field-RelaxedTimeout"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-85">RelaxedTimeout</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></label><span id='Config-fold-field-RelaxedTimeout-docs' class="fold-docs">
+<span class="md-text">				RelaxedTimeout is the concrete timeout value to use during
+				MIGRATING/FAILING_OVER states to accommodate increased latency.
+				This applies to both read and write timeouts.
+				Default: 10 seconds</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Config-fold-methods"><label for="Config-fold-methods">Methods (<i>total 7, in which 6 are exported</i>)</label><span id='Config-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Config-fold-method-ApplyDefaults"><label for="Config-fold-method-ApplyDefaults">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-209">ApplyDefaults</a>() *<b>Config</b></label><span id='Config-fold-method-ApplyDefaults-docs' class="fold-docs">
+<span class="md-text">				ApplyDefaults applies default values to any zero-value fields in the configuration.
+				This ensures that partially configured structs get sensible defaults for missing fields.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-method-ApplyDefaultsWithPoolConfig"><label for="Config-fold-method-ApplyDefaultsWithPoolConfig">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-223">ApplyDefaultsWithPoolConfig</a>(poolSize <a href="../../../../builtin.html#name-int">int</a>, maxActiveConns <a href="../../../../builtin.html#name-int">int</a>) *<b>Config</b></label><span id='Config-fold-method-ApplyDefaultsWithPoolConfig-docs' class="fold-docs">
+<span class="md-text">				ApplyDefaultsWithPoolConfig applies default values to any zero-value fields in the configuration,
+				using the provided pool size and max active connections to calculate worker and queue defaults.
+				This ensures that partially configured structs get sensible defaults for missing fields.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-method-ApplyDefaultsWithPoolSize"><label for="Config-fold-method-ApplyDefaultsWithPoolSize">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-216">ApplyDefaultsWithPoolSize</a>(poolSize <a href="../../../../builtin.html#name-int">int</a>) *<b>Config</b></label><span id='Config-fold-method-ApplyDefaultsWithPoolSize-docs' class="fold-docs">
+<span class="md-text">				ApplyDefaultsWithPoolSize applies default values to any zero-value fields in the configuration,
+				using the provided pool size to calculate worker defaults.
+				This ensures that partially configured structs get sensible defaults for missing fields.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-method-Clone"><label for="Config-fold-method-Clone">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-322">Clone</a>() *<b>Config</b></label><span id='Config-fold-method-Clone-docs' class="fold-docs">
+<span class="md-text">				Clone creates a deep copy of the configuration.</span>
+</span></span><span>
+			<span class="nodocs">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-132">IsEnabled</a>() <a href="../../../../builtin.html#name-bool">bool</a></span></span><span>
+			<input type='checkbox' class="fold" id="Config-fold-method-Validate"><label for="Config-fold-method-Validate">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-158">Validate</a>() <a href="../../../../builtin.html#name-error">error</a></label><span id='Config-fold-method-Validate-docs' class="fold-docs">
+<span class="md-text">				Validate checks if the configuration is valid.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Config-showhide-methods"><i><label for="Config-showhide-methods" class="show-inline">/* one unexported ... */</label><label for="Config-showhide-methods" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Config-fold-method-applyWorkerDefaults"><label for="Config-fold-method-applyWorkerDefaults">(*Config) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-347">applyWorkerDefaults</a>(poolSize <a href="../../../../builtin.html#name-int">int</a>)</label><span id='Config-fold-method-applyWorkerDefaults-docs' class="fold-docs">
+<span class="md-text">				applyWorkerDefaults calculates and applies worker defaults based on pool size</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Config-fold-results"><label for="Config-fold-results">As Outputs Of (<i>at least 5, all are exported</i>)</label><span id='Config-fold-results-items' class="fold-items"><span>
+			func <a href="#name-DefaultConfig">DefaultConfig</a>() *<b>Config</b></span><span>
+			func (*Config).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-209">ApplyDefaults</a>() *<b>Config</b></span><span>
+			func (*Config).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-223">ApplyDefaultsWithPoolConfig</a>(poolSize <a href="../../../../builtin.html#name-int">int</a>, maxActiveConns <a href="../../../../builtin.html#name-int">int</a>) *<b>Config</b></span><span>
+			func (*Config).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-216">ApplyDefaultsWithPoolSize</a>(poolSize <a href="../../../../builtin.html#name-int">int</a>) *<b>Config</b></span><span>
+			func (*Config).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-322">Clone</a>() *<b>Config</b></span></span>
+		<input type='checkbox' class="fold" id="Config-fold-params"><label for="Config-fold-params">As Inputs Of (<i>at least 6, in which 3 are exported</i>)</label><span id='Config-fold-params-items' class="fold-items"><span>
+			func <a href="#name-NewManager">NewManager</a>(client <a href="internal/interfaces.html">interfaces</a>.<a href="internal/interfaces.html#name-ClientInterface">ClientInterface</a>, pool <a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a>, config *<b>Config</b>) (*<a href="#name-Manager">Manager</a>, <a href="../../../../builtin.html#name-error">error</a>)</span><span>
+			func <a href="#name-NewPoolHook">NewPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<b>Config</b>, operationsManager <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a>) *<a href="#name-PoolHook">PoolHook</a></span><span>
+			func <a href="#name-NewPoolHookWithPoolSize">NewPoolHookWithPoolSize</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<b>Config</b>, operationsManager <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a>, poolSize <a href="../../../../builtin.html#name-int">int</a>) *<a href="#name-PoolHook">PoolHook</a></span>
+			<input type='checkbox' class="showhide" id="Config-showhide-outputofs"><i><label for="Config-showhide-outputofs" class="show-inline">/* 3+ unexporteds ... */</label><label for="Config-showhide-outputofs" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			func <a href="#name-newCircuitBreaker">newCircuitBreaker</a>(endpoint <a href="../../../../builtin.html#name-string">string</a>, config *<b>Config</b>) *<a href="#name-CircuitBreaker">CircuitBreaker</a></i></span><span class="hidden"><i>
+			func <a href="#name-newCircuitBreakerManager">newCircuitBreakerManager</a>(config *<b>Config</b>) *<a href="#name-CircuitBreakerManager">CircuitBreakerManager</a></i></span><span class="hidden"><i>
+			func <a href="#name-newHandoffWorkerManager">newHandoffWorkerManager</a>(config *<b>Config</b>, poolHook *<a href="#name-PoolHook">PoolHook</a>) *<a href="#name-handoffWorkerManager">handoffWorkerManager</a></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-EndpointType" data-popularity="440">	<input type='checkbox' class="fold" id="EndpointType-fold-content"><label for="EndpointType-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-40">EndpointType</a> <a href="../../../../builtin.html#name-string">string</a> <i>(basic type)</i></label><span id='EndpointType-fold-content-docs' class="fold-docs">
+<span class="md-text">		EndpointType represents the type of endpoint to request in MOVING notifications</span>
+
+		<input type='checkbox' class="fold" id="EndpointType-fold-methods"><label for="EndpointType-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='EndpointType-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="EndpointType-fold-method-IsValid"><label for="EndpointType-fold-method-IsValid">( EndpointType) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-53">IsValid</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='EndpointType-fold-method-IsValid-docs' class="fold-docs">
+<span class="md-text">				IsValid returns true if the endpoint type is valid</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="EndpointType-fold-method-String"><label for="EndpointType-fold-method-String">( EndpointType) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-64">String</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='EndpointType-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String returns the string representation of the endpoint type</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="EndpointType-fold-impls"><label for="EndpointType-fold-impls">Implements (<i>at least 5, in which 2 are exported</i>)</label><span id='EndpointType-fold-impls-items' class="fold-items"><span>
+			 EndpointType : database/sql/driver.<a href="../../../../database/sql/driver.html#name-Validator">Validator</a></span><span>
+			 EndpointType : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="EndpointType-showhide-impls"><i><label for="EndpointType-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="EndpointType-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 EndpointType : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 EndpointType : os/signal.<a href="../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 EndpointType : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="EndpointType-fold-results"><label for="EndpointType-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='EndpointType-fold-results-items' class="fold-items"><span>
+			func <a href="#name-DetectEndpointType">DetectEndpointType</a>(addr <a href="../../../../builtin.html#name-string">string</a>, tlsEnabled <a href="../../../../builtin.html#name-bool">bool</a>) <b>EndpointType</b></span></span>
+		<input type='checkbox' class="fold" id="EndpointType-fold-values"><label for="EndpointType-fold-values">As Types Of (<i>total 6, all are exported</i>)</label><span id='EndpointType-fold-values-items' class="fold-items"><span>
+			const <a href="#name-EndpointTypeAuto">EndpointTypeAuto</a></span><span>
+			const <a href="#name-EndpointTypeExternalFQDN">EndpointTypeExternalFQDN</a></span><span>
+			const <a href="#name-EndpointTypeExternalIP">EndpointTypeExternalIP</a></span><span>
+			const <a href="#name-EndpointTypeInternalFQDN">EndpointTypeInternalFQDN</a></span><span>
+			const <a href="#name-EndpointTypeInternalIP">EndpointTypeInternalIP</a></span><span>
+			const <a href="#name-EndpointTypeNone">EndpointTypeNone</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-HandoffRequest" data-popularity="75">	<input type='checkbox' class="fold" id="HandoffRequest-fold-content"><label for="HandoffRequest-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-21">HandoffRequest</a> <i>(struct)</i></label><span id='HandoffRequest-fold-content-docs' class="fold-docs">
+<span class="md-text">		HandoffRequest represents a request to handoff a connection to a new endpoint</span>
+
+		<input type='checkbox' class="fold" id="HandoffRequest-fold-fields"><label for="HandoffRequest-fold-fields">Fields (<i>total 5, all are exported</i>)</label><span id='HandoffRequest-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-22">Conn</a> <i>*<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a></i></span></span><span>
+			<input type='checkbox' class="fold" id="HandoffRequest-fold-field-ConnID"><label for="HandoffRequest-fold-field-ConnID"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-23">ConnID</a> <i><a href="../../../../builtin.html#name-uint64">uint64</a></i></label><span id='HandoffRequest-fold-field-ConnID-docs' class="fold-docs">
+<span class="md-text">				// Unique connection identifier</span>
+</span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-24">Endpoint</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<input type='checkbox' class="fold" id="HandoffRequest-fold-field-Pool"><label for="HandoffRequest-fold-field-Pool"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-26">Pool</a> <i><a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a></i></label><span id='HandoffRequest-fold-field-Pool-docs' class="fold-docs">
+<span class="md-text">				// Pool to remove connection from on failure</span>
+</span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-25">SeqID</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="HandoffRequest-fold-results"><label for="HandoffRequest-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='HandoffRequest-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-PoolHook">PoolHook</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-104">GetHandoffQueue</a>() chan <b>HandoffRequest</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-LoggingHook" data-popularity="225">	<input type='checkbox' class="fold" id="LoggingHook-fold-content"><label for="LoggingHook-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/hooks.go.html#line-14">LoggingHook</a> <i>(struct)</i></label><span id='LoggingHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		LoggingHook is an example hook implementation that logs all notifications.</span>
+
+		<input type='checkbox' class="fold" id="LoggingHook-fold-fields"><label for="LoggingHook-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='LoggingHook-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="LoggingHook-fold-field-LogLevel"><label for="LoggingHook-fold-field-LogLevel"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/hooks.go.html#line-15">LogLevel</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='LoggingHook-fold-field-LogLevel-docs' class="fold-docs">
+<span class="md-text">				// 0=Error, 1=Warn, 2=Info, 3=Debug</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="LoggingHook-fold-methods"><label for="LoggingHook-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='LoggingHook-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="LoggingHook-fold-method-PostHook"><label for="LoggingHook-fold-method-PostHook">(*LoggingHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/hooks.go.html#line-44">PostHook</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}, result <a href="../../../../builtin.html#name-error">error</a>)</label><span id='LoggingHook-fold-method-PostHook-docs' class="fold-docs">
+<span class="md-text">				PostHook logs the result after processing.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="LoggingHook-fold-method-PreHook"><label for="LoggingHook-fold-method-PreHook">(*LoggingHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/hooks.go.html#line-19">PreHook</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}) ([]interface{}, <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='LoggingHook-fold-method-PreHook-docs' class="fold-docs">
+<span class="md-text">				PreHook logs the notification before processing and allows modification.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="LoggingHook-fold-impls"><label for="LoggingHook-fold-impls">Implements (<i>at least one exported</i>)</label><span id='LoggingHook-fold-impls-items' class="fold-items"><span>
+			*LoggingHook : <a href="#name-NotificationHook">NotificationHook</a></span></span>
+		<input type='checkbox' class="fold" id="LoggingHook-fold-results"><label for="LoggingHook-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='LoggingHook-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewLoggingHook">NewLoggingHook</a>(logLevel <a href="../../../../builtin.html#name-int">int</a>) *<b>LoggingHook</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-Manager" data-popularity="1050">	<input type='checkbox' class="fold" id="Manager-fold-content"><label for="Manager-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-63">Manager</a> <i>(struct)</i></label><span id='Manager-fold-content-docs' class="fold-docs">
+<span class="md-text">		Manager provides a simplified upgrade functionality with hooks and atomic state.</span>
+
+		<input type='checkbox' class="fold" id="Manager-fold-fields"><label for="Manager-fold-fields">Fields (<i>total 12, none are exported</i>)</label><span id='Manager-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="Manager-showhide-fields"><i><label for="Manager-showhide-fields" class="show-inline">/* 12 unexporteds ... */</label><label for="Manager-showhide-fields" class="hide-inline">/* 12 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-activeMovingOps"><label for="Manager-fold-field-activeMovingOps"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-70">activeMovingOps</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Map">Map</a></i></label><span id='Manager-fold-field-activeMovingOps-docs' class="fold-docs">
+<span class="md-text">				MOVING operation tracking - using sync.Map for better concurrent performance</span>
+<span class="md-text">				// map[MovingOperationKey]*MovingOperation</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-activeOperationCount"><label for="Manager-fold-field-activeOperationCount"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-77">activeOperationCount</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int64">Int64</a></i></label><span id='Manager-fold-field-activeOperationCount-docs' class="fold-docs">
+<span class="md-text">				Atomic state tracking - no locks needed for state queries</span>
+<span class="md-text">				// Number of active operations</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-64">client</a> <i><a href="internal/interfaces.html">interfaces</a>.<a href="internal/interfaces.html#name-ClientInterface">ClientInterface</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-closed"><label for="Manager-fold-field-closed"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-78">closed</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Bool">Bool</a></i></label><span id='Manager-fold-field-closed-docs' class="fold-docs">
+<span class="md-text">				// Manager closed state</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-clusterStateReloadCallback"><label for="Manager-fold-field-clusterStateReloadCallback"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-86">clusterStateReloadCallback</a> <i><a href="#name-ClusterStateReloadCallback">ClusterStateReloadCallback</a></i></label><span id='Manager-fold-field-clusterStateReloadCallback-docs' class="fold-docs">
+<span class="md-text">				Cluster state reload callback for SMIGRATED notifications</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-65">config</a> <i>*<a href="#name-Config">Config</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-hooks"><label for="Manager-fold-field-hooks"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-81">hooks</a> <i>[]<a href="#name-NotificationHook">NotificationHook</a></i></label><span id='Manager-fold-field-hooks-docs' class="fold-docs">
+<span class="md-text">				Notification hooks for extensibility</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-hooksMu"><label for="Manager-fold-field-hooksMu"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-82">hooksMu</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-RWMutex">RWMutex</a></i></label><span id='Manager-fold-field-hooksMu-docs' class="fold-docs">
+<span class="md-text">				// Protects hooks slice</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-66">options</a> <i><a href="internal/interfaces.html">interfaces</a>.<a href="internal/interfaces.html#name-OptionsInterface">OptionsInterface</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-67">pool</a> <i><a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-83">poolHooksRef</a> <i>*<a href="#name-PoolHook">PoolHook</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-field-processedSMigratedSeqIDs"><label for="Manager-fold-field-processedSMigratedSeqIDs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-74">processedSMigratedSeqIDs</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Map">Map</a></i></label><span id='Manager-fold-field-processedSMigratedSeqIDs-docs' class="fold-docs">
+<span class="md-text">				SMIGRATED notification deduplication - tracks processed SeqIDs
+				Multiple connections may receive the same SMIGRATED notification</span>
+<span class="md-text">				// map[int64]bool</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Manager-fold-methods"><label for="Manager-fold-methods">Methods (<i>total 16, in which 12 are exported</i>)</label><span id='Manager-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-344">AddNotificationHook</a>(notificationHook <a href="#name-NotificationHook">NotificationHook</a>)</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-Close"><label for="Manager-fold-method-Close">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-255">Close</a>() <a href="../../../../builtin.html#name-error">error</a></label><span id='Manager-fold-method-Close-docs' class="fold-docs">
+<span class="md-text">				Close closes the manager.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-GetActiveMovingOperations"><label for="Manager-fold-method-GetActiveMovingOperations">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-212">GetActiveMovingOperations</a>() map[<a href="#name-MovingOperationKey">MovingOperationKey</a>]*<a href="#name-MovingOperation">MovingOperation</a></label><span id='Manager-fold-method-GetActiveMovingOperations-docs' class="fold-docs">
+<span class="md-text">				GetActiveMovingOperations returns active operations with composite keys.
+				WARNING: This method creates a new map and copies all operations on every call.
+				Use sparingly, especially in hot paths or high-frequency logging.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-GetActiveOperationCount"><label for="Manager-fold-method-GetActiveOperationCount">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-241">GetActiveOperationCount</a>() <a href="../../../../builtin.html#name-int64">int64</a></label><span id='Manager-fold-method-GetActiveOperationCount-docs' class="fold-docs">
+<span class="md-text">				GetActiveOperationCount returns the number of active operations.
+				Uses atomic counter for lock-free operation.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-GetState"><label for="Manager-fold-method-GetState">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-292">GetState</a>() <a href="#name-State">State</a></label><span id='Manager-fold-method-GetState-docs' class="fold-docs">
+<span class="md-text">				GetState returns current state using atomic counter for lock-free operation.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-InitPoolHook"><label for="Manager-fold-method-InitPoolHook">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-128">InitPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>))</label><span id='Manager-fold-method-InitPoolHook-docs' class="fold-docs">
+<span class="md-text">				GetPoolHook creates a pool hook with a custom dialer.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-IsHandoffInProgress"><label for="Manager-fold-method-IsHandoffInProgress">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-235">IsHandoffInProgress</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Manager-fold-method-IsHandoffInProgress-docs' class="fold-docs">
+<span class="md-text">				IsHandoffInProgress returns true if any handoff is in progress.
+				Uses atomic counter for lock-free operation.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-MarkSMigratedSeqIDProcessed"><label for="Manager-fold-method-MarkSMigratedSeqIDProcessed">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-249">MarkSMigratedSeqIDProcessed</a>(seqID <a href="../../../../builtin.html#name-int64">int64</a>) <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Manager-fold-method-MarkSMigratedSeqIDProcessed-docs' class="fold-docs">
+<span class="md-text">				MarkSMigratedSeqIDProcessed attempts to mark a SMIGRATED SeqID as processed.
+				Returns true if this is the first time processing this SeqID (should process),
+				false if it was already processed (should skip).
+				This prevents duplicate processing when multiple connections receive the same notification.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-SetClusterStateReloadCallback"><label for="Manager-fold-method-SetClusterStateReloadCallback">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-352">SetClusterStateReloadCallback</a>(callback <a href="#name-ClusterStateReloadCallback">ClusterStateReloadCallback</a>)</label><span id='Manager-fold-method-SetClusterStateReloadCallback-docs' class="fold-docs">
+<span class="md-text">				SetClusterStateReloadCallback sets the callback function that will be called when a SMIGRATED notification is received.
+				This allows node clients to notify their parent ClusterClient to reload cluster state.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-TrackMovingOperationWithConnID"><label for="Manager-fold-method-TrackMovingOperationWithConnID">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-154">TrackMovingOperationWithConnID</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, newEndpoint <a href="../../../../builtin.html#name-string">string</a>, deadline <a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a>, seqID <a href="../../../../builtin.html#name-int64">int64</a>, connID <a href="../../../../builtin.html#name-uint64">uint64</a>) <a href="../../../../builtin.html#name-error">error</a></label><span id='Manager-fold-method-TrackMovingOperationWithConnID-docs' class="fold-docs">
+<span class="md-text">				TrackMovingOperationWithConnID starts a new MOVING operation with a specific connection ID.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-TriggerClusterStateReload"><label for="Manager-fold-method-TriggerClusterStateReload">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-358">TriggerClusterStateReload</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, hostPort <a href="../../../../builtin.html#name-string">string</a>, slotRanges []<a href="../../../../builtin.html#name-string">string</a>)</label><span id='Manager-fold-method-TriggerClusterStateReload-docs' class="fold-docs">
+<span class="md-text">				TriggerClusterStateReload calls the cluster state reload callback if it's set.
+				This is called when a SMIGRATED notification is received.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Manager-fold-method-UntrackOperationWithConnID"><label for="Manager-fold-method-UntrackOperationWithConnID">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-188">UntrackOperationWithConnID</a>(seqID <a href="../../../../builtin.html#name-int64">int64</a>, connID <a href="../../../../builtin.html#name-uint64">uint64</a>)</label><span id='Manager-fold-method-UntrackOperationWithConnID-docs' class="fold-docs">
+<span class="md-text">				UntrackOperationWithConnID completes a MOVING operation with a specific connection ID.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="Manager-showhide-methods"><i><label for="Manager-showhide-methods" class="show-inline">/* 4 unexporteds ... */</label><label for="Manager-showhide-methods" class="hide-inline">/* 4 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-method-createPoolHook"><label for="Manager-fold-method-createPoolHook">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-328">createPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>)) *<a href="#name-PoolHook">PoolHook</a></label><span id='Manager-fold-method-createPoolHook-docs' class="fold-docs">
+<span class="md-text">				createPoolHook creates a pool hook with this manager already set.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-method-processPostHooks"><label for="Manager-fold-method-processPostHooks">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-318">processPostHooks</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}, result <a href="../../../../builtin.html#name-error">error</a>)</label><span id='Manager-fold-method-processPostHooks-docs' class="fold-docs">
+<span class="md-text">				processPostHooks calls all post-hooks with the processing result.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-method-processPreHooks"><label for="Manager-fold-method-processPreHooks">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-300">processPreHooks</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}) ([]interface{}, <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='Manager-fold-method-processPreHooks-docs' class="fold-docs">
+<span class="md-text">				processPreHooks calls all pre-hooks and returns the modified notification and whether to continue processing.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="Manager-fold-method-setupPushNotifications"><label for="Manager-fold-method-setupPushNotifications">(*Manager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-134">setupPushNotifications</a>() <a href="../../../../builtin.html#name-error">error</a></label><span id='Manager-fold-method-setupPushNotifications-docs' class="fold-docs">
+<span class="md-text">				setupPushNotifications sets up push notification handling by registering with the client's processor.</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="Manager-fold-impls"><label for="Manager-fold-impls">Implements (<i>at least 2, both are exported</i>)</label><span id='Manager-fold-impls-items' class="fold-items"><span>
+			*Manager : <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a></span><span>
+			*Manager : io.<a href="../../../../io.html#name-Closer">Closer</a></span></span>
+		<input type='checkbox' class="fold" id="Manager-fold-results"><label for="Manager-fold-results">As Outputs Of (<i>at least 2, both are exported</i>)</label><span id='Manager-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewManager">NewManager</a>(client <a href="internal/interfaces.html">interfaces</a>.<a href="internal/interfaces.html#name-ClientInterface">ClientInterface</a>, pool <a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a>, config *<a href="#name-Config">Config</a>) (*<b>Manager</b>, <a href="../../../../builtin.html#name-error">error</a>)</span><span>
+			func github.com/redis/go-redis/v9.(*<a href="../v9.html#name-Client">Client</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/redis.go.html#line-1315">GetMaintNotificationsManager</a>() *<b>Manager</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-MetricsHook" data-popularity="275">	<input type='checkbox' class="fold" id="MetricsHook-fold-content"><label for="MetricsHook-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-22">MetricsHook</a> <i>(struct)</i></label><span id='MetricsHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		MetricsHook collects metrics about notification processing.</span>
+
+		<input type='checkbox' class="fold" id="MetricsHook-fold-fields"><label for="MetricsHook-fold-fields">Fields (<i>total 6, all are exported</i>)</label><span id='MetricsHook-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-25">ErrorCounts</a> <i>map[<a href="../../../../builtin.html#name-string">string</a>]<a href="../../../../builtin.html#name-int64">int64</a></i></span></span><span>
+			<input type='checkbox' class="fold" id="MetricsHook-fold-field-HandoffCounts"><label for="MetricsHook-fold-field-HandoffCounts"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-26">HandoffCounts</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></label><span id='MetricsHook-fold-field-HandoffCounts-docs' class="fold-docs">
+<span class="md-text">				// Total handoffs initiated</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="MetricsHook-fold-field-HandoffFailures"><label for="MetricsHook-fold-field-HandoffFailures"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-28">HandoffFailures</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></label><span id='MetricsHook-fold-field-HandoffFailures-docs' class="fold-docs">
+<span class="md-text">				// Failed handoffs</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="MetricsHook-fold-field-HandoffSuccesses"><label for="MetricsHook-fold-field-HandoffSuccesses"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-27">HandoffSuccesses</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></label><span id='MetricsHook-fold-field-HandoffSuccesses-docs' class="fold-docs">
+<span class="md-text">				// Successful handoffs</span>
+</span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-23">NotificationCounts</a> <i>map[<a href="../../../../builtin.html#name-string">string</a>]<a href="../../../../builtin.html#name-int64">int64</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-24">ProcessingTimes</a> <i>map[<a href="../../../../builtin.html#name-string">string</a>]<a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="MetricsHook-fold-methods"><label for="MetricsHook-fold-methods">Methods (<i>total 3, all are exported</i>)</label><span id='MetricsHook-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="MetricsHook-fold-method-GetMetrics"><label for="MetricsHook-fold-method-GetMetrics">(*MetricsHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-76">GetMetrics</a>() map[<a href="../../../../builtin.html#name-string">string</a>]interface{}</label><span id='MetricsHook-fold-method-GetMetrics-docs' class="fold-docs">
+<span class="md-text">				GetMetrics returns a summary of collected metrics.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="MetricsHook-fold-method-PostHook"><label for="MetricsHook-fold-method-PostHook">(*MetricsHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-57">PostHook</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}, result <a href="../../../../builtin.html#name-error">error</a>)</label><span id='MetricsHook-fold-method-PostHook-docs' class="fold-docs">
+<span class="md-text">				PostHook records processing completion and any errors.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="MetricsHook-fold-method-PreHook"><label for="MetricsHook-fold-method-PreHook">(*MetricsHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-41">PreHook</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}) ([]interface{}, <a href="../../../../builtin.html#name-bool">bool</a>)</label><span id='MetricsHook-fold-method-PreHook-docs' class="fold-docs">
+<span class="md-text">				PreHook records the start time for processing metrics.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="MetricsHook-fold-impls"><label for="MetricsHook-fold-impls">Implements (<i>at least one exported</i>)</label><span id='MetricsHook-fold-impls-items' class="fold-items"><span>
+			*MetricsHook : <a href="#name-NotificationHook">NotificationHook</a></span></span>
+		<input type='checkbox' class="fold" id="MetricsHook-fold-results"><label for="MetricsHook-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='MetricsHook-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewMetricsHook">NewMetricsHook</a>() *<b>MetricsHook</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-Mode" data-popularity="365">	<input type='checkbox' class="fold" id="Mode-fold-content"><label for="Mode-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-15">Mode</a> <a href="../../../../builtin.html#name-string">string</a> <i>(basic type)</i></label><span id='Mode-fold-content-docs' class="fold-docs">
+<span class="md-text">		Mode represents the maintenance notifications mode</span>
+
+		<input type='checkbox' class="fold" id="Mode-fold-methods"><label for="Mode-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='Mode-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="Mode-fold-method-IsValid"><label for="Mode-fold-method-IsValid">( Mode) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-25">IsValid</a>() <a href="../../../../builtin.html#name-bool">bool</a></label><span id='Mode-fold-method-IsValid-docs' class="fold-docs">
+<span class="md-text">				IsValid returns true if the maintenance notifications mode is valid</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="Mode-fold-method-String"><label for="Mode-fold-method-String">( Mode) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-35">String</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='Mode-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String returns the string representation of the mode</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="Mode-fold-impls"><label for="Mode-fold-impls">Implements (<i>at least 5, in which 2 are exported</i>)</label><span id='Mode-fold-impls-items' class="fold-items"><span>
+			 Mode : database/sql/driver.<a href="../../../../database/sql/driver.html#name-Validator">Validator</a></span><span>
+			 Mode : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="Mode-showhide-impls"><i><label for="Mode-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="Mode-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 Mode : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 Mode : os/signal.<a href="../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 Mode : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="Mode-fold-values"><label for="Mode-fold-values">As Types Of (<i>total 3, all are exported</i>)</label><span id='Mode-fold-values-items' class="fold-items"><span>
+			const <a href="#name-ModeAuto">ModeAuto</a></span><span>
+			const <a href="#name-ModeDisabled">ModeDisabled</a></span><span>
+			const <a href="#name-ModeEnabled">ModeEnabled</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-MovingOperation" data-popularity="75">	<input type='checkbox' class="fold" id="MovingOperation-fold-content"><label for="MovingOperation-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-90">MovingOperation</a> <i>(struct)</i></label><span id='MovingOperation-fold-content-docs' class="fold-docs">
+<span class="md-text">		MovingOperation tracks an active MOVING operation.</span>
+
+		<input type='checkbox' class="fold" id="MovingOperation-fold-fields"><label for="MovingOperation-fold-fields">Fields (<i>total 4, all are exported</i>)</label><span id='MovingOperation-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-94">Deadline</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-92">NewEndpoint</a> <i><a href="../../../../builtin.html#name-string">string</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-91">SeqID</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></span></span><span>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-93">StartTime</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="MovingOperation-fold-results"><label for="MovingOperation-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='MovingOperation-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Manager">Manager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-212">GetActiveMovingOperations</a>() map[<a href="#name-MovingOperationKey">MovingOperationKey</a>]*<b>MovingOperation</b></span></span>
+
+</span></div><div class="anchor type-res" id="name-MovingOperationKey" data-popularity="325">	<input type='checkbox' class="fold" id="MovingOperationKey-fold-content"><label for="MovingOperationKey-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-52">MovingOperationKey</a> <i>(struct)</i></label><span id='MovingOperationKey-fold-content-docs' class="fold-docs">
+<span class="md-text">		MovingOperationKey provides a unique key for tracking MOVING operations
+		that combines sequence ID with connection identifier to handle duplicate
+		sequence IDs across multiple connections to the same node.</span>
+
+		<input type='checkbox' class="fold" id="MovingOperationKey-fold-fields"><label for="MovingOperationKey-fold-fields">Fields (<i>total 2, both are exported</i>)</label><span id='MovingOperationKey-fold-fields-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="MovingOperationKey-fold-field-ConnID"><label for="MovingOperationKey-fold-field-ConnID"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-54">ConnID</a> <i><a href="../../../../builtin.html#name-uint64">uint64</a></i></label><span id='MovingOperationKey-fold-field-ConnID-docs' class="fold-docs">
+<span class="md-text">				// Unique connection identifier</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="MovingOperationKey-fold-field-SeqID"><label for="MovingOperationKey-fold-field-SeqID"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-53">SeqID</a> <i><a href="../../../../builtin.html#name-int64">int64</a></i></label><span id='MovingOperationKey-fold-field-SeqID-docs' class="fold-docs">
+<span class="md-text">				// Sequence ID from MOVING notification</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="MovingOperationKey-fold-methods"><label for="MovingOperationKey-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='MovingOperationKey-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="MovingOperationKey-fold-method-String"><label for="MovingOperationKey-fold-method-String">( MovingOperationKey) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-58">String</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='MovingOperationKey-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String returns a string representation of the key for debugging</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="MovingOperationKey-fold-impls"><label for="MovingOperationKey-fold-impls">Implements (<i>at least 4, in which 1 is exported</i>)</label><span id='MovingOperationKey-fold-impls-items' class="fold-items"><span>
+			 MovingOperationKey : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="MovingOperationKey-showhide-impls"><i><label for="MovingOperationKey-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="MovingOperationKey-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 MovingOperationKey : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 MovingOperationKey : os/signal.<a href="../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 MovingOperationKey : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="MovingOperationKey-fold-results"><label for="MovingOperationKey-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='MovingOperationKey-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Manager">Manager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-212">GetActiveMovingOperations</a>() map[<b>MovingOperationKey</b>]*<a href="#name-MovingOperation">MovingOperation</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-NotificationHandler" data-popularity="500">	<input type='checkbox' class="fold" id="NotificationHandler-fold-content"><label for="NotificationHandler-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-17">NotificationHandler</a> <i>(struct)</i></label><span id='NotificationHandler-fold-content-docs' class="fold-docs">
+<span class="md-text">		NotificationHandler handles push notifications for the simplified manager.</span>
+
+		<input type='checkbox' class="fold" id="NotificationHandler-fold-fields"><label for="NotificationHandler-fold-fields">Fields (<i>total 2, neither is exported</i>)</label><span id='NotificationHandler-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="NotificationHandler-showhide-fields"><i><label for="NotificationHandler-showhide-fields" class="show-inline">/* 2 unexporteds ... */</label><label for="NotificationHandler-showhide-fields" class="hide-inline">/* 2 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-18">manager</a> <i>*<a href="#name-Manager">Manager</a></i></span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-19">operationsManager</a> <i><a href="#name-OperationsManagerInterface">OperationsManagerInterface</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="NotificationHandler-fold-methods"><label for="NotificationHandler-fold-methods">Methods (<i>total 9, in which 1 is exported</i>)</label><span id='NotificationHandler-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-HandlePushNotification"><label for="NotificationHandler-fold-method-HandlePushNotification">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-23">HandlePushNotification</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-HandlePushNotification-docs' class="fold-docs">
+<span class="md-text">				HandlePushNotification processes push notifications with hook support.</span>
+</span></span>
+			<input type='checkbox' class="showhide" id="NotificationHandler-showhide-methods"><i><label for="NotificationHandler-showhide-methods" class="show-inline">/* 8 unexporteds ... */</label><label for="NotificationHandler-showhide-methods" class="hide-inline">/* 8 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleFailedOver"><label for="NotificationHandler-fold-method-handleFailedOver">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-309">handleFailedOver</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleFailedOver-docs' class="fold-docs">
+<span class="md-text">				handleFailedOver processes FAILED_OVER notifications.
+				FAILED_OVER indicates that a failover has completed.
+				This is a per-connection notification that clears relaxed timeouts.
+				Expected format: ["FAILED_OVER", ...]</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleFailingOver"><label for="NotificationHandler-fold-method-handleFailingOver">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-273">handleFailingOver</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleFailingOver-docs' class="fold-docs">
+<span class="md-text">				handleFailingOver processes FAILING_OVER notifications.
+				FAILING_OVER indicates that a failover is starting.
+				This is a per-connection notification that applies relaxed timeouts.
+				Expected format: ["FAILING_OVER", ...]</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleMigrated"><label for="NotificationHandler-fold-method-handleMigrated">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-243">handleMigrated</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleMigrated-docs' class="fold-docs">
+<span class="md-text">				handleMigrated processes MIGRATED notifications.
+				MIGRATED indicates that a connection migration has completed.
+				This is a per-connection notification that clears relaxed timeouts.
+				Expected format: ["MIGRATED", ...]</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleMigrating"><label for="NotificationHandler-fold-method-handleMigrating">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-208">handleMigrating</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleMigrating-docs' class="fold-docs">
+<span class="md-text">				handleMigrating processes MIGRATING notifications.
+				MIGRATING indicates that a connection migration is starting.
+				This is a per-connection notification that applies relaxed timeouts.
+				Expected format: ["MIGRATING", ...]</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleMoving"><label for="NotificationHandler-fold-method-handleMoving">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-79">handleMoving</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleMoving-docs' class="fold-docs">
+<span class="md-text">				handleMoving processes MOVING notifications.
+				MOVING indicates that a connection should be handed off to a new endpoint.
+				This is a per-connection notification that triggers connection handoff.
+				Expected format: ["MOVING", seqNum, timeS, endpoint]</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleSMigrated"><label for="NotificationHandler-fold-method-handleSMigrated">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-392">handleSMigrated</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleSMigrated-docs' class="fold-docs">
+<span class="md-text">				handleSMigrated processes SMIGRATED notifications.
+				SMIGRATED indicates that a cluster slot has finished migrating to a different node.
+				This is a cluster-level notification that triggers cluster state reload.
+				
+				Expected RESP3 format:
+				
+					&gt;3
+					+SMIGRATED
+					:SeqID
+					*&lt;num_entries&gt;       &lt;- array of triplet arrays
+					  *3                 &lt;- each triplet is a 3-element array
+					    +&lt;source&gt;        &lt;- node from which slots are migrating FROM
+					    +&lt;destination&gt;   &lt;- node to which slots are migrating TO
+					    +&lt;slots&gt;         &lt;- comma-separated slots and/or ranges (e.g., "123,789-1000")
+				
+				A source and target endpoint may appear in multiple triplets.
+				The notification is only processed if the connection's NodeAddress matches one of the source endpoints.
+				
+				Note: Multiple connections may receive the same notification, so we deduplicate by SeqID before triggering reload.
+				but we still process the notification on each connection to clear the relaxed timeout.
+				In the case when the connection is from MOVED/ASK, the connection's original endpoint is not set,
+				so we will not be able to match the source endpoint. In such case, we will trigger the reload callback with the first target endpoint.</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="NotificationHandler-fold-method-handleSMigrating"><label for="NotificationHandler-fold-method-handleSMigrating">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-339">handleSMigrating</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, handlerCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notification []interface{}) <a href="../../../../builtin.html#name-error">error</a></label><span id='NotificationHandler-fold-method-handleSMigrating-docs' class="fold-docs">
+<span class="md-text">				handleSMigrating processes SMIGRATING notifications.
+				SMIGRATING indicates that a cluster slot is in the process of migrating to a different node.
+				This is a per-connection notification that applies relaxed timeouts during slot migration.
+				Expected format: ["SMIGRATING", SeqID, slot/range1-range2, ...]</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs">(*NotificationHandler) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/push_notification_handler.go.html#line-186">markConnForHandoff</a>(conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>, newEndpoint <a href="../../../../builtin.html#name-string">string</a>, seqID <a href="../../../../builtin.html#name-int64">int64</a>, deadline <a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a>) <a href="../../../../builtin.html#name-error">error</a></span></i></span></span>
+		<input type='checkbox' class="fold" id="NotificationHandler-fold-impls"><label for="NotificationHandler-fold-impls">Implements (<i>at least one exported</i>)</label><span id='NotificationHandler-fold-impls-items' class="fold-items"><span>
+			*NotificationHandler : github.com/redis/go-redis/v9/push.<a href="push.html#name-NotificationHandler">NotificationHandler</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-NotificationHook" data-popularity="435">	<input type='checkbox' class="fold" id="NotificationHook-fold-content"><label for="NotificationHook-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-44">NotificationHook</a> <b><i>(interface)</i></b></label><span id='NotificationHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		NotificationHook is called before and after notification processing
+		PreHook can modify the notification and return false to skip processing
+		PostHook is called after successful processing</span>
+
+		<input type='checkbox' class="fold" id="NotificationHook-fold-methods"><label for="NotificationHook-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='NotificationHook-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( NotificationHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-46">PostHook</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}, result <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<span class="nodocs">( NotificationHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-45">PreHook</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, notificationCtx <a href="push.html">push</a>.<a href="push.html#name-NotificationHandlerContext">NotificationHandlerContext</a>, notificationType <a href="../../../../builtin.html#name-string">string</a>, notification []interface{}) ([]interface{}, <a href="../../../../builtin.html#name-bool">bool</a>)</span></span></span>
+		<input type='checkbox' class="fold" id="NotificationHook-fold-impledby"><label for="NotificationHook-fold-impledby">Implemented By (<i>at least 2, both are exported</i>)</label><span id='NotificationHook-fold-impledby-items' class="fold-items"><span>
+			*<a href="#name-LoggingHook">LoggingHook</a></span><span>
+			*<a href="#name-MetricsHook">MetricsHook</a></span></span>
+		<input type='checkbox' class="fold" id="NotificationHook-fold-params"><label for="NotificationHook-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='NotificationHook-fold-params-items' class="fold-items"><span>
+			func (*<a href="#name-Manager">Manager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-344">AddNotificationHook</a>(notificationHook <b>NotificationHook</b>)</span></span>
+
+</span></div><div class="anchor type-res" id="name-OperationsManagerInterface" data-popularity="320">	<input type='checkbox' class="fold" id="OperationsManagerInterface-fold-content"><label for="OperationsManagerInterface-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-15">OperationsManagerInterface</a> <b><i>(interface)</i></b></label><span id='OperationsManagerInterface-fold-content-docs' class="fold-docs">
+<span class="md-text">		OperationsManagerInterface defines the interface for completing handoff operations</span>
+
+		<input type='checkbox' class="fold" id="OperationsManagerInterface-fold-methods"><label for="OperationsManagerInterface-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='OperationsManagerInterface-fold-methods-items' class="fold-items"><span>
+			<span class="nodocs">( OperationsManagerInterface) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-16">TrackMovingOperationWithConnID</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, newEndpoint <a href="../../../../builtin.html#name-string">string</a>, deadline <a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Time">Time</a>, seqID <a href="../../../../builtin.html#name-int64">int64</a>, connID <a href="../../../../builtin.html#name-uint64">uint64</a>) <a href="../../../../builtin.html#name-error">error</a></span></span><span>
+			<span class="nodocs">( OperationsManagerInterface) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-17">UntrackOperationWithConnID</a>(seqID <a href="../../../../builtin.html#name-int64">int64</a>, connID <a href="../../../../builtin.html#name-uint64">uint64</a>)</span></span></span>
+		<input type='checkbox' class="fold" id="OperationsManagerInterface-fold-impledby"><label for="OperationsManagerInterface-fold-impledby">Implemented By (<i>at least one exported</i>)</label><span id='OperationsManagerInterface-fold-impledby-items' class="fold-items"><span>
+			*<a href="#name-Manager">Manager</a></span></span>
+		<input type='checkbox' class="fold" id="OperationsManagerInterface-fold-params"><label for="OperationsManagerInterface-fold-params">As Inputs Of (<i>at least 2, both are exported</i>)</label><span id='OperationsManagerInterface-fold-params-items' class="fold-items"><span>
+			func <a href="#name-NewPoolHook">NewPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>, operationsManager <b>OperationsManagerInterface</b>) *<a href="#name-PoolHook">PoolHook</a></span><span>
+			func <a href="#name-NewPoolHookWithPoolSize">NewPoolHookWithPoolSize</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>, operationsManager <b>OperationsManagerInterface</b>, poolSize <a href="../../../../builtin.html#name-int">int</a>) *<a href="#name-PoolHook">PoolHook</a></span></span>
+
+</span></div><div class="anchor type-res" id="name-PoolHook" data-popularity="945">	<input type='checkbox' class="fold" id="PoolHook-fold-content"><label for="PoolHook-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-31">PoolHook</a> <i>(struct)</i></label><span id='PoolHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		PoolHook implements pool.PoolHook for Redis-specific connection handling
+		with maintenance notifications support.</span>
+
+		<input type='checkbox' class="fold" id="PoolHook-fold-fields"><label for="PoolHook-fold-fields">Fields (<i>total 6, none are exported</i>)</label><span id='PoolHook-fold-fields-items' class="fold-items">
+			<input type='checkbox' class="showhide" id="PoolHook-showhide-fields"><i><label for="PoolHook-showhide-fields" class="show-inline">/* 6 unexporteds ... */</label><label for="PoolHook-showhide-fields" class="hide-inline">/* 6 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="PoolHook-fold-field-baseDialer"><label for="PoolHook-fold-field-baseDialer"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-34">baseDialer</a> <i>func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>)</i></label><span id='PoolHook-fold-field-baseDialer-docs' class="fold-docs">
+<span class="md-text">				Base dialer for creating connections to new endpoints during handoffs
+				args are network and address</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="PoolHook-fold-field-config"><label for="PoolHook-fold-field-config"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-43">config</a> <i>*<a href="#name-Config">Config</a></i></label><span id='PoolHook-fold-field-config-docs' class="fold-docs">
+<span class="md-text">				Configuration for the maintenance notifications</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="PoolHook-fold-field-network"><label for="PoolHook-fold-field-network"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-37">network</a> <i><a href="../../../../builtin.html#name-string">string</a></i></label><span id='PoolHook-fold-field-network-docs' class="fold-docs">
+<span class="md-text">				Network type (e.g., "tcp", "unix")</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="PoolHook-fold-field-operationsManager"><label for="PoolHook-fold-field-operationsManager"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-46">operationsManager</a> <i><a href="#name-OperationsManagerInterface">OperationsManagerInterface</a></i></label><span id='PoolHook-fold-field-operationsManager-docs' class="fold-docs">
+<span class="md-text">				Operations manager interface for operation completion tracking</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="PoolHook-fold-field-pool"><label for="PoolHook-fold-field-pool"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-49">pool</a> <i><a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a></i></label><span id='PoolHook-fold-field-pool-docs' class="fold-docs">
+<span class="md-text">				Pool interface for removing connections on handoff failure</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="PoolHook-fold-field-workerManager"><label for="PoolHook-fold-field-workerManager"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-40">workerManager</a> <i>*<a href="#name-handoffWorkerManager">handoffWorkerManager</a></i></label><span id='PoolHook-fold-field-workerManager-docs' class="fold-docs">
+<span class="md-text">				Worker manager for background handoff processing</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="PoolHook-fold-methods"><label for="PoolHook-fold-methods">Methods (<i>total 12, all are exported</i>)</label><span id='PoolHook-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-GetCircuitBreakerStats"><label for="PoolHook-fold-method-GetCircuitBreakerStats">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-109">GetCircuitBreakerStats</a>() []<a href="#name-CircuitBreakerStats">CircuitBreakerStats</a></label><span id='PoolHook-fold-method-GetCircuitBreakerStats-docs' class="fold-docs">
+<span class="md-text">				GetCircuitBreakerStats returns circuit breaker statistics for monitoring</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-GetCurrentWorkers"><label for="PoolHook-fold-method-GetCurrentWorkers">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-84">GetCurrentWorkers</a>() <a href="../../../../builtin.html#name-int">int</a></label><span id='PoolHook-fold-method-GetCurrentWorkers-docs' class="fold-docs">
+<span class="md-text">				GetCurrentWorkers returns the current number of active workers (for testing)</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-GetHandoffQueue"><label for="PoolHook-fold-method-GetHandoffQueue">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-104">GetHandoffQueue</a>() chan <a href="#name-HandoffRequest">HandoffRequest</a></label><span id='PoolHook-fold-method-GetHandoffQueue-docs' class="fold-docs">
+<span class="md-text">				GetHandoffQueue returns the handoff queue for testing purposes</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-GetMaxWorkers"><label for="PoolHook-fold-method-GetMaxWorkers">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-99">GetMaxWorkers</a>() <a href="../../../../builtin.html#name-int">int</a></label><span id='PoolHook-fold-method-GetMaxWorkers-docs' class="fold-docs">
+<span class="md-text">				GetMaxWorkers returns the max workers for testing purposes</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-GetPendingMap"><label for="PoolHook-fold-method-GetPendingMap">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-94">GetPendingMap</a>() *<a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Map">Map</a></label><span id='PoolHook-fold-method-GetPendingMap-docs' class="fold-docs">
+<span class="md-text">				GetPendingMap returns the pending map for testing purposes</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-IsHandoffPending"><label for="PoolHook-fold-method-IsHandoffPending">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-89">IsHandoffPending</a>(conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>) <a href="../../../../builtin.html#name-bool">bool</a></label><span id='PoolHook-fold-method-IsHandoffPending-docs' class="fold-docs">
+<span class="md-text">				IsHandoffPending returns true if the given connection has a pending handoff</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-OnGet"><label for="PoolHook-fold-method-OnGet">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-119">OnGet</a>(_ <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>, _ <a href="../../../../builtin.html#name-bool">bool</a>) (accept <a href="../../../../builtin.html#name-bool">bool</a>, err <a href="../../../../builtin.html#name-error">error</a>)</label><span id='PoolHook-fold-method-OnGet-docs' class="fold-docs">
+<span class="md-text">				OnGet is called when a connection is retrieved from the pool</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-OnPut"><label for="PoolHook-fold-method-OnPut">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-136">OnPut</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>) (shouldPool <a href="../../../../builtin.html#name-bool">bool</a>, shouldRemove <a href="../../../../builtin.html#name-bool">bool</a>, err <a href="../../../../builtin.html#name-error">error</a>)</label><span id='PoolHook-fold-method-OnPut-docs' class="fold-docs">
+<span class="md-text">				OnPut is called when a connection is returned to the pool</span>
+</span></span><span>
+			<span class="nodocs">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-175">OnRemove</a>(_ <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, _ *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>, _ <a href="../../../../builtin.html#name-error">error</a>)</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-ResetCircuitBreakers"><label for="PoolHook-fold-method-ResetCircuitBreakers">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-114">ResetCircuitBreakers</a>()</label><span id='PoolHook-fold-method-ResetCircuitBreakers-docs' class="fold-docs">
+<span class="md-text">				ResetCircuitBreakers resets all circuit breakers (useful for testing)</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-SetPool"><label for="PoolHook-fold-method-SetPool">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-79">SetPool</a>(pooler <a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a>)</label><span id='PoolHook-fold-method-SetPool-docs' class="fold-docs">
+<span class="md-text">				SetPool sets the pool interface for removing connections on handoff failure</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="PoolHook-fold-method-Shutdown"><label for="PoolHook-fold-method-Shutdown">(*PoolHook) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-180">Shutdown</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>) <a href="../../../../builtin.html#name-error">error</a></label><span id='PoolHook-fold-method-Shutdown-docs' class="fold-docs">
+<span class="md-text">				Shutdown gracefully shuts down the processor, waiting for workers to complete</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="PoolHook-fold-impls"><label for="PoolHook-fold-impls">Implements (<i>at least one exported</i>)</label><span id='PoolHook-fold-impls-items' class="fold-items"><span>
+			*PoolHook : github.com/redis/go-redis/v9/internal/pool.<a href="internal/pool.html#name-PoolHook">PoolHook</a></span></span>
+		<input type='checkbox' class="fold" id="PoolHook-fold-results"><label for="PoolHook-fold-results">As Outputs Of (<i>at least 3, in which 2 are exported</i>)</label><span id='PoolHook-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewPoolHook">NewPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>, operationsManager <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a>) *<b>PoolHook</b></span><span>
+			func <a href="#name-NewPoolHookWithPoolSize">NewPoolHookWithPoolSize</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>, operationsManager <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a>, poolSize <a href="../../../../builtin.html#name-int">int</a>) *<b>PoolHook</b></span>
+			<input type='checkbox' class="showhide" id="PoolHook-showhide-inputofs"><i><label for="PoolHook-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="PoolHook-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func (*<a href="#name-Manager">Manager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-328">createPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>)) *<b>PoolHook</b></i></span></span>
+		<input type='checkbox' class="fold" id="PoolHook-fold-params"><label for="PoolHook-fold-params">As Inputs Of (<i>at least 2, in which 1 is exported</i>)</label><span id='PoolHook-fold-params-items' class="fold-items"><span>
+			func <a href="#name-ExampleCircuitBreakerMonitor">ExampleCircuitBreakerMonitor</a>(poolHook *<b>PoolHook</b>)</span>
+			<input type='checkbox' class="showhide" id="PoolHook-showhide-outputofs"><i><label for="PoolHook-showhide-outputofs" class="show-inline">/* at least one unexported ... */</label><label for="PoolHook-showhide-outputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-newHandoffWorkerManager">newHandoffWorkerManager</a>(config *<a href="#name-Config">Config</a>, poolHook *<b>PoolHook</b>) *<a href="#name-handoffWorkerManager">handoffWorkerManager</a></i></span></span>
+
+</span></div><div class="anchor type-res" id="name-State" data-popularity="335">	<input type='checkbox' class="fold" id="State-fold-content"><label for="State-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/state.go.html#line-4">State</a> <a href="../../../../builtin.html#name-int">int</a> <i>(basic type)</i></label><span id='State-fold-content-docs' class="fold-docs">
+<span class="md-text">		State represents the current state of a maintenance operation</span>
+
+		<input type='checkbox' class="fold" id="State-fold-methods"><label for="State-fold-methods">Methods (<i>only one, which is exported</i>)</label><span id='State-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="State-fold-method-String"><label for="State-fold-method-String">( State) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/state.go.html#line-15">String</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='State-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String returns a string representation of the state.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="State-fold-impls"><label for="State-fold-impls">Implements (<i>at least 4, in which 1 is exported</i>)</label><span id='State-fold-impls-items' class="fold-items"><span>
+			 State : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="State-showhide-impls"><i><label for="State-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="State-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 State : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 State : os/signal.<a href="../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 State : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="State-fold-results"><label for="State-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='State-fold-results-items' class="fold-items"><span>
+			func (*<a href="#name-Manager">Manager</a>).<a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-292">GetState</a>() <b>State</b></span></span>
+		<input type='checkbox' class="fold" id="State-fold-values"><label for="State-fold-values">As Types Of (<i>total 2, both are exported</i>)</label><span id='State-fold-values-items' class="fold-items"><span>
+			const <a href="#name-StateIdle">StateIdle</a></span><span>
+			const <a href="#name-StateMoving">StateMoving</a></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* 2 unexporteds ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* 2 unexporteds: */</label></i><div class="anchor type-res hidden" id="name-contextKey" data-popularity="5">	<input type='checkbox' class="fold" id="contextKey-fold-content"><label for="contextKey-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-15">contextKey</a> <a href="../../../../builtin.html#name-string">string</a> <i>(basic type)</i></label><span id='contextKey-fold-content-docs' class="fold-docs">
+<span class="md-text">		contextKey is a custom type for context keys to avoid collisions</span>
+
+		<input type='checkbox' class="fold" id="contextKey-fold-values"><label for="contextKey-fold-values">As Types Of (<i>only one, which is unexported</i>)</label><span id='contextKey-fold-values-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="contextKey-showhide-values"><i><label for="contextKey-showhide-values" class="show-inline">/* one unexported ... */</label><label for="contextKey-showhide-values" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			const <a href="#name-startTimeKey">startTimeKey</a></i></span></span>
+
+</span></div><div class="anchor type-res hidden" id="name-handoffWorkerManager" data-popularity="875">	<input type='checkbox' class="fold" id="handoffWorkerManager-fold-content"><label for="handoffWorkerManager-fold-content"> type <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-20">handoffWorkerManager</a> <i>(struct)</i></label><span id='handoffWorkerManager-fold-content-docs' class="fold-docs">
+<span class="md-text">		handoffWorkerManager manages background workers and queue for connection handoffs</span>
+
+		<input type='checkbox' class="fold" id="handoffWorkerManager-fold-fields"><label for="handoffWorkerManager-fold-fields">Fields (<i>total 12, none are exported</i>)</label><span id='handoffWorkerManager-fold-fields-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="handoffWorkerManager-showhide-fields"><i><label for="handoffWorkerManager-showhide-fields" class="show-inline">/* 12 unexporteds ... */</label><label for="handoffWorkerManager-showhide-fields" class="hide-inline">/* 12 unexporteds: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-29">activeWorkers</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Int32">Int32</a></i></span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-circuitBreakerManager"><label for="handoffWorkerManager-fold-field-circuitBreakerManager"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-43">circuitBreakerManager</a> <i>*<a href="#name-CircuitBreakerManager">CircuitBreakerManager</a></i></label><span id='handoffWorkerManager-fold-field-circuitBreakerManager-docs' class="fold-docs">
+<span class="md-text">				Circuit breaker manager for endpoint failure handling</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-config"><label for="handoffWorkerManager-fold-field-config"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-37">config</a> <i>*<a href="#name-Config">Config</a></i></label><span id='handoffWorkerManager-fold-field-config-docs' class="fold-docs">
+<span class="md-text">				Configuration for the maintenance notifications</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-handoffQueue"><label for="handoffWorkerManager-fold-field-handoffQueue"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-22">handoffQueue</a> <i>chan <a href="#name-HandoffRequest">HandoffRequest</a></i></label><span id='handoffWorkerManager-fold-field-handoffQueue-docs' class="fold-docs">
+<span class="md-text">				Event-driven handoff support</span>
+<span class="md-text">				// Queue for handoff requests</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-maxWorkers"><label for="handoffWorkerManager-fold-field-maxWorkers"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-28">maxWorkers</a> <i><a href="../../../../builtin.html#name-int">int</a></i></label><span id='handoffWorkerManager-fold-field-maxWorkers-docs' class="fold-docs">
+<span class="md-text">				On-demand worker management</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-pending"><label for="handoffWorkerManager-fold-field-pending"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-34">pending</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Map">Map</a></i></label><span id='handoffWorkerManager-fold-field-pending-docs' class="fold-docs">
+<span class="md-text">				Simple state tracking</span>
+<span class="md-text">				// map[uint64]int64 (connID -&gt; seqID)</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-poolHook"><label for="handoffWorkerManager-fold-field-poolHook"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-40">poolHook</a> <i>*<a href="#name-PoolHook">PoolHook</a></i></label><span id='handoffWorkerManager-fold-field-poolHook-docs' class="fold-docs">
+<span class="md-text">				Pool hook reference for handoff processing</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-shutdown"><label for="handoffWorkerManager-fold-field-shutdown"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-23">shutdown</a> <i>chan struct{}</i></label><span id='handoffWorkerManager-fold-field-shutdown-docs' class="fold-docs">
+<span class="md-text">				// Shutdown signal</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-shutdownOnce"><label for="handoffWorkerManager-fold-field-shutdownOnce"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-24">shutdownOnce</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Once">Once</a></i></label><span id='handoffWorkerManager-fold-field-shutdownOnce-docs' class="fold-docs">
+<span class="md-text">				// Ensure clean shutdown</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-workerTimeout"><label for="handoffWorkerManager-fold-field-workerTimeout"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-30">workerTimeout</a> <i><a href="../../../../time.html">time</a>.<a href="../../../../time.html#name-Duration">Duration</a></i></label><span id='handoffWorkerManager-fold-field-workerTimeout-docs' class="fold-docs">
+<span class="md-text">				// How long workers wait for work before exiting</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-field-workerWg"><label for="handoffWorkerManager-fold-field-workerWg"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-25">workerWg</a> <i><a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-WaitGroup">WaitGroup</a></i></label><span id='handoffWorkerManager-fold-field-workerWg-docs' class="fold-docs">
+<span class="md-text">				// Track worker goroutines</span>
+</span></i></span><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-31">workersScaling</a> <i><a href="../../../../sync/atomic.html">atomic</a>.<a href="../../../../sync/atomic.html#name-Bool">Bool</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="handoffWorkerManager-fold-methods"><label for="handoffWorkerManager-fold-methods">Methods (<i>total 16, none are exported</i>)</label><span id='handoffWorkerManager-fold-methods-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="handoffWorkerManager-showhide-methods"><i><label for="handoffWorkerManager-showhide-methods" class="show-inline">/* 16 unexporteds ... */</label><label for="handoffWorkerManager-showhide-methods" class="hide-inline">/* 16 unexporteds: */</label></i><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-closeConnFromRequest"><label for="handoffWorkerManager-fold-method-closeConnFromRequest">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-500">closeConnFromRequest</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, request <a href="#name-HandoffRequest">HandoffRequest</a>, err <a href="../../../../builtin.html#name-error">error</a>)</label><span id='handoffWorkerManager-fold-method-closeConnFromRequest-docs' class="fold-docs">
+<span class="md-text">				closeConnFromRequest closes the connection and logs the reason</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-createEndpointDialer"><label for="handoffWorkerManager-fold-method-createEndpointDialer">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-482">createEndpointDialer</a>(endpoint <a href="../../../../builtin.html#name-string">string</a>) func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>)</label><span id='handoffWorkerManager-fold-method-createEndpointDialer-docs' class="fold-docs">
+<span class="md-text">				createEndpointDialer creates a dialer function that connects to a specific endpoint</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-ensureWorkerAvailable"><label for="handoffWorkerManager-fold-method-ensureWorkerAvailable">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-98">ensureWorkerAvailable</a>()</label><span id='handoffWorkerManager-fold-method-ensureWorkerAvailable-docs' class="fold-docs">
+<span class="md-text">				ensureWorkerAvailable ensures at least one worker is available to process requests
+				Creates a new worker if needed and under the max limit</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-getCircuitBreakerStats"><label for="handoffWorkerManager-fold-method-getCircuitBreakerStats">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-81">getCircuitBreakerStats</a>() []<a href="#name-CircuitBreakerStats">CircuitBreakerStats</a></label><span id='handoffWorkerManager-fold-method-getCircuitBreakerStats-docs' class="fold-docs">
+<span class="md-text">				getCircuitBreakerStats returns circuit breaker statistics for monitoring</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-getCurrentWorkers"><label for="handoffWorkerManager-fold-method-getCurrentWorkers">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-61">getCurrentWorkers</a>() <a href="../../../../builtin.html#name-int">int</a></label><span id='handoffWorkerManager-fold-method-getCurrentWorkers-docs' class="fold-docs">
+<span class="md-text">				getCurrentWorkers returns the current number of active workers (for testing)</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-getHandoffQueue"><label for="handoffWorkerManager-fold-method-getHandoffQueue">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-76">getHandoffQueue</a>() chan <a href="#name-HandoffRequest">HandoffRequest</a></label><span id='handoffWorkerManager-fold-method-getHandoffQueue-docs' class="fold-docs">
+<span class="md-text">				getHandoffQueue returns the handoff queue for testing purposes</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-getMaxWorkers"><label for="handoffWorkerManager-fold-method-getMaxWorkers">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-71">getMaxWorkers</a>() <a href="../../../../builtin.html#name-int">int</a></label><span id='handoffWorkerManager-fold-method-getMaxWorkers-docs' class="fold-docs">
+<span class="md-text">				getMaxWorkers returns the max workers for testing purposes</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-getPendingMap"><label for="handoffWorkerManager-fold-method-getPendingMap">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-66">getPendingMap</a>() *<a href="../../../../sync.html">sync</a>.<a href="../../../../sync.html#name-Map">Map</a></label><span id='handoffWorkerManager-fold-method-getPendingMap-docs' class="fold-docs">
+<span class="md-text">				getPendingMap returns the pending map for testing purposes</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-isHandoffPending"><label for="handoffWorkerManager-fold-method-isHandoffPending">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-91">isHandoffPending</a>(conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>) <a href="../../../../builtin.html#name-bool">bool</a></label><span id='handoffWorkerManager-fold-method-isHandoffPending-docs' class="fold-docs">
+<span class="md-text">				isHandoffPending returns true if the given connection has a pending handoff</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-onDemandWorker"><label for="handoffWorkerManager-fold-method-onDemandWorker">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-123">onDemandWorker</a>()</label><span id='handoffWorkerManager-fold-method-onDemandWorker-docs' class="fold-docs">
+<span class="md-text">				onDemandWorker processes handoff requests and exits when idle</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-performConnectionHandoff"><label for="handoffWorkerManager-fold-method-performConnectionHandoff">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-358">performConnectionHandoff</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>) (shouldRetry <a href="../../../../builtin.html#name-bool">bool</a>, err <a href="../../../../builtin.html#name-error">error</a>)</label><span id='handoffWorkerManager-fold-method-performConnectionHandoff-docs' class="fold-docs">
+<span class="md-text">				performConnectionHandoff performs the actual connection handoff
+				When error is returned, the connection handoff should be retried if err is not ErrMaxHandoffRetriesReached</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-performHandoffInternal"><label for="handoffWorkerManager-fold-method-performHandoffInternal">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-394">performHandoffInternal</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>, newEndpoint <a href="../../../../builtin.html#name-string">string</a>, connID <a href="../../../../builtin.html#name-uint64">uint64</a>) (shouldRetry <a href="../../../../builtin.html#name-bool">bool</a>, err <a href="../../../../builtin.html#name-error">error</a>)</label><span id='handoffWorkerManager-fold-method-performHandoffInternal-docs' class="fold-docs">
+<span class="md-text">				performHandoffInternal performs the actual handoff logic (extracted for circuit breaker integration)</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-processHandoffRequest"><label for="handoffWorkerManager-fold-method-processHandoffRequest">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-180">processHandoffRequest</a>(request <a href="#name-HandoffRequest">HandoffRequest</a>)</label><span id='handoffWorkerManager-fold-method-processHandoffRequest-docs' class="fold-docs">
+<span class="md-text">				processHandoffRequest processes a single handoff request</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-queueHandoff"><label for="handoffWorkerManager-fold-method-queueHandoff">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-267">queueHandoff</a>(conn *<a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Conn">Conn</a>) <a href="../../../../builtin.html#name-error">error</a></label><span id='handoffWorkerManager-fold-method-queueHandoff-docs' class="fold-docs">
+<span class="md-text">				queueHandoff queues a handoff request for processing
+				if err is returned, connection will be removed from pool</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-resetCircuitBreakers"><label for="handoffWorkerManager-fold-method-resetCircuitBreakers">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-86">resetCircuitBreakers</a>()</label><span id='handoffWorkerManager-fold-method-resetCircuitBreakers-docs' class="fold-docs">
+<span class="md-text">				resetCircuitBreakers resets all circuit breakers (useful for testing)</span>
+</span></i></span><span class="hidden"><i>
+			<input type='checkbox' class="fold" id="handoffWorkerManager-fold-method-shutdownWorkers"><label for="handoffWorkerManager-fold-method-shutdownWorkers">(*handoffWorkerManager) <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-330">shutdownWorkers</a>(ctx <a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>) <a href="../../../../builtin.html#name-error">error</a></label><span id='handoffWorkerManager-fold-method-shutdownWorkers-docs' class="fold-docs">
+<span class="md-text">				shutdownWorkers gracefully shuts down the worker manager, waiting for workers to complete</span>
+</span></i></span></span>
+		<input type='checkbox' class="fold" id="handoffWorkerManager-fold-results"><label for="handoffWorkerManager-fold-results">As Outputs Of (<i>at least one unexported</i>)</label><span id='handoffWorkerManager-fold-results-items' class="fold-items">
+			<input type='checkbox' checked class="showhide" id="handoffWorkerManager-showhide-inputofs"><i><label for="handoffWorkerManager-showhide-inputofs" class="show-inline">/* at least one unexported ... */</label><label for="handoffWorkerManager-showhide-inputofs" class="hide-inline">/* at least one unexported: */</label></i><span class="hidden"><i>
+			func <a href="#name-newHandoffWorkerManager">newHandoffWorkerManager</a>(config *<a href="#name-Config">Config</a>, poolHook *<a href="#name-PoolHook">PoolHook</a>) *<b>handoffWorkerManager</b></i></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 12, in which 8 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-DefaultConfig">	<input type='checkbox' class="fold" id="DefaultConfig-fold-content"><label for="DefaultConfig-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-137">DefaultConfig</a>() *<a href="#name-Config">Config</a></label><span id='DefaultConfig-fold-content-docs' class="fold-docs">
+<span class="md-text">		DefaultConfig returns a Config with sensible defaults.</span>
+
+</span></div><div class="anchor value-res" id="name-DetectEndpointType">	<input type='checkbox' class="fold" id="DetectEndpointType-fold-content"><label for="DetectEndpointType-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-381">DetectEndpointType</a>(addr <a href="../../../../builtin.html#name-string">string</a>, tlsEnabled <a href="../../../../builtin.html#name-bool">bool</a>) <a href="#name-EndpointType">EndpointType</a></label><span id='DetectEndpointType-fold-content-docs' class="fold-docs">
+<span class="md-text">		DetectEndpointType automatically detects the appropriate endpoint type
+		based on the connection address and TLS configuration.
+		
+		For IP addresses:
+		  - If TLS is enabled: requests FQDN for proper certificate validation
+		  - If TLS is disabled: requests IP for better performance
+		
+		For hostnames:
+		  - If TLS is enabled: always requests FQDN for proper certificate validation
+		  - If TLS is disabled: requests IP for better performance
+		
+		Internal vs External detection:
+		  - For IPs: uses private IP range detection
+		  - For hostnames: uses heuristics based on common internal naming patterns</span>
+
+</span></div><div class="anchor value-res" id="name-ExampleCircuitBreakerMonitor">	<input type='checkbox' class="fold" id="ExampleCircuitBreakerMonitor-fold-content"><label for="ExampleCircuitBreakerMonitor-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-85">ExampleCircuitBreakerMonitor</a>(poolHook *<a href="#name-PoolHook">PoolHook</a>)</label><span id='ExampleCircuitBreakerMonitor-fold-content-docs' class="fold-docs">
+<span class="md-text">		ExampleCircuitBreakerMonitor demonstrates how to monitor circuit breaker status</span>
+
+</span></div><div class="anchor value-res" id="name-NewLoggingHook">	<input type='checkbox' class="fold" id="NewLoggingHook-fold-content"><label for="NewLoggingHook-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/hooks.go.html#line-58">NewLoggingHook</a>(logLevel <a href="../../../../builtin.html#name-int">int</a>) *<a href="#name-LoggingHook">LoggingHook</a></label><span id='NewLoggingHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewLoggingHook creates a new logging hook with the specified log level.
+		Log levels: 0=Error, 1=Warn, 2=Info, 3=Debug</span>
+
+</span></div><div class="anchor value-res" id="name-NewManager">	<input type='checkbox' class="fold" id="NewManager-fold-content"><label for="NewManager-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-106">NewManager</a>(client <a href="internal/interfaces.html">interfaces</a>.<a href="internal/interfaces.html#name-ClientInterface">ClientInterface</a>, pool <a href="internal/pool.html">pool</a>.<a href="internal/pool.html#name-Pooler">Pooler</a>, config *<a href="#name-Config">Config</a>) (*<a href="#name-Manager">Manager</a>, <a href="../../../../builtin.html#name-error">error</a>)</label><span id='NewManager-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewManager creates a new simplified manager.</span>
+
+</span></div><div class="anchor value-res" id="name-NewMetricsHook">	<input type='checkbox' class="fold" id="NewMetricsHook-fold-content"><label for="NewMetricsHook-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-32">NewMetricsHook</a>() *<a href="#name-MetricsHook">MetricsHook</a></label><span id='NewMetricsHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewMetricsHook creates a new metrics collection hook.</span>
+
+</span></div><div class="anchor value-res" id="name-NewPoolHook">	<input type='checkbox' class="fold" id="NewPoolHook-fold-content"><label for="NewPoolHook-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-53">NewPoolHook</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>, operationsManager <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a>) *<a href="#name-PoolHook">PoolHook</a></label><span id='NewPoolHook-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewPoolHook creates a new pool hook</span>
+
+</span></div><div class="anchor value-res" id="name-NewPoolHookWithPoolSize">	<input type='checkbox' class="fold" id="NewPoolHookWithPoolSize-fold-content"><label for="NewPoolHookWithPoolSize-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/pool_hook.go.html#line-58">NewPoolHookWithPoolSize</a>(baseDialer func(<a href="../../../../context.html">context</a>.<a href="../../../../context.html#name-Context">Context</a>, <a href="../../../../builtin.html#name-string">string</a>, <a href="../../../../builtin.html#name-string">string</a>) (<a href="../../../../net.html">net</a>.<a href="../../../../net.html#name-Conn">Conn</a>, <a href="../../../../builtin.html#name-error">error</a>), network <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>, operationsManager <a href="#name-OperationsManagerInterface">OperationsManagerInterface</a>, poolSize <a href="../../../../builtin.html#name-int">int</a>) *<a href="#name-PoolHook">PoolHook</a></label><span id='NewPoolHookWithPoolSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewPoolHookWithPoolSize creates a new pool hook with pool size for better worker defaults</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-functions-showhide"><i><label for="unexported-functions-showhide" class="show-inline">/* 4 unexporteds ... */</label><label for="unexported-functions-showhide" class="hide-inline">/* 4 unexporteds: */</label></i><div class="anchor value-res hidden" id="name-isInternalHostname"><i>	<input type='checkbox' class="fold" id="isInternalHostname-fold-content"><label for="isInternalHostname-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-427">isInternalHostname</a>(hostname <a href="../../../../builtin.html#name-string">string</a>) <a href="../../../../builtin.html#name-bool">bool</a></label><span id='isInternalHostname-fold-content-docs' class="fold-docs">
+<span class="md-text">		isInternalHostname determines if a hostname appears to be internal/private.
+		This is a heuristic based on common naming patterns.</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-newCircuitBreaker"><i>	<input type='checkbox' class="fold" id="newCircuitBreaker-fold-content"><label for="newCircuitBreaker-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-59">newCircuitBreaker</a>(endpoint <a href="../../../../builtin.html#name-string">string</a>, config *<a href="#name-Config">Config</a>) *<a href="#name-CircuitBreaker">CircuitBreaker</a></label><span id='newCircuitBreaker-fold-content-docs' class="fold-docs">
+<span class="md-text">		newCircuitBreaker creates a new circuit breaker for an endpoint</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-newCircuitBreakerManager"><i>	<input type='checkbox' class="fold" id="newCircuitBreakerManager-fold-content"><label for="newCircuitBreakerManager-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-233">newCircuitBreakerManager</a>(config *<a href="#name-Config">Config</a>) *<a href="#name-CircuitBreakerManager">CircuitBreakerManager</a></label><span id='newCircuitBreakerManager-fold-content-docs' class="fold-docs">
+<span class="md-text">		newCircuitBreakerManager creates a new circuit breaker manager</span>
+
+</span></i></div><div class="anchor value-res hidden" id="name-newHandoffWorkerManager"><i>	<input type='checkbox' class="fold" id="newHandoffWorkerManager-fold-content"><label for="newHandoffWorkerManager-fold-content"> func <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-47">newHandoffWorkerManager</a>(config *<a href="#name-Config">Config</a>, poolHook *<a href="#name-PoolHook">PoolHook</a>) *<a href="#name-handoffWorkerManager">handoffWorkerManager</a></label><span id='newHandoffWorkerManager-fold-content-docs' class="fold-docs">
+<span class="md-text">		newHandoffWorkerManager creates a new handoff worker manager</span>
+
+</span></i></div></div>
+<div id="exported-variables"><span class="title">Package-Level Variables<span class="title-stat"><i> (total 21, in which 20 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-ErrCircuitBreakerOpen">	<input type='checkbox' class="fold" id="ErrCircuitBreakerOpen-fold-content"><label for="ErrCircuitBreakerOpen-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-65">ErrCircuitBreakerOpen</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrCircuitBreakerOpen-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrCircuitBreakerOpen is returned when the circuit breaker is open</span>
+
+</span></div><div class="anchor value-res" id="name-ErrConnectionInvalidHandoffState">	<input type='checkbox' class="fold" id="ErrConnectionInvalidHandoffState-fold-content"><label for="ErrConnectionInvalidHandoffState-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-53">ErrConnectionInvalidHandoffState</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrConnectionInvalidHandoffState-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrConnectionInvalidHandoffState is returned when a connection is in an invalid state for handoff</span>
+
+</span></div><div class="anchor value-res" id="name-ErrConnectionMarkedForHandoff">	<input type='checkbox' class="fold" id="ErrConnectionMarkedForHandoff-fold-content"><label for="ErrConnectionMarkedForHandoff-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-48">ErrConnectionMarkedForHandoff</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrConnectionMarkedForHandoff-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrConnectionMarkedForHandoff is returned when a connection is marked for handoff
+		and should not be used until the handoff is complete</span>
+
+</span></div><div class="anchor value-res" id="name-ErrConnectionMarkedForHandoffWithState">	<input type='checkbox' class="fold" id="ErrConnectionMarkedForHandoffWithState-fold-content"><label for="ErrConnectionMarkedForHandoffWithState-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-51">ErrConnectionMarkedForHandoffWithState</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrConnectionMarkedForHandoffWithState-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrConnectionMarkedForHandoffWithState is returned when a connection is marked for handoff
+		and should not be used until the handoff is complete</span>
+
+</span></div><div class="anchor value-res" id="name-ErrHandoffQueueFull">	<input type='checkbox' class="fold" id="ErrHandoffQueueFull-fold-content"><label for="ErrHandoffQueueFull-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-35">ErrHandoffQueueFull</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrHandoffQueueFull-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrHandoffQueueFull is returned when the handoff queue is full</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidCircuitBreakerFailureThreshold">	<input type='checkbox' class="fold" id="ErrInvalidCircuitBreakerFailureThreshold-fold-content"><label for="ErrInvalidCircuitBreakerFailureThreshold-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-71">ErrInvalidCircuitBreakerFailureThreshold</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidCircuitBreakerFailureThreshold-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInvalidCircuitBreakerFailureThreshold is returned when the circuit breaker failure threshold is invalid</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidCircuitBreakerMaxRequests">	<input type='checkbox' class="fold" id="ErrInvalidCircuitBreakerMaxRequests-fold-content"><label for="ErrInvalidCircuitBreakerMaxRequests-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-75">ErrInvalidCircuitBreakerMaxRequests</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidCircuitBreakerMaxRequests-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInvalidCircuitBreakerMaxRequests is returned when the circuit breaker max requests is invalid</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidCircuitBreakerResetTimeout">	<input type='checkbox' class="fold" id="ErrInvalidCircuitBreakerResetTimeout-fold-content"><label for="ErrInvalidCircuitBreakerResetTimeout-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-73">ErrInvalidCircuitBreakerResetTimeout</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidCircuitBreakerResetTimeout-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInvalidCircuitBreakerResetTimeout is returned when the circuit breaker reset timeout is invalid</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidClient">	<input type='checkbox' class="fold" id="ErrInvalidClient-fold-content"><label for="ErrInvalidClient-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-29">ErrInvalidClient</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidClient-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInvalidClient is returned when the client does not support push notifications</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidEndpointType">	<input type='checkbox' class="fold" id="ErrInvalidEndpointType-fold-content"><label for="ErrInvalidEndpointType-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-16">ErrInvalidEndpointType</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidEndpointType-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidHandoffQueueSize">	<input type='checkbox' class="fold" id="ErrInvalidHandoffQueueSize-fold-content"><label for="ErrInvalidHandoffQueueSize-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-14">ErrInvalidHandoffQueueSize</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidHandoffQueueSize-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidHandoffRetries">	<input type='checkbox' class="fold" id="ErrInvalidHandoffRetries-fold-content"><label for="ErrInvalidHandoffRetries-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-23">ErrInvalidHandoffRetries</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidHandoffRetries-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInvalidHandoffRetries is returned when the number of handoff retries is invalid</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidHandoffTimeout">	<input type='checkbox' class="fold" id="ErrInvalidHandoffTimeout-fold-content"><label for="ErrInvalidHandoffTimeout-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-12">ErrInvalidHandoffTimeout</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidHandoffTimeout-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidHandoffWorkers">	<input type='checkbox' class="fold" id="ErrInvalidHandoffWorkers-fold-content"><label for="ErrInvalidHandoffWorkers-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-13">ErrInvalidHandoffWorkers</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidHandoffWorkers-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidMaintNotifications">	<input type='checkbox' class="fold" id="ErrInvalidMaintNotifications-fold-content"><label for="ErrInvalidMaintNotifications-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-17">ErrInvalidMaintNotifications</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidMaintNotifications-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidNotification">	<input type='checkbox' class="fold" id="ErrInvalidNotification-fold-content"><label for="ErrInvalidNotification-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-41">ErrInvalidNotification</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidNotification-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrInvalidNotification is returned when a notification is in an invalid format</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidPostHandoffRelaxedDuration">	<input type='checkbox' class="fold" id="ErrInvalidPostHandoffRelaxedDuration-fold-content"><label for="ErrInvalidPostHandoffRelaxedDuration-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-15">ErrInvalidPostHandoffRelaxedDuration</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidPostHandoffRelaxedDuration-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrInvalidRelaxedTimeout">	<input type='checkbox' class="fold" id="ErrInvalidRelaxedTimeout-fold-content"><label for="ErrInvalidRelaxedTimeout-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-11">ErrInvalidRelaxedTimeout</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrInvalidRelaxedTimeout-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrMaxHandoffRetriesReached">	<input type='checkbox' class="fold" id="ErrMaxHandoffRetriesReached-fold-content"><label for="ErrMaxHandoffRetriesReached-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-18">ErrMaxHandoffRetriesReached</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrMaxHandoffRetriesReached-fold-content-docs' class="fold-docs">
+<span class="md-text">		Configuration errors</span>
+
+</span></div><div class="anchor value-res" id="name-ErrShutdown">	<input type='checkbox' class="fold" id="ErrShutdown-fold-content"><label for="ErrShutdown-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/errors.go.html#line-59">ErrShutdown</a> <a href="../../../../builtin.html#name-error">error</a></label><span id='ErrShutdown-fold-content-docs' class="fold-docs">
+<span class="md-text">		ErrShutdown is returned when the maintnotifications manager is shutdown</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-variables-showhide"><i><label for="unexported-variables-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-variables-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-maintenanceNotificationTypes"><i>	<input type='checkbox' class="fold" id="maintenanceNotificationTypes-fold-content"><label for="maintenanceNotificationTypes-fold-content">  var <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-31">maintenanceNotificationTypes</a> []<a href="../../../../builtin.html#name-string">string</a></label><span id='maintenanceNotificationTypes-fold-content-docs' class="fold-docs">
+<span class="md-text">		maintenanceNotificationTypes contains all notification types that maintenance handles</span>
+
+</span></i></div></div>
+<div id="exported-constants"><span class="title">Package-Level Constants<span class="title-stat"><i> (total 23, in which 22 are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-CircuitBreakerClosed">	<input type='checkbox' class="fold" id="CircuitBreakerClosed-fold-content"><label for="CircuitBreakerClosed-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-18">CircuitBreakerClosed</a> <a href="#name-CircuitBreakerState">CircuitBreakerState</a> = 0</label><span id='CircuitBreakerClosed-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerClosed - normal operation, requests allowed</span>
+
+</span></div><div class="anchor value-res" id="name-CircuitBreakerHalfOpen">	<input type='checkbox' class="fold" id="CircuitBreakerHalfOpen-fold-content"><label for="CircuitBreakerHalfOpen-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-22">CircuitBreakerHalfOpen</a> <a href="#name-CircuitBreakerState">CircuitBreakerState</a> = 2</label><span id='CircuitBreakerHalfOpen-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerHalfOpen - testing if service recovered</span>
+
+</span></div><div class="anchor value-res" id="name-CircuitBreakerOpen">	<input type='checkbox' class="fold" id="CircuitBreakerOpen-fold-content"><label for="CircuitBreakerOpen-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/circuit_breaker.go.html#line-20">CircuitBreakerOpen</a> <a href="#name-CircuitBreakerState">CircuitBreakerState</a> = 1</label><span id='CircuitBreakerOpen-fold-content-docs' class="fold-docs">
+<span class="md-text">		CircuitBreakerOpen - failing fast, requests rejected</span>
+
+</span></div><div class="anchor value-res" id="name-EndpointTypeAuto">	<input type='checkbox' class="fold" id="EndpointTypeAuto-fold-content"><label for="EndpointTypeAuto-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-44">EndpointTypeAuto</a> <a href="#name-EndpointType">EndpointType</a> = "auto" // <span class="md-text">Auto-detect based on connection</span></label><span id='EndpointTypeAuto-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for endpoint types</span>
+
+</span></div><div class="anchor value-res" id="name-EndpointTypeExternalFQDN">	<input type='checkbox' class="fold" id="EndpointTypeExternalFQDN-fold-content"><label for="EndpointTypeExternalFQDN-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-48">EndpointTypeExternalFQDN</a> <a href="#name-EndpointType">EndpointType</a> = "external-fqdn" // <span class="md-text">External FQDN</span></label><span id='EndpointTypeExternalFQDN-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for endpoint types</span>
+
+</span></div><div class="anchor value-res" id="name-EndpointTypeExternalIP">	<input type='checkbox' class="fold" id="EndpointTypeExternalIP-fold-content"><label for="EndpointTypeExternalIP-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-47">EndpointTypeExternalIP</a> <a href="#name-EndpointType">EndpointType</a> = "external-ip" // <span class="md-text">External IP address</span></label><span id='EndpointTypeExternalIP-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for endpoint types</span>
+
+</span></div><div class="anchor value-res" id="name-EndpointTypeInternalFQDN">	<input type='checkbox' class="fold" id="EndpointTypeInternalFQDN-fold-content"><label for="EndpointTypeInternalFQDN-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-46">EndpointTypeInternalFQDN</a> <a href="#name-EndpointType">EndpointType</a> = "internal-fqdn" // <span class="md-text">Internal FQDN</span></label><span id='EndpointTypeInternalFQDN-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for endpoint types</span>
+
+</span></div><div class="anchor value-res" id="name-EndpointTypeInternalIP">	<input type='checkbox' class="fold" id="EndpointTypeInternalIP-fold-content"><label for="EndpointTypeInternalIP-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-45">EndpointTypeInternalIP</a> <a href="#name-EndpointType">EndpointType</a> = "internal-ip" // <span class="md-text">Internal IP address</span></label><span id='EndpointTypeInternalIP-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for endpoint types</span>
+
+</span></div><div class="anchor value-res" id="name-EndpointTypeNone">	<input type='checkbox' class="fold" id="EndpointTypeNone-fold-content"><label for="EndpointTypeNone-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-49">EndpointTypeNone</a> <a href="#name-EndpointType">EndpointType</a> = "none" // <span class="md-text">No endpoint (reconnect with current config)</span></label><span id='EndpointTypeNone-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for endpoint types</span>
+
+</span></div><div class="anchor value-res" id="name-ModeAuto">	<input type='checkbox' class="fold" id="ModeAuto-fold-content"><label for="ModeAuto-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-21">ModeAuto</a> <a href="#name-Mode">Mode</a> = "auto" // <span class="md-text">Client tries to send command, disables feature on error</span></label><span id='ModeAuto-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for maintenance push notifications modes</span>
+
+</span></div><div class="anchor value-res" id="name-ModeDisabled">	<input type='checkbox' class="fold" id="ModeDisabled-fold-content"><label for="ModeDisabled-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-19">ModeDisabled</a> <a href="#name-Mode">Mode</a> = "disabled" // <span class="md-text">Client doesn't send CLIENT MAINT_NOTIFICATIONS ON command</span></label><span id='ModeDisabled-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for maintenance push notifications modes</span>
+
+</span></div><div class="anchor value-res" id="name-ModeEnabled">	<input type='checkbox' class="fold" id="ModeEnabled-fold-content"><label for="ModeEnabled-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/config.go.html#line-20">ModeEnabled</a> <a href="#name-Mode">Mode</a> = "enabled" // <span class="md-text">Client forcefully sends command, interrupts connection on error</span></label><span id='ModeEnabled-fold-content-docs' class="fold-docs">
+<span class="md-text">		Constants for maintenance push notifications modes</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationFailedOver">	<input type='checkbox' class="fold" id="NotificationFailedOver-fold-content"><label for="NotificationFailedOver-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-25">NotificationFailedOver</a> = "FAILED_OVER" // <span class="md-text">Per-connection failover complete notification - clears relaxed timeouts</span></label><span id='NotificationFailedOver-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationFailingOver">	<input type='checkbox' class="fold" id="NotificationFailingOver-fold-content"><label for="NotificationFailingOver-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-24">NotificationFailingOver</a> = "FAILING_OVER" // <span class="md-text">Per-connection failover start notification - relaxes timeouts</span></label><span id='NotificationFailingOver-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationMigrated">	<input type='checkbox' class="fold" id="NotificationMigrated-fold-content"><label for="NotificationMigrated-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-23">NotificationMigrated</a> = "MIGRATED" // <span class="md-text">Per-connection migration complete notification - clears relaxed timeouts</span></label><span id='NotificationMigrated-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationMigrating">	<input type='checkbox' class="fold" id="NotificationMigrating-fold-content"><label for="NotificationMigrating-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-22">NotificationMigrating</a> = "MIGRATING" // <span class="md-text">Per-connection migration start notification - relaxes timeouts</span></label><span id='NotificationMigrating-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationMoving">	<input type='checkbox' class="fold" id="NotificationMoving-fold-content"><label for="NotificationMoving-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-21">NotificationMoving</a> = "MOVING" // <span class="md-text">Per-connection handoff notification</span></label><span id='NotificationMoving-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationSMigrated">	<input type='checkbox' class="fold" id="NotificationSMigrated-fold-content"><label for="NotificationSMigrated-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-27">NotificationSMigrated</a> = "SMIGRATED" // <span class="md-text">Cluster slot migrated notification -  unrelaxes timeouts and triggers cluster state reload</span></label><span id='NotificationSMigrated-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-NotificationSMigrating">	<input type='checkbox' class="fold" id="NotificationSMigrating-fold-content"><label for="NotificationSMigrating-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/manager.go.html#line-26">NotificationSMigrating</a> = "SMIGRATING" // <span class="md-text">Cluster slot migrating notification - relaxes timeouts</span></label><span id='NotificationSMigrating-fold-content-docs' class="fold-docs">
+<span class="md-text">		Push notification type constants for maintenance</span>
+
+</span></div><div class="anchor value-res" id="name-PoolNameMain">	<input type='checkbox' class="fold" id="PoolNameMain-fold-content"><label for="PoolNameMain-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/handoff_worker.go.html#line-17">PoolNameMain</a> = "main"</label><span id='PoolNameMain-fold-content-docs' class="fold-docs">
+<span class="md-text">		PoolNameMain is the name used for the main connection pool in metrics.</span>
+
+</span></div><div class="anchor value-res" id="name-StateIdle">	<input type='checkbox' class="fold" id="StateIdle-fold-content"><label for="StateIdle-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/state.go.html#line-8">StateIdle</a> <a href="#name-State">State</a> = 0</label><span id='StateIdle-fold-content-docs' class="fold-docs">
+<span class="md-text">		StateIdle indicates no upgrade is in progress</span>
+
+</span></div><div class="anchor value-res" id="name-StateMoving">	<input type='checkbox' class="fold" id="StateMoving-fold-content"><label for="StateMoving-fold-content">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/state.go.html#line-11">StateMoving</a> <a href="#name-State">State</a> = 1</label><span id='StateMoving-fold-content-docs' class="fold-docs">
+<span class="md-text">		StateHandoff indicates a connection handoff is in progress</span>
+
+</span></div>	<input type='checkbox' class="showhide" id="unexported-constants-showhide"><i><label for="unexported-constants-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-constants-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor value-res hidden" id="name-startTimeKey"><i>	<span class="nodocs">const <a href="../../../../../src/github.com/redis/go-redis/v9/maintnotifications/example_hooks.go.html#line-18">startTimeKey</a> <a href="#name-contextKey">contextKey</a> = "maint_notif_start_time"</span></i></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

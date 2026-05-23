@@ -1,3 +1,4 @@
+// Command main starts the SSO gRPC server with graceful shutdown handling.
 package main
 
 import (

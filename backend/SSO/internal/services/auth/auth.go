@@ -1,3 +1,5 @@
+// Package auth provides authentication business logic including user login,
+// registration, admin verification, and priority channel management.
 package auth
 
 import (
@@ -15,6 +17,7 @@ var (
 	emptyValue = 0
 )
 
+// Auth handles user authentication and authorization operations.
 type Auth struct {
 	log          *slog.Logger
 	userSaver    UserSaver
@@ -23,10 +26,12 @@ type Auth struct {
 	TokenTTL     time.Duration
 }
 
+// UserSaver persists new users to the storage.
 type UserSaver interface {
 	SaveUser(ctx context.Context, user models.User) (uid int64, err error)
 }
 
+// UserProvider retrieves user data and manages channels from storage.
 type UserProvider interface {
 	User(ctx context.Context, telegram_id int64) (models.User, error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
@@ -34,6 +39,7 @@ type UserProvider interface {
 	DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error
 }
 
+// AppProvider retrieves application configuration from storage.
 type AppProvider interface {
 	App(ctx context.Context, appID int64) (models.App, error)
 }
@@ -61,6 +67,8 @@ func New(
 	}
 }
 
+// Login authenticates a user by Telegram ID. If the user does not exist,
+// it automatically registers them. Returns a JWT token on success.
 func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, error) {
 	const op = "auth.Login"
 
@@ -122,6 +130,7 @@ func (a *Auth) Login(ctx context.Context, user models.User, appID int) (string, 
 	return token, nil
 }
 
+// SetPriorityChannels sets priority channels for a user.
 func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
 	const op = "auth.SetPriorityChannels"
 
@@ -132,6 +141,7 @@ func (a *Auth) SetPriorityChannels(ctx context.Context, user_id int64, channels 
 	return nil
 }
 
+// DeletePriorityChannels removes priority channels for a user.
 func (a *Auth) DeletePriorityChannels(ctx context.Context, user_id int64, channels []string) error {
 	const op = "auth.DeletePriorityChannels"
 
@@ -142,6 +152,8 @@ func (a *Auth) DeletePriorityChannels(ctx context.Context, user_id int64, channe
 	return nil
 }
 
+// RegisterNewUser creates a new user in the storage.
+// Returns ErrUserExists if the user already exists.
 func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "auth.RegisterNewUser"
 
@@ -177,6 +189,7 @@ func (a *Auth) RegisterNewUser(ctx context.Context, user models.User) (int64, er
 	return id, nil
 }
 
+// IsAdmin checks whether a user with the given Telegram ID has admin privileges.
 func (a *Auth) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) {
 	const op = "auth.IsAdmin"
 

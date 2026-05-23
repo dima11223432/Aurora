@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: google.golang.org/grpc/internal/balancer/weight</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>weight</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../../index.html#pkg-google.golang.org/grpc/internal/balancer/weight">google.golang.org/grpc/internal/balancer/weight</a><i> (on <a href="https://pkg.go.dev/google.golang.org/grpc/internal/balancer/weight" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../../dep/google.golang.org/grpc/internal/balancer/weight.html">2 packages</a>, and imported by <a href="../../../../../dep/google.golang.org/grpc/internal/balancer/weight.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#doc">d</a> <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html">weight.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package weight contains utilities to manage endpoint weights. Weights are
+		used by LB policies such as ringhash to distribute load across multiple
+		endpoints.</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (total 2, in which 1 is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-EndpointInfo" data-popularity="460">	<input type='checkbox' class="fold" id="EndpointInfo-fold-content"><label for="EndpointInfo-fold-content"> type <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-36">EndpointInfo</a> <i>(struct)</i></label><span id='EndpointInfo-fold-content-docs' class="fold-docs">
+<span class="md-text">		EndpointInfo will be stored in the Attributes field of Endpoints in order to
+		use the ringhash balancer.</span>
+
+		<input type='checkbox' class="fold" id="EndpointInfo-fold-fields"><label for="EndpointInfo-fold-fields">Fields (<i>only one, which is exported</i>)</label><span id='EndpointInfo-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-37">Weight</a> <i><a href="../../../../builtin.html#name-uint32">uint32</a></i></span></span></span>
+		<input type='checkbox' class="fold" id="EndpointInfo-fold-methods"><label for="EndpointInfo-fold-methods">Methods (<i>total 2, both are exported</i>)</label><span id='EndpointInfo-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="EndpointInfo-fold-method-Equal"><label for="EndpointInfo-fold-method-Equal">( EndpointInfo) <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-41">Equal</a>(o <a href="../../../../builtin.html#name-any">any</a>) <a href="../../../../builtin.html#name-bool">bool</a></label><span id='EndpointInfo-fold-method-Equal-docs' class="fold-docs">
+<span class="md-text">				Equal allows the values to be compared by Attributes.Equal.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="EndpointInfo-fold-method-String"><label for="EndpointInfo-fold-method-String">( EndpointInfo) <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-56">String</a>() <a href="../../../../builtin.html#name-string">string</a></label><span id='EndpointInfo-fold-method-String-docs' class="fold-docs">
+<span class="md-text">				String returns a human-readable representation of EndpointInfo.
+				This method is intended for logging, testing, and debugging purposes only.
+				Do not rely on the output format, as it is not guaranteed to remain stable.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="EndpointInfo-fold-impls"><label for="EndpointInfo-fold-impls">Implements (<i>at least 5, in which 2 are exported</i>)</label><span id='EndpointInfo-fold-impls-items' class="fold-items"><span>
+			 EndpointInfo : expvar.<a href="../../../../expvar.html#name-Var">Var</a></span><span>
+			 EndpointInfo : fmt.<a href="../../../../fmt.html#name-Stringer">Stringer</a></span>
+			<input type='checkbox' class="showhide" id="EndpointInfo-showhide-impls"><i><label for="EndpointInfo-showhide-impls" class="show-inline">/* 3+ unexporteds ... */</label><label for="EndpointInfo-showhide-impls" class="hide-inline">/* 3+ unexporteds: */</label></i><span class="hidden"><i>
+			 EndpointInfo : context.<a href="../../../../context.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 EndpointInfo : os/signal.<a href="../../../../os/signal.html#name-stringer">stringer</a></i></span><span class="hidden"><i>
+			 EndpointInfo : runtime.<a href="../../../../runtime.html#name-stringer">stringer</a></i></span></span>
+		<input type='checkbox' class="fold" id="EndpointInfo-fold-results"><label for="EndpointInfo-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='EndpointInfo-fold-results-items' class="fold-items"><span>
+			func <a href="#name-FromEndpoint">FromEndpoint</a>(endpoint <a href="../../resolver.html">resolver</a>.<a href="../../resolver.html#name-Endpoint">Endpoint</a>) <b>EndpointInfo</b></span></span>
+		<input type='checkbox' class="fold" id="EndpointInfo-fold-params"><label for="EndpointInfo-fold-params">As Inputs Of (<i>at least one exported</i>)</label><span id='EndpointInfo-fold-params-items' class="fold-items"><span>
+			func <a href="#name-Set">Set</a>(endpoint <a href="../../resolver.html">resolver</a>.<a href="../../resolver.html#name-Endpoint">Endpoint</a>, epInfo <b>EndpointInfo</b>) <a href="../../resolver.html">resolver</a>.<a href="../../resolver.html#name-Endpoint">Endpoint</a></span></span>
+
+</span></div></div><div>	<input type='checkbox' class="showhide" id="unexported-typenames-showhide"><i><label for="unexported-typenames-showhide" class="show-inline">/* one unexported ... */</label><label for="unexported-typenames-showhide" class="hide-inline">/* one unexported: */</label></i><div class="anchor type-res hidden" id="name-attributeKey" data-popularity="0">	<input type='checkbox' class="fold" id="attributeKey-fold-content"><label for="attributeKey-fold-content"> type <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-32">attributeKey</a> <i>(struct)</i></label><span id='attributeKey-fold-content-docs' class="fold-docs">
+<span class="md-text">		attributeKey is the type used as the key to store EndpointInfo in the
+		Attributes field of resolver.Endpoint.</span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (total 2, both are exported)</i></span></span>
+
+<div class="anchor value-res" id="name-FromEndpoint">	<input type='checkbox' class="fold" id="FromEndpoint-fold-content"><label for="FromEndpoint-fold-content"> func <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-62">FromEndpoint</a>(endpoint <a href="../../resolver.html">resolver</a>.<a href="../../resolver.html#name-Endpoint">Endpoint</a>) <a href="#name-EndpointInfo">EndpointInfo</a></label><span id='FromEndpoint-fold-content-docs' class="fold-docs">
+<span class="md-text">		FromEndpoint returns the EndpointInfo stored in the Attributes field of an
+		endpoint. It returns an empty EndpointInfo if attribute is not found.</span>
+
+</span></div><div class="anchor value-res" id="name-Set">	<input type='checkbox' class="fold" id="Set-fold-content"><label for="Set-fold-content"> func <a href="../../../../../src/google.golang.org/grpc/internal/balancer/weight/weight.go.html#line-48">Set</a>(endpoint <a href="../../resolver.html">resolver</a>.<a href="../../resolver.html#name-Endpoint">Endpoint</a>, epInfo <a href="#name-EndpointInfo">EndpointInfo</a>) <a href="../../resolver.html">resolver</a>.<a href="../../resolver.html#name-Endpoint">Endpoint</a></label><span id='Set-fold-content-docs' class="fold-docs">
+<span class="md-text">		Set returns a copy of endpoint in which the Attributes field is updated with
+		EndpointInfo.</span>
+
+</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

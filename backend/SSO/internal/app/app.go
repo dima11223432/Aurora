@@ -1,3 +1,4 @@
+// Package app initializes and wires together SSO application components.
 package app
 
 import (
@@ -8,10 +9,12 @@ import (
 	"time"
 )
 
+// App is the top-level application container for the SSO service.
 type App struct {
 	GRPCapp *grpcApp.App
 }
 
+// New creates a new App instance, initializing storage, auth service, and gRPC server.
 func New(log *slog.Logger, grpcPort int, storagePath string, tokenTTL time.Duration) *App {
 	// TODO: implement
 	storage, err := postgres.New(storagePath)

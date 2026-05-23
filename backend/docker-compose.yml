@@ -148,8 +148,35 @@ services:
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${SSO_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "44044"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
     depends_on:
       postgres:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  telegram-bot:
+    build:
+      context: ./Telegram_bot
+      dockerfile: Dockerfile
+    container_name: telegram-bot
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+    restart: unless-stopped
+    mem_limit: 512m
+    ports:
+      - "44046:44046"
+    environment:
+      - ENV=${ENV}
+      - BOT_TOKEN=${BOT_TOKEN}
+    depends_on:
+      sso:
         condition: service_healthy
     networks:
       - aurora-network

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Package: CacheService/internal/storage/redis</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="package-details"><code><span style="font-size:xx-large;">package <b>redis</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../../index.html#pkg-CacheService/internal/storage/redis">CacheService/internal/storage/redis</a><i> (on <a href="https://pkg.go.dev/CacheService/internal/storage/redis" target="_blank">go.dev</a>)</i>
+
+<span class="title">Dependency Relation</span>
+	imports <a href="../../../../dep/CacheService^27cbe/internal/storage/redis.html">9 packages</a>, and imported by <a href="../../../../dep/CacheService^27cbe/internal/storage/redis.html#imported-by">one package</a>
+
+<div id="files"><span class="title">Involved Source Files</span>
+
+	<input type='checkbox' checked class="fold" id="file-0-fold-content"><label for="file-0-fold-content">  <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#doc">d</a> <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html">redis.go</a></label><span id='file-0-fold-content-items' class="fold-items">
+<span class="md-text">		Package redis implements Redis-backed storage for the Cache Service,
+		handling analysed data storage with sorted-set indexing by channel and timestamp.</span></span></div>
+<div id="exported-types"><span class="title">Package-Level Type Names<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div id="exported-types-buttons" class="js-on">	/* sort exporteds by: <label id="sort-types-by-alphabet" class="button">alphabet</label> | <label id="sort-types-by-popularity" class="button">popularity</label> */</div><div class="anchor type-res" id="name-RedisController" data-popularity="375">	<input type='checkbox' class="fold" id="RedisController-fold-content"><label for="RedisController-fold-content"> type <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-19">RedisController</a> <i>(struct)</i></label><span id='RedisController-fold-content-docs' class="fold-docs">
+<span class="md-text">		RedisController manages Redis operations for storing and retrieving analysed data.</span>
+
+		<input type='checkbox' class="fold" id="RedisController-fold-fields"><label for="RedisController-fold-fields">Fields (<i>total 2, in which 1 is exported</i>)</label><span id='RedisController-fold-fields-items' class="fold-items"><span>
+			<span class="nodocs"><a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-21">DefaultTTl</a> <i><a href="../../../time.html">time</a>.<a href="../../../time.html#name-Duration">Duration</a></i></span></span>
+			<input type='checkbox' class="showhide" id="RedisController-showhide-fields"><i><label for="RedisController-showhide-fields" class="show-inline">/* one unexported ... */</label><label for="RedisController-showhide-fields" class="hide-inline">/* one unexported: */</label></i><span class="hidden"><i>
+			<span class="nodocs"><a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-20">redis</a> <i>*<a href="../../../github.com/redis/go-redis/v9.html">redis</a>.<a href="../../../github.com/redis/go-redis/v9.html#name-Client">Client</a></i></span></i></span></span>
+		<input type='checkbox' class="fold" id="RedisController-fold-methods"><label for="RedisController-fold-methods">Methods (<i>total 4, all are exported</i>)</label><span id='RedisController-fold-methods-items' class="fold-items"><span>
+			<input type='checkbox' class="fold" id="RedisController-fold-method-GetValue"><label for="RedisController-fold-method-GetValue">(*RedisController) <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-89">GetValue</a>(ctx <a href="../../../context.html">context</a>.<a href="../../../context.html#name-Context">Context</a>, key <a href="../../../builtin.html#name-string">string</a>) (interface{}, <a href="../../../builtin.html#name-error">error</a>)</label><span id='RedisController-fold-method-GetValue-docs' class="fold-docs">
+<span class="md-text">				GetValue retrieves raw bytes from Redis by key. Returns ErrCacheMiss if not found.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="RedisController-fold-method-Ping"><label for="RedisController-fold-method-Ping">(*RedisController) <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-102">Ping</a>(ctx <a href="../../../context.html">context</a>.<a href="../../../context.html#name-Context">Context</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='RedisController-fold-method-Ping-docs' class="fold-docs">
+<span class="md-text">				Ping checks the Redis connection health.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="RedisController-fold-method-SetCard"><label for="RedisController-fold-method-SetCard">(*RedisController) <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-39">SetCard</a>(ctx <a href="../../../context.html">context</a>.<a href="../../../context.html#name-Context">Context</a>, value <a href="../domain/models.html">models</a>.<a href="../domain/models.html#name-AnalysedData">AnalysedData</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='RedisController-fold-method-SetCard-docs' class="fold-docs">
+<span class="md-text">				SetCard stores analysed data in Redis as a JSON string and indexes it
+				in sorted sets by timestamp and channel username.</span>
+</span></span><span>
+			<input type='checkbox' class="fold" id="RedisController-fold-method-SetValue"><label for="RedisController-fold-method-SetValue">(*RedisController) <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-75">SetValue</a>(ctx <a href="../../../context.html">context</a>.<a href="../../../context.html#name-Context">Context</a>, key <a href="../../../builtin.html#name-string">string</a>, value interface{}, ttl ...<a href="../../../time.html">time</a>.<a href="../../../time.html#name-Duration">Duration</a>) <a href="../../../builtin.html#name-error">error</a></label><span id='RedisController-fold-method-SetValue-docs' class="fold-docs">
+<span class="md-text">				SetValue stores a JSON-serialized value in Redis with optional TTL.</span>
+</span></span></span>
+		<input type='checkbox' class="fold" id="RedisController-fold-impls"><label for="RedisController-fold-impls">Implements (<i>at least 2, both are exported</i>)</label><span id='RedisController-fold-impls-items' class="fold-items"><span>
+			*RedisController : CacheService/internal/services/AnalyseDataProvider.<a href="../services/AnalyseDataProvider^1a23c.html#name-AnasyledDataProvider">AnasyledDataProvider</a></span><span>
+			*RedisController : database/sql/driver.<a href="../../../database/sql/driver.html#name-Pinger">Pinger</a></span></span>
+		<input type='checkbox' class="fold" id="RedisController-fold-results"><label for="RedisController-fold-results">As Outputs Of (<i>at least one exported</i>)</label><span id='RedisController-fold-results-items' class="fold-items"><span>
+			func <a href="#name-NewRedisController">NewRedisController</a>(addr <a href="../../../builtin.html#name-string">string</a>, password <a href="../../../builtin.html#name-string">string</a>, db <a href="../../../builtin.html#name-int">int</a>, protocol <a href="../../../builtin.html#name-int">int</a>, ttl <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Duration">Duration</a>) *<b>RedisController</b></span></span>
+
+</span></div></div>
+<div id="exported-functions"><span class="title">Package-Level Functions<span class="title-stat"><i> (only one, which is exported)</i></span></span>
+
+<div class="anchor value-res" id="name-NewRedisController">	<input type='checkbox' class="fold" id="NewRedisController-fold-content"><label for="NewRedisController-fold-content"> func <a href="../../../../src/CacheService^27cbe/internal/storage/redis/redis.go.html#line-25">NewRedisController</a>(addr <a href="../../../builtin.html#name-string">string</a>, password <a href="../../../builtin.html#name-string">string</a>, db <a href="../../../builtin.html#name-int">int</a>, protocol <a href="../../../builtin.html#name-int">int</a>, ttl <a href="../../../time.html">time</a>.<a href="../../../time.html#name-Duration">Duration</a>) *<a href="#name-RedisController">RedisController</a></label><span id='NewRedisController-fold-content-docs' class="fold-docs">
+<span class="md-text">		NewRedisController creates a new RedisController with the given connection config.</span>
+
+</span></div></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

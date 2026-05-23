@@ -1,3 +1,5 @@
+// Package kafka implements a Kafka consumer that processes analysed financial data
+// and stores it via the AnalyseDataProvider.
 package kafka
 
 import (
@@ -12,10 +14,13 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
+// AnalyseDataProvider defines the contract for storing analysed data.
 type AnalyseDataProvider interface {
 	SetAnalysedData(ctx context.Context, dataTitle string, data models.AnalysedData) error
 }
 
+// Consumer reads messages from a Kafka topic and processes them through
+// a worker pull model with configurable parallelism.
 type Consumer struct {
 	reader               *kafka.Reader
 	analysedDataProvider AnalyseDataProvider
@@ -24,6 +29,7 @@ type Consumer struct {
 	jobs                 chan kafka.Message
 }
 
+// NewConsumer creates a new Kafka Consumer with the given configuration.
 func NewConsumer(log *slog.Logger, brokers []string, topic string, groupID string, maxPulls int32, analyseDataProvider AnalyseDataProvider) *Consumer {
 	return &Consumer{
 		reader: kafka.NewReader(kafka.ReaderConfig{
@@ -42,6 +48,7 @@ func NewConsumer(log *slog.Logger, brokers []string, topic string, groupID strin
 	}
 }
 
+// process unmarshals a Kafka message and stores the analysed data.
 func (c *Consumer) process(ctx context.Context, msg kafka.Message) error {
 	const op = "Cache_Service.internal.brokers.kafka.process"
 
@@ -61,6 +68,7 @@ func (c *Consumer) process(ctx context.Context, msg kafka.Message) error {
 	return nil
 }
 
+// StartWorkerPull launches worker goroutines that process messages from the jobs channel.
 func (c *Consumer) StartWorkerPull(ctx context.Context) error {
 	const op = "Cache_Service.internal.brokers.kafka.StartWorkerPull"
 
@@ -101,6 +109,7 @@ func (c *Consumer) StartWorkerPull(ctx context.Context) error {
 	return nil
 }
 
+// Consume reads messages from Kafka and dispatches them to the worker jobs channel.
 func (c *Consumer) Consume(ctx context.Context) error {
 	const op = "Cache_Service.internal.brokers.kafka.Consume"
 	defer close(c.jobs)
@@ -123,6 +132,7 @@ func (c *Consumer) Consume(ctx context.Context) error {
 	}
 }
 
+// Close shuts down the Kafka reader.
 func (c *Consumer) Close() {
 	c.reader.Close()
 

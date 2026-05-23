@@ -1,3 +1,4 @@
+// Package storage defines sentinel errors used across SSO storage layers.
 package storage
 
 import "errors"

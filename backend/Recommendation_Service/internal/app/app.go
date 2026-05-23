@@ -1,3 +1,4 @@
+// Package app initializes and wires together Recommendation Service components.
 package app
 
 import (
@@ -10,10 +11,12 @@ import (
 	"recommendationService/internal/storage/redis"
 )
 
+// App is the top-level application container for the Recommendation Service.
 type App struct {
 	GRPCapp *grpcApp.App
 }
 
+// New creates a new App instance, initializing storage, Redis, and gRPC server.
 func New(log *slog.Logger, cfg *config.Config) *App {
 	storage, err := postgres.New(cfg.StoragePass, cfg.ParsingServiceStoragePass)
 	redis := redis.NewRedisController(

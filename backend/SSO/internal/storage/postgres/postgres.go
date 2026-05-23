@@ -1,3 +1,4 @@
+// Package postgres implements the PostgreSQL storage layer for the SSO service.
 package postgres
 
 import (
@@ -16,6 +17,7 @@ const channelsArgMultiplier = 2
 
 var emptyValue = 0 //nolint:gochecknoglobals // sentinel value for zero check
 
+// Storage implements storage interfaces for users, apps, and channels using PostgreSQL.
 type Storage struct {
 	DB *sql.DB
 }
@@ -37,7 +39,8 @@ func New(storagePath string) (*Storage, error) {
 	}, nil
 }
 
-func (s *Storage) SetPriorityChannels(ctx context.Context, userID int64, channels []string) error {
+// SetPriorityChannels inserts priority channels for a user, skipping duplicates.
+func (s *Storage) SetPriorityChannels(ctx context.Context, user_id int64, channels []string) error {
 	const op = "storage.postgres.SetPriorityChannels"
 
 	if len(channels) == 0 {
@@ -69,6 +72,7 @@ func (s *Storage) SetPriorityChannels(ctx context.Context, userID int64, channel
 	return nil
 }
 
+// DeletePriorityChannels removes specified priority channels for a user.
 func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, channels []string) error {
 	const op = "storage.postgres.DeletePriorityChannels"
 
@@ -89,6 +93,7 @@ func (s *Storage) DeletePriorityChannels(ctx context.Context, userID int64, chan
 	return nil
 }
 
+// SaveUser inserts a new user into the database and returns the user ID.
 func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error) {
 	const op = "storage.postgres.SaveUser"
 
@@ -119,6 +124,7 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	return userID, nil
 }
 
+// GetUserById retrieves a user by their internal user ID.
 func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, error) {
 	const op = "storage.postgres.GetUserById"
 
@@ -141,6 +147,7 @@ func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, 
 	return user, nil
 }
 
+// User retrieves a user by their Telegram ID.
 func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) {
 	const op = "storage.postgres.User"
 
@@ -169,6 +176,7 @@ func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, err
 	return user, nil
 }
 
+// IsAdmin checks the admin status of a user by their Telegram ID.
 func (s *Storage) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) {
 	const op = "storage.postgres.IsAdmin"
 
@@ -190,6 +198,7 @@ func (s *Storage) IsAdmin(ctx context.Context, telegram_id int64) (bool, error) 
 	return isAdmin, nil
 }
 
+// App retrieves an application configuration by its ID.
 func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 	const op = "storage.postgres.App"
 
@@ -210,6 +219,7 @@ func (s *Storage) App(ctx context.Context, appID int64) (models.App, error) {
 	}
 	return app, nil
 }
+// isDuplicateError checks if a database error is a unique constraint violation.
 func isDuplicateError(err error) bool {
 	var pqErr *pq.Error
 	if errors.As(err, &pqErr) {
@@ -218,6 +228,7 @@ func isDuplicateError(err error) bool {
 	return strings.Contains(err.Error(), "duplicate key value")
 }
 
+// checkUserData validates that required user fields are non-empty.
 func checkUserData(user models.User) error {
 	if user.Telegram_id == int64(emptyValue) || user.First_name == "" || user.Last_name == "" || user.Username == "" {
 		return storage.ErrEmptyUserValues
