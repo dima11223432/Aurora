@@ -101,15 +101,14 @@ export default function RecommendationFeed() {
       </div>
 
       <div className="flex-grow flex flex-col items-center gap-6">
-        {!isLoading && recommendatedPosts.length === 0 ? (
-          <EmptyFeedState />
-        ) : (
-          <>
-            {recommendatedPosts.map((post, index) => (
-              <RecommendationCard key={index} {...post} />
-            ))}
-            {isLoading && <p className="text-white">Загрузка...</p>}
-          </>
+        {recommendatedPosts.map((post, index) => (
+          <RecommendationCard key={post.id || post._id || index} {...post} />
+        ))}
+
+        {isLoading && recommendatedPosts.length > 0 && (
+          <p className="text-cyan-400 font-medium animate-pulse my-2">
+            Подгружаем старые посты...
+          </p>
         )}
       </div>
       <Footer />

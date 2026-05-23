@@ -91,70 +91,48 @@ function Herozone() {
   ];
 
   return (
-    <>
-      <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] animate-gradient bg-[length:200%_200%]">
-        <div className="max-w-3xl w-full bg-[rgba(20,25,50,0.7)] backdrop-blur-md rounded-[3rem] p-6 sm:p-8 md:p-12 shadow-2xl border border-white/5">
-          <img
-            src="/Aurora-logo.png"
-            alt="Aurora logo"
-            className="w-20 h-20 mb-2 mx-auto"
-          />
-          <p className="text-[#95bec7] text-base text-center sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
-            Добро пожаловать в{" "}
-            <span className="text-[#0fd2f5] font-bold">Aurora</span>
-            <br /> ИИ-поддерживаемые прогнозы TON и T-Investments
-          </p>
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6">
+      <div className="max-w-3xl w-full bg-[rgba(20,25,50,0.7)] backdrop-blur-md rounded-[3rem] p-6 sm:p-8 md:p-12 shadow-2xl border border-white/5">
+        <img src={logo} alt="Aurora logo" className="w-20 h-20 mb-2 mx-auto" />
 
-          <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-12">
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className="flex gap-3 sm:gap-4 items-start group"
-              >
-                <div className="flex-1 bg-white/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl border border-[#0fd2f5]/20 hover:border-[#0fd2f5]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#0fd2f5]/10">
-                    <div className="flex-1">
-                      <h3 className="text-left text-white text-lg sm:text-xl md:text-2xl font-semibold mb-1">
-                        {item.title}
-                      </h3>
-                      <p className="text-left text-[#95bec7] text-sm sm:text-base opacity-90 leading-relaxed">
-                        {item.description}
-                      </p>
-                    </div>
-                  </div>
-              </div>
-            ))}
-          </div>
-          <div>
-            <button
-              onClick={() => navigate("/feed")}
-              className="w-full flex justify-center items-center gap-2 bg-[#0fd2f5] text-[#0A0F1F] font-bold text-lg py-4 px-8 rounded-full shadow-lg shadow-[#0fd2f5]/20 hover:bg-white hover:shadow-[#0fd2f5]/40 active:scale-95 transition-all duration-300 transform"
+        <p className="text-[#95bec7] text-base text-center sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
+          Добро пожаловать в{" "}
+          <span className="text-[#0fd2f5] font-bold">Aurora</span>
+          <br /> ИИ-поддерживаемые прогнозы в реальном времени
+        </p>
+
+        <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-12">
+          {items.map((item) => (
+            <div
+              key={item.id}
+              className="flex gap-3 sm:gap-4 items-start group"
             >
-              Начать
-            </button>
-          </div>
+              <div className="flex-1 bg-white/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl border border-[#0fd2f5]/20 hover:border-[#0fd2f5]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#0fd2f5]/10">
+                <div className="flex gap-3 sm:gap-4 items-center">
+                  <div className="w-10 h-10 sm:w-10 sm:h-10 rounded bg-[#0fd2f5]/20 border border-[#0fd2f5]/50 flex-shrink-0"></div>
+                  <div className="flex-1">
+                    <h3 className="text-left text-white text-lg sm:text-xl md:text-2xl font-semibold mb-1">
+                      {item.title}
+                    </h3>
+                    <p className="text-left text-[#95bec7] text-sm sm:text-base opacity-90 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <button
+            onClick={() => navigate("/feed")}
+            className="w-full flex justify-center items-center gap-2 bg-[#0fd2f5] text-[#0A0F1F] font-bold text-lg py-4 px-8 rounded-full shadow-lg shadow-[#0fd2f5]/20 hover:bg-white hover:shadow-[#0fd2f5]/40 active:scale-95 transition-all duration-300 transform"
+          >
+            Начать
+          </button>
         </div>
       </div>
-
-      <div className="fixed right-8 top-1/2 -translate-y-1/2 hidden xl:block z-50">
-  <div className="bg-white/5 backdrop-blur-md rounded-2xl p-8 border border-[#0fd2f5]/20 w-80">
-    <h4 className="text-[#0fd2f5] text-base uppercase tracking-wider mb-5">Текущие метрики</h4>
-    <div className="space-y-4">
-      <div>
-        <p className="text-gray-400 text-sm">TON цена</p>
-        <p className="text-white text-2xl font-bold">$5.42 <span className="text-green-400 text-base">+2.3%</span></p>
-      </div>
-      <div>
-        <p className="text-gray-400 text-sm">Объём 24ч</p>
-        <p className="text-white text-2xl font-bold">$124M</p>
-      </div>
-      <div>
-        <p className="text-gray-400 text-sm">Активные пользователи</p>
-        <p className="text-white text-2xl font-bold">2,847</p>
-      </div>
     </div>
-  </div>
-</div>
-    </>
   );
 }
 
