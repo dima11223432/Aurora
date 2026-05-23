@@ -42,9 +42,7 @@ async def command_start_handler(message: Message) -> None:
 
 
 async def main() -> None:
-    connector = ProxyConnector.from_url("socks5://127.0.0.1:10808")
-    client_session = aiohttp.ClientSession(connector=connector)
-    session = AiohttpSession(session=client_session)
+    session = AiohttpSession(proxy="socks5://127.0.0.1:10808")
 
     bot = Bot(
         token=TOKEN,
