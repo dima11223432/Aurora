@@ -130,7 +130,7 @@ func (a *ApiService) IsAdmin(
 // IsAdminByContext returns user admin status by JWT
 func (a *ApiService) IsAdminByContext(
 	ctx context.Context,
-	req *v1.IsAdminByContextRequest,
+	_ *v1.IsAdminByContextRequest,
 ) (*v1.IsAdminByContextResponse, error) {
 	isAdmin, err := a.auth.IsAdminByContext(ctx)
 	if err != nil {
