@@ -108,8 +108,6 @@ function Herozone() {
               className="flex gap-3 sm:gap-4 items-start group"
             >
               <div className="flex-1 bg-white/5 backdrop-blur-sm p-5 sm:p-6 rounded-xl border border-[#0fd2f5]/20 hover:border-[#0fd2f5]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[#0fd2f5]/10">
-                <div className="flex gap-3 sm:gap-4 items-center">
-                  <div className="w-10 h-10 sm:w-10 sm:h-10 rounded bg-[#0fd2f5]/20 border border-[#0fd2f5]/50 flex-shrink-0"></div>
                   <div className="flex-1">
                     <h3 className="text-left text-white text-lg sm:text-xl md:text-2xl font-semibold mb-1">
                       {item.title}
@@ -118,7 +116,6 @@ function Herozone() {
                       {item.description}
                     </p>
                   </div>
-                </div>
               </div>
             </div>
           ))}
