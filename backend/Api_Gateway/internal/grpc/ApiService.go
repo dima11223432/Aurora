@@ -127,10 +127,18 @@ func (a *ApiService) IsAdmin(
 	}, nil
 }
 
+// IsAdminByContext returns user admin status by JWT
 func (a *ApiService) IsAdminByContext(
 	ctx context.Context,
-	req *v1.IsAdminRequest,
-) *v1.IsAdminByContextResponce {
+	req *v1.IsAdminByContextRequest,
+) (*v1.IsAdminByContextResponse, error) {
+	isAdmin, err := a.auth.IsAdminByContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &v1.IsAdminByContextResponse{
+		IsAdmin: isAdmin,
+	}, nil
 }
 
 // GetRecommendatedPosts handles recommended posts retrieval via gRPC.
