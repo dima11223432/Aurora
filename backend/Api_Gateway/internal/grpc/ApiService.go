@@ -127,6 +127,12 @@ func (a *ApiService) IsAdmin(
 	}, nil
 }
 
+func (a *ApiService) IsAdminByContext(
+	ctx context.Context,
+	req *v1.IsAdminRequest,
+) *v1.IsAdminByContextResponce {
+}
+
 // GetRecommendatedPosts handles recommended posts retrieval via gRPC.
 func (a *ApiService) GetRecommendatedPosts(
 	ctx context.Context,
