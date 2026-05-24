@@ -300,6 +300,13 @@ services:
       - ./Analitic_Service/logs:/app/logs
     environment:
       - ENV=${ENV}
+      - DS=${DS}
+      - YA=${YA}
+      - GE=${GE}
+      - AN=${AN}
+      - QW=${QW}
+      - QWS=${QWS}
+      - ST=${ST}
       - PYTHONPATH=/app
       - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - KAFKA_TOPIC_RESULT=${KAFKA_TOPIC}
