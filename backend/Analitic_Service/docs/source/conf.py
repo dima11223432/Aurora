@@ -32,4 +32,5 @@ language = 'ru'
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+autodoc_mock_imports = ["confluent_kafka", "dotenv", "loguru", "internal"]
 
