@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: cpu_arm64_darwin.go in package internal/cpu</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	cpu_arm64_darwin.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../pkg/internal/cpu.html">internal/cpu</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0]
+{background: #226; color: #ff8;}
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2020 The Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">//go:build arm64 &amp;&amp; darwin &amp;&amp; !ios</span></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">package</span> cpu</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../pkg/internal/cpu.html#name-osInit" class="ident">osInit</a></label>() {</code></span>
+<span class="codeline" id="line-10"><code>	<span class="comment">// macOS 12 moved these to the hw.optional.arm tree, but as of Go 1.24 we</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">	// still support macOS 11. See [Determine Encryption Capabilities].</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">	// [Determine Encryption Capabilities]: https://developer.apple.com/documentation/kernel/1387446-sysctlbyname/determining_instruction_set_characteristics#3918855</span></code></span>
+<span class="codeline" id="line-14"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-84" class="ident">HasATOMICS</a> = <a href="cpu_darwin.go.html#line-31" class="ident">sysctlEnabled</a>([]<a href="../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<span class="lit-string">"hw.optional.armv8_1_atomics\x00"</span>))</code></span>
+<span class="codeline" id="line-15"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-83" class="ident">HasCRC32</a> = <a href="cpu_darwin.go.html#line-31" class="ident">sysctlEnabled</a>([]<a href="../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<span class="lit-string">"hw.optional.armv8_crc32\x00"</span>))</code></span>
+<span class="codeline" id="line-16"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-81" class="ident">HasSHA512</a> = <a href="cpu_darwin.go.html#line-31" class="ident">sysctlEnabled</a>([]<a href="../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<span class="lit-string">"hw.optional.armv8_2_sha512\x00"</span>))</code></span>
+<span class="codeline" id="line-17"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-82" class="ident">HasSHA3</a> = <a href="cpu_darwin.go.html#line-31" class="ident">sysctlEnabled</a>([]<a href="../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<span class="lit-string">"hw.optional.armv8_2_sha3\x00"</span>))</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-86" class="ident">HasDIT</a> = <a href="cpu_darwin.go.html#line-31" class="ident">sysctlEnabled</a>([]<a href="../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<span class="lit-string">"hw.optional.arm.FEAT_DIT\x00"</span>))</code></span>
+<span class="codeline" id="line-20"><code></code></span>
+<span class="codeline" id="line-21"><code>	<span class="comment">// There are no hw.optional sysctl values for the below features on macOS 11</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">	// to detect their supported state dynamically (although they are available</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">	// in the hw.optional.arm tree on macOS 12). Assume the CPU features that</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	// Apple Silicon M1 supports to be available on all future iterations.</span></code></span>
+<span class="codeline" id="line-25"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-77" class="ident">HasAES</a> = <a href="../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-26"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-78" class="ident">HasPMULL</a> = <a href="../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-27"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-79" class="ident">HasSHA1</a> = <a href="../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-28"><code>	<a href="cpu.go.html#line-75" class="ident">ARM64</a>.<a href="cpu.go.html#line-80" class="ident">HasSHA2</a> = <a href="../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-29"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

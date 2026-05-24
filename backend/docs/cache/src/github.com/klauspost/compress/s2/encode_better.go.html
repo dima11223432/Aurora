@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: encode_better.go in package github.com/klauspost/compress/s2</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	encode_better.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/s2.html">github.com/klauspost/compress/s2</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86],
+input[id=r87]:checked ~pre label[for=r87]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="r87" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2016 The Snappy-Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Copyright (c) 2019 Klaus Post. All rights reserved.</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="keyword">package</span> s2</code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-9"><code>	<label for="i0"><span class="lit-string i0">"math/bits"</span></label></code></span>
+<span class="codeline" id="line-10"><code>)</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// hash4 returns the hash of the lowest 4 bytes of u to fit in a hash table with h bits.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// Preferably h should be a constant and should always be &lt;32.</span></code></span>
+<span class="codeline" id="line-14"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/s2.html#name-hash4" class="ident">hash4</a></label>(<label for="r1" class="ident">u</label> <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>, <label for="r2" class="ident">h</label> <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-15"><code>	<span class="keyword">const</span> <label for="r3" class="ident">prime4bytes</label> = <span class="lit-number">2654435761</span></code></span>
+<span class="codeline" id="line-16"><code>	<span class="keyword">return</span> (<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r1" class="ident">u</label>) * <label for="r3" class="ident">prime4bytes</label>) &gt;&gt; ((<span class="lit-number">32</span> - <label for="r2" class="ident">h</label>) &amp; <span class="lit-number">31</span>)</code></span>
+<span class="codeline" id="line-17"><code>}</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">// hash5 returns the hash of the lowest 5 bytes of u to fit in a hash table with h bits.</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">// Preferably h should be a constant and should always be &lt;64.</span></code></span>
+<span class="codeline" id="line-21"><code><span class="keyword">func</span> <label for="r4" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/s2.html#name-hash5" class="ident">hash5</a></label>(<label for="r5" class="ident">u</label> <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>, <label for="r6" class="ident">h</label> <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-22"><code>	<span class="keyword">const</span> <label for="r7" class="ident">prime5bytes</label> = <span class="lit-number">889523592379</span></code></span>
+<span class="codeline" id="line-23"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(((<label for="r5" class="ident">u</label> &lt;&lt; (<span class="lit-number">64</span> - <span class="lit-number">40</span>)) * <label for="r7" class="ident">prime5bytes</label>) &gt;&gt; ((<span class="lit-number">64</span> - <label for="r6" class="ident">h</label>) &amp; <span class="lit-number">63</span>))</code></span>
+<span class="codeline" id="line-24"><code>}</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">// hash7 returns the hash of the lowest 7 bytes of u to fit in a hash table with h bits.</span></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// Preferably h should be a constant and should always be &lt;64.</span></code></span>
+<span class="codeline" id="line-28"><code><span class="keyword">func</span> <label for="r8" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/s2.html#name-hash7" class="ident">hash7</a></label>(<label for="r9" class="ident">u</label> <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>, <label for="r10" class="ident">h</label> <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-29"><code>	<span class="keyword">const</span> <label for="r11" class="ident">prime7bytes</label> = <span class="lit-number">58295818150454627</span></code></span>
+<span class="codeline" id="line-30"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(((<label for="r9" class="ident">u</label> &lt;&lt; (<span class="lit-number">64</span> - <span class="lit-number">56</span>)) * <label for="r11" class="ident">prime7bytes</label>) &gt;&gt; ((<span class="lit-number">64</span> - <label for="r10" class="ident">h</label>) &amp; <span class="lit-number">63</span>))</code></span>
+<span class="codeline" id="line-31"><code>}</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// hash8 returns the hash of u to fit in a hash table with h bits.</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">// Preferably h should be a constant and should always be &lt;64.</span></code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">func</span> <label for="r12" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/s2.html#name-hash8" class="ident">hash8</a></label>(<label for="r13" class="ident">u</label> <a href="../../../../../pkg/builtin.html#name-uint64" class="ident">uint64</a>, <label for="r14" class="ident">h</label> <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-36"><code>	<span class="keyword">const</span> <label for="r15" class="ident">prime8bytes</label> = <span class="lit-number">0xcf1bbcdcb7a56463</span></code></span>
+<span class="codeline" id="line-37"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>((<label for="r13" class="ident">u</label> * <label for="r15" class="ident">prime8bytes</label>) &gt;&gt; ((<span class="lit-number">64</span> - <label for="r14" class="ident">h</label>) &amp; <span class="lit-number">63</span>))</code></span>
+<span class="codeline" id="line-38"><code>}</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">// encodeBlockBetter encodes a non-empty src to a guaranteed-large-enough dst. It</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">// assumes that the varint-encoded length of the decompressed bytes has already</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">// been written.</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// It also assumes that:</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">//	len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">//	minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span></code></span>
+<span class="codeline" id="line-48"><code><span class="keyword">func</span> <label for="r16" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/s2.html#name-encodeBlockBetterGo" class="ident">encodeBlockBetterGo</a></label>(<label for="r17" class="ident">dst</label>, <label for="r18" class="ident">src</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (<label for="r19" class="ident">d</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-49"><code>	<span class="comment">// sLimit is when to stop looking for offset/length copies. The inputMargin</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">	// lets us use a fast path for emitLiteral in the main loop, while we are</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	// looking for copies.</span></code></span>
+<span class="codeline" id="line-52"><code>	<label for="r20" class="ident">sLimit</label> := <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>) - <a href="encode.go.html#line-326" class="ident">inputMargin</a></code></span>
+<span class="codeline" id="line-53"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>) &lt; <a href="encode.go.html#line-330" class="ident">minNonLiteralBlockSize</a> {</code></span>
+<span class="codeline" id="line-54"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-55"><code>	}</code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code>	<span class="comment">// Initialize the hash tables.</span></code></span>
+<span class="codeline" id="line-58"><code>	<span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-59"><code>		<span class="comment">// Long hash matches.</span></code></span>
+<span class="codeline" id="line-60"><code>		<label for="r21" class="ident">lTableBits</label>    = <span class="lit-number">17</span></code></span>
+<span class="codeline" id="line-61"><code>		<label for="r22" class="ident">maxLTableSize</label> = <span class="lit-number">1</span> &lt;&lt; <label for="r21" class="ident">lTableBits</label></code></span>
+<span class="codeline" id="line-62"><code></code></span>
+<span class="codeline" id="line-63"><code>		<span class="comment">// Short hash matches.</span></code></span>
+<span class="codeline" id="line-64"><code>		<label for="r23" class="ident">sTableBits</label>    = <span class="lit-number">14</span></code></span>
+<span class="codeline" id="line-65"><code>		<label for="r24" class="ident">maxSTableSize</label> = <span class="lit-number">1</span> &lt;&lt; <label for="r23" class="ident">sTableBits</label></code></span>
+<span class="codeline" id="line-66"><code>	)</code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code>	<span class="keyword">var</span> <label for="r25" class="ident">lTable</label> [<label for="r22" class="ident">maxLTableSize</label>]<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-69"><code>	<span class="keyword">var</span> <label for="r26" class="ident">sTable</label> [<label for="r24" class="ident">maxSTableSize</label>]<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-70"><code></code></span>
+<span class="codeline" id="line-71"><code>	<span class="comment">// Bail if we can't compress to at least this.</span></code></span>
+<span class="codeline" id="line-72"><code>	<label for="r27" class="ident">dstLimit</label> := <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>) - <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>)&gt;&gt;<span class="lit-number">5</span> - <span class="lit-number">6</span></code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code>	<span class="comment">// nextEmit is where in src the next emitLiteral should start from.</span></code></span>
+<span class="codeline" id="line-75"><code>	<label for="r28" class="ident">nextEmit</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-76"><code></code></span>
+<span class="codeline" id="line-77"><code>	<span class="comment">// The encoded form must start with a literal, as there are no previous</span></code></span>
+<span class="codeline" id="line-78"><code><span class="comment">	// bytes to copy, so we start looking for hash matches at s == 1.</span></code></span>
+<span class="codeline" id="line-79"><code>	<label for="r29" class="ident">s</label> := <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-80"><code>	<label for="r30" class="ident">cv</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code>	<span class="comment">// We initialize repeat to 0, so we never match on first attempt</span></code></span>
+<span class="codeline" id="line-83"><code>	<label for="r31" class="ident">repeat</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-84"><code></code></span>
+<span class="codeline" id="line-85"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-86"><code>		<label for="r32" class="ident">candidateL</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-87"><code>		<label for="r33" class="ident">nextS</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-88"><code>		<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-89"><code>			<span class="comment">// Next src position to check</span></code></span>
+<span class="codeline" id="line-90"><code>			<label for="r33" class="ident">nextS</label> = <label for="r29" class="ident">s</label> + (<label for="r29" class="ident">s</label>-<label for="r28" class="ident">nextEmit</label>)&gt;&gt;<span class="lit-number">7</span> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-91"><code>			<span class="keyword">if</span> <label for="r33" class="ident">nextS</label> &gt; <label for="r20" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-92"><code>				<span class="keyword">goto</span> <label for="r34" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-93"><code>			}</code></span>
+<span class="codeline" id="line-94"><code>			<label for="r35" class="ident">hashL</label> := <a href="#line-28" class="ident">hash7</a>(<label for="r30" class="ident">cv</label>, <label for="r21" class="ident">lTableBits</label>)</code></span>
+<span class="codeline" id="line-95"><code>			<label for="r36" class="ident">hashS</label> := <a href="#line-14" class="ident">hash4</a>(<label for="r30" class="ident">cv</label>, <label for="r23" class="ident">sTableBits</label>)</code></span>
+<span class="codeline" id="line-96"><code>			<label for="r32" class="ident">candidateL</label> = <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r25" class="ident">lTable</label>[<label for="r35" class="ident">hashL</label>])</code></span>
+<span class="codeline" id="line-97"><code>			<label for="r37" class="ident">candidateS</label> := <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r26" class="ident">sTable</label>[<label for="r36" class="ident">hashS</label>])</code></span>
+<span class="codeline" id="line-98"><code>			<label for="r25" class="ident">lTable</label>[<label for="r35" class="ident">hashL</label>] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-99"><code>			<label for="r26" class="ident">sTable</label>[<label for="r36" class="ident">hashS</label>] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-100"><code></code></span>
+<span class="codeline" id="line-101"><code>			<label for="r38" class="ident">valLong</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r32" class="ident">candidateL</label>)</code></span>
+<span class="codeline" id="line-102"><code>			<label for="r39" class="ident">valShort</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r37" class="ident">candidateS</label>)</code></span>
+<span class="codeline" id="line-103"><code></code></span>
+<span class="codeline" id="line-104"><code>			<span class="comment">// If long matches at least 8 bytes, use that.</span></code></span>
+<span class="codeline" id="line-105"><code>			<span class="keyword">if</span> <label for="r30" class="ident">cv</label> == <label for="r38" class="ident">valLong</label> {</code></span>
+<span class="codeline" id="line-106"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-107"><code>			}</code></span>
+<span class="codeline" id="line-108"><code>			<span class="keyword">if</span> <label for="r30" class="ident">cv</label> == <label for="r39" class="ident">valShort</label> {</code></span>
+<span class="codeline" id="line-109"><code>				<label for="r32" class="ident">candidateL</label> = <label for="r37" class="ident">candidateS</label></code></span>
+<span class="codeline" id="line-110"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-111"><code>			}</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code>			<span class="comment">// Check repeat at offset checkRep.</span></code></span>
+<span class="codeline" id="line-114"><code>			<span class="keyword">const</span> <label for="r40" class="ident">checkRep</label> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-115"><code>			<span class="comment">// Minimum length of a repeat. Tested with various values.</span></code></span>
+<span class="codeline" id="line-116"><code><span class="comment">			// While 4-5 offers improvements in some, 6 reduces</span></code></span>
+<span class="codeline" id="line-117"><code><span class="comment">			// regressions significantly.</span></code></span>
+<span class="codeline" id="line-118"><code>			<span class="keyword">const</span> <label for="r41" class="ident">wantRepeatBytes</label> = <span class="lit-number">6</span></code></span>
+<span class="codeline" id="line-119"><code>			<span class="keyword">const</span> <label for="r42" class="ident">repeatMask</label> = ((<span class="lit-number">1</span> &lt;&lt; (<label for="r41" class="ident">wantRepeatBytes</label> * <span class="lit-number">8</span>)) - <span class="lit-number">1</span>) &lt;&lt; (<span class="lit-number">8</span> * <label for="r40" class="ident">checkRep</label>)</code></span>
+<span class="codeline" id="line-120"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a> &amp;&amp; <label for="r31" class="ident">repeat</label> &gt; <span class="lit-number">0</span> &amp;&amp; <label for="r30" class="ident">cv</label>&amp;<label for="r42" class="ident">repeatMask</label> == <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>-<label for="r31" class="ident">repeat</label>)&amp;<label for="r42" class="ident">repeatMask</label> {</code></span>
+<span class="codeline" id="line-121"><code>				<label for="r43" class="ident">base</label> := <label for="r29" class="ident">s</label> + <label for="r40" class="ident">checkRep</label></code></span>
+<span class="codeline" id="line-122"><code>				<span class="comment">// Extend back</span></code></span>
+<span class="codeline" id="line-123"><code>				<span class="keyword">for</span> <label for="r44" class="ident">i</label> := <label for="r43" class="ident">base</label> - <label for="r31" class="ident">repeat</label>; <label for="r43" class="ident">base</label> &gt; <label for="r28" class="ident">nextEmit</label> &amp;&amp; <label for="r44" class="ident">i</label> &gt; <span class="lit-number">0</span> &amp;&amp; <label for="r18" class="ident">src</label>[<label for="r44" class="ident">i</label>-<span class="lit-number">1</span>] == <label for="r18" class="ident">src</label>[<label for="r43" class="ident">base</label>-<span class="lit-number">1</span>]; {</code></span>
+<span class="codeline" id="line-124"><code>					<label for="r44" class="ident">i</label>--</code></span>
+<span class="codeline" id="line-125"><code>					<label for="r43" class="ident">base</label>--</code></span>
+<span class="codeline" id="line-126"><code>				}</code></span>
+<span class="codeline" id="line-127"><code>				<label for="r19" class="ident">d</label> += <a href="encode_go.go.html#line-66" class="ident">emitLiteral</a>(<label for="r17" class="ident">dst</label>[<label for="r19" class="ident">d</label>:], <label for="r18" class="ident">src</label>[<label for="r28" class="ident">nextEmit</label>:<label for="r43" class="ident">base</label>])</code></span>
+<span class="codeline" id="line-128"><code></code></span>
+<span class="codeline" id="line-129"><code>				<span class="comment">// Extend forward</span></code></span>
+<span class="codeline" id="line-130"><code>				<label for="r45" class="ident">candidate</label> := <label for="r29" class="ident">s</label> - <label for="r31" class="ident">repeat</label> + <label for="r41" class="ident">wantRepeatBytes</label> + <label for="r40" class="ident">checkRep</label></code></span>
+<span class="codeline" id="line-131"><code>				<label for="r29" class="ident">s</label> += <label for="r41" class="ident">wantRepeatBytes</label> + <label for="r40" class="ident">checkRep</label></code></span>
+<span class="codeline" id="line-132"><code>				<span class="keyword">for</span> <label for="r29" class="ident">s</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>) {</code></span>
+<span class="codeline" id="line-133"><code>					<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>)-<label for="r29" class="ident">s</label> &lt; <span class="lit-number">8</span> {</code></span>
+<span class="codeline" id="line-134"><code>						<span class="keyword">if</span> <label for="r18" class="ident">src</label>[<label for="r29" class="ident">s</label>] == <label for="r18" class="ident">src</label>[<label for="r45" class="ident">candidate</label>] {</code></span>
+<span class="codeline" id="line-135"><code>							<label for="r29" class="ident">s</label>++</code></span>
+<span class="codeline" id="line-136"><code>							<label for="r45" class="ident">candidate</label>++</code></span>
+<span class="codeline" id="line-137"><code>							<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-138"><code>						}</code></span>
+<span class="codeline" id="line-139"><code>						<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-140"><code>					}</code></span>
+<span class="codeline" id="line-141"><code>					<span class="keyword">if</span> <label for="r46" class="ident">diff</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>) ^ <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r45" class="ident">candidate</label>); <label for="r46" class="ident">diff</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-142"><code>						<label for="r29" class="ident">s</label> += <a href="../../../../../pkg/math/bits.html" class="ident i0">bits</a>.<a href="../../../../math/bits/bits.go.html#line-90" class="ident">TrailingZeros64</a>(<label for="r46" class="ident">diff</label>) &gt;&gt; <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-143"><code>						<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-144"><code>					}</code></span>
+<span class="codeline" id="line-145"><code>					<label for="r29" class="ident">s</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-146"><code>					<label for="r45" class="ident">candidate</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-147"><code>				}</code></span>
+<span class="codeline" id="line-148"><code>				<span class="comment">// same as `add := emitCopy(dst[d:], repeat, s-base)` but skips storing offset.</span></code></span>
+<span class="codeline" id="line-149"><code>				<label for="r19" class="ident">d</label> += <a href="encode_go.go.html#line-104" class="ident">emitRepeat</a>(<label for="r17" class="ident">dst</label>[<label for="r19" class="ident">d</label>:], <label for="r31" class="ident">repeat</label>, <label for="r29" class="ident">s</label>-<label for="r43" class="ident">base</label>)</code></span>
+<span class="codeline" id="line-150"><code>				<label for="r28" class="ident">nextEmit</label> = <label for="r29" class="ident">s</label></code></span>
+<span class="codeline" id="line-151"><code>				<span class="keyword">if</span> <label for="r29" class="ident">s</label> &gt;= <label for="r20" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-152"><code>					<span class="keyword">goto</span> <label for="r34" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-153"><code>				}</code></span>
+<span class="codeline" id="line-154"><code>				<span class="comment">// Index in-between</span></code></span>
+<span class="codeline" id="line-155"><code>				<label for="r47" class="ident">index0</label> := <label for="r43" class="ident">base</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-156"><code>				<label for="r48" class="ident">index1</label> := <label for="r29" class="ident">s</label> - <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-157"><code></code></span>
+<span class="codeline" id="line-158"><code>				<label for="r30" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-159"><code>				<span class="keyword">for</span> <label for="r47" class="ident">index0</label> &lt; <label for="r48" class="ident">index1</label> {</code></span>
+<span class="codeline" id="line-160"><code>					<label for="r49" class="ident">cv0</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r47" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-161"><code>					<label for="r50" class="ident">cv1</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r48" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-162"><code>					<label for="r25" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<label for="r49" class="ident">cv0</label>, <label for="r21" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r47" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-163"><code>					<label for="r26" class="ident">sTable</label>[<a href="#line-14" class="ident">hash4</a>(<label for="r49" class="ident">cv0</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r23" class="ident">sTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r47" class="ident">index0</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-164"><code></code></span>
+<span class="codeline" id="line-165"><code>					<label for="r25" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<label for="r50" class="ident">cv1</label>, <label for="r21" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r48" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-166"><code>					<label for="r26" class="ident">sTable</label>[<a href="#line-14" class="ident">hash4</a>(<label for="r50" class="ident">cv1</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r23" class="ident">sTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r48" class="ident">index1</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-167"><code>					<label for="r47" class="ident">index0</label> += <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-168"><code>					<label for="r48" class="ident">index1</label> -= <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-169"><code>				}</code></span>
+<span class="codeline" id="line-170"><code></code></span>
+<span class="codeline" id="line-171"><code>				<label for="r30" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-172"><code>				<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-173"><code>			}</code></span>
+<span class="codeline" id="line-174"><code></code></span>
+<span class="codeline" id="line-175"><code>			<span class="comment">// Long likely matches 7, so take that.</span></code></span>
+<span class="codeline" id="line-176"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r30" class="ident">cv</label>) == <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r38" class="ident">valLong</label>) {</code></span>
+<span class="codeline" id="line-177"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-178"><code>			}</code></span>
+<span class="codeline" id="line-179"><code></code></span>
+<span class="codeline" id="line-180"><code>			<span class="comment">// Check our short candidate</span></code></span>
+<span class="codeline" id="line-181"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r30" class="ident">cv</label>) == <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r39" class="ident">valShort</label>) {</code></span>
+<span class="codeline" id="line-182"><code>				<span class="comment">// Try a long candidate at s+1</span></code></span>
+<span class="codeline" id="line-183"><code>				<label for="r35" class="ident">hashL</label> = <a href="#line-28" class="ident">hash7</a>(<label for="r30" class="ident">cv</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r21" class="ident">lTableBits</label>)</code></span>
+<span class="codeline" id="line-184"><code>				<label for="r32" class="ident">candidateL</label> = <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r25" class="ident">lTable</label>[<label for="r35" class="ident">hashL</label>])</code></span>
+<span class="codeline" id="line-185"><code>				<label for="r25" class="ident">lTable</label>[<label for="r35" class="ident">hashL</label>] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r29" class="ident">s</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-186"><code>				<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r30" class="ident">cv</label>&gt;&gt;<span class="lit-number">8</span>) == <a href="encode_all.go.html#line-14" class="ident">load32</a>(<label for="r18" class="ident">src</label>, <label for="r32" class="ident">candidateL</label>) {</code></span>
+<span class="codeline" id="line-187"><code>					<label for="r29" class="ident">s</label>++</code></span>
+<span class="codeline" id="line-188"><code>					<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-189"><code>				}</code></span>
+<span class="codeline" id="line-190"><code>				<span class="comment">// Use our short candidate.</span></code></span>
+<span class="codeline" id="line-191"><code>				<label for="r32" class="ident">candidateL</label> = <label for="r37" class="ident">candidateS</label></code></span>
+<span class="codeline" id="line-192"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-193"><code>			}</code></span>
+<span class="codeline" id="line-194"><code></code></span>
+<span class="codeline" id="line-195"><code>			<label for="r30" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r33" class="ident">nextS</label>)</code></span>
+<span class="codeline" id="line-196"><code>			<label for="r29" class="ident">s</label> = <label for="r33" class="ident">nextS</label></code></span>
+<span class="codeline" id="line-197"><code>		}</code></span>
+<span class="codeline" id="line-198"><code></code></span>
+<span class="codeline" id="line-199"><code>		<span class="comment">// Extend backwards</span></code></span>
+<span class="codeline" id="line-200"><code>		<span class="keyword">for</span> <label for="r32" class="ident">candidateL</label> &gt; <span class="lit-number">0</span> &amp;&amp; <label for="r29" class="ident">s</label> &gt; <label for="r28" class="ident">nextEmit</label> &amp;&amp; <label for="r18" class="ident">src</label>[<label for="r32" class="ident">candidateL</label>-<span class="lit-number">1</span>] == <label for="r18" class="ident">src</label>[<label for="r29" class="ident">s</label>-<span class="lit-number">1</span>] {</code></span>
+<span class="codeline" id="line-201"><code>			<label for="r32" class="ident">candidateL</label>--</code></span>
+<span class="codeline" id="line-202"><code>			<label for="r29" class="ident">s</label>--</code></span>
+<span class="codeline" id="line-203"><code>		}</code></span>
+<span class="codeline" id="line-204"><code></code></span>
+<span class="codeline" id="line-205"><code>		<span class="comment">// Bail if we exceed the maximum size.</span></code></span>
+<span class="codeline" id="line-206"><code>		<span class="keyword">if</span> <label for="r19" class="ident">d</label>+(<label for="r29" class="ident">s</label>-<label for="r28" class="ident">nextEmit</label>) &gt; <label for="r27" class="ident">dstLimit</label> {</code></span>
+<span class="codeline" id="line-207"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-208"><code>		}</code></span>
+<span class="codeline" id="line-209"><code></code></span>
+<span class="codeline" id="line-210"><code>		<label for="r51" class="ident">base</label> := <label for="r29" class="ident">s</label></code></span>
+<span class="codeline" id="line-211"><code>		<label for="r52" class="ident">offset</label> := <label for="r51" class="ident">base</label> - <label for="r32" class="ident">candidateL</label></code></span>
+<span class="codeline" id="line-212"><code></code></span>
+<span class="codeline" id="line-213"><code>		<span class="comment">// Extend the 4-byte match as long as possible.</span></code></span>
+<span class="codeline" id="line-214"><code>		<label for="r29" class="ident">s</label> += <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-215"><code>		<label for="r32" class="ident">candidateL</label> += <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-216"><code>		<span class="keyword">for</span> <label for="r29" class="ident">s</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>) {</code></span>
+<span class="codeline" id="line-217"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>)-<label for="r29" class="ident">s</label> &lt; <span class="lit-number">8</span> {</code></span>
+<span class="codeline" id="line-218"><code>				<span class="keyword">if</span> <label for="r18" class="ident">src</label>[<label for="r29" class="ident">s</label>] == <label for="r18" class="ident">src</label>[<label for="r32" class="ident">candidateL</label>] {</code></span>
+<span class="codeline" id="line-219"><code>					<label for="r29" class="ident">s</label>++</code></span>
+<span class="codeline" id="line-220"><code>					<label for="r32" class="ident">candidateL</label>++</code></span>
+<span class="codeline" id="line-221"><code>					<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-222"><code>				}</code></span>
+<span class="codeline" id="line-223"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-224"><code>			}</code></span>
+<span class="codeline" id="line-225"><code>			<span class="keyword">if</span> <label for="r53" class="ident">diff</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>) ^ <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r32" class="ident">candidateL</label>); <label for="r53" class="ident">diff</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-226"><code>				<label for="r29" class="ident">s</label> += <a href="../../../../../pkg/math/bits.html" class="ident i0">bits</a>.<a href="../../../../math/bits/bits.go.html#line-90" class="ident">TrailingZeros64</a>(<label for="r53" class="ident">diff</label>) &gt;&gt; <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-227"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-228"><code>			}</code></span>
+<span class="codeline" id="line-229"><code>			<label for="r29" class="ident">s</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-230"><code>			<label for="r32" class="ident">candidateL</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-231"><code>		}</code></span>
+<span class="codeline" id="line-232"><code></code></span>
+<span class="codeline" id="line-233"><code>		<span class="keyword">if</span> <label for="r52" class="ident">offset</label> &gt; <span class="lit-number">65535</span> &amp;&amp; <label for="r29" class="ident">s</label>-<label for="r51" class="ident">base</label> &lt;= <span class="lit-number">5</span> &amp;&amp; <label for="r31" class="ident">repeat</label> != <label for="r52" class="ident">offset</label> {</code></span>
+<span class="codeline" id="line-234"><code>			<span class="comment">// Bail if the match is equal or worse to the encoding.</span></code></span>
+<span class="codeline" id="line-235"><code>			<label for="r29" class="ident">s</label> = <label for="r33" class="ident">nextS</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-236"><code>			<span class="keyword">if</span> <label for="r29" class="ident">s</label> &gt;= <label for="r20" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-237"><code>				<span class="keyword">goto</span> <label for="r34" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-238"><code>			}</code></span>
+<span class="codeline" id="line-239"><code>			<label for="r30" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-240"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-241"><code>		}</code></span>
+<span class="codeline" id="line-242"><code></code></span>
+<span class="codeline" id="line-243"><code>		<label for="r19" class="ident">d</label> += <a href="encode_go.go.html#line-66" class="ident">emitLiteral</a>(<label for="r17" class="ident">dst</label>[<label for="r19" class="ident">d</label>:], <label for="r18" class="ident">src</label>[<label for="r28" class="ident">nextEmit</label>:<label for="r51" class="ident">base</label>])</code></span>
+<span class="codeline" id="line-244"><code>		<span class="keyword">if</span> <label for="r31" class="ident">repeat</label> == <label for="r52" class="ident">offset</label> {</code></span>
+<span class="codeline" id="line-245"><code>			<label for="r19" class="ident">d</label> += <a href="encode_go.go.html#line-104" class="ident">emitRepeat</a>(<label for="r17" class="ident">dst</label>[<label for="r19" class="ident">d</label>:], <label for="r52" class="ident">offset</label>, <label for="r29" class="ident">s</label>-<label for="r51" class="ident">base</label>)</code></span>
+<span class="codeline" id="line-246"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-247"><code>			<label for="r19" class="ident">d</label> += <a href="encode_go.go.html#line-158" class="ident">emitCopy</a>(<label for="r17" class="ident">dst</label>[<label for="r19" class="ident">d</label>:], <label for="r52" class="ident">offset</label>, <label for="r29" class="ident">s</label>-<label for="r51" class="ident">base</label>)</code></span>
+<span class="codeline" id="line-248"><code>			<label for="r31" class="ident">repeat</label> = <label for="r52" class="ident">offset</label></code></span>
+<span class="codeline" id="line-249"><code>		}</code></span>
+<span class="codeline" id="line-250"><code></code></span>
+<span class="codeline" id="line-251"><code>		<label for="r28" class="ident">nextEmit</label> = <label for="r29" class="ident">s</label></code></span>
+<span class="codeline" id="line-252"><code>		<span class="keyword">if</span> <label for="r29" class="ident">s</label> &gt;= <label for="r20" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-253"><code>			<span class="keyword">goto</span> <label for="r34" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-254"><code>		}</code></span>
+<span class="codeline" id="line-255"><code></code></span>
+<span class="codeline" id="line-256"><code>		<span class="keyword">if</span> <label for="r19" class="ident">d</label> &gt; <label for="r27" class="ident">dstLimit</label> {</code></span>
+<span class="codeline" id="line-257"><code>			<span class="comment">// Do we have space for more, if not bail.</span></code></span>
+<span class="codeline" id="line-258"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-259"><code>		}</code></span>
+<span class="codeline" id="line-260"><code></code></span>
+<span class="codeline" id="line-261"><code>		<span class="comment">// Index short &amp; long</span></code></span>
+<span class="codeline" id="line-262"><code>		<label for="r54" class="ident">index0</label> := <label for="r51" class="ident">base</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-263"><code>		<label for="r55" class="ident">index1</label> := <label for="r29" class="ident">s</label> - <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-264"><code></code></span>
+<span class="codeline" id="line-265"><code>		<label for="r56" class="ident">cv0</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r54" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-266"><code>		<label for="r57" class="ident">cv1</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r55" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-267"><code>		<label for="r25" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<label for="r56" class="ident">cv0</label>, <label for="r21" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r54" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-268"><code>		<label for="r26" class="ident">sTable</label>[<a href="#line-14" class="ident">hash4</a>(<label for="r56" class="ident">cv0</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r23" class="ident">sTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r54" class="ident">index0</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-269"><code></code></span>
+<span class="codeline" id="line-270"><code>		<label for="r25" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<label for="r57" class="ident">cv1</label>, <label for="r21" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r55" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-271"><code>		<label for="r26" class="ident">sTable</label>[<a href="#line-14" class="ident">hash4</a>(<label for="r57" class="ident">cv1</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r23" class="ident">sTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r55" class="ident">index1</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-272"><code>		<label for="r54" class="ident">index0</label> += <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-273"><code>		<label for="r55" class="ident">index1</label> -= <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-274"><code>		<label for="r30" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r29" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-275"><code></code></span>
+<span class="codeline" id="line-276"><code>		<span class="comment">// index every second long in between.</span></code></span>
+<span class="codeline" id="line-277"><code>		<span class="keyword">for</span> <label for="r54" class="ident">index0</label> &lt; <label for="r55" class="ident">index1</label> {</code></span>
+<span class="codeline" id="line-278"><code>			<label for="r25" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r54" class="ident">index0</label>), <label for="r21" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r54" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-279"><code>			<label for="r25" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r18" class="ident">src</label>, <label for="r55" class="ident">index1</label>), <label for="r21" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r55" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-280"><code>			<label for="r54" class="ident">index0</label> += <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-281"><code>			<label for="r55" class="ident">index1</label> -= <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-282"><code>		}</code></span>
+<span class="codeline" id="line-283"><code>	}</code></span>
+<span class="codeline" id="line-284"><code></code></span>
+<span class="codeline" id="line-285"><code><label for="r34" class="ident">emitRemainder</label>:</code></span>
+<span class="codeline" id="line-286"><code>	<span class="keyword">if</span> <label for="r28" class="ident">nextEmit</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>) {</code></span>
+<span class="codeline" id="line-287"><code>		<span class="comment">// Bail if we exceed the maximum size.</span></code></span>
+<span class="codeline" id="line-288"><code>		<span class="keyword">if</span> <label for="r19" class="ident">d</label>+<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">src</label>)-<label for="r28" class="ident">nextEmit</label> &gt; <label for="r27" class="ident">dstLimit</label> {</code></span>
+<span class="codeline" id="line-289"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-290"><code>		}</code></span>
+<span class="codeline" id="line-291"><code>		<label for="r19" class="ident">d</label> += <a href="encode_go.go.html#line-66" class="ident">emitLiteral</a>(<label for="r17" class="ident">dst</label>[<label for="r19" class="ident">d</label>:], <label for="r18" class="ident">src</label>[<label for="r28" class="ident">nextEmit</label>:])</code></span>
+<span class="codeline" id="line-292"><code>	}</code></span>
+<span class="codeline" id="line-293"><code>	<span class="keyword">return</span> <label for="r19" class="ident">d</label></code></span>
+<span class="codeline" id="line-294"><code>}</code></span>
+<span class="codeline" id="line-295"><code></code></span>
+<span class="codeline" id="line-296"><code><span class="comment">// encodeBlockBetterSnappyGo encodes a non-empty src to a guaranteed-large-enough dst. It</span></code></span>
+<span class="codeline" id="line-297"><code><span class="comment">// assumes that the varint-encoded length of the decompressed bytes has already</span></code></span>
+<span class="codeline" id="line-298"><code><span class="comment">// been written.</span></code></span>
+<span class="codeline" id="line-299"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-300"><code><span class="comment">// It also assumes that:</span></code></span>
+<span class="codeline" id="line-301"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-302"><code><span class="comment">//	len(dst) &gt;= MaxEncodedLen(len(src)) &amp;&amp;</span></code></span>
+<span class="codeline" id="line-303"><code><span class="comment">//	minNonLiteralBlockSize &lt;= len(src) &amp;&amp; len(src) &lt;= maxBlockSize</span></code></span>
+<span class="codeline" id="line-304"><code><span class="keyword">func</span> <label for="r58" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/s2.html#name-encodeBlockBetterSnappyGo" class="ident">encodeBlockBetterSnappyGo</a></label>(<label for="r59" class="ident">dst</label>, <label for="r60" class="ident">src</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (<label for="r61" class="ident">d</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-305"><code>	<span class="comment">// sLimit is when to stop looking for offset/length copies. The inputMargin</span></code></span>
+<span class="codeline" id="line-306"><code><span class="comment">	// lets us use a fast path for emitLiteral in the main loop, while we are</span></code></span>
+<span class="codeline" id="line-307"><code><span class="comment">	// looking for copies.</span></code></span>
+<span class="codeline" id="line-308"><code>	<label for="r62" class="ident">sLimit</label> := <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>) - <a href="encode.go.html#line-326" class="ident">inputMargin</a></code></span>
+<span class="codeline" id="line-309"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>) &lt; <a href="encode.go.html#line-330" class="ident">minNonLiteralBlockSize</a> {</code></span>
+<span class="codeline" id="line-310"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-311"><code>	}</code></span>
+<span class="codeline" id="line-312"><code></code></span>
+<span class="codeline" id="line-313"><code>	<span class="comment">// Initialize the hash tables.</span></code></span>
+<span class="codeline" id="line-314"><code>	<span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-315"><code>		<span class="comment">// Long hash matches.</span></code></span>
+<span class="codeline" id="line-316"><code>		<label for="r63" class="ident">lTableBits</label>    = <span class="lit-number">16</span></code></span>
+<span class="codeline" id="line-317"><code>		<label for="r64" class="ident">maxLTableSize</label> = <span class="lit-number">1</span> &lt;&lt; <label for="r63" class="ident">lTableBits</label></code></span>
+<span class="codeline" id="line-318"><code></code></span>
+<span class="codeline" id="line-319"><code>		<span class="comment">// Short hash matches.</span></code></span>
+<span class="codeline" id="line-320"><code>		<label for="r65" class="ident">sTableBits</label>    = <span class="lit-number">14</span></code></span>
+<span class="codeline" id="line-321"><code>		<label for="r66" class="ident">maxSTableSize</label> = <span class="lit-number">1</span> &lt;&lt; <label for="r65" class="ident">sTableBits</label></code></span>
+<span class="codeline" id="line-322"><code>	)</code></span>
+<span class="codeline" id="line-323"><code></code></span>
+<span class="codeline" id="line-324"><code>	<span class="keyword">var</span> <label for="r67" class="ident">lTable</label> [<label for="r64" class="ident">maxLTableSize</label>]<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-325"><code>	<span class="keyword">var</span> <label for="r68" class="ident">sTable</label> [<label for="r66" class="ident">maxSTableSize</label>]<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-326"><code></code></span>
+<span class="codeline" id="line-327"><code>	<span class="comment">// Bail if we can't compress to at least this.</span></code></span>
+<span class="codeline" id="line-328"><code>	<label for="r69" class="ident">dstLimit</label> := <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>) - <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>)&gt;&gt;<span class="lit-number">5</span> - <span class="lit-number">6</span></code></span>
+<span class="codeline" id="line-329"><code></code></span>
+<span class="codeline" id="line-330"><code>	<span class="comment">// nextEmit is where in src the next emitLiteral should start from.</span></code></span>
+<span class="codeline" id="line-331"><code>	<label for="r70" class="ident">nextEmit</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-332"><code></code></span>
+<span class="codeline" id="line-333"><code>	<span class="comment">// The encoded form must start with a literal, as there are no previous</span></code></span>
+<span class="codeline" id="line-334"><code><span class="comment">	// bytes to copy, so we start looking for hash matches at s == 1.</span></code></span>
+<span class="codeline" id="line-335"><code>	<label for="r71" class="ident">s</label> := <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-336"><code>	<label for="r72" class="ident">cv</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r71" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-337"><code></code></span>
+<span class="codeline" id="line-338"><code>	<span class="comment">// We initialize repeat to 0, so we never match on first attempt</span></code></span>
+<span class="codeline" id="line-339"><code>	<label for="r73" class="ident">repeat</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-340"><code>	<span class="keyword">const</span> <label for="r74" class="ident">maxSkip</label> = <span class="lit-number">100</span></code></span>
+<span class="codeline" id="line-341"><code></code></span>
+<span class="codeline" id="line-342"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-343"><code>		<label for="r75" class="ident">candidateL</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-344"><code>		<label for="r76" class="ident">nextS</label> := <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-345"><code>		<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-346"><code>			<span class="comment">// Next src position to check</span></code></span>
+<span class="codeline" id="line-347"><code>			<label for="r76" class="ident">nextS</label> = (<label for="r71" class="ident">s</label>-<label for="r70" class="ident">nextEmit</label>)&gt;&gt;<span class="lit-number">7</span> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-348"><code>			<span class="keyword">if</span> <label for="r76" class="ident">nextS</label> &gt; <label for="r74" class="ident">maxSkip</label> {</code></span>
+<span class="codeline" id="line-349"><code>				<label for="r76" class="ident">nextS</label> = <label for="r71" class="ident">s</label> + <label for="r74" class="ident">maxSkip</label></code></span>
+<span class="codeline" id="line-350"><code>			} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-351"><code>				<label for="r76" class="ident">nextS</label> += <label for="r71" class="ident">s</label></code></span>
+<span class="codeline" id="line-352"><code>			}</code></span>
+<span class="codeline" id="line-353"><code></code></span>
+<span class="codeline" id="line-354"><code>			<span class="keyword">if</span> <label for="r76" class="ident">nextS</label> &gt; <label for="r62" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-355"><code>				<span class="keyword">goto</span> <label for="r77" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-356"><code>			}</code></span>
+<span class="codeline" id="line-357"><code>			<label for="r78" class="ident">hashL</label> := <a href="#line-28" class="ident">hash7</a>(<label for="r72" class="ident">cv</label>, <label for="r63" class="ident">lTableBits</label>)</code></span>
+<span class="codeline" id="line-358"><code>			<label for="r79" class="ident">hashS</label> := <a href="#line-14" class="ident">hash4</a>(<label for="r72" class="ident">cv</label>, <label for="r65" class="ident">sTableBits</label>)</code></span>
+<span class="codeline" id="line-359"><code>			<label for="r75" class="ident">candidateL</label> = <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r67" class="ident">lTable</label>[<label for="r78" class="ident">hashL</label>])</code></span>
+<span class="codeline" id="line-360"><code>			<label for="r80" class="ident">candidateS</label> := <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r68" class="ident">sTable</label>[<label for="r79" class="ident">hashS</label>])</code></span>
+<span class="codeline" id="line-361"><code>			<label for="r67" class="ident">lTable</label>[<label for="r78" class="ident">hashL</label>] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r71" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-362"><code>			<label for="r68" class="ident">sTable</label>[<label for="r79" class="ident">hashS</label>] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r71" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-363"><code></code></span>
+<span class="codeline" id="line-364"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r72" class="ident">cv</label>) == <a href="encode_all.go.html#line-14" class="ident">load32</a>(<label for="r60" class="ident">src</label>, <label for="r75" class="ident">candidateL</label>) {</code></span>
+<span class="codeline" id="line-365"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-366"><code>			}</code></span>
+<span class="codeline" id="line-367"><code></code></span>
+<span class="codeline" id="line-368"><code>			<span class="comment">// Check our short candidate</span></code></span>
+<span class="codeline" id="line-369"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r72" class="ident">cv</label>) == <a href="encode_all.go.html#line-14" class="ident">load32</a>(<label for="r60" class="ident">src</label>, <label for="r80" class="ident">candidateS</label>) {</code></span>
+<span class="codeline" id="line-370"><code>				<span class="comment">// Try a long candidate at s+1</span></code></span>
+<span class="codeline" id="line-371"><code>				<label for="r78" class="ident">hashL</label> = <a href="#line-28" class="ident">hash7</a>(<label for="r72" class="ident">cv</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r63" class="ident">lTableBits</label>)</code></span>
+<span class="codeline" id="line-372"><code>				<label for="r75" class="ident">candidateL</label> = <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r67" class="ident">lTable</label>[<label for="r78" class="ident">hashL</label>])</code></span>
+<span class="codeline" id="line-373"><code>				<label for="r67" class="ident">lTable</label>[<label for="r78" class="ident">hashL</label>] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r71" class="ident">s</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-374"><code>				<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r72" class="ident">cv</label>&gt;&gt;<span class="lit-number">8</span>) == <a href="encode_all.go.html#line-14" class="ident">load32</a>(<label for="r60" class="ident">src</label>, <label for="r75" class="ident">candidateL</label>) {</code></span>
+<span class="codeline" id="line-375"><code>					<label for="r71" class="ident">s</label>++</code></span>
+<span class="codeline" id="line-376"><code>					<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-377"><code>				}</code></span>
+<span class="codeline" id="line-378"><code>				<span class="comment">// Use our short candidate.</span></code></span>
+<span class="codeline" id="line-379"><code>				<label for="r75" class="ident">candidateL</label> = <label for="r80" class="ident">candidateS</label></code></span>
+<span class="codeline" id="line-380"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-381"><code>			}</code></span>
+<span class="codeline" id="line-382"><code></code></span>
+<span class="codeline" id="line-383"><code>			<label for="r72" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r76" class="ident">nextS</label>)</code></span>
+<span class="codeline" id="line-384"><code>			<label for="r71" class="ident">s</label> = <label for="r76" class="ident">nextS</label></code></span>
+<span class="codeline" id="line-385"><code>		}</code></span>
+<span class="codeline" id="line-386"><code></code></span>
+<span class="codeline" id="line-387"><code>		<span class="comment">// Extend backwards</span></code></span>
+<span class="codeline" id="line-388"><code>		<span class="keyword">for</span> <label for="r75" class="ident">candidateL</label> &gt; <span class="lit-number">0</span> &amp;&amp; <label for="r71" class="ident">s</label> &gt; <label for="r70" class="ident">nextEmit</label> &amp;&amp; <label for="r60" class="ident">src</label>[<label for="r75" class="ident">candidateL</label>-<span class="lit-number">1</span>] == <label for="r60" class="ident">src</label>[<label for="r71" class="ident">s</label>-<span class="lit-number">1</span>] {</code></span>
+<span class="codeline" id="line-389"><code>			<label for="r75" class="ident">candidateL</label>--</code></span>
+<span class="codeline" id="line-390"><code>			<label for="r71" class="ident">s</label>--</code></span>
+<span class="codeline" id="line-391"><code>		}</code></span>
+<span class="codeline" id="line-392"><code></code></span>
+<span class="codeline" id="line-393"><code>		<span class="comment">// Bail if we exceed the maximum size.</span></code></span>
+<span class="codeline" id="line-394"><code>		<span class="keyword">if</span> <label for="r61" class="ident">d</label>+(<label for="r71" class="ident">s</label>-<label for="r70" class="ident">nextEmit</label>) &gt; <label for="r69" class="ident">dstLimit</label> {</code></span>
+<span class="codeline" id="line-395"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-396"><code>		}</code></span>
+<span class="codeline" id="line-397"><code></code></span>
+<span class="codeline" id="line-398"><code>		<label for="r81" class="ident">base</label> := <label for="r71" class="ident">s</label></code></span>
+<span class="codeline" id="line-399"><code>		<label for="r82" class="ident">offset</label> := <label for="r81" class="ident">base</label> - <label for="r75" class="ident">candidateL</label></code></span>
+<span class="codeline" id="line-400"><code></code></span>
+<span class="codeline" id="line-401"><code>		<span class="comment">// Extend the 4-byte match as long as possible.</span></code></span>
+<span class="codeline" id="line-402"><code>		<label for="r71" class="ident">s</label> += <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-403"><code>		<label for="r75" class="ident">candidateL</label> += <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-404"><code>		<span class="keyword">for</span> <label for="r71" class="ident">s</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>) {</code></span>
+<span class="codeline" id="line-405"><code>			<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>)-<label for="r71" class="ident">s</label> &lt; <span class="lit-number">8</span> {</code></span>
+<span class="codeline" id="line-406"><code>				<span class="keyword">if</span> <label for="r60" class="ident">src</label>[<label for="r71" class="ident">s</label>] == <label for="r60" class="ident">src</label>[<label for="r75" class="ident">candidateL</label>] {</code></span>
+<span class="codeline" id="line-407"><code>					<label for="r71" class="ident">s</label>++</code></span>
+<span class="codeline" id="line-408"><code>					<label for="r75" class="ident">candidateL</label>++</code></span>
+<span class="codeline" id="line-409"><code>					<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-410"><code>				}</code></span>
+<span class="codeline" id="line-411"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-412"><code>			}</code></span>
+<span class="codeline" id="line-413"><code>			<span class="keyword">if</span> <label for="r83" class="ident">diff</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r71" class="ident">s</label>) ^ <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r75" class="ident">candidateL</label>); <label for="r83" class="ident">diff</label> != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-414"><code>				<label for="r71" class="ident">s</label> += <a href="../../../../../pkg/math/bits.html" class="ident i0">bits</a>.<a href="../../../../math/bits/bits.go.html#line-90" class="ident">TrailingZeros64</a>(<label for="r83" class="ident">diff</label>) &gt;&gt; <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-415"><code>				<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-416"><code>			}</code></span>
+<span class="codeline" id="line-417"><code>			<label for="r71" class="ident">s</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-418"><code>			<label for="r75" class="ident">candidateL</label> += <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-419"><code>		}</code></span>
+<span class="codeline" id="line-420"><code></code></span>
+<span class="codeline" id="line-421"><code>		<span class="keyword">if</span> <label for="r82" class="ident">offset</label> &gt; <span class="lit-number">65535</span> &amp;&amp; <label for="r71" class="ident">s</label>-<label for="r81" class="ident">base</label> &lt;= <span class="lit-number">5</span> &amp;&amp; <label for="r73" class="ident">repeat</label> != <label for="r82" class="ident">offset</label> {</code></span>
+<span class="codeline" id="line-422"><code>			<span class="comment">// Bail if the match is equal or worse to the encoding.</span></code></span>
+<span class="codeline" id="line-423"><code>			<label for="r71" class="ident">s</label> = <label for="r76" class="ident">nextS</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-424"><code>			<span class="keyword">if</span> <label for="r71" class="ident">s</label> &gt;= <label for="r62" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-425"><code>				<span class="keyword">goto</span> <label for="r77" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-426"><code>			}</code></span>
+<span class="codeline" id="line-427"><code>			<label for="r72" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r71" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-428"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-429"><code>		}</code></span>
+<span class="codeline" id="line-430"><code></code></span>
+<span class="codeline" id="line-431"><code>		<label for="r61" class="ident">d</label> += <a href="encode_go.go.html#line-66" class="ident">emitLiteral</a>(<label for="r59" class="ident">dst</label>[<label for="r61" class="ident">d</label>:], <label for="r60" class="ident">src</label>[<label for="r70" class="ident">nextEmit</label>:<label for="r81" class="ident">base</label>])</code></span>
+<span class="codeline" id="line-432"><code>		<label for="r61" class="ident">d</label> += <a href="encode_go.go.html#line-227" class="ident">emitCopyNoRepeat</a>(<label for="r59" class="ident">dst</label>[<label for="r61" class="ident">d</label>:], <label for="r82" class="ident">offset</label>, <label for="r71" class="ident">s</label>-<label for="r81" class="ident">base</label>)</code></span>
+<span class="codeline" id="line-433"><code>		<label for="r73" class="ident">repeat</label> = <label for="r82" class="ident">offset</label></code></span>
+<span class="codeline" id="line-434"><code></code></span>
+<span class="codeline" id="line-435"><code>		<label for="r70" class="ident">nextEmit</label> = <label for="r71" class="ident">s</label></code></span>
+<span class="codeline" id="line-436"><code>		<span class="keyword">if</span> <label for="r71" class="ident">s</label> &gt;= <label for="r62" class="ident">sLimit</label> {</code></span>
+<span class="codeline" id="line-437"><code>			<span class="keyword">goto</span> <label for="r77" class="ident">emitRemainder</label></code></span>
+<span class="codeline" id="line-438"><code>		}</code></span>
+<span class="codeline" id="line-439"><code></code></span>
+<span class="codeline" id="line-440"><code>		<span class="keyword">if</span> <label for="r61" class="ident">d</label> &gt; <label for="r69" class="ident">dstLimit</label> {</code></span>
+<span class="codeline" id="line-441"><code>			<span class="comment">// Do we have space for more, if not bail.</span></code></span>
+<span class="codeline" id="line-442"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-443"><code>		}</code></span>
+<span class="codeline" id="line-444"><code></code></span>
+<span class="codeline" id="line-445"><code>		<span class="comment">// Index short &amp; long</span></code></span>
+<span class="codeline" id="line-446"><code>		<label for="r84" class="ident">index0</label> := <label for="r81" class="ident">base</label> + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-447"><code>		<label for="r85" class="ident">index1</label> := <label for="r71" class="ident">s</label> - <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-448"><code></code></span>
+<span class="codeline" id="line-449"><code>		<label for="r86" class="ident">cv0</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r84" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-450"><code>		<label for="r87" class="ident">cv1</label> := <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r85" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-451"><code>		<label for="r67" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<label for="r86" class="ident">cv0</label>, <label for="r63" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r84" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-452"><code>		<label for="r68" class="ident">sTable</label>[<a href="#line-14" class="ident">hash4</a>(<label for="r86" class="ident">cv0</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r65" class="ident">sTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r84" class="ident">index0</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-453"><code></code></span>
+<span class="codeline" id="line-454"><code>		<label for="r67" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<label for="r87" class="ident">cv1</label>, <label for="r63" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r85" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-455"><code>		<label for="r68" class="ident">sTable</label>[<a href="#line-14" class="ident">hash4</a>(<label for="r87" class="ident">cv1</label>&gt;&gt;<span class="lit-number">8</span>, <label for="r65" class="ident">sTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r85" class="ident">index1</label> + <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-456"><code>		<label for="r84" class="ident">index0</label> += <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-457"><code>		<label for="r85" class="ident">index1</label> -= <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-458"><code>		<label for="r72" class="ident">cv</label> = <a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r71" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-459"><code></code></span>
+<span class="codeline" id="line-460"><code>		<span class="comment">// index every second long in between.</span></code></span>
+<span class="codeline" id="line-461"><code>		<span class="keyword">for</span> <label for="r84" class="ident">index0</label> &lt; <label for="r85" class="ident">index1</label> {</code></span>
+<span class="codeline" id="line-462"><code>			<label for="r67" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r84" class="ident">index0</label>), <label for="r63" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r84" class="ident">index0</label>)</code></span>
+<span class="codeline" id="line-463"><code>			<label for="r67" class="ident">lTable</label>[<a href="#line-28" class="ident">hash7</a>(<a href="encode_all.go.html#line-18" class="ident">load64</a>(<label for="r60" class="ident">src</label>, <label for="r85" class="ident">index1</label>), <label for="r63" class="ident">lTableBits</label>)] = <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<label for="r85" class="ident">index1</label>)</code></span>
+<span class="codeline" id="line-464"><code>			<label for="r84" class="ident">index0</label> += <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-465"><code>			<label for="r85" class="ident">index1</label> -= <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-466"><code>		}</code></span>
+<span class="codeline" id="line-467"><code>	}</code></span>
+<span class="codeline" id="line-468"><code></code></span>
+<span class="codeline" id="line-469"><code><label for="r77" class="ident">emitRemainder</label>:</code></span>
+<span class="codeline" id="line-470"><code>	<span class="keyword">if</span> <label for="r70" class="ident">nextEmit</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>) {</code></span>
+<span class="codeline" id="line-471"><code>		<span class="comment">// Bail if we exceed the maximum size.</span></code></span>
+<span class="codeline" id="line-472"><code>		<span class="keyword">if</span> <label for="r61" class="ident">d</label>+<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r60" class="ident">src</label>)-<label for="r70" class="ident">nextEmit</label> &gt; <label for="r69" class="ident">dstLimit</label> {</code></span>
+<span class="codeline" id="line-473"><code>			<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-474"><code>		}</code></span>
+<span class="codeline" id="line-475"><code>		<label for="r61" class="ident">d</label> += <a href="encode_go.go.html#line-66" class="ident">emitLiteral</a>(<label for="r59" class="ident">dst</label>[<label for="r61" class="ident">d</label>:], <label for="r60" class="ident">src</label>[<label for="r70" class="ident">nextEmit</label>:])</code></span>
+<span class="codeline" id="line-476"><code>	}</code></span>
+<span class="codeline" id="line-477"><code>	<span class="keyword">return</span> <label for="r61" class="ident">d</label></code></span>
+<span class="codeline" id="line-478"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

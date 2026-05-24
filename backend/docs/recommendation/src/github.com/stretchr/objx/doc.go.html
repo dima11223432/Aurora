@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: doc.go in package github.com/stretchr/objx</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	doc.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/stretchr/objx.html">github.com/stretchr/objx</a>
+</code></pre>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">/*</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">Package objx provides utilities for dealing with maps, slices, JSON and other data.</span></code></span>
+<span class="codeline" id="line-3"><code></code></span>
+<span class="codeline" id="line-4"><code><span class="comment"># Overview</span></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">Objx provides the `objx.Map` type, which is a `map[string]interface{}` that exposes</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">a powerful `Get` method (among others) that allows you to easily and quickly get</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">access to data within the map, without having to worry too much about type assertions,</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">missing data, default values etc.</span></code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment"># Pattern</span></code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">Objx uses a predictable pattern to make access data from within `map[string]interface{}` easy.</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">Call one of the `objx.` functions to create your `objx.Map` to get going:</span></code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">	m, err := objx.FromJSON(json)</span></code></span>
+<span class="codeline" id="line-17"><code></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">NOTE: Any methods or functions with the `Must` prefix will panic if something goes wrong,</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">the rest will be optimistic and try to figure things out without panicking.</span></code></span>
+<span class="codeline" id="line-20"><code></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">Use `Get` to access the value you're interested in.  You can use dot and array</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">notation too:</span></code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	m.Get("places[0].latlng")</span></code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">Once you have sought the `Value` you're interested in, you can use the `Is*` methods to determine its type.</span></code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">	if m.Get("code").IsStr() { // Your code... }</span></code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">Or you can just assume the type, and use one of the strong type methods to extract the real value:</span></code></span>
+<span class="codeline" id="line-31"><code></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">	m.Get("code").Int()</span></code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">If there's no value there (or if it's the wrong type) then a default value will be returned,</span></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">or you can be explicit about the default value.</span></code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">	Get("code").Int(-1)</span></code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">If you're dealing with a slice of data as a value, Objx provides many useful methods for iterating,</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">manipulating and selecting that data.  You can find out more by exploring the index below.</span></code></span>
+<span class="codeline" id="line-41"><code></code></span>
+<span class="codeline" id="line-42"><code><span class="comment"># Reading data</span></code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">A simple example of how to use Objx:</span></code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">	// Use MustFromJSON to make an objx.Map from some JSON</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">	m := objx.MustFromJSON(`{"name": "Mat", "age": 30}`)</span></code></span>
+<span class="codeline" id="line-48"><code></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">	// Get the details</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">	name := m.Get("name").Str()</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">	age := m.Get("age").Int()</span></code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">	// Get their nickname (or use their name if they don't have one)</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">	nickname := m.Get("nickname").Str(name)</span></code></span>
+<span class="codeline" id="line-55"><code></code></span>
+<span class="codeline" id="line-56"><code><span class="comment"># Ranging</span></code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">Since `objx.Map` is a `map[string]interface{}` you can treat it as such.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">For example, to `range` the data, do what you would expect:</span></code></span>
+<span class="codeline" id="line-60"><code></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">	m := objx.MustFromJSON(json)</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">	for key, value := range m {</span></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">	  // Your code...</span></code></span>
+<span class="codeline" id="line-64"><code><span class="comment">	}</span></code></span>
+<span class="codeline" id="line-65"><code><span class="comment">*/</span></code></span></div><span class="codeline" id="line-66"><code><span class="keyword">package</span> objx</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

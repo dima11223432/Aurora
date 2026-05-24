@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: dim_arm64.s in package math</title>
+<link href="../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	dim_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../pkg/math.html">math</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2016 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>#define PosInf 0x7FF0000000000000</code></span>
+<span class="codeline" id="line-8"><code>#define NaN    0x7FF8000000000001</code></span>
+<span class="codeline" id="line-9"><code>#define NegInf 0xFFF0000000000000</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code>// func ·archMax(x, y float64) float64</code></span>
+<span class="codeline" id="line-12"><code>TEXT ·archMax(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-13"><code>	// +Inf special cases</code></span>
+<span class="codeline" id="line-14"><code>	MOVD	$PosInf, R0</code></span>
+<span class="codeline" id="line-15"><code>	MOVD	x+0(FP), R1</code></span>
+<span class="codeline" id="line-16"><code>	CMP	R0, R1</code></span>
+<span class="codeline" id="line-17"><code>	BEQ	isPosInf</code></span>
+<span class="codeline" id="line-18"><code>	MOVD	y+8(FP), R2</code></span>
+<span class="codeline" id="line-19"><code>	CMP	R0, R2</code></span>
+<span class="codeline" id="line-20"><code>	BEQ	isPosInf</code></span>
+<span class="codeline" id="line-21"><code>	// normal case</code></span>
+<span class="codeline" id="line-22"><code>	FMOVD	R1, F0</code></span>
+<span class="codeline" id="line-23"><code>	FMOVD	R2, F1</code></span>
+<span class="codeline" id="line-24"><code>	FMAXD	F0, F1, F0</code></span>
+<span class="codeline" id="line-25"><code>	FMOVD	F0, ret+16(FP)</code></span>
+<span class="codeline" id="line-26"><code>	RET</code></span>
+<span class="codeline" id="line-27"><code>isPosInf: // return +Inf</code></span>
+<span class="codeline" id="line-28"><code>	MOVD	R0, ret+16(FP)</code></span>
+<span class="codeline" id="line-29"><code>	RET</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code>// func archMin(x, y float64) float64</code></span>
+<span class="codeline" id="line-32"><code>TEXT ·archMin(SB),NOSPLIT,$0</code></span>
+<span class="codeline" id="line-33"><code>	// -Inf special cases</code></span>
+<span class="codeline" id="line-34"><code>	MOVD	$NegInf, R0</code></span>
+<span class="codeline" id="line-35"><code>	MOVD	x+0(FP), R1</code></span>
+<span class="codeline" id="line-36"><code>	CMP	R0, R1</code></span>
+<span class="codeline" id="line-37"><code>	BEQ	isNegInf</code></span>
+<span class="codeline" id="line-38"><code>	MOVD	y+8(FP), R2</code></span>
+<span class="codeline" id="line-39"><code>	CMP	R0, R2</code></span>
+<span class="codeline" id="line-40"><code>	BEQ	isNegInf</code></span>
+<span class="codeline" id="line-41"><code>	// normal case</code></span>
+<span class="codeline" id="line-42"><code>	FMOVD	R1, F0</code></span>
+<span class="codeline" id="line-43"><code>	FMOVD	R2, F1</code></span>
+<span class="codeline" id="line-44"><code>	FMIND	F0, F1, F0</code></span>
+<span class="codeline" id="line-45"><code>	FMOVD	F0, ret+16(FP)</code></span>
+<span class="codeline" id="line-46"><code>	RET</code></span>
+<span class="codeline" id="line-47"><code>isNegInf: // return -Inf</code></span>
+<span class="codeline" id="line-48"><code>	MOVD	R0, ret+16(FP)</code></span>
+<span class="codeline" id="line-49"><code>	RET</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

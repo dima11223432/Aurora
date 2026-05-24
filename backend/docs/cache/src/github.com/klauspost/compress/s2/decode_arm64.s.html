@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: decode_arm64.s in package github.com/klauspost/compress/s2</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	decode_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/s2.html">github.com/klauspost/compress/s2</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2020 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>// +build !appengine</code></span>
+<span class="codeline" id="line-6"><code>// +build gc</code></span>
+<span class="codeline" id="line-7"><code>// +build !noasm</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code>#define R_TMP0 R2</code></span>
+<span class="codeline" id="line-12"><code>#define R_TMP1 R3</code></span>
+<span class="codeline" id="line-13"><code>#define R_LEN R4</code></span>
+<span class="codeline" id="line-14"><code>#define R_OFF R5</code></span>
+<span class="codeline" id="line-15"><code>#define R_SRC R6</code></span>
+<span class="codeline" id="line-16"><code>#define R_DST R7</code></span>
+<span class="codeline" id="line-17"><code>#define R_DBASE R8</code></span>
+<span class="codeline" id="line-18"><code>#define R_DLEN R9</code></span>
+<span class="codeline" id="line-19"><code>#define R_DEND R10</code></span>
+<span class="codeline" id="line-20"><code>#define R_SBASE R11</code></span>
+<span class="codeline" id="line-21"><code>#define R_SLEN R12</code></span>
+<span class="codeline" id="line-22"><code>#define R_SEND R13</code></span>
+<span class="codeline" id="line-23"><code>#define R_TMP2 R14</code></span>
+<span class="codeline" id="line-24"><code>#define R_TMP3 R15</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code>// TEST_SRC will check if R_SRC is &lt;= SRC_END</code></span>
+<span class="codeline" id="line-27"><code>#define TEST_SRC() \</code></span>
+<span class="codeline" id="line-28"><code>	CMP R_SEND, R_SRC \</code></span>
+<span class="codeline" id="line-29"><code>	BGT errCorrupt</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code>// MOVD R_SRC, R_TMP1</code></span>
+<span class="codeline" id="line-32"><code>// SUB  R_SBASE, R_TMP1, R_TMP1</code></span>
+<span class="codeline" id="line-33"><code>// CMP  R_SLEN, R_TMP1</code></span>
+<span class="codeline" id="line-34"><code>// BGT  errCorrupt</code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code>// The asm code generally follows the pure Go code in decode_other.go, except</code></span>
+<span class="codeline" id="line-37"><code>// where marked with a "!!!".</code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code>// func decode(dst, src []byte) int</code></span>
+<span class="codeline" id="line-40"><code>//</code></span>
+<span class="codeline" id="line-41"><code>// All local variables fit into registers. The non-zero stack size is only to</code></span>
+<span class="codeline" id="line-42"><code>// spill registers and push args when issuing a CALL. The register allocation:</code></span>
+<span class="codeline" id="line-43"><code>//	- R_TMP0	scratch</code></span>
+<span class="codeline" id="line-44"><code>//	- R_TMP1	scratch</code></span>
+<span class="codeline" id="line-45"><code>//	- R_LEN	length or x</code></span>
+<span class="codeline" id="line-46"><code>//	- R_OFF	offset</code></span>
+<span class="codeline" id="line-47"><code>//	- R_SRC	&amp;src[s]</code></span>
+<span class="codeline" id="line-48"><code>//	- R_DST	&amp;dst[d]</code></span>
+<span class="codeline" id="line-49"><code>//	+ R_DBASE	dst_base</code></span>
+<span class="codeline" id="line-50"><code>//	+ R_DLEN	dst_len</code></span>
+<span class="codeline" id="line-51"><code>//	+ R_DEND	dst_base + dst_len</code></span>
+<span class="codeline" id="line-52"><code>//	+ R_SBASE	src_base</code></span>
+<span class="codeline" id="line-53"><code>//	+ R_SLEN	src_len</code></span>
+<span class="codeline" id="line-54"><code>//	+ R_SEND	src_base + src_len</code></span>
+<span class="codeline" id="line-55"><code>//	- R_TMP2	used by doCopy</code></span>
+<span class="codeline" id="line-56"><code>//	- R_TMP3	used by doCopy</code></span>
+<span class="codeline" id="line-57"><code>//</code></span>
+<span class="codeline" id="line-58"><code>// The registers R_DBASE-R_SEND (marked with a "+") are set at the start of the</code></span>
+<span class="codeline" id="line-59"><code>// function, and after a CALL returns, and are not otherwise modified.</code></span>
+<span class="codeline" id="line-60"><code>//</code></span>
+<span class="codeline" id="line-61"><code>// The d variable is implicitly R_DST - R_DBASE,  and len(dst)-d is R_DEND - R_DST.</code></span>
+<span class="codeline" id="line-62"><code>// The s variable is implicitly R_SRC - R_SBASE, and len(src)-s is R_SEND - R_SRC.</code></span>
+<span class="codeline" id="line-63"><code>TEXT ·s2Decode(SB), NOSPLIT, $56-64</code></span>
+<span class="codeline" id="line-64"><code>	// Initialize R_SRC, R_DST and R_DBASE-R_SEND.</code></span>
+<span class="codeline" id="line-65"><code>	MOVD dst_base+0(FP), R_DBASE</code></span>
+<span class="codeline" id="line-66"><code>	MOVD dst_len+8(FP), R_DLEN</code></span>
+<span class="codeline" id="line-67"><code>	MOVD R_DBASE, R_DST</code></span>
+<span class="codeline" id="line-68"><code>	MOVD R_DBASE, R_DEND</code></span>
+<span class="codeline" id="line-69"><code>	ADD  R_DLEN, R_DEND, R_DEND</code></span>
+<span class="codeline" id="line-70"><code>	MOVD src_base+24(FP), R_SBASE</code></span>
+<span class="codeline" id="line-71"><code>	MOVD src_len+32(FP), R_SLEN</code></span>
+<span class="codeline" id="line-72"><code>	MOVD R_SBASE, R_SRC</code></span>
+<span class="codeline" id="line-73"><code>	MOVD R_SBASE, R_SEND</code></span>
+<span class="codeline" id="line-74"><code>	ADD  R_SLEN, R_SEND, R_SEND</code></span>
+<span class="codeline" id="line-75"><code>	MOVD $0, R_OFF</code></span>
+<span class="codeline" id="line-76"><code></code></span>
+<span class="codeline" id="line-77"><code>loop:</code></span>
+<span class="codeline" id="line-78"><code>	// for s &lt; len(src)</code></span>
+<span class="codeline" id="line-79"><code>	CMP R_SEND, R_SRC</code></span>
+<span class="codeline" id="line-80"><code>	BEQ end</code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code>	// R_LEN = uint32(src[s])</code></span>
+<span class="codeline" id="line-83"><code>	//</code></span>
+<span class="codeline" id="line-84"><code>	// switch src[s] &amp; 0x03</code></span>
+<span class="codeline" id="line-85"><code>	MOVBU (R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-86"><code>	MOVW  R_LEN, R_TMP1</code></span>
+<span class="codeline" id="line-87"><code>	ANDW  $3, R_TMP1</code></span>
+<span class="codeline" id="line-88"><code>	MOVW  $1, R1</code></span>
+<span class="codeline" id="line-89"><code>	CMPW  R1, R_TMP1</code></span>
+<span class="codeline" id="line-90"><code>	BGE   tagCopy</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code>	// ----------------------------------------</code></span>
+<span class="codeline" id="line-93"><code>	// The code below handles literal tags.</code></span>
+<span class="codeline" id="line-94"><code></code></span>
+<span class="codeline" id="line-95"><code>	// case tagLiteral:</code></span>
+<span class="codeline" id="line-96"><code>	// x := uint32(src[s] &gt;&gt; 2)</code></span>
+<span class="codeline" id="line-97"><code>	// switch</code></span>
+<span class="codeline" id="line-98"><code>	MOVW $60, R1</code></span>
+<span class="codeline" id="line-99"><code>	LSRW $2, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-100"><code>	CMPW R_LEN, R1</code></span>
+<span class="codeline" id="line-101"><code>	BLS  tagLit60Plus</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code>	// case x &lt; 60:</code></span>
+<span class="codeline" id="line-104"><code>	// s++</code></span>
+<span class="codeline" id="line-105"><code>	ADD $1, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code>doLit:</code></span>
+<span class="codeline" id="line-108"><code>	// This is the end of the inner "switch", when we have a literal tag.</code></span>
+<span class="codeline" id="line-109"><code>	//</code></span>
+<span class="codeline" id="line-110"><code>	// We assume that R_LEN == x and x fits in a uint32, where x is the variable</code></span>
+<span class="codeline" id="line-111"><code>	// used in the pure Go decode_other.go code.</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code>	// length = int(x) + 1</code></span>
+<span class="codeline" id="line-114"><code>	//</code></span>
+<span class="codeline" id="line-115"><code>	// Unlike the pure Go code, we don't need to check if length &lt;= 0 because</code></span>
+<span class="codeline" id="line-116"><code>	// R_LEN can hold 64 bits, so the increment cannot overflow.</code></span>
+<span class="codeline" id="line-117"><code>	ADD $1, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-118"><code></code></span>
+<span class="codeline" id="line-119"><code>	// Prepare to check if copying length bytes will run past the end of dst or</code></span>
+<span class="codeline" id="line-120"><code>	// src.</code></span>
+<span class="codeline" id="line-121"><code>	//</code></span>
+<span class="codeline" id="line-122"><code>	// R_TMP0 = len(dst) - d</code></span>
+<span class="codeline" id="line-123"><code>	// R_TMP1 = len(src) - s</code></span>
+<span class="codeline" id="line-124"><code>	MOVD R_DEND, R_TMP0</code></span>
+<span class="codeline" id="line-125"><code>	SUB  R_DST, R_TMP0, R_TMP0</code></span>
+<span class="codeline" id="line-126"><code>	MOVD R_SEND, R_TMP1</code></span>
+<span class="codeline" id="line-127"><code>	SUB  R_SRC, R_TMP1, R_TMP1</code></span>
+<span class="codeline" id="line-128"><code></code></span>
+<span class="codeline" id="line-129"><code>	// !!! Try a faster technique for short (16 or fewer bytes) copies.</code></span>
+<span class="codeline" id="line-130"><code>	//</code></span>
+<span class="codeline" id="line-131"><code>	// if length &gt; 16 || len(dst)-d &lt; 16 || len(src)-s &lt; 16 {</code></span>
+<span class="codeline" id="line-132"><code>	//   goto callMemmove // Fall back on calling runtime·memmove.</code></span>
+<span class="codeline" id="line-133"><code>	// }</code></span>
+<span class="codeline" id="line-134"><code>	//</code></span>
+<span class="codeline" id="line-135"><code>	// The C++ snappy code calls this TryFastAppend. It also checks len(src)-s</code></span>
+<span class="codeline" id="line-136"><code>	// against 21 instead of 16, because it cannot assume that all of its input</code></span>
+<span class="codeline" id="line-137"><code>	// is contiguous in memory and so it needs to leave enough source bytes to</code></span>
+<span class="codeline" id="line-138"><code>	// read the next tag without refilling buffers, but Go's Decode assumes</code></span>
+<span class="codeline" id="line-139"><code>	// contiguousness (the src argument is a []byte).</code></span>
+<span class="codeline" id="line-140"><code>	CMP $16, R_LEN</code></span>
+<span class="codeline" id="line-141"><code>	BGT callMemmove</code></span>
+<span class="codeline" id="line-142"><code>	CMP $16, R_TMP0</code></span>
+<span class="codeline" id="line-143"><code>	BLT callMemmove</code></span>
+<span class="codeline" id="line-144"><code>	CMP $16, R_TMP1</code></span>
+<span class="codeline" id="line-145"><code>	BLT callMemmove</code></span>
+<span class="codeline" id="line-146"><code></code></span>
+<span class="codeline" id="line-147"><code>	// !!! Implement the copy from src to dst as a 16-byte load and store.</code></span>
+<span class="codeline" id="line-148"><code>	// (Decode's documentation says that dst and src must not overlap.)</code></span>
+<span class="codeline" id="line-149"><code>	//</code></span>
+<span class="codeline" id="line-150"><code>	// This always copies 16 bytes, instead of only length bytes, but that's</code></span>
+<span class="codeline" id="line-151"><code>	// OK. If the input is a valid Snappy encoding then subsequent iterations</code></span>
+<span class="codeline" id="line-152"><code>	// will fix up the overrun. Otherwise, Decode returns a nil []byte (and a</code></span>
+<span class="codeline" id="line-153"><code>	// non-nil error), so the overrun will be ignored.</code></span>
+<span class="codeline" id="line-154"><code>	//</code></span>
+<span class="codeline" id="line-155"><code>	// Note that on arm64, it is legal and cheap to issue unaligned 8-byte or</code></span>
+<span class="codeline" id="line-156"><code>	// 16-byte loads and stores. This technique probably wouldn't be as</code></span>
+<span class="codeline" id="line-157"><code>	// effective on architectures that are fussier about alignment.</code></span>
+<span class="codeline" id="line-158"><code>	LDP 0(R_SRC), (R_TMP2, R_TMP3)</code></span>
+<span class="codeline" id="line-159"><code>	STP (R_TMP2, R_TMP3), 0(R_DST)</code></span>
+<span class="codeline" id="line-160"><code></code></span>
+<span class="codeline" id="line-161"><code>	// d += length</code></span>
+<span class="codeline" id="line-162"><code>	// s += length</code></span>
+<span class="codeline" id="line-163"><code>	ADD R_LEN, R_DST, R_DST</code></span>
+<span class="codeline" id="line-164"><code>	ADD R_LEN, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-165"><code>	B   loop</code></span>
+<span class="codeline" id="line-166"><code></code></span>
+<span class="codeline" id="line-167"><code>callMemmove:</code></span>
+<span class="codeline" id="line-168"><code>	// if length &gt; len(dst)-d || length &gt; len(src)-s { etc }</code></span>
+<span class="codeline" id="line-169"><code>	CMP R_TMP0, R_LEN</code></span>
+<span class="codeline" id="line-170"><code>	BGT errCorrupt</code></span>
+<span class="codeline" id="line-171"><code>	CMP R_TMP1, R_LEN</code></span>
+<span class="codeline" id="line-172"><code>	BGT errCorrupt</code></span>
+<span class="codeline" id="line-173"><code></code></span>
+<span class="codeline" id="line-174"><code>	// copy(dst[d:], src[s:s+length])</code></span>
+<span class="codeline" id="line-175"><code>	//</code></span>
+<span class="codeline" id="line-176"><code>	// This means calling runtime·memmove(&amp;dst[d], &amp;src[s], length), so we push</code></span>
+<span class="codeline" id="line-177"><code>	// R_DST, R_SRC and R_LEN as arguments. Coincidentally, we also need to spill those</code></span>
+<span class="codeline" id="line-178"><code>	// three registers to the stack, to save local variables across the CALL.</code></span>
+<span class="codeline" id="line-179"><code>	MOVD R_DST, 8(RSP)</code></span>
+<span class="codeline" id="line-180"><code>	MOVD R_SRC, 16(RSP)</code></span>
+<span class="codeline" id="line-181"><code>	MOVD R_LEN, 24(RSP)</code></span>
+<span class="codeline" id="line-182"><code>	MOVD R_DST, 32(RSP)</code></span>
+<span class="codeline" id="line-183"><code>	MOVD R_SRC, 40(RSP)</code></span>
+<span class="codeline" id="line-184"><code>	MOVD R_LEN, 48(RSP)</code></span>
+<span class="codeline" id="line-185"><code>	MOVD R_OFF, 56(RSP)</code></span>
+<span class="codeline" id="line-186"><code>	CALL runtime·memmove(SB)</code></span>
+<span class="codeline" id="line-187"><code></code></span>
+<span class="codeline" id="line-188"><code>	// Restore local variables: unspill registers from the stack and</code></span>
+<span class="codeline" id="line-189"><code>	// re-calculate R_DBASE-R_SEND.</code></span>
+<span class="codeline" id="line-190"><code>	MOVD 32(RSP), R_DST</code></span>
+<span class="codeline" id="line-191"><code>	MOVD 40(RSP), R_SRC</code></span>
+<span class="codeline" id="line-192"><code>	MOVD 48(RSP), R_LEN</code></span>
+<span class="codeline" id="line-193"><code>	MOVD 56(RSP), R_OFF</code></span>
+<span class="codeline" id="line-194"><code>	MOVD dst_base+0(FP), R_DBASE</code></span>
+<span class="codeline" id="line-195"><code>	MOVD dst_len+8(FP), R_DLEN</code></span>
+<span class="codeline" id="line-196"><code>	MOVD R_DBASE, R_DEND</code></span>
+<span class="codeline" id="line-197"><code>	ADD  R_DLEN, R_DEND, R_DEND</code></span>
+<span class="codeline" id="line-198"><code>	MOVD src_base+24(FP), R_SBASE</code></span>
+<span class="codeline" id="line-199"><code>	MOVD src_len+32(FP), R_SLEN</code></span>
+<span class="codeline" id="line-200"><code>	MOVD R_SBASE, R_SEND</code></span>
+<span class="codeline" id="line-201"><code>	ADD  R_SLEN, R_SEND, R_SEND</code></span>
+<span class="codeline" id="line-202"><code></code></span>
+<span class="codeline" id="line-203"><code>	// d += length</code></span>
+<span class="codeline" id="line-204"><code>	// s += length</code></span>
+<span class="codeline" id="line-205"><code>	ADD R_LEN, R_DST, R_DST</code></span>
+<span class="codeline" id="line-206"><code>	ADD R_LEN, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-207"><code>	B   loop</code></span>
+<span class="codeline" id="line-208"><code></code></span>
+<span class="codeline" id="line-209"><code>tagLit60Plus:</code></span>
+<span class="codeline" id="line-210"><code>	// !!! This fragment does the</code></span>
+<span class="codeline" id="line-211"><code>	//</code></span>
+<span class="codeline" id="line-212"><code>	// s += x - 58; if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-213"><code>	//</code></span>
+<span class="codeline" id="line-214"><code>	// checks. In the asm version, we code it once instead of once per switch case.</code></span>
+<span class="codeline" id="line-215"><code>	ADD R_LEN, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-216"><code>	SUB $58, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-217"><code>	TEST_SRC()</code></span>
+<span class="codeline" id="line-218"><code></code></span>
+<span class="codeline" id="line-219"><code>	// case x == 60:</code></span>
+<span class="codeline" id="line-220"><code>	MOVW $61, R1</code></span>
+<span class="codeline" id="line-221"><code>	CMPW R1, R_LEN</code></span>
+<span class="codeline" id="line-222"><code>	BEQ  tagLit61</code></span>
+<span class="codeline" id="line-223"><code>	BGT  tagLit62Plus</code></span>
+<span class="codeline" id="line-224"><code></code></span>
+<span class="codeline" id="line-225"><code>	// x = uint32(src[s-1])</code></span>
+<span class="codeline" id="line-226"><code>	MOVBU -1(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-227"><code>	B     doLit</code></span>
+<span class="codeline" id="line-228"><code></code></span>
+<span class="codeline" id="line-229"><code>tagLit61:</code></span>
+<span class="codeline" id="line-230"><code>	// case x == 61:</code></span>
+<span class="codeline" id="line-231"><code>	// x = uint32(src[s-2]) | uint32(src[s-1])&lt;&lt;8</code></span>
+<span class="codeline" id="line-232"><code>	MOVHU -2(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-233"><code>	B     doLit</code></span>
+<span class="codeline" id="line-234"><code></code></span>
+<span class="codeline" id="line-235"><code>tagLit62Plus:</code></span>
+<span class="codeline" id="line-236"><code>	CMPW $62, R_LEN</code></span>
+<span class="codeline" id="line-237"><code>	BHI  tagLit63</code></span>
+<span class="codeline" id="line-238"><code></code></span>
+<span class="codeline" id="line-239"><code>	// case x == 62:</code></span>
+<span class="codeline" id="line-240"><code>	// x = uint32(src[s-3]) | uint32(src[s-2])&lt;&lt;8 | uint32(src[s-1])&lt;&lt;16</code></span>
+<span class="codeline" id="line-241"><code>	MOVHU -3(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-242"><code>	MOVBU -1(R_SRC), R_TMP1</code></span>
+<span class="codeline" id="line-243"><code>	ORR   R_TMP1&lt;&lt;16, R_LEN</code></span>
+<span class="codeline" id="line-244"><code>	B     doLit</code></span>
+<span class="codeline" id="line-245"><code></code></span>
+<span class="codeline" id="line-246"><code>tagLit63:</code></span>
+<span class="codeline" id="line-247"><code>	// case x == 63:</code></span>
+<span class="codeline" id="line-248"><code>	// x = uint32(src[s-4]) | uint32(src[s-3])&lt;&lt;8 | uint32(src[s-2])&lt;&lt;16 | uint32(src[s-1])&lt;&lt;24</code></span>
+<span class="codeline" id="line-249"><code>	MOVWU -4(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-250"><code>	B     doLit</code></span>
+<span class="codeline" id="line-251"><code></code></span>
+<span class="codeline" id="line-252"><code>	// The code above handles literal tags.</code></span>
+<span class="codeline" id="line-253"><code>	// ----------------------------------------</code></span>
+<span class="codeline" id="line-254"><code>	// The code below handles copy tags.</code></span>
+<span class="codeline" id="line-255"><code></code></span>
+<span class="codeline" id="line-256"><code>tagCopy4:</code></span>
+<span class="codeline" id="line-257"><code>	// case tagCopy4:</code></span>
+<span class="codeline" id="line-258"><code>	// s += 5</code></span>
+<span class="codeline" id="line-259"><code>	ADD $5, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-260"><code></code></span>
+<span class="codeline" id="line-261"><code>	// if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-262"><code>	MOVD R_SRC, R_TMP1</code></span>
+<span class="codeline" id="line-263"><code>	SUB  R_SBASE, R_TMP1, R_TMP1</code></span>
+<span class="codeline" id="line-264"><code>	CMP  R_SLEN, R_TMP1</code></span>
+<span class="codeline" id="line-265"><code>	BGT  errCorrupt</code></span>
+<span class="codeline" id="line-266"><code></code></span>
+<span class="codeline" id="line-267"><code>	// length = 1 + int(src[s-5])&gt;&gt;2</code></span>
+<span class="codeline" id="line-268"><code>	MOVD $1, R1</code></span>
+<span class="codeline" id="line-269"><code>	ADD  R_LEN&gt;&gt;2, R1, R_LEN</code></span>
+<span class="codeline" id="line-270"><code></code></span>
+<span class="codeline" id="line-271"><code>	// offset = int(uint32(src[s-4]) | uint32(src[s-3])&lt;&lt;8 | uint32(src[s-2])&lt;&lt;16 | uint32(src[s-1])&lt;&lt;24)</code></span>
+<span class="codeline" id="line-272"><code>	MOVWU -4(R_SRC), R_OFF</code></span>
+<span class="codeline" id="line-273"><code>	B     doCopy</code></span>
+<span class="codeline" id="line-274"><code></code></span>
+<span class="codeline" id="line-275"><code>tagCopy2:</code></span>
+<span class="codeline" id="line-276"><code>	// case tagCopy2:</code></span>
+<span class="codeline" id="line-277"><code>	// s += 3</code></span>
+<span class="codeline" id="line-278"><code>	ADD $3, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-279"><code></code></span>
+<span class="codeline" id="line-280"><code>	// if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-281"><code>	TEST_SRC()</code></span>
+<span class="codeline" id="line-282"><code></code></span>
+<span class="codeline" id="line-283"><code>	// length = 1 + int(src[s-3])&gt;&gt;2</code></span>
+<span class="codeline" id="line-284"><code>	MOVD $1, R1</code></span>
+<span class="codeline" id="line-285"><code>	ADD  R_LEN&gt;&gt;2, R1, R_LEN</code></span>
+<span class="codeline" id="line-286"><code></code></span>
+<span class="codeline" id="line-287"><code>	// offset = int(uint32(src[s-2]) | uint32(src[s-1])&lt;&lt;8)</code></span>
+<span class="codeline" id="line-288"><code>	MOVHU -2(R_SRC), R_OFF</code></span>
+<span class="codeline" id="line-289"><code>	B     doCopy</code></span>
+<span class="codeline" id="line-290"><code></code></span>
+<span class="codeline" id="line-291"><code>tagCopy:</code></span>
+<span class="codeline" id="line-292"><code>	// We have a copy tag. We assume that:</code></span>
+<span class="codeline" id="line-293"><code>	//	- R_TMP1 == src[s] &amp; 0x03</code></span>
+<span class="codeline" id="line-294"><code>	//	- R_LEN == src[s]</code></span>
+<span class="codeline" id="line-295"><code>	CMP $2, R_TMP1</code></span>
+<span class="codeline" id="line-296"><code>	BEQ tagCopy2</code></span>
+<span class="codeline" id="line-297"><code>	BGT tagCopy4</code></span>
+<span class="codeline" id="line-298"><code></code></span>
+<span class="codeline" id="line-299"><code>	// case tagCopy1:</code></span>
+<span class="codeline" id="line-300"><code>	// s += 2</code></span>
+<span class="codeline" id="line-301"><code>	ADD $2, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-302"><code></code></span>
+<span class="codeline" id="line-303"><code>	// if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-304"><code>	TEST_SRC()</code></span>
+<span class="codeline" id="line-305"><code></code></span>
+<span class="codeline" id="line-306"><code>	// offset = int(uint32(src[s-2])&amp;0xe0&lt;&lt;3 | uint32(src[s-1]))</code></span>
+<span class="codeline" id="line-307"><code>	// Calculate offset in R_TMP0 in case it is a repeat.</code></span>
+<span class="codeline" id="line-308"><code>	MOVD  R_LEN, R_TMP0</code></span>
+<span class="codeline" id="line-309"><code>	AND   $0xe0, R_TMP0</code></span>
+<span class="codeline" id="line-310"><code>	MOVBU -1(R_SRC), R_TMP1</code></span>
+<span class="codeline" id="line-311"><code>	ORR   R_TMP0&lt;&lt;3, R_TMP1, R_TMP0</code></span>
+<span class="codeline" id="line-312"><code></code></span>
+<span class="codeline" id="line-313"><code>	// length = 4 + int(src[s-2])&gt;&gt;2&amp;0x7</code></span>
+<span class="codeline" id="line-314"><code>	MOVD $7, R1</code></span>
+<span class="codeline" id="line-315"><code>	AND  R_LEN&gt;&gt;2, R1, R_LEN</code></span>
+<span class="codeline" id="line-316"><code>	ADD  $4, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-317"><code></code></span>
+<span class="codeline" id="line-318"><code>	// check if repeat code with offset 0.</code></span>
+<span class="codeline" id="line-319"><code>	CMP $0, R_TMP0</code></span>
+<span class="codeline" id="line-320"><code>	BEQ repeatCode</code></span>
+<span class="codeline" id="line-321"><code></code></span>
+<span class="codeline" id="line-322"><code>	// This is a regular copy, transfer our temporary value to R_OFF (offset)</code></span>
+<span class="codeline" id="line-323"><code>	MOVD R_TMP0, R_OFF</code></span>
+<span class="codeline" id="line-324"><code>	B    doCopy</code></span>
+<span class="codeline" id="line-325"><code></code></span>
+<span class="codeline" id="line-326"><code>	// This is a repeat code.</code></span>
+<span class="codeline" id="line-327"><code>repeatCode:</code></span>
+<span class="codeline" id="line-328"><code>	// If length &lt; 9, reuse last offset, with the length already calculated.</code></span>
+<span class="codeline" id="line-329"><code>	CMP $9, R_LEN</code></span>
+<span class="codeline" id="line-330"><code>	BLT doCopyRepeat</code></span>
+<span class="codeline" id="line-331"><code>	BEQ repeatLen1</code></span>
+<span class="codeline" id="line-332"><code>	CMP $10, R_LEN</code></span>
+<span class="codeline" id="line-333"><code>	BEQ repeatLen2</code></span>
+<span class="codeline" id="line-334"><code></code></span>
+<span class="codeline" id="line-335"><code>repeatLen3:</code></span>
+<span class="codeline" id="line-336"><code>	// s +=3</code></span>
+<span class="codeline" id="line-337"><code>	ADD $3, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-338"><code></code></span>
+<span class="codeline" id="line-339"><code>	// if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-340"><code>	TEST_SRC()</code></span>
+<span class="codeline" id="line-341"><code></code></span>
+<span class="codeline" id="line-342"><code>	// length = uint32(src[s-3]) | (uint32(src[s-2])&lt;&lt;8) | (uint32(src[s-1])&lt;&lt;16) + 65540</code></span>
+<span class="codeline" id="line-343"><code>	MOVBU -1(R_SRC), R_TMP0</code></span>
+<span class="codeline" id="line-344"><code>	MOVHU -3(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-345"><code>	ORR   R_TMP0&lt;&lt;16, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-346"><code>	ADD   $65540, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-347"><code>	B     doCopyRepeat</code></span>
+<span class="codeline" id="line-348"><code></code></span>
+<span class="codeline" id="line-349"><code>repeatLen2:</code></span>
+<span class="codeline" id="line-350"><code>	// s +=2</code></span>
+<span class="codeline" id="line-351"><code>	ADD $2, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-352"><code></code></span>
+<span class="codeline" id="line-353"><code>	// if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-354"><code>	TEST_SRC()</code></span>
+<span class="codeline" id="line-355"><code></code></span>
+<span class="codeline" id="line-356"><code>	// length = uint32(src[s-2]) | (uint32(src[s-1])&lt;&lt;8) + 260</code></span>
+<span class="codeline" id="line-357"><code>	MOVHU -2(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-358"><code>	ADD   $260, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-359"><code>	B     doCopyRepeat</code></span>
+<span class="codeline" id="line-360"><code></code></span>
+<span class="codeline" id="line-361"><code>repeatLen1:</code></span>
+<span class="codeline" id="line-362"><code>	// s +=1</code></span>
+<span class="codeline" id="line-363"><code>	ADD $1, R_SRC, R_SRC</code></span>
+<span class="codeline" id="line-364"><code></code></span>
+<span class="codeline" id="line-365"><code>	// if uint(s) &gt; uint(len(src)) { etc }</code></span>
+<span class="codeline" id="line-366"><code>	TEST_SRC()</code></span>
+<span class="codeline" id="line-367"><code></code></span>
+<span class="codeline" id="line-368"><code>	// length = src[s-1] + 8</code></span>
+<span class="codeline" id="line-369"><code>	MOVBU -1(R_SRC), R_LEN</code></span>
+<span class="codeline" id="line-370"><code>	ADD   $8, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-371"><code>	B     doCopyRepeat</code></span>
+<span class="codeline" id="line-372"><code></code></span>
+<span class="codeline" id="line-373"><code>doCopy:</code></span>
+<span class="codeline" id="line-374"><code>	// This is the end of the outer "switch", when we have a copy tag.</code></span>
+<span class="codeline" id="line-375"><code>	//</code></span>
+<span class="codeline" id="line-376"><code>	// We assume that:</code></span>
+<span class="codeline" id="line-377"><code>	//	- R_LEN == length &amp;&amp; R_LEN &gt; 0</code></span>
+<span class="codeline" id="line-378"><code>	//	- R_OFF == offset</code></span>
+<span class="codeline" id="line-379"><code></code></span>
+<span class="codeline" id="line-380"><code>	// if d &lt; offset { etc }</code></span>
+<span class="codeline" id="line-381"><code>	MOVD R_DST, R_TMP1</code></span>
+<span class="codeline" id="line-382"><code>	SUB  R_DBASE, R_TMP1, R_TMP1</code></span>
+<span class="codeline" id="line-383"><code>	CMP  R_OFF, R_TMP1</code></span>
+<span class="codeline" id="line-384"><code>	BLT  errCorrupt</code></span>
+<span class="codeline" id="line-385"><code></code></span>
+<span class="codeline" id="line-386"><code>	// Repeat values can skip the test above, since any offset &gt; 0 will be in dst.</code></span>
+<span class="codeline" id="line-387"><code>doCopyRepeat:</code></span>
+<span class="codeline" id="line-388"><code></code></span>
+<span class="codeline" id="line-389"><code>	// if offset &lt;= 0 { etc }</code></span>
+<span class="codeline" id="line-390"><code>	CMP $0, R_OFF</code></span>
+<span class="codeline" id="line-391"><code>	BLE errCorrupt</code></span>
+<span class="codeline" id="line-392"><code></code></span>
+<span class="codeline" id="line-393"><code>	// if length &gt; len(dst)-d { etc }</code></span>
+<span class="codeline" id="line-394"><code>	MOVD R_DEND, R_TMP1</code></span>
+<span class="codeline" id="line-395"><code>	SUB  R_DST, R_TMP1, R_TMP1</code></span>
+<span class="codeline" id="line-396"><code>	CMP  R_TMP1, R_LEN</code></span>
+<span class="codeline" id="line-397"><code>	BGT  errCorrupt</code></span>
+<span class="codeline" id="line-398"><code></code></span>
+<span class="codeline" id="line-399"><code>	// forwardCopy(dst[d:d+length], dst[d-offset:]); d += length</code></span>
+<span class="codeline" id="line-400"><code>	//</code></span>
+<span class="codeline" id="line-401"><code>	// Set:</code></span>
+<span class="codeline" id="line-402"><code>	//	- R_TMP2 = len(dst)-d</code></span>
+<span class="codeline" id="line-403"><code>	//	- R_TMP3 = &amp;dst[d-offset]</code></span>
+<span class="codeline" id="line-404"><code>	MOVD R_DEND, R_TMP2</code></span>
+<span class="codeline" id="line-405"><code>	SUB  R_DST, R_TMP2, R_TMP2</code></span>
+<span class="codeline" id="line-406"><code>	MOVD R_DST, R_TMP3</code></span>
+<span class="codeline" id="line-407"><code>	SUB  R_OFF, R_TMP3, R_TMP3</code></span>
+<span class="codeline" id="line-408"><code></code></span>
+<span class="codeline" id="line-409"><code>	// !!! Try a faster technique for short (16 or fewer bytes) forward copies.</code></span>
+<span class="codeline" id="line-410"><code>	//</code></span>
+<span class="codeline" id="line-411"><code>	// First, try using two 8-byte load/stores, similar to the doLit technique</code></span>
+<span class="codeline" id="line-412"><code>	// above. Even if dst[d:d+length] and dst[d-offset:] can overlap, this is</code></span>
+<span class="codeline" id="line-413"><code>	// still OK if offset &gt;= 8. Note that this has to be two 8-byte load/stores</code></span>
+<span class="codeline" id="line-414"><code>	// and not one 16-byte load/store, and the first store has to be before the</code></span>
+<span class="codeline" id="line-415"><code>	// second load, due to the overlap if offset is in the range [8, 16).</code></span>
+<span class="codeline" id="line-416"><code>	//</code></span>
+<span class="codeline" id="line-417"><code>	// if length &gt; 16 || offset &lt; 8 || len(dst)-d &lt; 16 {</code></span>
+<span class="codeline" id="line-418"><code>	//   goto slowForwardCopy</code></span>
+<span class="codeline" id="line-419"><code>	// }</code></span>
+<span class="codeline" id="line-420"><code>	// copy 16 bytes</code></span>
+<span class="codeline" id="line-421"><code>	// d += length</code></span>
+<span class="codeline" id="line-422"><code>	CMP  $16, R_LEN</code></span>
+<span class="codeline" id="line-423"><code>	BGT  slowForwardCopy</code></span>
+<span class="codeline" id="line-424"><code>	CMP  $8, R_OFF</code></span>
+<span class="codeline" id="line-425"><code>	BLT  slowForwardCopy</code></span>
+<span class="codeline" id="line-426"><code>	CMP  $16, R_TMP2</code></span>
+<span class="codeline" id="line-427"><code>	BLT  slowForwardCopy</code></span>
+<span class="codeline" id="line-428"><code>	MOVD 0(R_TMP3), R_TMP0</code></span>
+<span class="codeline" id="line-429"><code>	MOVD R_TMP0, 0(R_DST)</code></span>
+<span class="codeline" id="line-430"><code>	MOVD 8(R_TMP3), R_TMP1</code></span>
+<span class="codeline" id="line-431"><code>	MOVD R_TMP1, 8(R_DST)</code></span>
+<span class="codeline" id="line-432"><code>	ADD  R_LEN, R_DST, R_DST</code></span>
+<span class="codeline" id="line-433"><code>	B    loop</code></span>
+<span class="codeline" id="line-434"><code></code></span>
+<span class="codeline" id="line-435"><code>slowForwardCopy:</code></span>
+<span class="codeline" id="line-436"><code>	// !!! If the forward copy is longer than 16 bytes, or if offset &lt; 8, we</code></span>
+<span class="codeline" id="line-437"><code>	// can still try 8-byte load stores, provided we can overrun up to 10 extra</code></span>
+<span class="codeline" id="line-438"><code>	// bytes. As above, the overrun will be fixed up by subsequent iterations</code></span>
+<span class="codeline" id="line-439"><code>	// of the outermost loop.</code></span>
+<span class="codeline" id="line-440"><code>	//</code></span>
+<span class="codeline" id="line-441"><code>	// The C++ snappy code calls this technique IncrementalCopyFastPath. Its</code></span>
+<span class="codeline" id="line-442"><code>	// commentary says:</code></span>
+<span class="codeline" id="line-443"><code>	//</code></span>
+<span class="codeline" id="line-444"><code>	// ----</code></span>
+<span class="codeline" id="line-445"><code>	//</code></span>
+<span class="codeline" id="line-446"><code>	// The main part of this loop is a simple copy of eight bytes at a time</code></span>
+<span class="codeline" id="line-447"><code>	// until we've copied (at least) the requested amount of bytes.  However,</code></span>
+<span class="codeline" id="line-448"><code>	// if d and d-offset are less than eight bytes apart (indicating a</code></span>
+<span class="codeline" id="line-449"><code>	// repeating pattern of length &lt; 8), we first need to expand the pattern in</code></span>
+<span class="codeline" id="line-450"><code>	// order to get the correct results. For instance, if the buffer looks like</code></span>
+<span class="codeline" id="line-451"><code>	// this, with the eight-byte &lt;d-offset&gt; and &lt;d&gt; patterns marked as</code></span>
+<span class="codeline" id="line-452"><code>	// intervals:</code></span>
+<span class="codeline" id="line-453"><code>	//</code></span>
+<span class="codeline" id="line-454"><code>	//    abxxxxxxxxxxxx</code></span>
+<span class="codeline" id="line-455"><code>	//    [------]           d-offset</code></span>
+<span class="codeline" id="line-456"><code>	//      [------]         d</code></span>
+<span class="codeline" id="line-457"><code>	//</code></span>
+<span class="codeline" id="line-458"><code>	// a single eight-byte copy from &lt;d-offset&gt; to &lt;d&gt; will repeat the pattern</code></span>
+<span class="codeline" id="line-459"><code>	// once, after which we can move &lt;d&gt; two bytes without moving &lt;d-offset&gt;:</code></span>
+<span class="codeline" id="line-460"><code>	//</code></span>
+<span class="codeline" id="line-461"><code>	//    ababxxxxxxxxxx</code></span>
+<span class="codeline" id="line-462"><code>	//    [------]           d-offset</code></span>
+<span class="codeline" id="line-463"><code>	//        [------]       d</code></span>
+<span class="codeline" id="line-464"><code>	//</code></span>
+<span class="codeline" id="line-465"><code>	// and repeat the exercise until the two no longer overlap.</code></span>
+<span class="codeline" id="line-466"><code>	//</code></span>
+<span class="codeline" id="line-467"><code>	// This allows us to do very well in the special case of one single byte</code></span>
+<span class="codeline" id="line-468"><code>	// repeated many times, without taking a big hit for more general cases.</code></span>
+<span class="codeline" id="line-469"><code>	//</code></span>
+<span class="codeline" id="line-470"><code>	// The worst case of extra writing past the end of the match occurs when</code></span>
+<span class="codeline" id="line-471"><code>	// offset == 1 and length == 1; the last copy will read from byte positions</code></span>
+<span class="codeline" id="line-472"><code>	// [0..7] and write to [4..11], whereas it was only supposed to write to</code></span>
+<span class="codeline" id="line-473"><code>	// position 1. Thus, ten excess bytes.</code></span>
+<span class="codeline" id="line-474"><code>	//</code></span>
+<span class="codeline" id="line-475"><code>	// ----</code></span>
+<span class="codeline" id="line-476"><code>	//</code></span>
+<span class="codeline" id="line-477"><code>	// That "10 byte overrun" worst case is confirmed by Go's</code></span>
+<span class="codeline" id="line-478"><code>	// TestSlowForwardCopyOverrun, which also tests the fixUpSlowForwardCopy</code></span>
+<span class="codeline" id="line-479"><code>	// and finishSlowForwardCopy algorithm.</code></span>
+<span class="codeline" id="line-480"><code>	//</code></span>
+<span class="codeline" id="line-481"><code>	// if length &gt; len(dst)-d-10 {</code></span>
+<span class="codeline" id="line-482"><code>	//   goto verySlowForwardCopy</code></span>
+<span class="codeline" id="line-483"><code>	// }</code></span>
+<span class="codeline" id="line-484"><code>	SUB $10, R_TMP2, R_TMP2</code></span>
+<span class="codeline" id="line-485"><code>	CMP R_TMP2, R_LEN</code></span>
+<span class="codeline" id="line-486"><code>	BGT verySlowForwardCopy</code></span>
+<span class="codeline" id="line-487"><code></code></span>
+<span class="codeline" id="line-488"><code>	// We want to keep the offset, so we use R_TMP2 from here.</code></span>
+<span class="codeline" id="line-489"><code>	MOVD R_OFF, R_TMP2</code></span>
+<span class="codeline" id="line-490"><code></code></span>
+<span class="codeline" id="line-491"><code>makeOffsetAtLeast8:</code></span>
+<span class="codeline" id="line-492"><code>	// !!! As above, expand the pattern so that offset &gt;= 8 and we can use</code></span>
+<span class="codeline" id="line-493"><code>	// 8-byte load/stores.</code></span>
+<span class="codeline" id="line-494"><code>	//</code></span>
+<span class="codeline" id="line-495"><code>	// for offset &lt; 8 {</code></span>
+<span class="codeline" id="line-496"><code>	//   copy 8 bytes from dst[d-offset:] to dst[d:]</code></span>
+<span class="codeline" id="line-497"><code>	//   length -= offset</code></span>
+<span class="codeline" id="line-498"><code>	//   d      += offset</code></span>
+<span class="codeline" id="line-499"><code>	//   offset += offset</code></span>
+<span class="codeline" id="line-500"><code>	//   // The two previous lines together means that d-offset, and therefore</code></span>
+<span class="codeline" id="line-501"><code>	//   // R_TMP3, is unchanged.</code></span>
+<span class="codeline" id="line-502"><code>	// }</code></span>
+<span class="codeline" id="line-503"><code>	CMP  $8, R_TMP2</code></span>
+<span class="codeline" id="line-504"><code>	BGE  fixUpSlowForwardCopy</code></span>
+<span class="codeline" id="line-505"><code>	MOVD (R_TMP3), R_TMP1</code></span>
+<span class="codeline" id="line-506"><code>	MOVD R_TMP1, (R_DST)</code></span>
+<span class="codeline" id="line-507"><code>	SUB  R_TMP2, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-508"><code>	ADD  R_TMP2, R_DST, R_DST</code></span>
+<span class="codeline" id="line-509"><code>	ADD  R_TMP2, R_TMP2, R_TMP2</code></span>
+<span class="codeline" id="line-510"><code>	B    makeOffsetAtLeast8</code></span>
+<span class="codeline" id="line-511"><code></code></span>
+<span class="codeline" id="line-512"><code>fixUpSlowForwardCopy:</code></span>
+<span class="codeline" id="line-513"><code>	// !!! Add length (which might be negative now) to d (implied by R_DST being</code></span>
+<span class="codeline" id="line-514"><code>	// &amp;dst[d]) so that d ends up at the right place when we jump back to the</code></span>
+<span class="codeline" id="line-515"><code>	// top of the loop. Before we do that, though, we save R_DST to R_TMP0 so that, if</code></span>
+<span class="codeline" id="line-516"><code>	// length is positive, copying the remaining length bytes will write to the</code></span>
+<span class="codeline" id="line-517"><code>	// right place.</code></span>
+<span class="codeline" id="line-518"><code>	MOVD R_DST, R_TMP0</code></span>
+<span class="codeline" id="line-519"><code>	ADD  R_LEN, R_DST, R_DST</code></span>
+<span class="codeline" id="line-520"><code></code></span>
+<span class="codeline" id="line-521"><code>finishSlowForwardCopy:</code></span>
+<span class="codeline" id="line-522"><code>	// !!! Repeat 8-byte load/stores until length &lt;= 0. Ending with a negative</code></span>
+<span class="codeline" id="line-523"><code>	// length means that we overrun, but as above, that will be fixed up by</code></span>
+<span class="codeline" id="line-524"><code>	// subsequent iterations of the outermost loop.</code></span>
+<span class="codeline" id="line-525"><code>	MOVD $0, R1</code></span>
+<span class="codeline" id="line-526"><code>	CMP  R1, R_LEN</code></span>
+<span class="codeline" id="line-527"><code>	BLE  loop</code></span>
+<span class="codeline" id="line-528"><code>	MOVD (R_TMP3), R_TMP1</code></span>
+<span class="codeline" id="line-529"><code>	MOVD R_TMP1, (R_TMP0)</code></span>
+<span class="codeline" id="line-530"><code>	ADD  $8, R_TMP3, R_TMP3</code></span>
+<span class="codeline" id="line-531"><code>	ADD  $8, R_TMP0, R_TMP0</code></span>
+<span class="codeline" id="line-532"><code>	SUB  $8, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-533"><code>	B    finishSlowForwardCopy</code></span>
+<span class="codeline" id="line-534"><code></code></span>
+<span class="codeline" id="line-535"><code>verySlowForwardCopy:</code></span>
+<span class="codeline" id="line-536"><code>	// verySlowForwardCopy is a simple implementation of forward copy. In C</code></span>
+<span class="codeline" id="line-537"><code>	// parlance, this is a do/while loop instead of a while loop, since we know</code></span>
+<span class="codeline" id="line-538"><code>	// that length &gt; 0. In Go syntax:</code></span>
+<span class="codeline" id="line-539"><code>	//</code></span>
+<span class="codeline" id="line-540"><code>	// for {</code></span>
+<span class="codeline" id="line-541"><code>	//   dst[d] = dst[d - offset]</code></span>
+<span class="codeline" id="line-542"><code>	//   d++</code></span>
+<span class="codeline" id="line-543"><code>	//   length--</code></span>
+<span class="codeline" id="line-544"><code>	//   if length == 0 {</code></span>
+<span class="codeline" id="line-545"><code>	//     break</code></span>
+<span class="codeline" id="line-546"><code>	//   }</code></span>
+<span class="codeline" id="line-547"><code>	// }</code></span>
+<span class="codeline" id="line-548"><code>	MOVB (R_TMP3), R_TMP1</code></span>
+<span class="codeline" id="line-549"><code>	MOVB R_TMP1, (R_DST)</code></span>
+<span class="codeline" id="line-550"><code>	ADD  $1, R_TMP3, R_TMP3</code></span>
+<span class="codeline" id="line-551"><code>	ADD  $1, R_DST, R_DST</code></span>
+<span class="codeline" id="line-552"><code>	SUB  $1, R_LEN, R_LEN</code></span>
+<span class="codeline" id="line-553"><code>	CBNZ R_LEN, verySlowForwardCopy</code></span>
+<span class="codeline" id="line-554"><code>	B    loop</code></span>
+<span class="codeline" id="line-555"><code></code></span>
+<span class="codeline" id="line-556"><code>	// The code above handles copy tags.</code></span>
+<span class="codeline" id="line-557"><code>	// ----------------------------------------</code></span>
+<span class="codeline" id="line-558"><code></code></span>
+<span class="codeline" id="line-559"><code>end:</code></span>
+<span class="codeline" id="line-560"><code>	// This is the end of the "for s &lt; len(src)".</code></span>
+<span class="codeline" id="line-561"><code>	//</code></span>
+<span class="codeline" id="line-562"><code>	// if d != len(dst) { etc }</code></span>
+<span class="codeline" id="line-563"><code>	CMP R_DEND, R_DST</code></span>
+<span class="codeline" id="line-564"><code>	BNE errCorrupt</code></span>
+<span class="codeline" id="line-565"><code></code></span>
+<span class="codeline" id="line-566"><code>	// return 0</code></span>
+<span class="codeline" id="line-567"><code>	MOVD $0, ret+48(FP)</code></span>
+<span class="codeline" id="line-568"><code>	RET</code></span>
+<span class="codeline" id="line-569"><code></code></span>
+<span class="codeline" id="line-570"><code>errCorrupt:</code></span>
+<span class="codeline" id="line-571"><code>	// return decodeErrCodeCorrupt</code></span>
+<span class="codeline" id="line-572"><code>	MOVD $1, R_TMP0</code></span>
+<span class="codeline" id="line-573"><code>	MOVD R_TMP0, ret+48(FP)</code></span>
+<span class="codeline" id="line-574"><code>	RET</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

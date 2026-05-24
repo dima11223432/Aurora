@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: sqlite3_func_crypt.go in package github.com/mattn/go-sqlite3</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	sqlite3_func_crypt.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/mattn/go-sqlite3.html">github.com/mattn/go-sqlite3</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright (C) 2018 G.J.R. Timmer &lt;gjr.timmer@gmail.com&gt;.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// Use of this source code is governed by an MIT-style</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="keyword">package</span> sqlite3</code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-9"><code>	<label for="i0"><span class="lit-string i0">"crypto/sha1"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i1"><span class="lit-string i1">"crypto/sha256"</span></label></code></span>
+<span class="codeline" id="line-11"><code>	<label for="i2"><span class="lit-string i2">"crypto/sha512"</span></label></code></span>
+<span class="codeline" id="line-12"><code>)</code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// This file provides several different implementations for the</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">// default embedded sqlite_crypt function.</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// This function is uses a caesar-cypher by default</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">// and is used within the UserAuthentication module to encode</span></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// the password.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">// The provided functions can be used as an overload to the sqlite_crypt</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">// function through the use of the RegisterFunc on the connection.</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">// Because the functions can serv a purpose to an end-user</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// without using the UserAuthentication module</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">// the functions are default compiled in.</span></code></span>
+<span class="codeline" id="line-26"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// From SQLITE3 - user-auth.txt</span></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">// The sqlite_user.pw field is encoded by a built-in SQL function</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// "sqlite_crypt(X,Y)".  The two arguments are both BLOBs.  The first argument</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// is the plaintext password supplied to the sqlite3_user_authenticate()</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">// interface.  The second argument is the sqlite_user.pw value and is supplied</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">// so that the function can extract the "salt" used by the password encoder.</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// The result of sqlite_crypt(X,Y) is another blob which is the value that</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">// ends up being stored in sqlite_user.pw.  To verify credentials X supplied</span></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">// by the sqlite3_user_authenticate() routine, SQLite runs:</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">//     sqlite_user.pw == sqlite_crypt(X, sqlite_user.pw)</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// To compute an appropriate sqlite_user.pw value from a new or modified</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">// password X, sqlite_crypt(X,NULL) is run.  A new random salt is selected</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">// when the second argument is NULL.</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// The built-in version of of sqlite_crypt() uses a simple Caesar-cypher</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// which prevents passwords from being revealed by searching the raw database</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">// for ASCII text, but is otherwise trivally broken.  For better password</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">// security, the database should be encrypted using the SQLite Encryption</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">// Extension or similar technology.  Or, the application can use the</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// sqlite3_create_function() interface to provide an alternative</span></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">// implementation of sqlite_crypt() that computes a stronger password hash,</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">// perhaps using a cryptographic hash function like SHA1.</span></code></span>
+<span class="codeline" id="line-51"><code></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">// CryptEncoderSHA1 encodes a password with SHA1</span></code></span>
+<span class="codeline" id="line-53"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSHA1" class="ident">CryptEncoderSHA1</a></label>(<label for="r1" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r2" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-54"><code>	<label for="r3" class="ident">h</label> := <a href="../../../../pkg/crypto/sha1.html" class="ident i0">sha1</a>.<a href="../../../crypto/sha1/sha1.go.html#line-273" class="ident">Sum</a>(<label for="r1" class="ident">pass</label>)</code></span>
+<span class="codeline" id="line-55"><code>	<span class="keyword">return</span> <label for="r3" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-56"><code>}</code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">// CryptEncoderSSHA1 encodes a password with SHA1 with the</span></code></span>
+<span class="codeline" id="line-59"><code><span class="comment">// configured salt.</span></code></span>
+<span class="codeline" id="line-60"><code><span class="keyword">func</span> <label for="r4" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSSHA1" class="ident">CryptEncoderSSHA1</a></label>(<label for="r5" class="ident">salt</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <span class="keyword">func</span>(<label for="r6" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r7" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-61"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r8" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r9" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-62"><code>		<label for="r10" class="ident">s</label> := []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<label for="r5" class="ident">salt</label>)</code></span>
+<span class="codeline" id="line-63"><code>		<label for="r11" class="ident">p</label> := <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r8" class="ident">pass</label>, <label for="r10" class="ident">s</label>...)</code></span>
+<span class="codeline" id="line-64"><code>		<label for="r12" class="ident">h</label> := <a href="../../../../pkg/crypto/sha1.html" class="ident i0">sha1</a>.<a href="../../../crypto/sha1/sha1.go.html#line-273" class="ident">Sum</a>(<label for="r11" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-65"><code>		<span class="keyword">return</span> <label for="r12" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-66"><code>	}</code></span>
+<span class="codeline" id="line-67"><code>}</code></span>
+<span class="codeline" id="line-68"><code></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">// CryptEncoderSHA256 encodes a password with SHA256</span></code></span>
+<span class="codeline" id="line-70"><code><span class="keyword">func</span> <label for="r13" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSHA256" class="ident">CryptEncoderSHA256</a></label>(<label for="r14" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r15" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-71"><code>	<label for="r16" class="ident">h</label> := <a href="../../../../pkg/crypto/sha256.html" class="ident i1">sha256</a>.<a href="../../../crypto/sha256/sha256.go.html#line-53" class="ident">Sum256</a>(<label for="r14" class="ident">pass</label>)</code></span>
+<span class="codeline" id="line-72"><code>	<span class="keyword">return</span> <label for="r16" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-73"><code>}</code></span>
+<span class="codeline" id="line-74"><code></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">// CryptEncoderSSHA256 encodes a password with SHA256</span></code></span>
+<span class="codeline" id="line-76"><code><span class="comment">// with the configured salt</span></code></span>
+<span class="codeline" id="line-77"><code><span class="keyword">func</span> <label for="r17" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSSHA256" class="ident">CryptEncoderSSHA256</a></label>(<label for="r18" class="ident">salt</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <span class="keyword">func</span>(<label for="r19" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r20" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-78"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r21" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r22" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-79"><code>		<label for="r23" class="ident">s</label> := []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<label for="r18" class="ident">salt</label>)</code></span>
+<span class="codeline" id="line-80"><code>		<label for="r24" class="ident">p</label> := <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r21" class="ident">pass</label>, <label for="r23" class="ident">s</label>...)</code></span>
+<span class="codeline" id="line-81"><code>		<label for="r25" class="ident">h</label> := <a href="../../../../pkg/crypto/sha256.html" class="ident i1">sha256</a>.<a href="../../../crypto/sha256/sha256.go.html#line-53" class="ident">Sum256</a>(<label for="r24" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-82"><code>		<span class="keyword">return</span> <label for="r25" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-83"><code>	}</code></span>
+<span class="codeline" id="line-84"><code>}</code></span>
+<span class="codeline" id="line-85"><code></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">// CryptEncoderSHA384 encodes a password with SHA384</span></code></span>
+<span class="codeline" id="line-87"><code><span class="keyword">func</span> <label for="r26" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSHA384" class="ident">CryptEncoderSHA384</a></label>(<label for="r27" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r28" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-88"><code>	<label for="r29" class="ident">h</label> := <a href="../../../../pkg/crypto/sha512.html" class="ident i2">sha512</a>.<a href="../../../crypto/sha512/sha512.go.html#line-96" class="ident">Sum384</a>(<label for="r27" class="ident">pass</label>)</code></span>
+<span class="codeline" id="line-89"><code>	<span class="keyword">return</span> <label for="r29" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// CryptEncoderSSHA384 encodes a password with SHA384</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// with the configured salt</span></code></span>
+<span class="codeline" id="line-94"><code><span class="keyword">func</span> <label for="r30" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSSHA384" class="ident">CryptEncoderSSHA384</a></label>(<label for="r31" class="ident">salt</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <span class="keyword">func</span>(<label for="r32" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r33" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-95"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r34" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r35" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-96"><code>		<label for="r36" class="ident">s</label> := []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<label for="r31" class="ident">salt</label>)</code></span>
+<span class="codeline" id="line-97"><code>		<label for="r37" class="ident">p</label> := <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r34" class="ident">pass</label>, <label for="r36" class="ident">s</label>...)</code></span>
+<span class="codeline" id="line-98"><code>		<label for="r38" class="ident">h</label> := <a href="../../../../pkg/crypto/sha512.html" class="ident i2">sha512</a>.<a href="../../../crypto/sha512/sha512.go.html#line-96" class="ident">Sum384</a>(<label for="r37" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-99"><code>		<span class="keyword">return</span> <label for="r38" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-100"><code>	}</code></span>
+<span class="codeline" id="line-101"><code>}</code></span>
+<span class="codeline" id="line-102"><code></code></span>
+<span class="codeline" id="line-103"><code><span class="comment">// CryptEncoderSHA512 encodes a password with SHA512</span></code></span>
+<span class="codeline" id="line-104"><code><span class="keyword">func</span> <label for="r39" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSHA512" class="ident">CryptEncoderSHA512</a></label>(<label for="r40" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r41" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-105"><code>	<label for="r42" class="ident">h</label> := <a href="../../../../pkg/crypto/sha512.html" class="ident i2">sha512</a>.<a href="../../../crypto/sha512/sha512.go.html#line-84" class="ident">Sum512</a>(<label for="r40" class="ident">pass</label>)</code></span>
+<span class="codeline" id="line-106"><code>	<span class="keyword">return</span> <label for="r42" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-107"><code>}</code></span>
+<span class="codeline" id="line-108"><code></code></span>
+<span class="codeline" id="line-109"><code><span class="comment">// CryptEncoderSSHA512 encodes a password with SHA512</span></code></span>
+<span class="codeline" id="line-110"><code><span class="comment">// with the configured salt</span></code></span>
+<span class="codeline" id="line-111"><code><span class="keyword">func</span> <label for="r43" class="ident"><a href="../../../../pkg/github.com/mattn/go-sqlite3.html#name-CryptEncoderSSHA512" class="ident">CryptEncoderSSHA512</a></label>(<label for="r44" class="ident">salt</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) <span class="keyword">func</span>(<label for="r45" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r46" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-112"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r47" class="ident">pass</label> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r48" class="ident">hash</label> <a href="../../../../pkg/builtin.html#name-any" class="ident">any</a>) []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a> {</code></span>
+<span class="codeline" id="line-113"><code>		<label for="r49" class="ident">s</label> := []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<label for="r44" class="ident">salt</label>)</code></span>
+<span class="codeline" id="line-114"><code>		<label for="r50" class="ident">p</label> := <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r47" class="ident">pass</label>, <label for="r49" class="ident">s</label>...)</code></span>
+<span class="codeline" id="line-115"><code>		<label for="r51" class="ident">h</label> := <a href="../../../../pkg/crypto/sha512.html" class="ident i2">sha512</a>.<a href="../../../crypto/sha512/sha512.go.html#line-84" class="ident">Sum512</a>(<label for="r50" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-116"><code>		<span class="keyword">return</span> <label for="r51" class="ident">h</label>[:]</code></span>
+<span class="codeline" id="line-117"><code>	}</code></span>
+<span class="codeline" id="line-118"><code>}</code></span>
+<span class="codeline" id="line-119"><code></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">// EOF</span></code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

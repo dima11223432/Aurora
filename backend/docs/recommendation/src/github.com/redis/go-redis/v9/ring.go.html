@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: ring.go in package github.com/redis/go-redis/v9</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	ring.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/redis/go-redis/v9.html">github.com/redis/go-redis/v9</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86],
+input[id=r87]:checked ~pre label[for=r87],
+input[id=r88]:checked ~pre label[for=r88],
+input[id=r89]:checked ~pre label[for=r89],
+input[id=r90]:checked ~pre label[for=r90],
+input[id=r91]:checked ~pre label[for=r91],
+input[id=r92]:checked ~pre label[for=r92],
+input[id=r93]:checked ~pre label[for=r93],
+input[id=r94]:checked ~pre label[for=r94],
+input[id=r95]:checked ~pre label[for=r95],
+input[id=r96]:checked ~pre label[for=r96],
+input[id=r97]:checked ~pre label[for=r97],
+input[id=r98]:checked ~pre label[for=r98],
+input[id=r99]:checked ~pre label[for=r99],
+input[id=r100]:checked ~pre label[for=r100],
+input[id=r101]:checked ~pre label[for=r101],
+input[id=r102]:checked ~pre label[for=r102],
+input[id=r103]:checked ~pre label[for=r103],
+input[id=r104]:checked ~pre label[for=r104],
+input[id=r105]:checked ~pre label[for=r105],
+input[id=r106]:checked ~pre label[for=r106],
+input[id=r107]:checked ~pre label[for=r107],
+input[id=r108]:checked ~pre label[for=r108],
+input[id=r109]:checked ~pre label[for=r109],
+input[id=r110]:checked ~pre label[for=r110],
+input[id=r111]:checked ~pre label[for=r111],
+input[id=r112]:checked ~pre label[for=r112],
+input[id=r113]:checked ~pre label[for=r113],
+input[id=r114]:checked ~pre label[for=r114],
+input[id=r115]:checked ~pre label[for=r115],
+input[id=r116]:checked ~pre label[for=r116],
+input[id=r117]:checked ~pre label[for=r117],
+input[id=r118]:checked ~pre label[for=r118],
+input[id=r119]:checked ~pre label[for=r119],
+input[id=r120]:checked ~pre label[for=r120],
+input[id=r121]:checked ~pre label[for=r121],
+input[id=r122]:checked ~pre label[for=r122],
+input[id=r123]:checked ~pre label[for=r123],
+input[id=r124]:checked ~pre label[for=r124],
+input[id=r125]:checked ~pre label[for=r125],
+input[id=r126]:checked ~pre label[for=r126],
+input[id=r127]:checked ~pre label[for=r127],
+input[id=r128]:checked ~pre label[for=r128],
+input[id=r129]:checked ~pre label[for=r129],
+input[id=r130]:checked ~pre label[for=r130],
+input[id=r131]:checked ~pre label[for=r131],
+input[id=r132]:checked ~pre label[for=r132],
+input[id=r133]:checked ~pre label[for=r133],
+input[id=r134]:checked ~pre label[for=r134],
+input[id=r135]:checked ~pre label[for=r135],
+input[id=r136]:checked ~pre label[for=r136],
+input[id=r137]:checked ~pre label[for=r137],
+input[id=r138]:checked ~pre label[for=r138],
+input[id=r139]:checked ~pre label[for=r139],
+input[id=r140]:checked ~pre label[for=r140],
+input[id=r141]:checked ~pre label[for=r141],
+input[id=r142]:checked ~pre label[for=r142],
+input[id=r143]:checked ~pre label[for=r143],
+input[id=r144]:checked ~pre label[for=r144],
+input[id=r145]:checked ~pre label[for=r145],
+input[id=r146]:checked ~pre label[for=r146],
+input[id=r147]:checked ~pre label[for=r147],
+input[id=r148]:checked ~pre label[for=r148],
+input[id=r149]:checked ~pre label[for=r149],
+input[id=r150]:checked ~pre label[for=r150],
+input[id=r151]:checked ~pre label[for=r151],
+input[id=r152]:checked ~pre label[for=r152],
+input[id=r153]:checked ~pre label[for=r153],
+input[id=r154]:checked ~pre label[for=r154],
+input[id=r155]:checked ~pre label[for=r155],
+input[id=r156]:checked ~pre label[for=r156],
+input[id=r157]:checked ~pre label[for=r157],
+input[id=r158]:checked ~pre label[for=r158],
+input[id=r159]:checked ~pre label[for=r159],
+input[id=r160]:checked ~pre label[for=r160],
+input[id=r161]:checked ~pre label[for=r161],
+input[id=r162]:checked ~pre label[for=r162],
+input[id=r163]:checked ~pre label[for=r163],
+input[id=r164]:checked ~pre label[for=r164],
+input[id=r165]:checked ~pre label[for=r165],
+input[id=r166]:checked ~pre label[for=r166],
+input[id=r167]:checked ~pre label[for=r167],
+input[id=r168]:checked ~pre label[for=r168],
+input[id=r169]:checked ~pre label[for=r169],
+input[id=r170]:checked ~pre label[for=r170],
+input[id=r171]:checked ~pre label[for=r171],
+input[id=r172]:checked ~pre label[for=r172],
+input[id=r173]:checked ~pre label[for=r173],
+input[id=r174]:checked ~pre label[for=r174],
+input[id=r175]:checked ~pre label[for=r175],
+input[id=r176]:checked ~pre label[for=r176],
+input[id=r177]:checked ~pre label[for=r177],
+input[id=r178]:checked ~pre label[for=r178],
+input[id=r179]:checked ~pre label[for=r179],
+input[id=r180]:checked ~pre label[for=r180],
+input[id=r181]:checked ~pre label[for=r181],
+input[id=r182]:checked ~pre label[for=r182],
+input[id=r183]:checked ~pre label[for=r183],
+input[id=r184]:checked ~pre label[for=r184],
+input[id=r185]:checked ~pre label[for=r185],
+input[id=r186]:checked ~pre label[for=r186],
+input[id=r187]:checked ~pre label[for=r187],
+input[id=r188]:checked ~pre label[for=r188],
+input[id=r189]:checked ~pre label[for=r189],
+input[id=r190]:checked ~pre label[for=r190],
+input[id=r191]:checked ~pre label[for=r191],
+input[id=r192]:checked ~pre label[for=r192],
+input[id=r193]:checked ~pre label[for=r193],
+input[id=r194]:checked ~pre label[for=r194],
+input[id=r195]:checked ~pre label[for=r195],
+input[id=r196]:checked ~pre label[for=r196],
+input[id=r197]:checked ~pre label[for=r197],
+input[id=r198]:checked ~pre label[for=r198],
+input[id=r199]:checked ~pre label[for=r199],
+input[id=r200]:checked ~pre label[for=r200],
+input[id=r201]:checked ~pre label[for=r201],
+input[id=r202]:checked ~pre label[for=r202],
+input[id=r203]:checked ~pre label[for=r203],
+input[id=r204]:checked ~pre label[for=r204],
+input[id=r205]:checked ~pre label[for=r205],
+input[id=r206]:checked ~pre label[for=r206],
+input[id=r207]:checked ~pre label[for=r207],
+input[id=r208]:checked ~pre label[for=r208],
+input[id=r209]:checked ~pre label[for=r209],
+input[id=r210]:checked ~pre label[for=r210],
+input[id=r211]:checked ~pre label[for=r211],
+input[id=r212]:checked ~pre label[for=r212],
+input[id=r213]:checked ~pre label[for=r213],
+input[id=r214]:checked ~pre label[for=r214],
+input[id=r215]:checked ~pre label[for=r215],
+input[id=r216]:checked ~pre label[for=r216],
+input[id=r217]:checked ~pre label[for=r217],
+input[id=r218]:checked ~pre label[for=r218],
+input[id=r219]:checked ~pre label[for=r219],
+input[id=r220]:checked ~pre label[for=r220],
+input[id=r221]:checked ~pre label[for=r221],
+input[id=r222]:checked ~pre label[for=r222],
+input[id=r223]:checked ~pre label[for=r223],
+input[id=r224]:checked ~pre label[for=r224],
+input[id=r225]:checked ~pre label[for=r225],
+input[id=r226]:checked ~pre label[for=r226],
+input[id=r227]:checked ~pre label[for=r227],
+input[id=r228]:checked ~pre label[for=r228],
+input[id=r229]:checked ~pre label[for=r229],
+input[id=r230]:checked ~pre label[for=r230],
+input[id=r231]:checked ~pre label[for=r231],
+input[id=r232]:checked ~pre label[for=r232],
+input[id=r233]:checked ~pre label[for=r233],
+input[id=r234]:checked ~pre label[for=r234],
+input[id=r235]:checked ~pre label[for=r235],
+input[id=r236]:checked ~pre label[for=r236],
+input[id=r237]:checked ~pre label[for=r237],
+input[id=r238]:checked ~pre label[for=r238],
+input[id=r239]:checked ~pre label[for=r239],
+input[id=r240]:checked ~pre label[for=r240],
+input[id=r241]:checked ~pre label[for=r241],
+input[id=r242]:checked ~pre label[for=r242],
+input[id=r243]:checked ~pre label[for=r243],
+input[id=r244]:checked ~pre label[for=r244],
+input[id=r245]:checked ~pre label[for=r245],
+input[id=r246]:checked ~pre label[for=r246],
+input[id=r247]:checked ~pre label[for=r247],
+input[id=r248]:checked ~pre label[for=r248],
+input[id=r249]:checked ~pre label[for=r249],
+input[id=r250]:checked ~pre label[for=r250],
+input[id=r251]:checked ~pre label[for=r251],
+input[id=r252]:checked ~pre label[for=r252],
+input[id=r253]:checked ~pre label[for=r253],
+input[id=r254]:checked ~pre label[for=r254],
+input[id=r255]:checked ~pre label[for=r255]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6,
+input[id=i7]:checked ~pre .i7,
+input[id=i8]:checked ~pre .i8,
+input[id=i9]:checked ~pre .i9,
+input[id=i10]:checked ~pre .i10,
+input[id=i11]:checked ~pre .i11,
+input[id=i12]:checked ~pre .i12,
+input[id=i13]:checked ~pre .i13,
+input[id=i14]:checked ~pre .i14,
+input[id=i15]:checked ~pre .i15,
+input[id=i16]:checked ~pre .i16
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="r87" type="radio" name="g"/>
+<input id="r88" type="radio" name="g"/>
+<input id="r89" type="radio" name="g"/>
+<input id="r90" type="radio" name="g"/>
+<input id="r91" type="radio" name="g"/>
+<input id="r92" type="radio" name="g"/>
+<input id="r93" type="radio" name="g"/>
+<input id="r94" type="radio" name="g"/>
+<input id="r95" type="radio" name="g"/>
+<input id="r96" type="radio" name="g"/>
+<input id="r97" type="radio" name="g"/>
+<input id="r98" type="radio" name="g"/>
+<input id="r99" type="radio" name="g"/>
+<input id="r100" type="radio" name="g"/>
+<input id="r101" type="radio" name="g"/>
+<input id="r102" type="radio" name="g"/>
+<input id="r103" type="radio" name="g"/>
+<input id="r104" type="radio" name="g"/>
+<input id="r105" type="radio" name="g"/>
+<input id="r106" type="radio" name="g"/>
+<input id="r107" type="radio" name="g"/>
+<input id="r108" type="radio" name="g"/>
+<input id="r109" type="radio" name="g"/>
+<input id="r110" type="radio" name="g"/>
+<input id="r111" type="radio" name="g"/>
+<input id="r112" type="radio" name="g"/>
+<input id="r113" type="radio" name="g"/>
+<input id="r114" type="radio" name="g"/>
+<input id="r115" type="radio" name="g"/>
+<input id="r116" type="radio" name="g"/>
+<input id="r117" type="radio" name="g"/>
+<input id="r118" type="radio" name="g"/>
+<input id="r119" type="radio" name="g"/>
+<input id="r120" type="radio" name="g"/>
+<input id="r121" type="radio" name="g"/>
+<input id="r122" type="radio" name="g"/>
+<input id="r123" type="radio" name="g"/>
+<input id="r124" type="radio" name="g"/>
+<input id="r125" type="radio" name="g"/>
+<input id="r126" type="radio" name="g"/>
+<input id="r127" type="radio" name="g"/>
+<input id="r128" type="radio" name="g"/>
+<input id="r129" type="radio" name="g"/>
+<input id="r130" type="radio" name="g"/>
+<input id="r131" type="radio" name="g"/>
+<input id="r132" type="radio" name="g"/>
+<input id="r133" type="radio" name="g"/>
+<input id="r134" type="radio" name="g"/>
+<input id="r135" type="radio" name="g"/>
+<input id="r136" type="radio" name="g"/>
+<input id="r137" type="radio" name="g"/>
+<input id="r138" type="radio" name="g"/>
+<input id="r139" type="radio" name="g"/>
+<input id="r140" type="radio" name="g"/>
+<input id="r141" type="radio" name="g"/>
+<input id="r142" type="radio" name="g"/>
+<input id="r143" type="radio" name="g"/>
+<input id="r144" type="radio" name="g"/>
+<input id="r145" type="radio" name="g"/>
+<input id="r146" type="radio" name="g"/>
+<input id="r147" type="radio" name="g"/>
+<input id="r148" type="radio" name="g"/>
+<input id="r149" type="radio" name="g"/>
+<input id="r150" type="radio" name="g"/>
+<input id="r151" type="radio" name="g"/>
+<input id="r152" type="radio" name="g"/>
+<input id="r153" type="radio" name="g"/>
+<input id="r154" type="radio" name="g"/>
+<input id="r155" type="radio" name="g"/>
+<input id="r156" type="radio" name="g"/>
+<input id="r157" type="radio" name="g"/>
+<input id="r158" type="radio" name="g"/>
+<input id="r159" type="radio" name="g"/>
+<input id="r160" type="radio" name="g"/>
+<input id="r161" type="radio" name="g"/>
+<input id="r162" type="radio" name="g"/>
+<input id="r163" type="radio" name="g"/>
+<input id="r164" type="radio" name="g"/>
+<input id="r165" type="radio" name="g"/>
+<input id="r166" type="radio" name="g"/>
+<input id="r167" type="radio" name="g"/>
+<input id="r168" type="radio" name="g"/>
+<input id="r169" type="radio" name="g"/>
+<input id="r170" type="radio" name="g"/>
+<input id="r171" type="radio" name="g"/>
+<input id="r172" type="radio" name="g"/>
+<input id="r173" type="radio" name="g"/>
+<input id="r174" type="radio" name="g"/>
+<input id="r175" type="radio" name="g"/>
+<input id="r176" type="radio" name="g"/>
+<input id="r177" type="radio" name="g"/>
+<input id="r178" type="radio" name="g"/>
+<input id="r179" type="radio" name="g"/>
+<input id="r180" type="radio" name="g"/>
+<input id="r181" type="radio" name="g"/>
+<input id="r182" type="radio" name="g"/>
+<input id="r183" type="radio" name="g"/>
+<input id="r184" type="radio" name="g"/>
+<input id="r185" type="radio" name="g"/>
+<input id="r186" type="radio" name="g"/>
+<input id="r187" type="radio" name="g"/>
+<input id="r188" type="radio" name="g"/>
+<input id="r189" type="radio" name="g"/>
+<input id="r190" type="radio" name="g"/>
+<input id="r191" type="radio" name="g"/>
+<input id="r192" type="radio" name="g"/>
+<input id="r193" type="radio" name="g"/>
+<input id="r194" type="radio" name="g"/>
+<input id="r195" type="radio" name="g"/>
+<input id="r196" type="radio" name="g"/>
+<input id="r197" type="radio" name="g"/>
+<input id="r198" type="radio" name="g"/>
+<input id="r199" type="radio" name="g"/>
+<input id="r200" type="radio" name="g"/>
+<input id="r201" type="radio" name="g"/>
+<input id="r202" type="radio" name="g"/>
+<input id="r203" type="radio" name="g"/>
+<input id="r204" type="radio" name="g"/>
+<input id="r205" type="radio" name="g"/>
+<input id="r206" type="radio" name="g"/>
+<input id="r207" type="radio" name="g"/>
+<input id="r208" type="radio" name="g"/>
+<input id="r209" type="radio" name="g"/>
+<input id="r210" type="radio" name="g"/>
+<input id="r211" type="radio" name="g"/>
+<input id="r212" type="radio" name="g"/>
+<input id="r213" type="radio" name="g"/>
+<input id="r214" type="radio" name="g"/>
+<input id="r215" type="radio" name="g"/>
+<input id="r216" type="radio" name="g"/>
+<input id="r217" type="radio" name="g"/>
+<input id="r218" type="radio" name="g"/>
+<input id="r219" type="radio" name="g"/>
+<input id="r220" type="radio" name="g"/>
+<input id="r221" type="radio" name="g"/>
+<input id="r222" type="radio" name="g"/>
+<input id="r223" type="radio" name="g"/>
+<input id="r224" type="radio" name="g"/>
+<input id="r225" type="radio" name="g"/>
+<input id="r226" type="radio" name="g"/>
+<input id="r227" type="radio" name="g"/>
+<input id="r228" type="radio" name="g"/>
+<input id="r229" type="radio" name="g"/>
+<input id="r230" type="radio" name="g"/>
+<input id="r231" type="radio" name="g"/>
+<input id="r232" type="radio" name="g"/>
+<input id="r233" type="radio" name="g"/>
+<input id="r234" type="radio" name="g"/>
+<input id="r235" type="radio" name="g"/>
+<input id="r236" type="radio" name="g"/>
+<input id="r237" type="radio" name="g"/>
+<input id="r238" type="radio" name="g"/>
+<input id="r239" type="radio" name="g"/>
+<input id="r240" type="radio" name="g"/>
+<input id="r241" type="radio" name="g"/>
+<input id="r242" type="radio" name="g"/>
+<input id="r243" type="radio" name="g"/>
+<input id="r244" type="radio" name="g"/>
+<input id="r245" type="radio" name="g"/>
+<input id="r246" type="radio" name="g"/>
+<input id="r247" type="radio" name="g"/>
+<input id="r248" type="radio" name="g"/>
+<input id="r249" type="radio" name="g"/>
+<input id="r250" type="radio" name="g"/>
+<input id="r251" type="radio" name="g"/>
+<input id="r252" type="radio" name="g"/>
+<input id="r253" type="radio" name="g"/>
+<input id="r254" type="radio" name="g"/>
+<input id="r255" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+<input id="i7" type="radio" name="i"/>
+<input id="i8" type="radio" name="i"/>
+<input id="i9" type="radio" name="i"/>
+<input id="i10" type="radio" name="i"/>
+<input id="i11" type="radio" name="i"/>
+<input id="i12" type="radio" name="i"/>
+<input id="i13" type="radio" name="i"/>
+<input id="i14" type="radio" name="i"/>
+<input id="i15" type="radio" name="i"/>
+<input id="i16" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> redis</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"crypto/tls"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"errors"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"fmt"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i4"><span class="lit-string i4">"net"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i5"><span class="lit-string i5">"strconv"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i6"><span class="lit-string i6">"sync"</span></label></code></span>
+<span class="codeline" id="line-11"><code>	<label for="i7"><span class="lit-string i7">"sync/atomic"</span></label></code></span>
+<span class="codeline" id="line-12"><code>	<label for="i8"><span class="lit-string i8">"time"</span></label></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code>	<label for="i9"><span class="lit-string i9">"github.com/cespare/xxhash/v2"</span></label></code></span>
+<span class="codeline" id="line-15"><code>	<label for="i10"><span class="lit-string i10">"github.com/dgryski/go-rendezvous"</span></label> <span class="comment">//nolint</span></code></span>
+<span class="codeline" id="line-16"><code>	<label for="i11"><span class="lit-string i11">"github.com/redis/go-redis/v9/auth"</span></label></code></span>
+<span class="codeline" id="line-17"><code></code></span>
+<span class="codeline" id="line-18"><code>	<label for="i12"><span class="lit-string i12">"github.com/redis/go-redis/v9/internal"</span></label></code></span>
+<span class="codeline" id="line-19"><code>	<label for="i13"><span class="lit-string i13">"github.com/redis/go-redis/v9/internal/hashtag"</span></label></code></span>
+<span class="codeline" id="line-20"><code>	<label for="i14"><span class="lit-string i14">"github.com/redis/go-redis/v9/internal/pool"</span></label></code></span>
+<span class="codeline" id="line-21"><code>	<label for="i15"><span class="lit-string i15">"github.com/redis/go-redis/v9/internal/proto"</span></label></code></span>
+<span class="codeline" id="line-22"><code>	<label for="i16"><span class="lit-string i16">"github.com/redis/go-redis/v9/internal/rand"</span></label></code></span>
+<span class="codeline" id="line-23"><code>)</code></span>
+<span class="codeline" id="line-24"><code></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">var</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-errRingShardsDown" class="ident">errRingShardsDown</a> = <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"redis: all ring shards are down"</span>)</code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// defaultHeartbeatFn is the default function used to check the shard liveness</span></code></span>
+<span class="codeline" id="line-28"><code><span class="keyword">var</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-defaultHeartbeatFn" class="ident">defaultHeartbeatFn</a> = <span class="keyword">func</span>(<label for="r0" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r1" class="ident">client</label> *<a href="redis.go.html#line-1193" class="ident">Client</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-29"><code>	<label for="r2" class="ident">err</label> := <label for="r1" class="ident">client</label>.<a href="commands.go.html#line-439" class="ident">Ping</a>(<label for="r0" class="ident">ctx</label>).<a href="command.go.html#line-383" class="ident">Err</a>()</code></span>
+<span class="codeline" id="line-30"><code>	<span class="keyword">return</span> <label for="r2" class="ident">err</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> || <label for="r2" class="ident">err</label> == <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i14">pool</a>.<a href="internal/pool/pool.go.html#line-25" class="ident">ErrPoolTimeout</a></code></span>
+<span class="codeline" id="line-31"><code>}</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">//------------------------------------------------------------------------------</span></code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-ConsistentHash" class="ident">ConsistentHash</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.ConsistentHash.html#name-Get" class="ident">Get</a>(<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-37"><code>}</code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-rendezvousWrapper" class="ident">rendezvousWrapper</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-40"><code>	*<a href="../../../../../pkg/github.com/dgryski/go-rendezvous.html" class="ident i10">rendezvous</a>.<a href="../../../dgryski/go-rendezvous/rdv.go.html#line-3" class="ident">Rendezvous</a></code></span>
+<span class="codeline" id="line-41"><code>}</code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code><span class="keyword">func</span> (<label for="r3" class="ident">w</label> <a href="#line-39" class="ident">rendezvousWrapper</a>) <label for="r4" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.rendezvousWrapper^1c65a.html#name-.Get" class="ident">Get</a></label>(<label for="r5" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-44"><code>	<span class="keyword">return</span> <label for="r3" class="ident">w</label>.<a href="../../../dgryski/go-rendezvous/rdv.go.html#line-29" class="ident">Lookup</a>(<label for="r5" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-45"><code>}</code></span>
+<span class="codeline" id="line-46"><code></code></span>
+<span class="codeline" id="line-47"><code><span class="keyword">func</span> <label for="r6" class="ident"><a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-newRendezvous" class="ident">newRendezvous</a></label>(<label for="r7" class="ident">shards</label> []<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="#line-35" class="ident">ConsistentHash</a> {</code></span>
+<span class="codeline" id="line-48"><code>	<span class="keyword">return</span> <a href="#line-39" class="ident">rendezvousWrapper</a>{<a href="../../../../../pkg/github.com/dgryski/go-rendezvous.html" class="ident i10">rendezvous</a>.<a href="../../../dgryski/go-rendezvous/rdv.go.html#line-12" class="ident">New</a>(<label for="r7" class="ident">shards</label>, <a href="../../../../../pkg/github.com/cespare/xxhash/v2.html" class="ident i9">xxhash</a>.<a href="../../../cespare/xxhash/v2/xxhash_unsafe.go.html#line-38" class="ident">Sum64String</a>)}</code></span>
+<span class="codeline" id="line-49"><code>}</code></span>
+<span class="codeline" id="line-50"><code></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">//------------------------------------------------------------------------------</span></code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">// RingOptions are used to configure a ring client and should be</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">// passed to NewRing.</span></code></span>
+<span class="codeline" id="line-55"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-RingOptions" class="ident">RingOptions</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-56"><code>	<span class="comment">// Map of name =&gt; host:port addresses of ring shards.</span></code></span>
+<span class="codeline" id="line-57"><code>	Addrs <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code>	<span class="comment">// NewClient creates a shard client with provided options.</span></code></span>
+<span class="codeline" id="line-60"><code>	NewClient <span class="keyword">func</span>(opt *<a href="options.go.html#line-47" class="ident">Options</a>) *<a href="redis.go.html#line-1193" class="ident">Client</a></code></span>
+<span class="codeline" id="line-61"><code></code></span>
+<span class="codeline" id="line-62"><code>	<span class="comment">// ClientName will execute the `CLIENT SETNAME ClientName` command for each conn.</span></code></span>
+<span class="codeline" id="line-63"><code>	ClientName <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-64"><code></code></span>
+<span class="codeline" id="line-65"><code>	<span class="comment">// Frequency of executing HeartbeatFn to check shards availability.</span></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">	// Shard is considered down after 3 subsequent failed checks.</span></code></span>
+<span class="codeline" id="line-67"><code>	HeartbeatFrequency <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-68"><code></code></span>
+<span class="codeline" id="line-69"><code>	<span class="comment">// A function used to check the shard liveness</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">	// if not set, defaults to defaultHeartbeatFn</span></code></span>
+<span class="codeline" id="line-71"><code>	HeartbeatFn <span class="keyword">func</span>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, client *<a href="redis.go.html#line-1193" class="ident">Client</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-72"><code></code></span>
+<span class="codeline" id="line-73"><code>	<span class="comment">// NewConsistentHash returns a consistent hash that is used</span></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">	// to distribute keys across the shards.</span></code></span>
+<span class="codeline" id="line-75"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-76"><code><span class="comment">	// See https://medium.com/@dgryski/consistent-hashing-algorithmic-tradeoffs-ef6b8e2fcae8</span></code></span>
+<span class="codeline" id="line-77"><code><span class="comment">	// for consistent hashing algorithmic tradeoffs.</span></code></span>
+<span class="codeline" id="line-78"><code>	NewConsistentHash <span class="keyword">func</span>(shards []<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="#line-35" class="ident">ConsistentHash</a></code></span>
+<span class="codeline" id="line-79"><code></code></span>
+<span class="codeline" id="line-80"><code>	<span class="comment">// Following options are copied from Options struct.</span></code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code>	Dialer    <span class="keyword">func</span>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, network, addr <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../../pkg/net.html" class="ident i4">net</a>.<a href="../../../../net/net.go.html#line-124" class="ident">Conn</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-83"><code>	OnConnect <span class="keyword">func</span>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, cn *<a href="redis.go.html#line-1479" class="ident">Conn</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-84"><code></code></span>
+<span class="codeline" id="line-85"><code>	Protocol <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-86"><code>	Username <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-87"><code>	Password <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-88"><code>	<span class="comment">// CredentialsProvider allows the username and password to be updated</span></code></span>
+<span class="codeline" id="line-89"><code><span class="comment">	// before reconnecting. It should return the current username and password.</span></code></span>
+<span class="codeline" id="line-90"><code>	CredentialsProvider <span class="keyword">func</span>() (username <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, password <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code>	<span class="comment">// CredentialsProviderContext is an enhanced parameter of CredentialsProvider,</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">	// done to maintain API compatibility. In the future,</span></code></span>
+<span class="codeline" id="line-94"><code><span class="comment">	// there might be a merge between CredentialsProviderContext and CredentialsProvider.</span></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">	// There will be a conflict between them; if CredentialsProviderContext exists, we will ignore CredentialsProvider.</span></code></span>
+<span class="codeline" id="line-96"><code>	CredentialsProviderContext <span class="keyword">func</span>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>) (username <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, password <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, err <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-97"><code></code></span>
+<span class="codeline" id="line-98"><code>	<span class="comment">// StreamingCredentialsProvider is used to retrieve the credentials</span></code></span>
+<span class="codeline" id="line-99"><code><span class="comment">	// for the connection from an external source. Those credentials may change</span></code></span>
+<span class="codeline" id="line-100"><code><span class="comment">	// during the connection lifetime. This is useful for managed identity</span></code></span>
+<span class="codeline" id="line-101"><code><span class="comment">	// scenarios where the credentials are retrieved from an external source.</span></code></span>
+<span class="codeline" id="line-102"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-103"><code><span class="comment">	// Currently, this is a placeholder for the future implementation.</span></code></span>
+<span class="codeline" id="line-104"><code>	StreamingCredentialsProvider <a href="../../../../../pkg/github.com/redis/go-redis/v9/auth.html" class="ident i11">auth</a>.<a href="auth/auth.go.html#line-8" class="ident">StreamingCredentialsProvider</a></code></span>
+<span class="codeline" id="line-105"><code>	DB                           <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code>	MaxRetries      <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-108"><code>	MinRetryBackoff <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-109"><code>	MaxRetryBackoff <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-110"><code></code></span>
+<span class="codeline" id="line-111"><code>	DialTimeout <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code>	<span class="comment">// DialerRetries is the maximum number of retry attempts when dialing fails.</span></code></span>
+<span class="codeline" id="line-114"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-115"><code><span class="comment">	// default: 5</span></code></span>
+<span class="codeline" id="line-116"><code>	DialerRetries <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-117"><code></code></span>
+<span class="codeline" id="line-118"><code>	<span class="comment">// DialerRetryTimeout is the backoff duration between retry attempts.</span></code></span>
+<span class="codeline" id="line-119"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">	// default: 100 milliseconds</span></code></span>
+<span class="codeline" id="line-121"><code>	DialerRetryTimeout <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-122"><code></code></span>
+<span class="codeline" id="line-123"><code>	ReadTimeout           <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-124"><code>	WriteTimeout          <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-125"><code>	ContextTimeoutEnabled <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-126"><code></code></span>
+<span class="codeline" id="line-127"><code>	<span class="comment">// PoolFIFO uses FIFO mode for each node connection pool GET/PUT (default LIFO).</span></code></span>
+<span class="codeline" id="line-128"><code>	PoolFIFO <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-129"><code></code></span>
+<span class="codeline" id="line-130"><code>	PoolSize              <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-131"><code>	PoolTimeout           <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-132"><code>	MinIdleConns          <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-133"><code>	MaxIdleConns          <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-134"><code>	MaxActiveConns        <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-135"><code>	ConnMaxIdleTime       <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-136"><code>	ConnMaxLifetime       <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-137"><code>	ConnMaxLifetimeJitter <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-138"><code></code></span>
+<span class="codeline" id="line-139"><code>	<span class="comment">// ReadBufferSize is the size of the bufio.Reader buffer for each connection.</span></code></span>
+<span class="codeline" id="line-140"><code><span class="comment">	// Larger buffers can improve performance for commands that return large responses.</span></code></span>
+<span class="codeline" id="line-141"><code><span class="comment">	// Smaller buffers can improve memory usage for larger pools.</span></code></span>
+<span class="codeline" id="line-142"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-143"><code><span class="comment">	// default: 32KiB (32768 bytes)</span></code></span>
+<span class="codeline" id="line-144"><code>	ReadBufferSize <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-145"><code></code></span>
+<span class="codeline" id="line-146"><code>	<span class="comment">// WriteBufferSize is the size of the bufio.Writer buffer for each connection.</span></code></span>
+<span class="codeline" id="line-147"><code><span class="comment">	// Larger buffers can improve performance for large pipelines and commands with many arguments.</span></code></span>
+<span class="codeline" id="line-148"><code><span class="comment">	// Smaller buffers can improve memory usage for larger pools.</span></code></span>
+<span class="codeline" id="line-149"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-150"><code><span class="comment">	// default: 32KiB (32768 bytes)</span></code></span>
+<span class="codeline" id="line-151"><code>	WriteBufferSize <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-152"><code></code></span>
+<span class="codeline" id="line-153"><code>	TLSConfig *<a href="../../../../../pkg/crypto/tls.html" class="ident i1">tls</a>.<a href="../../../../crypto/tls/common.go.html#line-566" class="ident">Config</a></code></span>
+<span class="codeline" id="line-154"><code>	Limiter   <a href="options.go.html#line-36" class="ident">Limiter</a></code></span>
+<span class="codeline" id="line-155"><code></code></span>
+<span class="codeline" id="line-156"><code>	<span class="comment">// DisableIndentity - Disable set-lib on connect.</span></code></span>
+<span class="codeline" id="line-157"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-158"><code><span class="comment">	// default: false</span></code></span>
+<span class="codeline" id="line-159"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-160"><code><span class="comment">	// Deprecated: Use DisableIdentity instead.</span></code></span>
+<span class="codeline" id="line-161"><code>	DisableIndentity <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-162"><code></code></span>
+<span class="codeline" id="line-163"><code>	<span class="comment">// DisableIdentity is used to disable CLIENT SETINFO command on connect.</span></code></span>
+<span class="codeline" id="line-164"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-165"><code><span class="comment">	// default: false</span></code></span>
+<span class="codeline" id="line-166"><code>	DisableIdentity <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-167"><code>	IdentitySuffix  <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-168"><code>	UnstableResp3   <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-169"><code>}</code></span>
+<span class="codeline" id="line-170"><code></code></span>
+<span class="codeline" id="line-171"><code><span class="keyword">func</span> (<label for="r8" class="ident">opt</label> *<a href="#line-55" class="ident">RingOptions</a>) <label for="r9" class="ident">init</label>() {</code></span>
+<span class="codeline" id="line-172"><code>	<span class="keyword">if</span> <label for="r8" class="ident">opt</label>.<a href="#line-60" class="ident">NewClient</a> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-173"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-60" class="ident">NewClient</a> = <span class="keyword">func</span>(<label for="r10" class="ident">opt</label> *<a href="options.go.html#line-47" class="ident">Options</a>) *<a href="redis.go.html#line-1193" class="ident">Client</a> {</code></span>
+<span class="codeline" id="line-174"><code>			<span class="keyword">return</span> <a href="redis.go.html#line-1199" class="ident">NewClient</a>(<label for="r10" class="ident">opt</label>)</code></span>
+<span class="codeline" id="line-175"><code>		}</code></span>
+<span class="codeline" id="line-176"><code>	}</code></span>
+<span class="codeline" id="line-177"><code></code></span>
+<span class="codeline" id="line-178"><code>	<span class="keyword">if</span> <label for="r8" class="ident">opt</label>.<a href="#line-67" class="ident">HeartbeatFrequency</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-179"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-67" class="ident">HeartbeatFrequency</a> = <span class="lit-number">500</span> * <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-937" class="ident">Millisecond</a></code></span>
+<span class="codeline" id="line-180"><code>	}</code></span>
+<span class="codeline" id="line-181"><code></code></span>
+<span class="codeline" id="line-182"><code>	<span class="keyword">if</span> <label for="r8" class="ident">opt</label>.<a href="#line-71" class="ident">HeartbeatFn</a> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-183"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-71" class="ident">HeartbeatFn</a> = <a href="#line-28" class="ident">defaultHeartbeatFn</a></code></span>
+<span class="codeline" id="line-184"><code>	}</code></span>
+<span class="codeline" id="line-185"><code></code></span>
+<span class="codeline" id="line-186"><code>	<span class="keyword">if</span> <label for="r8" class="ident">opt</label>.<a href="#line-78" class="ident">NewConsistentHash</a> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-187"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-78" class="ident">NewConsistentHash</a> = <a href="#line-47" class="ident">newRendezvous</a></code></span>
+<span class="codeline" id="line-188"><code>	}</code></span>
+<span class="codeline" id="line-189"><code></code></span>
+<span class="codeline" id="line-190"><code>	<span class="keyword">switch</span> <label for="r8" class="ident">opt</label>.<a href="#line-107" class="ident">MaxRetries</a> {</code></span>
+<span class="codeline" id="line-191"><code>	<span class="keyword">case</span> -<span class="lit-number">1</span>:</code></span>
+<span class="codeline" id="line-192"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-107" class="ident">MaxRetries</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-193"><code>	<span class="keyword">case</span> <span class="lit-number">0</span>:</code></span>
+<span class="codeline" id="line-194"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-107" class="ident">MaxRetries</a> = <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-195"><code>	}</code></span>
+<span class="codeline" id="line-196"><code>	<span class="keyword">switch</span> <label for="r8" class="ident">opt</label>.<a href="#line-108" class="ident">MinRetryBackoff</a> {</code></span>
+<span class="codeline" id="line-197"><code>	<span class="keyword">case</span> -<span class="lit-number">1</span>:</code></span>
+<span class="codeline" id="line-198"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-108" class="ident">MinRetryBackoff</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-199"><code>	<span class="keyword">case</span> <span class="lit-number">0</span>:</code></span>
+<span class="codeline" id="line-200"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-108" class="ident">MinRetryBackoff</a> = <span class="lit-number">8</span> * <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-937" class="ident">Millisecond</a></code></span>
+<span class="codeline" id="line-201"><code>	}</code></span>
+<span class="codeline" id="line-202"><code>	<span class="keyword">switch</span> <label for="r8" class="ident">opt</label>.<a href="#line-109" class="ident">MaxRetryBackoff</a> {</code></span>
+<span class="codeline" id="line-203"><code>	<span class="keyword">case</span> -<span class="lit-number">1</span>:</code></span>
+<span class="codeline" id="line-204"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-109" class="ident">MaxRetryBackoff</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-205"><code>	<span class="keyword">case</span> <span class="lit-number">0</span>:</code></span>
+<span class="codeline" id="line-206"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-109" class="ident">MaxRetryBackoff</a> = <span class="lit-number">512</span> * <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-937" class="ident">Millisecond</a></code></span>
+<span class="codeline" id="line-207"><code>	}</code></span>
+<span class="codeline" id="line-208"><code></code></span>
+<span class="codeline" id="line-209"><code>	<span class="keyword">if</span> <label for="r8" class="ident">opt</label>.<a href="#line-144" class="ident">ReadBufferSize</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-210"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-144" class="ident">ReadBufferSize</a> = <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/proto.html" class="ident i15">proto</a>.<a href="internal/proto/reader.go.html#line-16" class="ident">DefaultBufferSize</a></code></span>
+<span class="codeline" id="line-211"><code>	}</code></span>
+<span class="codeline" id="line-212"><code>	<span class="keyword">if</span> <label for="r8" class="ident">opt</label>.<a href="#line-151" class="ident">WriteBufferSize</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-213"><code>		<label for="r8" class="ident">opt</label>.<a href="#line-151" class="ident">WriteBufferSize</a> = <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/proto.html" class="ident i15">proto</a>.<a href="internal/proto/reader.go.html#line-16" class="ident">DefaultBufferSize</a></code></span>
+<span class="codeline" id="line-214"><code>	}</code></span>
+<span class="codeline" id="line-215"><code>}</code></span>
+<span class="codeline" id="line-216"><code></code></span>
+<span class="codeline" id="line-217"><code><span class="keyword">func</span> (<label for="r11" class="ident">opt</label> *<a href="#line-55" class="ident">RingOptions</a>) <label for="r12" class="ident">clientOptions</label>() *<a href="options.go.html#line-47" class="ident">Options</a> {</code></span>
+<span class="codeline" id="line-218"><code>	<span class="keyword">return</span> &amp;<a href="options.go.html#line-47" class="ident">Options</a>{</code></span>
+<span class="codeline" id="line-219"><code>		<a href="options.go.html#line-68" class="ident">ClientName</a>: <label for="r11" class="ident">opt</label>.<a href="#line-63" class="ident">ClientName</a>,</code></span>
+<span class="codeline" id="line-220"><code>		<a href="options.go.html#line-72" class="ident">Dialer</a>:     <label for="r11" class="ident">opt</label>.<a href="#line-82" class="ident">Dialer</a>,</code></span>
+<span class="codeline" id="line-221"><code>		<a href="options.go.html#line-75" class="ident">OnConnect</a>:  <label for="r11" class="ident">opt</label>.<a href="#line-83" class="ident">OnConnect</a>,</code></span>
+<span class="codeline" id="line-222"><code></code></span>
+<span class="codeline" id="line-223"><code>		<a href="options.go.html#line-80" class="ident">Protocol</a>:                     <label for="r11" class="ident">opt</label>.<a href="#line-85" class="ident">Protocol</a>,</code></span>
+<span class="codeline" id="line-224"><code>		<a href="options.go.html#line-85" class="ident">Username</a>:                     <label for="r11" class="ident">opt</label>.<a href="#line-86" class="ident">Username</a>,</code></span>
+<span class="codeline" id="line-225"><code>		<a href="options.go.html#line-91" class="ident">Password</a>:                     <label for="r11" class="ident">opt</label>.<a href="#line-87" class="ident">Password</a>,</code></span>
+<span class="codeline" id="line-226"><code>		<a href="options.go.html#line-95" class="ident">CredentialsProvider</a>:          <label for="r11" class="ident">opt</label>.<a href="#line-90" class="ident">CredentialsProvider</a>,</code></span>
+<span class="codeline" id="line-227"><code>		<a href="options.go.html#line-101" class="ident">CredentialsProviderContext</a>:   <label for="r11" class="ident">opt</label>.<a href="#line-96" class="ident">CredentialsProviderContext</a>,</code></span>
+<span class="codeline" id="line-228"><code>		<a href="options.go.html#line-109" class="ident">StreamingCredentialsProvider</a>: <label for="r11" class="ident">opt</label>.<a href="#line-104" class="ident">StreamingCredentialsProvider</a>,</code></span>
+<span class="codeline" id="line-229"><code>		<a href="options.go.html#line-112" class="ident">DB</a>:                           <label for="r11" class="ident">opt</label>.<a href="#line-105" class="ident">DB</a>,</code></span>
+<span class="codeline" id="line-230"><code></code></span>
+<span class="codeline" id="line-231"><code>		<a href="options.go.html#line-118" class="ident">MaxRetries</a>: -<span class="lit-number">1</span>,</code></span>
+<span class="codeline" id="line-232"><code></code></span>
+<span class="codeline" id="line-233"><code>		<a href="options.go.html#line-134" class="ident">DialTimeout</a>:           <label for="r11" class="ident">opt</label>.<a href="#line-111" class="ident">DialTimeout</a>,</code></span>
+<span class="codeline" id="line-234"><code>		<a href="options.go.html#line-139" class="ident">DialerRetries</a>:         <label for="r11" class="ident">opt</label>.<a href="#line-116" class="ident">DialerRetries</a>,</code></span>
+<span class="codeline" id="line-235"><code>		<a href="options.go.html#line-144" class="ident">DialerRetryTimeout</a>:    <label for="r11" class="ident">opt</label>.<a href="#line-121" class="ident">DialerRetryTimeout</a>,</code></span>
+<span class="codeline" id="line-236"><code>		<a href="options.go.html#line-153" class="ident">ReadTimeout</a>:           <label for="r11" class="ident">opt</label>.<a href="#line-123" class="ident">ReadTimeout</a>,</code></span>
+<span class="codeline" id="line-237"><code>		<a href="options.go.html#line-162" class="ident">WriteTimeout</a>:          <label for="r11" class="ident">opt</label>.<a href="#line-124" class="ident">WriteTimeout</a>,</code></span>
+<span class="codeline" id="line-238"><code>		<a href="options.go.html#line-166" class="ident">ContextTimeoutEnabled</a>: <label for="r11" class="ident">opt</label>.<a href="#line-125" class="ident">ContextTimeoutEnabled</a>,</code></span>
+<span class="codeline" id="line-239"><code></code></span>
+<span class="codeline" id="line-240"><code>		<a href="options.go.html#line-190" class="ident">PoolFIFO</a>:              <label for="r11" class="ident">opt</label>.<a href="#line-128" class="ident">PoolFIFO</a>,</code></span>
+<span class="codeline" id="line-241"><code>		<a href="options.go.html#line-198" class="ident">PoolSize</a>:              <label for="r11" class="ident">opt</label>.<a href="#line-130" class="ident">PoolSize</a>,</code></span>
+<span class="codeline" id="line-242"><code>		<a href="options.go.html#line-208" class="ident">PoolTimeout</a>:           <label for="r11" class="ident">opt</label>.<a href="#line-131" class="ident">PoolTimeout</a>,</code></span>
+<span class="codeline" id="line-243"><code>		<a href="options.go.html#line-214" class="ident">MinIdleConns</a>:          <label for="r11" class="ident">opt</label>.<a href="#line-132" class="ident">MinIdleConns</a>,</code></span>
+<span class="codeline" id="line-244"><code>		<a href="options.go.html#line-220" class="ident">MaxIdleConns</a>:          <label for="r11" class="ident">opt</label>.<a href="#line-133" class="ident">MaxIdleConns</a>,</code></span>
+<span class="codeline" id="line-245"><code>		<a href="options.go.html#line-227" class="ident">MaxActiveConns</a>:        <label for="r11" class="ident">opt</label>.<a href="#line-134" class="ident">MaxActiveConns</a>,</code></span>
+<span class="codeline" id="line-246"><code>		<a href="options.go.html#line-237" class="ident">ConnMaxIdleTime</a>:       <label for="r11" class="ident">opt</label>.<a href="#line-135" class="ident">ConnMaxIdleTime</a>,</code></span>
+<span class="codeline" id="line-247"><code>		<a href="options.go.html#line-245" class="ident">ConnMaxLifetime</a>:       <label for="r11" class="ident">opt</label>.<a href="#line-136" class="ident">ConnMaxLifetime</a>,</code></span>
+<span class="codeline" id="line-248"><code>		<a href="options.go.html#line-258" class="ident">ConnMaxLifetimeJitter</a>: <label for="r11" class="ident">opt</label>.<a href="#line-137" class="ident">ConnMaxLifetimeJitter</a>,</code></span>
+<span class="codeline" id="line-249"><code>		<a href="options.go.html#line-173" class="ident">ReadBufferSize</a>:        <label for="r11" class="ident">opt</label>.<a href="#line-144" class="ident">ReadBufferSize</a>,</code></span>
+<span class="codeline" id="line-250"><code>		<a href="options.go.html#line-180" class="ident">WriteBufferSize</a>:       <label for="r11" class="ident">opt</label>.<a href="#line-151" class="ident">WriteBufferSize</a>,</code></span>
+<span class="codeline" id="line-251"><code></code></span>
+<span class="codeline" id="line-252"><code>		<a href="options.go.html#line-261" class="ident">TLSConfig</a>: <label for="r11" class="ident">opt</label>.<a href="#line-153" class="ident">TLSConfig</a>,</code></span>
+<span class="codeline" id="line-253"><code>		<a href="options.go.html#line-264" class="ident">Limiter</a>:   <label for="r11" class="ident">opt</label>.<a href="#line-154" class="ident">Limiter</a>,</code></span>
+<span class="codeline" id="line-254"><code></code></span>
+<span class="codeline" id="line-255"><code>		<a href="options.go.html#line-279" class="ident">DisableIdentity</a>:  <label for="r11" class="ident">opt</label>.<a href="#line-166" class="ident">DisableIdentity</a>,</code></span>
+<span class="codeline" id="line-256"><code>		<a href="options.go.html#line-274" class="ident">DisableIndentity</a>: <label for="r11" class="ident">opt</label>.<a href="#line-161" class="ident">DisableIndentity</a>,</code></span>
+<span class="codeline" id="line-257"><code></code></span>
+<span class="codeline" id="line-258"><code>		<a href="options.go.html#line-283" class="ident">IdentitySuffix</a>: <label for="r11" class="ident">opt</label>.<a href="#line-167" class="ident">IdentitySuffix</a>,</code></span>
+<span class="codeline" id="line-259"><code>		<a href="options.go.html#line-287" class="ident">UnstableResp3</a>:  <label for="r11" class="ident">opt</label>.<a href="#line-168" class="ident">UnstableResp3</a>,</code></span>
+<span class="codeline" id="line-260"><code>	}</code></span>
+<span class="codeline" id="line-261"><code>}</code></span>
+<span class="codeline" id="line-262"><code></code></span>
+<span class="codeline" id="line-263"><code><span class="comment">//------------------------------------------------------------------------------</span></code></span>
+<span class="codeline" id="line-264"><code></code></span>
+<span class="codeline" id="line-265"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-ringShard" class="ident">ringShard</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-266"><code>	Client *<a href="redis.go.html#line-1193" class="ident">Client</a></code></span>
+<span class="codeline" id="line-267"><code>	down   <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-268"><code>	addr   <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-269"><code>}</code></span>
+<span class="codeline" id="line-270"><code></code></span>
+<span class="codeline" id="line-271"><code><span class="keyword">func</span> <label for="r13" class="ident"><a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-newRingShard" class="ident">newRingShard</a></label>(<label for="r14" class="ident">opt</label> *<a href="#line-55" class="ident">RingOptions</a>, <label for="r15" class="ident">addr</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="#line-265" class="ident">ringShard</a> {</code></span>
+<span class="codeline" id="line-272"><code>	<label for="r16" class="ident">clopt</label> := <label for="r14" class="ident">opt</label>.<a href="#line-217" class="ident">clientOptions</a>()</code></span>
+<span class="codeline" id="line-273"><code>	<label for="r16" class="ident">clopt</label>.<a href="options.go.html#line-54" class="ident">Addr</a> = <label for="r15" class="ident">addr</label></code></span>
+<span class="codeline" id="line-274"><code></code></span>
+<span class="codeline" id="line-275"><code>	<span class="keyword">return</span> &amp;<a href="#line-265" class="ident">ringShard</a>{</code></span>
+<span class="codeline" id="line-276"><code>		<a href="#line-266" class="ident">Client</a>: <label for="r14" class="ident">opt</label>.<a href="#line-60" class="ident">NewClient</a>(<label for="r16" class="ident">clopt</label>),</code></span>
+<span class="codeline" id="line-277"><code>		<a href="#line-268" class="ident">addr</a>:   <label for="r15" class="ident">addr</label>,</code></span>
+<span class="codeline" id="line-278"><code>	}</code></span>
+<span class="codeline" id="line-279"><code>}</code></span>
+<span class="codeline" id="line-280"><code></code></span>
+<span class="codeline" id="line-281"><code><span class="keyword">func</span> (<label for="r17" class="ident">shard</label> *<a href="#line-265" class="ident">ringShard</a>) <label for="r18" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.ringShard^e0b3a.html#name-.String" class="ident">String</a></label>() <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-282"><code>	<span class="keyword">var</span> <label for="r19" class="ident">state</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-283"><code>	<span class="keyword">if</span> <label for="r17" class="ident">shard</label>.<a href="#line-296" class="ident">IsUp</a>() {</code></span>
+<span class="codeline" id="line-284"><code>		<label for="r19" class="ident">state</label> = <span class="lit-string">"up"</span></code></span>
+<span class="codeline" id="line-285"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-286"><code>		<label for="r19" class="ident">state</label> = <span class="lit-string">"down"</span></code></span>
+<span class="codeline" id="line-287"><code>	}</code></span>
+<span class="codeline" id="line-288"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/fmt.html" class="ident i3">fmt</a>.<a href="../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"%s is %s"</span>, <label for="r17" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>, <label for="r19" class="ident">state</label>)</code></span>
+<span class="codeline" id="line-289"><code>}</code></span>
+<span class="codeline" id="line-290"><code></code></span>
+<span class="codeline" id="line-291"><code><span class="keyword">func</span> (<label for="r20" class="ident">shard</label> *<a href="#line-265" class="ident">ringShard</a>) <label for="r21" class="ident">IsDown</label>() <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-292"><code>	<span class="keyword">const</span> <label for="r22" class="ident">threshold</label> = <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-293"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/sync/atomic.html" class="ident i7">atomic</a>.<a href="../../../../sync/atomic/doc.go.html#line-177" class="ident">LoadInt32</a>(&amp;<label for="r20" class="ident">shard</label>.<a href="#line-267" class="ident">down</a>) &gt;= <label for="r22" class="ident">threshold</label></code></span>
+<span class="codeline" id="line-294"><code>}</code></span>
+<span class="codeline" id="line-295"><code></code></span>
+<span class="codeline" id="line-296"><code><span class="keyword">func</span> (<label for="r23" class="ident">shard</label> *<a href="#line-265" class="ident">ringShard</a>) <label for="r24" class="ident">IsUp</label>() <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-297"><code>	<span class="keyword">return</span> !<label for="r23" class="ident">shard</label>.<a href="#line-291" class="ident">IsDown</a>()</code></span>
+<span class="codeline" id="line-298"><code>}</code></span>
+<span class="codeline" id="line-299"><code></code></span>
+<span class="codeline" id="line-300"><code><span class="comment">// Vote votes to set shard state and returns true if state was changed.</span></code></span>
+<span class="codeline" id="line-301"><code><span class="keyword">func</span> (<label for="r25" class="ident">shard</label> *<a href="#line-265" class="ident">ringShard</a>) <label for="r26" class="ident">Vote</label>(<label for="r27" class="ident">up</label> <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-302"><code>	<span class="keyword">if</span> <label for="r27" class="ident">up</label> {</code></span>
+<span class="codeline" id="line-303"><code>		<label for="r28" class="ident">changed</label> := <label for="r25" class="ident">shard</label>.<a href="#line-291" class="ident">IsDown</a>()</code></span>
+<span class="codeline" id="line-304"><code>		<a href="../../../../../pkg/sync/atomic.html" class="ident i7">atomic</a>.<a href="../../../../sync/atomic/doc.go.html#line-199" class="ident">StoreInt32</a>(&amp;<label for="r25" class="ident">shard</label>.<a href="#line-267" class="ident">down</a>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-305"><code>		<span class="keyword">return</span> <label for="r28" class="ident">changed</label></code></span>
+<span class="codeline" id="line-306"><code>	}</code></span>
+<span class="codeline" id="line-307"><code></code></span>
+<span class="codeline" id="line-308"><code>	<span class="keyword">if</span> <label for="r25" class="ident">shard</label>.<a href="#line-291" class="ident">IsDown</a>() {</code></span>
+<span class="codeline" id="line-309"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-310"><code>	}</code></span>
+<span class="codeline" id="line-311"><code></code></span>
+<span class="codeline" id="line-312"><code>	<a href="../../../../../pkg/sync/atomic.html" class="ident i7">atomic</a>.<a href="../../../../sync/atomic/doc.go.html#line-115" class="ident">AddInt32</a>(&amp;<label for="r25" class="ident">shard</label>.<a href="#line-267" class="ident">down</a>, <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-313"><code>	<span class="keyword">return</span> <label for="r25" class="ident">shard</label>.<a href="#line-291" class="ident">IsDown</a>()</code></span>
+<span class="codeline" id="line-314"><code>}</code></span>
+<span class="codeline" id="line-315"><code></code></span>
+<span class="codeline" id="line-316"><code><span class="comment">//------------------------------------------------------------------------------</span></code></span>
+<span class="codeline" id="line-317"><code></code></span>
+<span class="codeline" id="line-318"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-ringSharding" class="ident">ringSharding</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-319"><code>	opt *<a href="#line-55" class="ident">RingOptions</a></code></span>
+<span class="codeline" id="line-320"><code></code></span>
+<span class="codeline" id="line-321"><code>	mu        <a href="../../../../../pkg/sync.html" class="ident i6">sync</a>.<a href="../../../../sync/rwmutex.go.html#line-39" class="ident">RWMutex</a></code></span>
+<span class="codeline" id="line-322"><code>	shards    *<a href="#line-333" class="ident">ringShards</a></code></span>
+<span class="codeline" id="line-323"><code>	closed    <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-324"><code>	hash      <a href="#line-35" class="ident">ConsistentHash</a></code></span>
+<span class="codeline" id="line-325"><code>	numShard  <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-326"><code>	onNewNode []<span class="keyword">func</span>(rdb *<a href="redis.go.html#line-1193" class="ident">Client</a>)</code></span>
+<span class="codeline" id="line-327"><code></code></span>
+<span class="codeline" id="line-328"><code>	<span class="comment">// ensures exclusive access to SetAddrs so there is no need</span></code></span>
+<span class="codeline" id="line-329"><code><span class="comment">	// to hold mu for the duration of potentially long shard creation</span></code></span>
+<span class="codeline" id="line-330"><code>	setAddrsMu <a href="../../../../../pkg/sync.html" class="ident i6">sync</a>.<a href="../../../../sync/mutex.go.html#line-30" class="ident">Mutex</a></code></span>
+<span class="codeline" id="line-331"><code>}</code></span>
+<span class="codeline" id="line-332"><code></code></span>
+<span class="codeline" id="line-333"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-ringShards" class="ident">ringShards</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-334"><code>	m    <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="#line-265" class="ident">ringShard</a></code></span>
+<span class="codeline" id="line-335"><code>	list []*<a href="#line-265" class="ident">ringShard</a></code></span>
+<span class="codeline" id="line-336"><code>}</code></span>
+<span class="codeline" id="line-337"><code></code></span>
+<span class="codeline" id="line-338"><code><span class="keyword">func</span> <label for="r29" class="ident"><a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-newRingSharding" class="ident">newRingSharding</a></label>(<label for="r30" class="ident">opt</label> *<a href="#line-55" class="ident">RingOptions</a>) *<a href="#line-318" class="ident">ringSharding</a> {</code></span>
+<span class="codeline" id="line-339"><code>	<label for="r31" class="ident">c</label> := &amp;<a href="#line-318" class="ident">ringSharding</a>{</code></span>
+<span class="codeline" id="line-340"><code>		<a href="#line-319" class="ident">opt</a>: <label for="r30" class="ident">opt</label>,</code></span>
+<span class="codeline" id="line-341"><code>	}</code></span>
+<span class="codeline" id="line-342"><code>	<label for="r31" class="ident">c</label>.<a href="#line-356" class="ident">SetAddrs</a>(<label for="r30" class="ident">opt</label>.<a href="#line-57" class="ident">Addrs</a>)</code></span>
+<span class="codeline" id="line-343"><code></code></span>
+<span class="codeline" id="line-344"><code>	<span class="keyword">return</span> <label for="r31" class="ident">c</label></code></span>
+<span class="codeline" id="line-345"><code>}</code></span>
+<span class="codeline" id="line-346"><code></code></span>
+<span class="codeline" id="line-347"><code><span class="keyword">func</span> (<label for="r32" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r33" class="ident">OnNewNode</label>(<label for="r34" class="ident">fn</label> <span class="keyword">func</span>(<label for="r35" class="ident">rdb</label> *<a href="redis.go.html#line-1193" class="ident">Client</a>)) {</code></span>
+<span class="codeline" id="line-348"><code>	<label for="r32" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-144" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-349"><code>	<label for="r32" class="ident">c</label>.<a href="#line-326" class="ident">onNewNode</a> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r32" class="ident">c</label>.<a href="#line-326" class="ident">onNewNode</a>, <label for="r34" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-350"><code>	<label for="r32" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-201" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-351"><code>}</code></span>
+<span class="codeline" id="line-352"><code></code></span>
+<span class="codeline" id="line-353"><code><span class="comment">// SetAddrs replaces the shards in use, such that you can increase and</span></code></span>
+<span class="codeline" id="line-354"><code><span class="comment">// decrease number of shards, that you use. It will reuse shards that</span></code></span>
+<span class="codeline" id="line-355"><code><span class="comment">// existed before and close the ones that will not be used anymore.</span></code></span>
+<span class="codeline" id="line-356"><code><span class="keyword">func</span> (<label for="r36" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r37" class="ident">SetAddrs</label>(<label for="r38" class="ident">addrs</label> <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-357"><code>	<label for="r36" class="ident">c</label>.<a href="#line-330" class="ident">setAddrsMu</a>.<a href="../../../../sync/mutex.go.html#line-45" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-358"><code>	<span class="keyword">defer</span> <label for="r36" class="ident">c</label>.<a href="#line-330" class="ident">setAddrsMu</a>.<a href="../../../../sync/mutex.go.html#line-64" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-359"><code></code></span>
+<span class="codeline" id="line-360"><code>	<label for="r39" class="ident">cleanup</label> := <span class="keyword">func</span>(<label for="r40" class="ident">shards</label> <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="#line-265" class="ident">ringShard</a>) {</code></span>
+<span class="codeline" id="line-361"><code>		<span class="keyword">for</span> <label for="r41" class="ident">addr</label>, <label for="r42" class="ident">shard</label> := <span class="keyword">range</span> <label for="r40" class="ident">shards</label> {</code></span>
+<span class="codeline" id="line-362"><code>			<span class="keyword">if</span> <label for="r43" class="ident">err</label> := <label for="r42" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-943" class="ident">Close</a>(); <label for="r43" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-363"><code>				<a href="../../../../../pkg/github.com/redis/go-redis/v9/internal.html" class="ident i12">internal</a>.<a href="internal/log.go.html#line-33" class="ident">Logger</a>.<a href="internal/log.go.html#line-14" class="ident">Printf</a>(<a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-215" class="ident">Background</a>(), <span class="lit-string">"shard.Close %s failed: %s"</span>, <label for="r41" class="ident">addr</label>, <label for="r43" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-364"><code>			}</code></span>
+<span class="codeline" id="line-365"><code>		}</code></span>
+<span class="codeline" id="line-366"><code>	}</code></span>
+<span class="codeline" id="line-367"><code></code></span>
+<span class="codeline" id="line-368"><code>	<label for="r36" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-67" class="ident">RLock</a>()</code></span>
+<span class="codeline" id="line-369"><code>	<span class="keyword">if</span> <label for="r36" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> {</code></span>
+<span class="codeline" id="line-370"><code>		<label for="r36" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-371"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-372"><code>	}</code></span>
+<span class="codeline" id="line-373"><code>	<label for="r44" class="ident">existing</label> := <label for="r36" class="ident">c</label>.<a href="#line-322" class="ident">shards</a></code></span>
+<span class="codeline" id="line-374"><code>	<label for="r36" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-375"><code></code></span>
+<span class="codeline" id="line-376"><code>	<label for="r45" class="ident">shards</label>, <label for="r46" class="ident">created</label>, <label for="r47" class="ident">unused</label> := <label for="r36" class="ident">c</label>.<a href="#line-391" class="ident">newRingShards</a>(<label for="r38" class="ident">addrs</label>, <label for="r44" class="ident">existing</label>)</code></span>
+<span class="codeline" id="line-377"><code></code></span>
+<span class="codeline" id="line-378"><code>	<label for="r36" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-144" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-379"><code>	<span class="keyword">if</span> <label for="r36" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> {</code></span>
+<span class="codeline" id="line-380"><code>		<label for="r39" class="ident">cleanup</label>(<label for="r46" class="ident">created</label>)</code></span>
+<span class="codeline" id="line-381"><code>		<label for="r36" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-201" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-382"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-383"><code>	}</code></span>
+<span class="codeline" id="line-384"><code>	<label for="r36" class="ident">c</label>.<a href="#line-322" class="ident">shards</a> = <label for="r45" class="ident">shards</label></code></span>
+<span class="codeline" id="line-385"><code>	<label for="r36" class="ident">c</label>.<a href="#line-526" class="ident">rebalanceLocked</a>()</code></span>
+<span class="codeline" id="line-386"><code>	<label for="r36" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-201" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-387"><code></code></span>
+<span class="codeline" id="line-388"><code>	<label for="r39" class="ident">cleanup</label>(<label for="r47" class="ident">unused</label>)</code></span>
+<span class="codeline" id="line-389"><code>}</code></span>
+<span class="codeline" id="line-390"><code></code></span>
+<span class="codeline" id="line-391"><code><span class="keyword">func</span> (<label for="r48" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r49" class="ident">newRingShards</label>(</code></span>
+<span class="codeline" id="line-392"><code>	<label for="r50" class="ident">addrs</label> <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r51" class="ident">existing</label> *<a href="#line-333" class="ident">ringShards</a>,</code></span>
+<span class="codeline" id="line-393"><code>) (<label for="r52" class="ident">shards</label> *<a href="#line-333" class="ident">ringShards</a>, <label for="r53" class="ident">created</label>, <label for="r54" class="ident">unused</label> <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="#line-265" class="ident">ringShard</a>) {</code></span>
+<span class="codeline" id="line-394"><code>	<label for="r52" class="ident">shards</label> = &amp;<a href="#line-333" class="ident">ringShards</a>{<a href="#line-334" class="ident">m</a>: <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="#line-265" class="ident">ringShard</a>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r50" class="ident">addrs</label>))}</code></span>
+<span class="codeline" id="line-395"><code>	<label for="r53" class="ident">created</label> = <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="#line-265" class="ident">ringShard</a>) <span class="comment">// indexed by addr</span></code></span>
+<span class="codeline" id="line-396"><code>	<label for="r54" class="ident">unused</label> = <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="#line-265" class="ident">ringShard</a>)  <span class="comment">// indexed by addr</span></code></span>
+<span class="codeline" id="line-397"><code></code></span>
+<span class="codeline" id="line-398"><code>	<span class="keyword">if</span> <label for="r51" class="ident">existing</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-399"><code>		<span class="keyword">for</span> <label for="r55" class="ident">_</label>, <label for="r56" class="ident">shard</label> := <span class="keyword">range</span> <label for="r51" class="ident">existing</label>.<a href="#line-335" class="ident">list</a> {</code></span>
+<span class="codeline" id="line-400"><code>			<label for="r54" class="ident">unused</label>[<label for="r56" class="ident">shard</label>.<a href="#line-268" class="ident">addr</a>] = <label for="r56" class="ident">shard</label></code></span>
+<span class="codeline" id="line-401"><code>		}</code></span>
+<span class="codeline" id="line-402"><code>	}</code></span>
+<span class="codeline" id="line-403"><code></code></span>
+<span class="codeline" id="line-404"><code>	<span class="keyword">for</span> <label for="r57" class="ident">name</label>, <label for="r58" class="ident">addr</label> := <span class="keyword">range</span> <label for="r50" class="ident">addrs</label> {</code></span>
+<span class="codeline" id="line-405"><code>		<span class="keyword">if</span> <label for="r59" class="ident">shard</label>, <label for="r60" class="ident">ok</label> := <label for="r54" class="ident">unused</label>[<label for="r58" class="ident">addr</label>]; <label for="r60" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-406"><code>			<label for="r52" class="ident">shards</label>.<a href="#line-334" class="ident">m</a>[<label for="r57" class="ident">name</label>] = <label for="r59" class="ident">shard</label></code></span>
+<span class="codeline" id="line-407"><code>			<a href="../../../../../pkg/builtin.html#name-delete" class="ident">delete</a>(<label for="r54" class="ident">unused</label>, <label for="r58" class="ident">addr</label>)</code></span>
+<span class="codeline" id="line-408"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-409"><code>			<label for="r61" class="ident">shard</label> := <a href="#line-271" class="ident">newRingShard</a>(<label for="r48" class="ident">c</label>.<a href="#line-319" class="ident">opt</a>, <label for="r58" class="ident">addr</label>)</code></span>
+<span class="codeline" id="line-410"><code>			<label for="r52" class="ident">shards</label>.<a href="#line-334" class="ident">m</a>[<label for="r57" class="ident">name</label>] = <label for="r61" class="ident">shard</label></code></span>
+<span class="codeline" id="line-411"><code>			<label for="r53" class="ident">created</label>[<label for="r58" class="ident">addr</label>] = <label for="r61" class="ident">shard</label></code></span>
+<span class="codeline" id="line-412"><code></code></span>
+<span class="codeline" id="line-413"><code>			<span class="keyword">for</span> <label for="r62" class="ident">_</label>, <label for="r63" class="ident">fn</label> := <span class="keyword">range</span> <label for="r48" class="ident">c</label>.<a href="#line-326" class="ident">onNewNode</a> {</code></span>
+<span class="codeline" id="line-414"><code>				<label for="r63" class="ident">fn</label>(<label for="r61" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>)</code></span>
+<span class="codeline" id="line-415"><code>			}</code></span>
+<span class="codeline" id="line-416"><code>		}</code></span>
+<span class="codeline" id="line-417"><code>	}</code></span>
+<span class="codeline" id="line-418"><code></code></span>
+<span class="codeline" id="line-419"><code>	<span class="keyword">for</span> <label for="r64" class="ident">_</label>, <label for="r65" class="ident">shard</label> := <span class="keyword">range</span> <label for="r52" class="ident">shards</label>.<a href="#line-334" class="ident">m</a> {</code></span>
+<span class="codeline" id="line-420"><code>		<label for="r52" class="ident">shards</label>.<a href="#line-335" class="ident">list</a> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r52" class="ident">shards</label>.<a href="#line-335" class="ident">list</a>, <label for="r65" class="ident">shard</label>)</code></span>
+<span class="codeline" id="line-421"><code>	}</code></span>
+<span class="codeline" id="line-422"><code></code></span>
+<span class="codeline" id="line-423"><code>	<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-424"><code>}</code></span>
+<span class="codeline" id="line-425"><code></code></span>
+<span class="codeline" id="line-426"><code><span class="comment">// Warning: External exposure of `c.shards.list` may cause data races.</span></code></span>
+<span class="codeline" id="line-427"><code><span class="comment">// So keep internal or implement deep copy if exposed.</span></code></span>
+<span class="codeline" id="line-428"><code><span class="keyword">func</span> (<label for="r66" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r67" class="ident">List</label>() []*<a href="#line-265" class="ident">ringShard</a> {</code></span>
+<span class="codeline" id="line-429"><code>	<label for="r66" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-67" class="ident">RLock</a>()</code></span>
+<span class="codeline" id="line-430"><code>	<span class="keyword">defer</span> <label for="r66" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-431"><code></code></span>
+<span class="codeline" id="line-432"><code>	<span class="keyword">if</span> <label for="r66" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> {</code></span>
+<span class="codeline" id="line-433"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-434"><code>	}</code></span>
+<span class="codeline" id="line-435"><code>	<span class="keyword">return</span> <label for="r66" class="ident">c</label>.<a href="#line-322" class="ident">shards</a>.<a href="#line-335" class="ident">list</a></code></span>
+<span class="codeline" id="line-436"><code>}</code></span>
+<span class="codeline" id="line-437"><code></code></span>
+<span class="codeline" id="line-438"><code><span class="keyword">func</span> (<label for="r68" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r69" class="ident">Hash</label>(<label for="r70" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-439"><code>	<label for="r70" class="ident">key</label> = <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/hashtag.html" class="ident i13">hashtag</a>.<a href="internal/hashtag/hashtag.go.html#line-50" class="ident">Key</a>(<label for="r70" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-440"><code></code></span>
+<span class="codeline" id="line-441"><code>	<span class="keyword">var</span> <label for="r71" class="ident">hash</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-442"><code></code></span>
+<span class="codeline" id="line-443"><code>	<label for="r68" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-67" class="ident">RLock</a>()</code></span>
+<span class="codeline" id="line-444"><code>	<span class="keyword">defer</span> <label for="r68" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-445"><code></code></span>
+<span class="codeline" id="line-446"><code>	<span class="keyword">if</span> <label for="r68" class="ident">c</label>.<a href="#line-325" class="ident">numShard</a> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-447"><code>		<label for="r71" class="ident">hash</label> = <label for="r68" class="ident">c</label>.<a href="#line-324" class="ident">hash</a>.<a href="#line-36" class="ident">Get</a>(<label for="r70" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-448"><code>	}</code></span>
+<span class="codeline" id="line-449"><code></code></span>
+<span class="codeline" id="line-450"><code>	<span class="keyword">return</span> <label for="r71" class="ident">hash</label></code></span>
+<span class="codeline" id="line-451"><code>}</code></span>
+<span class="codeline" id="line-452"><code></code></span>
+<span class="codeline" id="line-453"><code><span class="keyword">func</span> (<label for="r72" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r73" class="ident">GetByKey</label>(<label for="r74" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (*<a href="#line-265" class="ident">ringShard</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-454"><code>	<label for="r74" class="ident">key</label> = <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/hashtag.html" class="ident i13">hashtag</a>.<a href="internal/hashtag/hashtag.go.html#line-50" class="ident">Key</a>(<label for="r74" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-455"><code></code></span>
+<span class="codeline" id="line-456"><code>	<label for="r72" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-67" class="ident">RLock</a>()</code></span>
+<span class="codeline" id="line-457"><code>	<span class="keyword">defer</span> <label for="r72" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-458"><code></code></span>
+<span class="codeline" id="line-459"><code>	<span class="keyword">if</span> <label for="r72" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> {</code></span>
+<span class="codeline" id="line-460"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/pool.html" class="ident i14">pool</a>.<a href="internal/pool/pool.go.html#line-18" class="ident">ErrClosed</a></code></span>
+<span class="codeline" id="line-461"><code>	}</code></span>
+<span class="codeline" id="line-462"><code></code></span>
+<span class="codeline" id="line-463"><code>	<span class="keyword">if</span> <label for="r72" class="ident">c</label>.<a href="#line-325" class="ident">numShard</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-464"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="#line-25" class="ident">errRingShardsDown</a></code></span>
+<span class="codeline" id="line-465"><code>	}</code></span>
+<span class="codeline" id="line-466"><code></code></span>
+<span class="codeline" id="line-467"><code>	<label for="r75" class="ident">shardName</label> := <label for="r72" class="ident">c</label>.<a href="#line-324" class="ident">hash</a>.<a href="#line-36" class="ident">Get</a>(<label for="r74" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-468"><code>	<span class="keyword">if</span> <label for="r75" class="ident">shardName</label> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-469"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="#line-25" class="ident">errRingShardsDown</a></code></span>
+<span class="codeline" id="line-470"><code>	}</code></span>
+<span class="codeline" id="line-471"><code>	<span class="keyword">return</span> <label for="r72" class="ident">c</label>.<a href="#line-322" class="ident">shards</a>.<a href="#line-334" class="ident">m</a>[<label for="r75" class="ident">shardName</label>], <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-472"><code>}</code></span>
+<span class="codeline" id="line-473"><code></code></span>
+<span class="codeline" id="line-474"><code><span class="keyword">func</span> (<label for="r76" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r77" class="ident">GetByName</label>(<label for="r78" class="ident">shardName</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (*<a href="#line-265" class="ident">ringShard</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-475"><code>	<span class="keyword">if</span> <label for="r78" class="ident">shardName</label> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-476"><code>		<span class="keyword">return</span> <label for="r76" class="ident">c</label>.<a href="#line-490" class="ident">Random</a>()</code></span>
+<span class="codeline" id="line-477"><code>	}</code></span>
+<span class="codeline" id="line-478"><code></code></span>
+<span class="codeline" id="line-479"><code>	<label for="r76" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-67" class="ident">RLock</a>()</code></span>
+<span class="codeline" id="line-480"><code>	<span class="keyword">defer</span> <label for="r76" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-481"><code></code></span>
+<span class="codeline" id="line-482"><code>	<label for="r79" class="ident">shard</label>, <label for="r80" class="ident">ok</label> := <label for="r76" class="ident">c</label>.<a href="#line-322" class="ident">shards</a>.<a href="#line-334" class="ident">m</a>[<label for="r78" class="ident">shardName</label>]</code></span>
+<span class="codeline" id="line-483"><code>	<span class="keyword">if</span> !<label for="r80" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-484"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/errors.html" class="ident i2">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"redis: the shard is not in the ring"</span>)</code></span>
+<span class="codeline" id="line-485"><code>	}</code></span>
+<span class="codeline" id="line-486"><code></code></span>
+<span class="codeline" id="line-487"><code>	<span class="keyword">return</span> <label for="r79" class="ident">shard</label>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-488"><code>}</code></span>
+<span class="codeline" id="line-489"><code></code></span>
+<span class="codeline" id="line-490"><code><span class="keyword">func</span> (<label for="r81" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r82" class="ident">Random</label>() (*<a href="#line-265" class="ident">ringShard</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-491"><code>	<span class="keyword">return</span> <label for="r81" class="ident">c</label>.<a href="#line-453" class="ident">GetByKey</a>(<a href="../../../../../pkg/strconv.html" class="ident i5">strconv</a>.<a href="../../../../strconv/number.go.html#line-214" class="ident">Itoa</a>(<a href="../../../../../pkg/github.com/redis/go-redis/v9/internal/rand.html" class="ident i16">rand</a>.<a href="internal/rand/rand.go.html#line-9" class="ident">Int</a>()))</code></span>
+<span class="codeline" id="line-492"><code>}</code></span>
+<span class="codeline" id="line-493"><code></code></span>
+<span class="codeline" id="line-494"><code><span class="comment">// Heartbeat monitors state of each shard in the ring.</span></code></span>
+<span class="codeline" id="line-495"><code><span class="keyword">func</span> (<label for="r83" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r84" class="ident">Heartbeat</label>(<label for="r85" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r86" class="ident">frequency</label> <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a>) {</code></span>
+<span class="codeline" id="line-496"><code>	<label for="r87" class="ident">ticker</label> := <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/tick.go.html#line-36" class="ident">NewTicker</a>(<label for="r86" class="ident">frequency</label>)</code></span>
+<span class="codeline" id="line-497"><code>	<span class="keyword">defer</span> <label for="r87" class="ident">ticker</label>.<a href="../../../../time/tick.go.html#line-52" class="ident">Stop</a>()</code></span>
+<span class="codeline" id="line-498"><code></code></span>
+<span class="codeline" id="line-499"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-500"><code>		<a href="../../../../runtime/select.go.html#line-122"><span class="keyword">select</span></a> {</code></span>
+<span class="codeline" id="line-501"><code>		<span class="keyword">case</span> <a href="../../../../runtime/chan.go.html#line-508">&lt;-</a><label for="r87" class="ident">ticker</label>.<a href="../../../../time/tick.go.html#line-17" class="ident">C</a>:</code></span>
+<span class="codeline" id="line-502"><code>			<span class="keyword">var</span> <label for="r88" class="ident">rebalance</label> <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-503"><code></code></span>
+<span class="codeline" id="line-504"><code>			<span class="comment">// note: `c.List()` return a shadow copy of `[]*ringShard`.</span></code></span>
+<span class="codeline" id="line-505"><code>			<span class="keyword">for</span> <label for="r89" class="ident">_</label>, <label for="r90" class="ident">shard</label> := <span class="keyword">range</span> <label for="r83" class="ident">c</label>.<a href="#line-428" class="ident">List</a>() {</code></span>
+<span class="codeline" id="line-506"><code>				<label for="r91" class="ident">isUp</label> := <label for="r83" class="ident">c</label>.<a href="#line-319" class="ident">opt</a>.<a href="#line-71" class="ident">HeartbeatFn</a>(<label for="r85" class="ident">ctx</label>, <label for="r90" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>)</code></span>
+<span class="codeline" id="line-507"><code>				<span class="keyword">if</span> <label for="r90" class="ident">shard</label>.<a href="#line-301" class="ident">Vote</a>(<label for="r91" class="ident">isUp</label>) {</code></span>
+<span class="codeline" id="line-508"><code>					<a href="../../../../../pkg/github.com/redis/go-redis/v9/internal.html" class="ident i12">internal</a>.<a href="internal/log.go.html#line-33" class="ident">Logger</a>.<a href="internal/log.go.html#line-14" class="ident">Printf</a>(<label for="r85" class="ident">ctx</label>, <span class="lit-string">"ring shard state changed: %s"</span>, <label for="r90" class="ident">shard</label>)</code></span>
+<span class="codeline" id="line-509"><code>					<label for="r88" class="ident">rebalance</label> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-510"><code>				}</code></span>
+<span class="codeline" id="line-511"><code>			}</code></span>
+<span class="codeline" id="line-512"><code></code></span>
+<span class="codeline" id="line-513"><code>			<span class="keyword">if</span> <label for="r88" class="ident">rebalance</label> {</code></span>
+<span class="codeline" id="line-514"><code>				<label for="r83" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-144" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-515"><code>				<label for="r83" class="ident">c</label>.<a href="#line-526" class="ident">rebalanceLocked</a>()</code></span>
+<span class="codeline" id="line-516"><code>				<label for="r83" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-201" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-517"><code>			}</code></span>
+<span class="codeline" id="line-518"><code>		<span class="keyword">case</span> <a href="../../../../runtime/chan.go.html#line-508">&lt;-</a><label for="r85" class="ident">ctx</label>.<a href="../../../../context/context.go.html#line-108" class="ident">Done</a>():</code></span>
+<span class="codeline" id="line-519"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-520"><code>		}</code></span>
+<span class="codeline" id="line-521"><code>	}</code></span>
+<span class="codeline" id="line-522"><code>}</code></span>
+<span class="codeline" id="line-523"><code></code></span>
+<span class="codeline" id="line-524"><code><span class="comment">// rebalanceLocked removes dead shards from the Ring.</span></code></span>
+<span class="codeline" id="line-525"><code><span class="comment">// Requires c.mu locked.</span></code></span>
+<span class="codeline" id="line-526"><code><span class="keyword">func</span> (<label for="r92" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r93" class="ident">rebalanceLocked</label>() {</code></span>
+<span class="codeline" id="line-527"><code>	<span class="keyword">if</span> <label for="r92" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> {</code></span>
+<span class="codeline" id="line-528"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-529"><code>	}</code></span>
+<span class="codeline" id="line-530"><code>	<span class="keyword">if</span> <label for="r92" class="ident">c</label>.<a href="#line-322" class="ident">shards</a> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-531"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-532"><code>	}</code></span>
+<span class="codeline" id="line-533"><code></code></span>
+<span class="codeline" id="line-534"><code>	<label for="r94" class="ident">liveShards</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r92" class="ident">c</label>.<a href="#line-322" class="ident">shards</a>.<a href="#line-334" class="ident">m</a>))</code></span>
+<span class="codeline" id="line-535"><code></code></span>
+<span class="codeline" id="line-536"><code>	<span class="keyword">for</span> <label for="r95" class="ident">name</label>, <label for="r96" class="ident">shard</label> := <span class="keyword">range</span> <label for="r92" class="ident">c</label>.<a href="#line-322" class="ident">shards</a>.<a href="#line-334" class="ident">m</a> {</code></span>
+<span class="codeline" id="line-537"><code>		<span class="keyword">if</span> <label for="r96" class="ident">shard</label>.<a href="#line-296" class="ident">IsUp</a>() {</code></span>
+<span class="codeline" id="line-538"><code>			<label for="r94" class="ident">liveShards</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r94" class="ident">liveShards</label>, <label for="r95" class="ident">name</label>)</code></span>
+<span class="codeline" id="line-539"><code>		}</code></span>
+<span class="codeline" id="line-540"><code>	}</code></span>
+<span class="codeline" id="line-541"><code></code></span>
+<span class="codeline" id="line-542"><code>	<label for="r92" class="ident">c</label>.<a href="#line-324" class="ident">hash</a> = <label for="r92" class="ident">c</label>.<a href="#line-319" class="ident">opt</a>.<a href="#line-78" class="ident">NewConsistentHash</a>(<label for="r94" class="ident">liveShards</label>)</code></span>
+<span class="codeline" id="line-543"><code>	<label for="r92" class="ident">c</label>.<a href="#line-325" class="ident">numShard</a> = <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r94" class="ident">liveShards</label>)</code></span>
+<span class="codeline" id="line-544"><code>}</code></span>
+<span class="codeline" id="line-545"><code></code></span>
+<span class="codeline" id="line-546"><code><span class="keyword">func</span> (<label for="r97" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r98" class="ident">Len</label>() <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-547"><code>	<label for="r97" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-67" class="ident">RLock</a>()</code></span>
+<span class="codeline" id="line-548"><code>	<span class="keyword">defer</span> <label for="r97" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-114" class="ident">RUnlock</a>()</code></span>
+<span class="codeline" id="line-549"><code></code></span>
+<span class="codeline" id="line-550"><code>	<span class="keyword">return</span> <label for="r97" class="ident">c</label>.<a href="#line-325" class="ident">numShard</a></code></span>
+<span class="codeline" id="line-551"><code>}</code></span>
+<span class="codeline" id="line-552"><code></code></span>
+<span class="codeline" id="line-553"><code><span class="keyword">func</span> (<label for="r99" class="ident">c</label> *<a href="#line-318" class="ident">ringSharding</a>) <label for="r100" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.ringSharding^21d29.html#name-.Close" class="ident">Close</a></label>() <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-554"><code>	<label for="r99" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-144" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-555"><code>	<span class="keyword">defer</span> <label for="r99" class="ident">c</label>.<a href="#line-321" class="ident">mu</a>.<a href="../../../../sync/rwmutex.go.html#line-201" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-556"><code></code></span>
+<span class="codeline" id="line-557"><code>	<span class="keyword">if</span> <label for="r99" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> {</code></span>
+<span class="codeline" id="line-558"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-559"><code>	}</code></span>
+<span class="codeline" id="line-560"><code>	<label for="r99" class="ident">c</label>.<a href="#line-323" class="ident">closed</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-561"><code></code></span>
+<span class="codeline" id="line-562"><code>	<span class="keyword">var</span> <label for="r101" class="ident">firstErr</label> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-563"><code></code></span>
+<span class="codeline" id="line-564"><code>	<span class="keyword">for</span> <label for="r102" class="ident">_</label>, <label for="r103" class="ident">shard</label> := <span class="keyword">range</span> <label for="r99" class="ident">c</label>.<a href="#line-322" class="ident">shards</a>.<a href="#line-335" class="ident">list</a> {</code></span>
+<span class="codeline" id="line-565"><code>		<span class="keyword">if</span> <label for="r104" class="ident">err</label> := <label for="r103" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-943" class="ident">Close</a>(); <label for="r104" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> &amp;&amp; <label for="r101" class="ident">firstErr</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-566"><code>			<label for="r101" class="ident">firstErr</label> = <label for="r104" class="ident">err</label></code></span>
+<span class="codeline" id="line-567"><code>		}</code></span>
+<span class="codeline" id="line-568"><code>	}</code></span>
+<span class="codeline" id="line-569"><code></code></span>
+<span class="codeline" id="line-570"><code>	<label for="r99" class="ident">c</label>.<a href="#line-324" class="ident">hash</a> = <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-571"><code>	<label for="r99" class="ident">c</label>.<a href="#line-322" class="ident">shards</a> = <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-572"><code>	<label for="r99" class="ident">c</label>.<a href="#line-325" class="ident">numShard</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-573"><code></code></span>
+<span class="codeline" id="line-574"><code>	<span class="keyword">return</span> <label for="r101" class="ident">firstErr</label></code></span>
+<span class="codeline" id="line-575"><code>}</code></span>
+<span class="codeline" id="line-576"><code></code></span>
+<span class="codeline" id="line-577"><code><span class="comment">//------------------------------------------------------------------------------</span></code></span>
+<span class="codeline" id="line-578"><code></code></span>
+<span class="codeline" id="line-579"><code><span class="comment">// Ring is a Redis client that uses consistent hashing to distribute</span></code></span>
+<span class="codeline" id="line-580"><code><span class="comment">// keys across multiple Redis servers (shards). It's safe for</span></code></span>
+<span class="codeline" id="line-581"><code><span class="comment">// concurrent use by multiple goroutines.</span></code></span>
+<span class="codeline" id="line-582"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-583"><code><span class="comment">// Ring monitors the state of each shard and removes dead shards from</span></code></span>
+<span class="codeline" id="line-584"><code><span class="comment">// the ring. When a shard comes online it is added back to the ring. This</span></code></span>
+<span class="codeline" id="line-585"><code><span class="comment">// gives you maximum availability and partition tolerance, but no</span></code></span>
+<span class="codeline" id="line-586"><code><span class="comment">// consistency between different shards or even clients. Each client</span></code></span>
+<span class="codeline" id="line-587"><code><span class="comment">// uses shards that are available to the client and does not do any</span></code></span>
+<span class="codeline" id="line-588"><code><span class="comment">// coordination when shard state is changed.</span></code></span>
+<span class="codeline" id="line-589"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-590"><code><span class="comment">// Ring should be used when you need multiple Redis servers for caching</span></code></span>
+<span class="codeline" id="line-591"><code><span class="comment">// and can tolerate losing data when one of the servers dies.</span></code></span>
+<span class="codeline" id="line-592"><code><span class="comment">// Otherwise you should use Redis Cluster.</span></code></span>
+<span class="codeline" id="line-593"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-Ring" class="ident">Ring</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-594"><code>	<a href="commands.go.html#line-269" class="ident">cmdable</a></code></span>
+<span class="codeline" id="line-595"><code>	<a href="redis.go.html#line-58" class="ident">hooksMixin</a></code></span>
+<span class="codeline" id="line-596"><code></code></span>
+<span class="codeline" id="line-597"><code>	opt               *<a href="#line-55" class="ident">RingOptions</a></code></span>
+<span class="codeline" id="line-598"><code>	sharding          *<a href="#line-318" class="ident">ringSharding</a></code></span>
+<span class="codeline" id="line-599"><code>	cmdsInfoCache     *<a href="command.go.html#line-4614" class="ident">cmdsInfoCache</a></code></span>
+<span class="codeline" id="line-600"><code>	heartbeatCancelFn <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-231" class="ident">CancelFunc</a></code></span>
+<span class="codeline" id="line-601"><code>}</code></span>
+<span class="codeline" id="line-602"><code></code></span>
+<span class="codeline" id="line-603"><code><span class="keyword">func</span> <label for="r105" class="ident"><a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-NewRing" class="ident">NewRing</a></label>(<label for="r106" class="ident">opt</label> *<a href="#line-55" class="ident">RingOptions</a>) *<a href="#line-593" class="ident">Ring</a> {</code></span>
+<span class="codeline" id="line-604"><code>	<span class="keyword">if</span> <label for="r106" class="ident">opt</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-605"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"redis: NewRing nil options"</span>)</code></span>
+<span class="codeline" id="line-606"><code>	}</code></span>
+<span class="codeline" id="line-607"><code>	<label for="r106" class="ident">opt</label>.<a href="#line-171" class="ident">init</a>()</code></span>
+<span class="codeline" id="line-608"><code></code></span>
+<span class="codeline" id="line-609"><code>	<label for="r107" class="ident">hbCtx</label>, <label for="r108" class="ident">hbCancel</label> := <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-240" class="ident">WithCancel</a>(<a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-215" class="ident">Background</a>())</code></span>
+<span class="codeline" id="line-610"><code></code></span>
+<span class="codeline" id="line-611"><code>	<label for="r109" class="ident">ring</label> := <a href="#line-593" class="ident">Ring</a>{</code></span>
+<span class="codeline" id="line-612"><code>		<a href="#line-597" class="ident">opt</a>:               <label for="r106" class="ident">opt</label>,</code></span>
+<span class="codeline" id="line-613"><code>		<a href="#line-598" class="ident">sharding</a>:          <a href="#line-338" class="ident">newRingSharding</a>(<label for="r106" class="ident">opt</label>),</code></span>
+<span class="codeline" id="line-614"><code>		<a href="#line-600" class="ident">heartbeatCancelFn</a>: <label for="r108" class="ident">hbCancel</label>,</code></span>
+<span class="codeline" id="line-615"><code>	}</code></span>
+<span class="codeline" id="line-616"><code></code></span>
+<span class="codeline" id="line-617"><code>	<label for="r109" class="ident">ring</label>.<a href="#line-599" class="ident">cmdsInfoCache</a> = <a href="command.go.html#line-4622" class="ident">newCmdsInfoCache</a>(<label for="r109" class="ident">ring</label>.<a href="#line-757" class="ident">cmdsInfo</a>)</code></span>
+<span class="codeline" id="line-618"><code>	<label for="r109" class="ident">ring</label>.<a href="#line-594" class="ident">cmdable</a> = <label for="r109" class="ident">ring</label>.<a href="#line-639" class="ident">Process</a></code></span>
+<span class="codeline" id="line-619"><code></code></span>
+<span class="codeline" id="line-620"><code>	<label for="r109" class="ident">ring</label>.<a href="redis.go.html#line-66" class="ident">initHooks</a>(<a href="redis.go.html#line-72" class="ident">hooks</a>{</code></span>
+<span class="codeline" id="line-621"><code>		<a href="redis.go.html#line-74" class="ident">process</a>: <label for="r109" class="ident">ring</label>.<a href="#line-785" class="ident">process</a>,</code></span>
+<span class="codeline" id="line-622"><code>		<a href="redis.go.html#line-75" class="ident">pipeline</a>: <span class="keyword">func</span>(<label for="r110" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r111" class="ident">cmds</label> []<a href="command.go.html#line-185" class="ident">Cmder</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-623"><code>			<span class="keyword">return</span> <label for="r109" class="ident">ring</label>.<a href="#line-834" class="ident">generalProcessPipeline</a>(<label for="r110" class="ident">ctx</label>, <label for="r111" class="ident">cmds</label>, <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a>)</code></span>
+<span class="codeline" id="line-624"><code>		},</code></span>
+<span class="codeline" id="line-625"><code>		<a href="redis.go.html#line-76" class="ident">txPipeline</a>: <span class="keyword">func</span>(<label for="r112" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r113" class="ident">cmds</label> []<a href="command.go.html#line-185" class="ident">Cmder</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-626"><code>			<span class="keyword">return</span> <label for="r109" class="ident">ring</label>.<a href="#line-834" class="ident">generalProcessPipeline</a>(<label for="r112" class="ident">ctx</label>, <label for="r113" class="ident">cmds</label>, <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a>)</code></span>
+<span class="codeline" id="line-627"><code>		},</code></span>
+<span class="codeline" id="line-628"><code>	})</code></span>
+<span class="codeline" id="line-629"><code></code></span>
+<span class="codeline" id="line-630"><code>	<span class="keyword">go</span> <label for="r109" class="ident">ring</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-495" class="ident">Heartbeat</a>(<label for="r107" class="ident">hbCtx</label>, <label for="r106" class="ident">opt</label>.<a href="#line-67" class="ident">HeartbeatFrequency</a>)</code></span>
+<span class="codeline" id="line-631"><code></code></span>
+<span class="codeline" id="line-632"><code>	<span class="keyword">return</span> &amp;<label for="r109" class="ident">ring</label></code></span>
+<span class="codeline" id="line-633"><code>}</code></span>
+<span class="codeline" id="line-634"><code></code></span>
+<span class="codeline" id="line-635"><code><span class="keyword">func</span> (<label for="r114" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r115" class="ident">SetAddrs</label>(<label for="r116" class="ident">addrs</label> <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-636"><code>	<label for="r114" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-356" class="ident">SetAddrs</a>(<label for="r116" class="ident">addrs</label>)</code></span>
+<span class="codeline" id="line-637"><code>}</code></span>
+<span class="codeline" id="line-638"><code></code></span>
+<span class="codeline" id="line-639"><code><span class="keyword">func</span> (<label for="r117" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r118" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.Process" class="ident">Process</a></label>(<label for="r119" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r120" class="ident">cmd</label> <a href="command.go.html#line-185" class="ident">Cmder</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-640"><code>	<label for="r121" class="ident">err</label> := <label for="r117" class="ident">c</label>.<a href="redis.go.html#line-204" class="ident">processHook</a>(<label for="r119" class="ident">ctx</label>, <label for="r120" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-641"><code>	<label for="r120" class="ident">cmd</label>.<a href="command.go.html#line-214" class="ident">SetErr</a>(<label for="r121" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-642"><code>	<span class="keyword">return</span> <label for="r121" class="ident">err</label></code></span>
+<span class="codeline" id="line-643"><code>}</code></span>
+<span class="codeline" id="line-644"><code></code></span>
+<span class="codeline" id="line-645"><code><span class="comment">// Options returns read-only Options that were used to create the client.</span></code></span>
+<span class="codeline" id="line-646"><code><span class="keyword">func</span> (<label for="r122" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r123" class="ident">Options</label>() *<a href="#line-55" class="ident">RingOptions</a> {</code></span>
+<span class="codeline" id="line-647"><code>	<span class="keyword">return</span> <label for="r122" class="ident">c</label>.<a href="#line-597" class="ident">opt</a></code></span>
+<span class="codeline" id="line-648"><code>}</code></span>
+<span class="codeline" id="line-649"><code></code></span>
+<span class="codeline" id="line-650"><code><span class="keyword">func</span> (<label for="r124" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r125" class="ident">retryBackoff</label>(<label for="r126" class="ident">attempt</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../../pkg/time.html" class="ident i8">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a> {</code></span>
+<span class="codeline" id="line-651"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal.html" class="ident i12">internal</a>.<a href="internal/internal.go.html#line-9" class="ident">RetryBackoff</a>(<label for="r126" class="ident">attempt</label>, <label for="r124" class="ident">c</label>.<a href="#line-597" class="ident">opt</a>.<a href="#line-108" class="ident">MinRetryBackoff</a>, <label for="r124" class="ident">c</label>.<a href="#line-597" class="ident">opt</a>.<a href="#line-109" class="ident">MaxRetryBackoff</a>)</code></span>
+<span class="codeline" id="line-652"><code>}</code></span>
+<span class="codeline" id="line-653"><code></code></span>
+<span class="codeline" id="line-654"><code><span class="comment">// PoolStats returns accumulated connection pool stats.</span></code></span>
+<span class="codeline" id="line-655"><code><span class="keyword">func</span> (<label for="r127" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r128" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.PoolStats" class="ident">PoolStats</a></label>() *<a href="redis.go.html#line-1352" class="ident">PoolStats</a> {</code></span>
+<span class="codeline" id="line-656"><code>	<span class="comment">// note: `c.List()` return a shadow copy of `[]*ringShard`.</span></code></span>
+<span class="codeline" id="line-657"><code>	<label for="r129" class="ident">shards</label> := <label for="r127" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-428" class="ident">List</a>()</code></span>
+<span class="codeline" id="line-658"><code>	<span class="keyword">var</span> <label for="r130" class="ident">acc</label> <a href="redis.go.html#line-1352" class="ident">PoolStats</a></code></span>
+<span class="codeline" id="line-659"><code>	<span class="keyword">for</span> <label for="r131" class="ident">_</label>, <label for="r132" class="ident">shard</label> := <span class="keyword">range</span> <label for="r129" class="ident">shards</label> {</code></span>
+<span class="codeline" id="line-660"><code>		<label for="r133" class="ident">s</label> := <label for="r132" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-221" class="ident">connPool</a>.<a href="internal/pool/pool.go.html#line-253" class="ident">Stats</a>()</code></span>
+<span class="codeline" id="line-661"><code>		<label for="r130" class="ident">acc</label>.<a href="internal/pool/pool.go.html#line-228" class="ident">Hits</a> += <label for="r133" class="ident">s</label>.<a href="internal/pool/pool.go.html#line-228" class="ident">Hits</a></code></span>
+<span class="codeline" id="line-662"><code>		<label for="r130" class="ident">acc</label>.<a href="internal/pool/pool.go.html#line-229" class="ident">Misses</a> += <label for="r133" class="ident">s</label>.<a href="internal/pool/pool.go.html#line-229" class="ident">Misses</a></code></span>
+<span class="codeline" id="line-663"><code>		<label for="r130" class="ident">acc</label>.<a href="internal/pool/pool.go.html#line-230" class="ident">Timeouts</a> += <label for="r133" class="ident">s</label>.<a href="internal/pool/pool.go.html#line-230" class="ident">Timeouts</a></code></span>
+<span class="codeline" id="line-664"><code>		<label for="r130" class="ident">acc</label>.<a href="internal/pool/pool.go.html#line-235" class="ident">TotalConns</a> += <label for="r133" class="ident">s</label>.<a href="internal/pool/pool.go.html#line-235" class="ident">TotalConns</a></code></span>
+<span class="codeline" id="line-665"><code>		<label for="r130" class="ident">acc</label>.<a href="internal/pool/pool.go.html#line-236" class="ident">IdleConns</a> += <label for="r133" class="ident">s</label>.<a href="internal/pool/pool.go.html#line-236" class="ident">IdleConns</a></code></span>
+<span class="codeline" id="line-666"><code>	}</code></span>
+<span class="codeline" id="line-667"><code>	<span class="keyword">return</span> &amp;<label for="r130" class="ident">acc</label></code></span>
+<span class="codeline" id="line-668"><code>}</code></span>
+<span class="codeline" id="line-669"><code></code></span>
+<span class="codeline" id="line-670"><code><span class="comment">// Len returns the current number of shards in the ring.</span></code></span>
+<span class="codeline" id="line-671"><code><span class="keyword">func</span> (<label for="r134" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r135" class="ident">Len</label>() <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-672"><code>	<span class="keyword">return</span> <label for="r134" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-546" class="ident">Len</a>()</code></span>
+<span class="codeline" id="line-673"><code>}</code></span>
+<span class="codeline" id="line-674"><code></code></span>
+<span class="codeline" id="line-675"><code><span class="comment">// Subscribe subscribes the client to the specified channels.</span></code></span>
+<span class="codeline" id="line-676"><code><span class="keyword">func</span> (<label for="r136" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r137" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.Subscribe" class="ident">Subscribe</a></label>(<label for="r138" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r139" class="ident">channels</label> ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="pubsub.go.html#line-23" class="ident">PubSub</a> {</code></span>
+<span class="codeline" id="line-677"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r139" class="ident">channels</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-678"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"at least one channel is required"</span>)</code></span>
+<span class="codeline" id="line-679"><code>	}</code></span>
+<span class="codeline" id="line-680"><code></code></span>
+<span class="codeline" id="line-681"><code>	<label for="r140" class="ident">shard</label>, <label for="r141" class="ident">err</label> := <label for="r136" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-453" class="ident">GetByKey</a>(<label for="r139" class="ident">channels</label>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-682"><code>	<span class="keyword">if</span> <label for="r141" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-683"><code>		<span class="comment">// TODO: return PubSub with sticky error</span></code></span>
+<span class="codeline" id="line-684"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r141" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-685"><code>	}</code></span>
+<span class="codeline" id="line-686"><code>	<span class="keyword">return</span> <label for="r140" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-1446" class="ident">Subscribe</a>(<label for="r138" class="ident">ctx</label>, <label for="r139" class="ident">channels</label>...)</code></span>
+<span class="codeline" id="line-687"><code>}</code></span>
+<span class="codeline" id="line-688"><code></code></span>
+<span class="codeline" id="line-689"><code><span class="comment">// PSubscribe subscribes the client to the given patterns.</span></code></span>
+<span class="codeline" id="line-690"><code><span class="keyword">func</span> (<label for="r142" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r143" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.PSubscribe" class="ident">PSubscribe</a></label>(<label for="r144" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r145" class="ident">channels</label> ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="pubsub.go.html#line-23" class="ident">PubSub</a> {</code></span>
+<span class="codeline" id="line-691"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r145" class="ident">channels</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-692"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"at least one channel is required"</span>)</code></span>
+<span class="codeline" id="line-693"><code>	}</code></span>
+<span class="codeline" id="line-694"><code></code></span>
+<span class="codeline" id="line-695"><code>	<label for="r146" class="ident">shard</label>, <label for="r147" class="ident">err</label> := <label for="r142" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-453" class="ident">GetByKey</a>(<label for="r145" class="ident">channels</label>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-696"><code>	<span class="keyword">if</span> <label for="r147" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-697"><code>		<span class="comment">// TODO: return PubSub with sticky error</span></code></span>
+<span class="codeline" id="line-698"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r147" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-699"><code>	}</code></span>
+<span class="codeline" id="line-700"><code>	<span class="keyword">return</span> <label for="r146" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-1456" class="ident">PSubscribe</a>(<label for="r144" class="ident">ctx</label>, <label for="r145" class="ident">channels</label>...)</code></span>
+<span class="codeline" id="line-701"><code>}</code></span>
+<span class="codeline" id="line-702"><code></code></span>
+<span class="codeline" id="line-703"><code><span class="comment">// SSubscribe Subscribes the client to the specified shard channels.</span></code></span>
+<span class="codeline" id="line-704"><code><span class="keyword">func</span> (<label for="r148" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r149" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.SSubscribe" class="ident">SSubscribe</a></label>(<label for="r150" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r151" class="ident">channels</label> ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="pubsub.go.html#line-23" class="ident">PubSub</a> {</code></span>
+<span class="codeline" id="line-705"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r151" class="ident">channels</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-706"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<span class="lit-string">"at least one channel is required"</span>)</code></span>
+<span class="codeline" id="line-707"><code>	}</code></span>
+<span class="codeline" id="line-708"><code>	<label for="r152" class="ident">shard</label>, <label for="r153" class="ident">err</label> := <label for="r148" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-453" class="ident">GetByKey</a>(<label for="r151" class="ident">channels</label>[<span class="lit-number">0</span>])</code></span>
+<span class="codeline" id="line-709"><code>	<span class="keyword">if</span> <label for="r153" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-710"><code>		<span class="comment">// TODO: return PubSub with sticky error</span></code></span>
+<span class="codeline" id="line-711"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r153" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-712"><code>	}</code></span>
+<span class="codeline" id="line-713"><code>	<span class="keyword">return</span> <label for="r152" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-1466" class="ident">SSubscribe</a>(<label for="r150" class="ident">ctx</label>, <label for="r151" class="ident">channels</label>...)</code></span>
+<span class="codeline" id="line-714"><code>}</code></span>
+<span class="codeline" id="line-715"><code></code></span>
+<span class="codeline" id="line-716"><code><span class="keyword">func</span> (<label for="r154" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r155" class="ident">OnNewNode</label>(<label for="r156" class="ident">fn</label> <span class="keyword">func</span>(<label for="r157" class="ident">rdb</label> *<a href="redis.go.html#line-1193" class="ident">Client</a>)) {</code></span>
+<span class="codeline" id="line-717"><code>	<label for="r154" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-347" class="ident">OnNewNode</a>(<label for="r156" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-718"><code>}</code></span>
+<span class="codeline" id="line-719"><code></code></span>
+<span class="codeline" id="line-720"><code><span class="comment">// ForEachShard concurrently calls the fn on each live shard in the ring.</span></code></span>
+<span class="codeline" id="line-721"><code><span class="comment">// It returns the first error if any.</span></code></span>
+<span class="codeline" id="line-722"><code><span class="keyword">func</span> (<label for="r158" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r159" class="ident">ForEachShard</label>(</code></span>
+<span class="codeline" id="line-723"><code>	<label for="r160" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>,</code></span>
+<span class="codeline" id="line-724"><code>	<label for="r161" class="ident">fn</label> <span class="keyword">func</span>(<label for="r162" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r163" class="ident">client</label> *<a href="redis.go.html#line-1193" class="ident">Client</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>,</code></span>
+<span class="codeline" id="line-725"><code>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-726"><code>	<span class="comment">// note: `c.List()` return a shadow copy of `[]*ringShard`.</span></code></span>
+<span class="codeline" id="line-727"><code>	<label for="r164" class="ident">shards</label> := <label for="r158" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-428" class="ident">List</a>()</code></span>
+<span class="codeline" id="line-728"><code>	<span class="keyword">var</span> <label for="r165" class="ident">wg</label> <a href="../../../../../pkg/sync.html" class="ident i6">sync</a>.<a href="../../../../sync/waitgroup.go.html#line-48" class="ident">WaitGroup</a></code></span>
+<span class="codeline" id="line-729"><code>	<label for="r166" class="ident">errCh</label> := <a href="../../../../runtime/chan.go.html#line-75">make</a>(<span class="keyword">chan</span> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>, <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-730"><code>	<span class="keyword">for</span> <label for="r167" class="ident">_</label>, <label for="r168" class="ident">shard</label> := <span class="keyword">range</span> <label for="r164" class="ident">shards</label> {</code></span>
+<span class="codeline" id="line-731"><code>		<span class="keyword">if</span> <label for="r168" class="ident">shard</label>.<a href="#line-291" class="ident">IsDown</a>() {</code></span>
+<span class="codeline" id="line-732"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-733"><code>		}</code></span>
+<span class="codeline" id="line-734"><code></code></span>
+<span class="codeline" id="line-735"><code>		<label for="r165" class="ident">wg</label>.<a href="../../../../sync/waitgroup.go.html#line-77" class="ident">Add</a>(<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-736"><code>		<span class="keyword">go</span> <span class="keyword">func</span>(<label for="r169" class="ident">shard</label> *<a href="#line-265" class="ident">ringShard</a>) {</code></span>
+<span class="codeline" id="line-737"><code>			<span class="keyword">defer</span> <label for="r165" class="ident">wg</label>.<a href="../../../../sync/waitgroup.go.html#line-155" class="ident">Done</a>()</code></span>
+<span class="codeline" id="line-738"><code>			<label for="r170" class="ident">err</label> := <label for="r161" class="ident">fn</label>(<label for="r160" class="ident">ctx</label>, <label for="r169" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>)</code></span>
+<span class="codeline" id="line-739"><code>			<span class="keyword">if</span> <label for="r170" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-740"><code>				<a href="../../../../runtime/chan.go.html#line-784"><span class="keyword">select</span></a> {</code></span>
+<span class="codeline" id="line-741"><code>				<span class="keyword">case</span> <label for="r166" class="ident">errCh</label> <a href="../../../../runtime/chan.go.html#line-176">&lt;-</a> <label for="r170" class="ident">err</label>:</code></span>
+<span class="codeline" id="line-742"><code>				<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-743"><code>				}</code></span>
+<span class="codeline" id="line-744"><code>			}</code></span>
+<span class="codeline" id="line-745"><code>		}(<label for="r168" class="ident">shard</label>)</code></span>
+<span class="codeline" id="line-746"><code>	}</code></span>
+<span class="codeline" id="line-747"><code>	<label for="r165" class="ident">wg</label>.<a href="../../../../sync/waitgroup.go.html#line-160" class="ident">Wait</a>()</code></span>
+<span class="codeline" id="line-748"><code></code></span>
+<span class="codeline" id="line-749"><code>	<a href="../../../../runtime/chan.go.html#line-804"><span class="keyword">select</span></a> {</code></span>
+<span class="codeline" id="line-750"><code>	<span class="keyword">case</span> <label for="r171" class="ident">err</label> := <a href="../../../../runtime/chan.go.html#line-508">&lt;-</a><label for="r166" class="ident">errCh</label>:</code></span>
+<span class="codeline" id="line-751"><code>		<span class="keyword">return</span> <label for="r171" class="ident">err</label></code></span>
+<span class="codeline" id="line-752"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-753"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-754"><code>	}</code></span>
+<span class="codeline" id="line-755"><code>}</code></span>
+<span class="codeline" id="line-756"><code></code></span>
+<span class="codeline" id="line-757"><code><span class="keyword">func</span> (<label for="r172" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r173" class="ident">cmdsInfo</label>(<label for="r174" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>) (<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>]*<a href="command.go.html#line-4401" class="ident">CommandInfo</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-758"><code>	<span class="comment">// note: `c.List()` return a shadow copy of `[]*ringShard`.</span></code></span>
+<span class="codeline" id="line-759"><code>	<label for="r175" class="ident">shards</label> := <label for="r172" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-428" class="ident">List</a>()</code></span>
+<span class="codeline" id="line-760"><code>	<span class="keyword">var</span> <label for="r176" class="ident">firstErr</label> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-761"><code>	<span class="keyword">for</span> <label for="r177" class="ident">_</label>, <label for="r178" class="ident">shard</label> := <span class="keyword">range</span> <label for="r175" class="ident">shards</label> {</code></span>
+<span class="codeline" id="line-762"><code>		<label for="r179" class="ident">cmdsInfo</label>, <label for="r180" class="ident">err</label> := <label for="r178" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="commands.go.html#line-376" class="ident">Command</a>(<label for="r174" class="ident">ctx</label>).<a href="command.go.html#line-4439" class="ident">Result</a>()</code></span>
+<span class="codeline" id="line-763"><code>		<span class="keyword">if</span> <label for="r180" class="ident">err</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-764"><code>			<span class="keyword">return</span> <label for="r179" class="ident">cmdsInfo</label>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-765"><code>		}</code></span>
+<span class="codeline" id="line-766"><code>		<span class="keyword">if</span> <label for="r176" class="ident">firstErr</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-767"><code>			<label for="r176" class="ident">firstErr</label> = <label for="r180" class="ident">err</label></code></span>
+<span class="codeline" id="line-768"><code>		}</code></span>
+<span class="codeline" id="line-769"><code>	}</code></span>
+<span class="codeline" id="line-770"><code>	<span class="keyword">if</span> <label for="r176" class="ident">firstErr</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-771"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="#line-25" class="ident">errRingShardsDown</a></code></span>
+<span class="codeline" id="line-772"><code>	}</code></span>
+<span class="codeline" id="line-773"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r176" class="ident">firstErr</label></code></span>
+<span class="codeline" id="line-774"><code>}</code></span>
+<span class="codeline" id="line-775"><code></code></span>
+<span class="codeline" id="line-776"><code><span class="keyword">func</span> (<label for="r181" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r182" class="ident">cmdShard</label>(<label for="r183" class="ident">cmd</label> <a href="command.go.html#line-185" class="ident">Cmder</a>) (*<a href="#line-265" class="ident">ringShard</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-777"><code>	<label for="r184" class="ident">pos</label> := <a href="command.go.html#line-254" class="ident">cmdFirstKeyPos</a>(<label for="r183" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-778"><code>	<span class="keyword">if</span> <label for="r184" class="ident">pos</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-779"><code>		<span class="keyword">return</span> <label for="r181" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-490" class="ident">Random</a>()</code></span>
+<span class="codeline" id="line-780"><code>	}</code></span>
+<span class="codeline" id="line-781"><code>	<label for="r185" class="ident">firstKey</label> := <label for="r183" class="ident">cmd</label>.<a href="command.go.html#line-205" class="ident">stringArg</a>(<label for="r184" class="ident">pos</label>)</code></span>
+<span class="codeline" id="line-782"><code>	<span class="keyword">return</span> <label for="r181" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-453" class="ident">GetByKey</a>(<label for="r185" class="ident">firstKey</label>)</code></span>
+<span class="codeline" id="line-783"><code>}</code></span>
+<span class="codeline" id="line-784"><code></code></span>
+<span class="codeline" id="line-785"><code><span class="keyword">func</span> (<label for="r186" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r187" class="ident">process</label>(<label for="r188" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r189" class="ident">cmd</label> <a href="command.go.html#line-185" class="ident">Cmder</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-786"><code>	<span class="keyword">var</span> <label for="r190" class="ident">lastErr</label> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-787"><code>	<span class="keyword">for</span> <label for="r191" class="ident">attempt</label> := <span class="lit-number">0</span>; <label for="r191" class="ident">attempt</label> &lt;= <label for="r186" class="ident">c</label>.<a href="#line-597" class="ident">opt</a>.<a href="#line-107" class="ident">MaxRetries</a>; <label for="r191" class="ident">attempt</label>++ {</code></span>
+<span class="codeline" id="line-788"><code>		<span class="keyword">if</span> <label for="r191" class="ident">attempt</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-789"><code>			<span class="keyword">if</span> <label for="r192" class="ident">err</label> := <a href="../../../../../pkg/github.com/redis/go-redis/v9/internal.html" class="ident i12">internal</a>.<a href="internal/util.go.html#line-13" class="ident">Sleep</a>(<label for="r188" class="ident">ctx</label>, <label for="r186" class="ident">c</label>.<a href="#line-650" class="ident">retryBackoff</a>(<label for="r191" class="ident">attempt</label>)); <label for="r192" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-790"><code>				<span class="keyword">return</span> <label for="r192" class="ident">err</label></code></span>
+<span class="codeline" id="line-791"><code>			}</code></span>
+<span class="codeline" id="line-792"><code>		}</code></span>
+<span class="codeline" id="line-793"><code></code></span>
+<span class="codeline" id="line-794"><code>		<label for="r193" class="ident">shard</label>, <label for="r194" class="ident">err</label> := <label for="r186" class="ident">c</label>.<a href="#line-776" class="ident">cmdShard</a>(<label for="r189" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-795"><code>		<span class="keyword">if</span> <label for="r194" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-796"><code>			<span class="keyword">return</span> <label for="r194" class="ident">err</label></code></span>
+<span class="codeline" id="line-797"><code>		}</code></span>
+<span class="codeline" id="line-798"><code></code></span>
+<span class="codeline" id="line-799"><code>		<label for="r190" class="ident">lastErr</label> = <label for="r193" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-1292" class="ident">Process</a>(<label for="r188" class="ident">ctx</label>, <label for="r189" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-800"><code>		<span class="keyword">if</span> <label for="r190" class="ident">lastErr</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> || !<a href="error.go.html#line-79" class="ident">shouldRetry</a>(<label for="r190" class="ident">lastErr</label>, <label for="r189" class="ident">cmd</label>.<a href="command.go.html#line-211" class="ident">readTimeout</a>() == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>) {</code></span>
+<span class="codeline" id="line-801"><code>			<span class="keyword">return</span> <label for="r190" class="ident">lastErr</label></code></span>
+<span class="codeline" id="line-802"><code>		}</code></span>
+<span class="codeline" id="line-803"><code>	}</code></span>
+<span class="codeline" id="line-804"><code>	<span class="keyword">return</span> <label for="r190" class="ident">lastErr</label></code></span>
+<span class="codeline" id="line-805"><code>}</code></span>
+<span class="codeline" id="line-806"><code></code></span>
+<span class="codeline" id="line-807"><code><span class="keyword">func</span> (<label for="r195" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r196" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.Pipelined" class="ident">Pipelined</a></label>(<label for="r197" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r198" class="ident">fn</label> <span class="keyword">func</span>(<a href="pipeline.go.html#line-23" class="ident">Pipeliner</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) ([]<a href="command.go.html#line-185" class="ident">Cmder</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-808"><code>	<span class="keyword">return</span> <label for="r195" class="ident">c</label>.<a href="#line-811" class="ident">Pipeline</a>().<a href="commands.go.html#line-175" class="ident">Pipelined</a>(<label for="r197" class="ident">ctx</label>, <label for="r198" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-809"><code>}</code></span>
+<span class="codeline" id="line-810"><code></code></span>
+<span class="codeline" id="line-811"><code><span class="keyword">func</span> (<label for="r199" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r200" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.Pipeline" class="ident">Pipeline</a></label>() <a href="pipeline.go.html#line-23" class="ident">Pipeliner</a> {</code></span>
+<span class="codeline" id="line-812"><code>	<label for="r201" class="ident">pipe</label> := <a href="pipeline.go.html#line-54" class="ident">Pipeline</a>{</code></span>
+<span class="codeline" id="line-813"><code>		<a href="pipeline.go.html#line-58" class="ident">exec</a>: <a href="pipeline.go.html#line-8" class="ident">pipelineExecer</a>(<label for="r199" class="ident">c</label>.<a href="redis.go.html#line-208" class="ident">processPipelineHook</a>),</code></span>
+<span class="codeline" id="line-814"><code>	}</code></span>
+<span class="codeline" id="line-815"><code>	<label for="r201" class="ident">pipe</label>.<a href="pipeline.go.html#line-62" class="ident">init</a>()</code></span>
+<span class="codeline" id="line-816"><code>	<span class="keyword">return</span> &amp;<label for="r201" class="ident">pipe</label></code></span>
+<span class="codeline" id="line-817"><code>}</code></span>
+<span class="codeline" id="line-818"><code></code></span>
+<span class="codeline" id="line-819"><code><span class="keyword">func</span> (<label for="r202" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r203" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.TxPipelined" class="ident">TxPipelined</a></label>(<label for="r204" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r205" class="ident">fn</label> <span class="keyword">func</span>(<a href="pipeline.go.html#line-23" class="ident">Pipeliner</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) ([]<a href="command.go.html#line-185" class="ident">Cmder</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-820"><code>	<span class="keyword">return</span> <label for="r202" class="ident">c</label>.<a href="#line-823" class="ident">TxPipeline</a>().<a href="commands.go.html#line-175" class="ident">Pipelined</a>(<label for="r204" class="ident">ctx</label>, <label for="r205" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-821"><code>}</code></span>
+<span class="codeline" id="line-822"><code></code></span>
+<span class="codeline" id="line-823"><code><span class="keyword">func</span> (<label for="r206" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r207" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.TxPipeline" class="ident">TxPipeline</a></label>() <a href="pipeline.go.html#line-23" class="ident">Pipeliner</a> {</code></span>
+<span class="codeline" id="line-824"><code>	<label for="r208" class="ident">pipe</label> := <a href="pipeline.go.html#line-54" class="ident">Pipeline</a>{</code></span>
+<span class="codeline" id="line-825"><code>		<a href="pipeline.go.html#line-58" class="ident">exec</a>: <span class="keyword">func</span>(<label for="r209" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r210" class="ident">cmds</label> []<a href="command.go.html#line-185" class="ident">Cmder</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-826"><code>			<label for="r210" class="ident">cmds</label> = <a href="tx.go.html#line-142" class="ident">wrapMultiExec</a>(<label for="r209" class="ident">ctx</label>, <label for="r210" class="ident">cmds</label>)</code></span>
+<span class="codeline" id="line-827"><code>			<span class="keyword">return</span> <label for="r206" class="ident">c</label>.<a href="redis.go.html#line-212" class="ident">processTxPipelineHook</a>(<label for="r209" class="ident">ctx</label>, <label for="r210" class="ident">cmds</label>)</code></span>
+<span class="codeline" id="line-828"><code>		},</code></span>
+<span class="codeline" id="line-829"><code>	}</code></span>
+<span class="codeline" id="line-830"><code>	<label for="r208" class="ident">pipe</label>.<a href="pipeline.go.html#line-62" class="ident">init</a>()</code></span>
+<span class="codeline" id="line-831"><code>	<span class="keyword">return</span> &amp;<label for="r208" class="ident">pipe</label></code></span>
+<span class="codeline" id="line-832"><code>}</code></span>
+<span class="codeline" id="line-833"><code></code></span>
+<span class="codeline" id="line-834"><code><span class="keyword">func</span> (<label for="r211" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r212" class="ident">generalProcessPipeline</label>(</code></span>
+<span class="codeline" id="line-835"><code>	<label for="r213" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r214" class="ident">cmds</label> []<a href="command.go.html#line-185" class="ident">Cmder</a>, <label for="r215" class="ident">tx</label> <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>,</code></span>
+<span class="codeline" id="line-836"><code>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-837"><code>	<span class="keyword">if</span> <label for="r215" class="ident">tx</label> {</code></span>
+<span class="codeline" id="line-838"><code>		<span class="comment">// Trim multi .. exec.</span></code></span>
+<span class="codeline" id="line-839"><code>		<label for="r214" class="ident">cmds</label> = <label for="r214" class="ident">cmds</label>[<span class="lit-number">1</span> : <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r214" class="ident">cmds</label>)-<span class="lit-number">1</span>]</code></span>
+<span class="codeline" id="line-840"><code>	}</code></span>
+<span class="codeline" id="line-841"><code></code></span>
+<span class="codeline" id="line-842"><code>	<label for="r216" class="ident">cmdsMap</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="command.go.html#line-185" class="ident">Cmder</a>)</code></span>
+<span class="codeline" id="line-843"><code></code></span>
+<span class="codeline" id="line-844"><code>	<span class="keyword">for</span> <label for="r217" class="ident">_</label>, <label for="r218" class="ident">cmd</label> := <span class="keyword">range</span> <label for="r214" class="ident">cmds</label> {</code></span>
+<span class="codeline" id="line-845"><code>		<label for="r219" class="ident">hash</label> := <label for="r218" class="ident">cmd</label>.<a href="command.go.html#line-205" class="ident">stringArg</a>(<a href="command.go.html#line-254" class="ident">cmdFirstKeyPos</a>(<label for="r218" class="ident">cmd</label>))</code></span>
+<span class="codeline" id="line-846"><code>		<span class="keyword">if</span> <label for="r219" class="ident">hash</label> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-847"><code>			<label for="r219" class="ident">hash</label> = <label for="r211" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-438" class="ident">Hash</a>(<label for="r219" class="ident">hash</label>)</code></span>
+<span class="codeline" id="line-848"><code>		}</code></span>
+<span class="codeline" id="line-849"><code>		<label for="r216" class="ident">cmdsMap</label>[<label for="r219" class="ident">hash</label>] = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r216" class="ident">cmdsMap</label>[<label for="r219" class="ident">hash</label>], <label for="r218" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-850"><code>	}</code></span>
+<span class="codeline" id="line-851"><code></code></span>
+<span class="codeline" id="line-852"><code>	<span class="keyword">var</span> <label for="r220" class="ident">wg</label> <a href="../../../../../pkg/sync.html" class="ident i6">sync</a>.<a href="../../../../sync/waitgroup.go.html#line-48" class="ident">WaitGroup</a></code></span>
+<span class="codeline" id="line-853"><code>	<label for="r221" class="ident">errs</label> := <a href="../../../../runtime/chan.go.html#line-75">make</a>(<span class="keyword">chan</span> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r216" class="ident">cmdsMap</label>))</code></span>
+<span class="codeline" id="line-854"><code></code></span>
+<span class="codeline" id="line-855"><code>	<span class="keyword">for</span> <label for="r222" class="ident">hash</label>, <label for="r223" class="ident">cmds</label> := <span class="keyword">range</span> <label for="r216" class="ident">cmdsMap</label> {</code></span>
+<span class="codeline" id="line-856"><code>		<label for="r220" class="ident">wg</label>.<a href="../../../../sync/waitgroup.go.html#line-77" class="ident">Add</a>(<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-857"><code>		<span class="keyword">go</span> <span class="keyword">func</span>(<label for="r224" class="ident">hash</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r225" class="ident">cmds</label> []<a href="command.go.html#line-185" class="ident">Cmder</a>) {</code></span>
+<span class="codeline" id="line-858"><code>			<span class="keyword">defer</span> <label for="r220" class="ident">wg</label>.<a href="../../../../sync/waitgroup.go.html#line-155" class="ident">Done</a>()</code></span>
+<span class="codeline" id="line-859"><code></code></span>
+<span class="codeline" id="line-860"><code>			<span class="comment">// TODO: retry?</span></code></span>
+<span class="codeline" id="line-861"><code>			<label for="r226" class="ident">shard</label>, <label for="r227" class="ident">err</label> := <label for="r211" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-474" class="ident">GetByName</a>(<label for="r224" class="ident">hash</label>)</code></span>
+<span class="codeline" id="line-862"><code>			<span class="keyword">if</span> <label for="r227" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-863"><code>				<a href="command.go.html#line-221" class="ident">setCmdsErr</a>(<label for="r225" class="ident">cmds</label>, <label for="r227" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-864"><code>				<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-865"><code>			}</code></span>
+<span class="codeline" id="line-866"><code></code></span>
+<span class="codeline" id="line-867"><code>			<label for="r228" class="ident">hook</label> := <label for="r226" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-208" class="ident">processPipelineHook</a></code></span>
+<span class="codeline" id="line-868"><code>			<span class="keyword">if</span> <label for="r215" class="ident">tx</label> {</code></span>
+<span class="codeline" id="line-869"><code>				<label for="r225" class="ident">cmds</label> = <a href="tx.go.html#line-142" class="ident">wrapMultiExec</a>(<label for="r213" class="ident">ctx</label>, <label for="r225" class="ident">cmds</label>)</code></span>
+<span class="codeline" id="line-870"><code>				<label for="r228" class="ident">hook</label> = <label for="r226" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>.<a href="redis.go.html#line-212" class="ident">processTxPipelineHook</a></code></span>
+<span class="codeline" id="line-871"><code>			}</code></span>
+<span class="codeline" id="line-872"><code></code></span>
+<span class="codeline" id="line-873"><code>			<span class="keyword">if</span> <label for="r227" class="ident">err</label> = <label for="r228" class="ident">hook</label>(<label for="r213" class="ident">ctx</label>, <label for="r225" class="ident">cmds</label>); <label for="r227" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-874"><code>				<label for="r221" class="ident">errs</label> &lt;- <label for="r227" class="ident">err</label></code></span>
+<span class="codeline" id="line-875"><code>			}</code></span>
+<span class="codeline" id="line-876"><code>		}(<label for="r222" class="ident">hash</label>, <label for="r223" class="ident">cmds</label>)</code></span>
+<span class="codeline" id="line-877"><code>	}</code></span>
+<span class="codeline" id="line-878"><code></code></span>
+<span class="codeline" id="line-879"><code>	<label for="r220" class="ident">wg</label>.<a href="../../../../sync/waitgroup.go.html#line-160" class="ident">Wait</a>()</code></span>
+<span class="codeline" id="line-880"><code>	<a href="../../../../../pkg/builtin.html#name-close" class="ident">close</a>(<label for="r221" class="ident">errs</label>)</code></span>
+<span class="codeline" id="line-881"><code></code></span>
+<span class="codeline" id="line-882"><code>	<span class="keyword">if</span> <label for="r229" class="ident">err</label> := &lt;-<label for="r221" class="ident">errs</label>; <label for="r229" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-883"><code>		<span class="keyword">return</span> <label for="r229" class="ident">err</label></code></span>
+<span class="codeline" id="line-884"><code>	}</code></span>
+<span class="codeline" id="line-885"><code>	<span class="keyword">return</span> <a href="command.go.html#line-229" class="ident">cmdsFirstErr</a>(<label for="r214" class="ident">cmds</label>)</code></span>
+<span class="codeline" id="line-886"><code>}</code></span>
+<span class="codeline" id="line-887"><code></code></span>
+<span class="codeline" id="line-888"><code><span class="keyword">func</span> (<label for="r230" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r231" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.Watch" class="ident">Watch</a></label>(<label for="r232" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r233" class="ident">fn</label> <span class="keyword">func</span>(*<a href="tx.go.html#line-18" class="ident">Tx</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>, <label for="r234" class="ident">keys</label> ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-889"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r234" class="ident">keys</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-890"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/fmt.html" class="ident i3">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"redis: Watch requires at least one key"</span>)</code></span>
+<span class="codeline" id="line-891"><code>	}</code></span>
+<span class="codeline" id="line-892"><code></code></span>
+<span class="codeline" id="line-893"><code>	<span class="keyword">var</span> <label for="r235" class="ident">shards</label> []*<a href="#line-265" class="ident">ringShard</a></code></span>
+<span class="codeline" id="line-894"><code></code></span>
+<span class="codeline" id="line-895"><code>	<span class="keyword">for</span> <label for="r236" class="ident">_</label>, <label for="r237" class="ident">key</label> := <span class="keyword">range</span> <label for="r234" class="ident">keys</label> {</code></span>
+<span class="codeline" id="line-896"><code>		<span class="keyword">if</span> <label for="r237" class="ident">key</label> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-897"><code>			<label for="r238" class="ident">shard</label>, <label for="r239" class="ident">err</label> := <label for="r230" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-453" class="ident">GetByKey</a>(<label for="r237" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-898"><code>			<span class="keyword">if</span> <label for="r239" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-899"><code>				<span class="keyword">return</span> <label for="r239" class="ident">err</label></code></span>
+<span class="codeline" id="line-900"><code>			}</code></span>
+<span class="codeline" id="line-901"><code></code></span>
+<span class="codeline" id="line-902"><code>			<label for="r235" class="ident">shards</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r235" class="ident">shards</label>, <label for="r238" class="ident">shard</label>)</code></span>
+<span class="codeline" id="line-903"><code>		}</code></span>
+<span class="codeline" id="line-904"><code>	}</code></span>
+<span class="codeline" id="line-905"><code></code></span>
+<span class="codeline" id="line-906"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r235" class="ident">shards</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-907"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/fmt.html" class="ident i3">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"redis: Watch requires at least one shard"</span>)</code></span>
+<span class="codeline" id="line-908"><code>	}</code></span>
+<span class="codeline" id="line-909"><code></code></span>
+<span class="codeline" id="line-910"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r235" class="ident">shards</label>) &gt; <span class="lit-number">1</span> {</code></span>
+<span class="codeline" id="line-911"><code>		<span class="keyword">for</span> <label for="r240" class="ident">_</label>, <label for="r241" class="ident">shard</label> := <span class="keyword">range</span> <label for="r235" class="ident">shards</label>[<span class="lit-number">1</span>:] {</code></span>
+<span class="codeline" id="line-912"><code>			<span class="keyword">if</span> <label for="r241" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a> != <label for="r235" class="ident">shards</label>[<span class="lit-number">0</span>].<a href="#line-266" class="ident">Client</a> {</code></span>
+<span class="codeline" id="line-913"><code>				<label for="r242" class="ident">err</label> := <a href="../../../../../pkg/fmt.html" class="ident i3">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"redis: Watch requires all keys to be in the same shard"</span>)</code></span>
+<span class="codeline" id="line-914"><code>				<span class="keyword">return</span> <label for="r242" class="ident">err</label></code></span>
+<span class="codeline" id="line-915"><code>			}</code></span>
+<span class="codeline" id="line-916"><code>		}</code></span>
+<span class="codeline" id="line-917"><code>	}</code></span>
+<span class="codeline" id="line-918"><code></code></span>
+<span class="codeline" id="line-919"><code>	<span class="keyword">return</span> <label for="r235" class="ident">shards</label>[<span class="lit-number">0</span>].<a href="#line-266" class="ident">Client</a>.<a href="tx.go.html#line-59" class="ident">Watch</a>(<label for="r232" class="ident">ctx</label>, <label for="r233" class="ident">fn</label>, <label for="r234" class="ident">keys</label>...)</code></span>
+<span class="codeline" id="line-920"><code>}</code></span>
+<span class="codeline" id="line-921"><code></code></span>
+<span class="codeline" id="line-922"><code><span class="comment">// Close closes the ring client, releasing any open resources.</span></code></span>
+<span class="codeline" id="line-923"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-924"><code><span class="comment">// It is rare to Close a Ring, as the Ring is meant to be long-lived</span></code></span>
+<span class="codeline" id="line-925"><code><span class="comment">// and shared between many goroutines.</span></code></span>
+<span class="codeline" id="line-926"><code><span class="keyword">func</span> (<label for="r243" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r244" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.Ring.html#name-.Close" class="ident">Close</a></label>() <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-927"><code>	<label for="r243" class="ident">c</label>.<a href="#line-600" class="ident">heartbeatCancelFn</a>()</code></span>
+<span class="codeline" id="line-928"><code></code></span>
+<span class="codeline" id="line-929"><code>	<span class="keyword">return</span> <label for="r243" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-553" class="ident">Close</a>()</code></span>
+<span class="codeline" id="line-930"><code>}</code></span>
+<span class="codeline" id="line-931"><code></code></span>
+<span class="codeline" id="line-932"><code><span class="comment">// GetShardClients returns a list of all shard clients in the ring.</span></code></span>
+<span class="codeline" id="line-933"><code><span class="comment">// This can be used to create dedicated connections (e.g., PubSub) for each shard.</span></code></span>
+<span class="codeline" id="line-934"><code><span class="keyword">func</span> (<label for="r245" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r246" class="ident">GetShardClients</label>() []*<a href="redis.go.html#line-1193" class="ident">Client</a> {</code></span>
+<span class="codeline" id="line-935"><code>	<label for="r247" class="ident">shards</label> := <label for="r245" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-428" class="ident">List</a>()</code></span>
+<span class="codeline" id="line-936"><code>	<label for="r248" class="ident">clients</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]*<a href="redis.go.html#line-1193" class="ident">Client</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r247" class="ident">shards</label>))</code></span>
+<span class="codeline" id="line-937"><code>	<span class="keyword">for</span> <label for="r249" class="ident">_</label>, <label for="r250" class="ident">shard</label> := <span class="keyword">range</span> <label for="r247" class="ident">shards</label> {</code></span>
+<span class="codeline" id="line-938"><code>		<span class="keyword">if</span> <label for="r250" class="ident">shard</label>.<a href="#line-296" class="ident">IsUp</a>() {</code></span>
+<span class="codeline" id="line-939"><code>			<label for="r248" class="ident">clients</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r248" class="ident">clients</label>, <label for="r250" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>)</code></span>
+<span class="codeline" id="line-940"><code>		}</code></span>
+<span class="codeline" id="line-941"><code>	}</code></span>
+<span class="codeline" id="line-942"><code>	<span class="keyword">return</span> <label for="r248" class="ident">clients</label></code></span>
+<span class="codeline" id="line-943"><code>}</code></span>
+<span class="codeline" id="line-944"><code></code></span>
+<span class="codeline" id="line-945"><code><span class="comment">// GetShardClientForKey returns the shard client that would handle the given key.</span></code></span>
+<span class="codeline" id="line-946"><code><span class="comment">// This can be used to determine which shard a particular key/channel would be routed to.</span></code></span>
+<span class="codeline" id="line-947"><code><span class="keyword">func</span> (<label for="r251" class="ident">c</label> *<a href="#line-593" class="ident">Ring</a>) <label for="r252" class="ident">GetShardClientForKey</label>(<label for="r253" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (*<a href="redis.go.html#line-1193" class="ident">Client</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-948"><code>	<label for="r254" class="ident">shard</label>, <label for="r255" class="ident">err</label> := <label for="r251" class="ident">c</label>.<a href="#line-598" class="ident">sharding</a>.<a href="#line-453" class="ident">GetByKey</a>(<label for="r253" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-949"><code>	<span class="keyword">if</span> <label for="r255" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-950"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r255" class="ident">err</label></code></span>
+<span class="codeline" id="line-951"><code>	}</code></span>
+<span class="codeline" id="line-952"><code>	<span class="keyword">return</span> <label for="r254" class="ident">shard</label>.<a href="#line-266" class="ident">Client</a>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-953"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

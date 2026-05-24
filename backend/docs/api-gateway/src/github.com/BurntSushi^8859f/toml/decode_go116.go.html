@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: decode_go116.go in package github.com/BurntSushi/toml</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	decode_go116.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html">github.com/BurntSushi/toml</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">//go:build go1.16</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// +build go1.16</span></code></span>
+<span class="codeline" id="line-3"><code></code></span>
+<span class="codeline" id="line-4"><code><span class="keyword">package</span> toml</code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<span class="codeline" id="line-6"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-7"><code>	<label for="i0"><span class="lit-string i0">"io/fs"</span></label></code></span>
+<span class="codeline" id="line-8"><code>)</code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// DecodeFS reads the contents of a file from [fs.FS] and decodes it with</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// [Decode].</span></code></span>
+<span class="codeline" id="line-12"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../pkg/github.com/BurntSushi^8859f/toml.html#name-DecodeFS" class="ident">DecodeFS</a></label>(<label for="r1" class="ident">fsys</label> <a href="../../../../pkg/io/fs.html" class="ident i0">fs</a>.<a href="../../../io/fs/fs.go.html#line-40" class="ident">FS</a>, <label for="r2" class="ident">path</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r3" class="ident">v</label> <span class="keyword">interface</span>{}) (<a href="meta.go.html#line-12" class="ident">MetaData</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-13"><code>	<label for="r4" class="ident">fp</label>, <label for="r5" class="ident">err</label> := <label for="r1" class="ident">fsys</label>.<a href="../../../io/fs/fs.go.html#line-51" class="ident">Open</a>(<label for="r2" class="ident">path</label>)</code></span>
+<span class="codeline" id="line-14"><code>	<span class="keyword">if</span> <label for="r5" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-15"><code>		<span class="keyword">return</span> <a href="meta.go.html#line-12" class="ident">MetaData</a>{}, <label for="r5" class="ident">err</label></code></span>
+<span class="codeline" id="line-16"><code>	}</code></span>
+<span class="codeline" id="line-17"><code>	<span class="keyword">defer</span> <label for="r4" class="ident">fp</label>.<a href="../../../io/fs/fs.go.html#line-98" class="ident">Close</a>()</code></span>
+<span class="codeline" id="line-18"><code>	<span class="keyword">return</span> <a href="decode.go.html#line-114" class="ident">NewDecoder</a>(<label for="r4" class="ident">fp</label>).<a href="decode.go.html#line-125" class="ident">Decode</a>(<label for="r3" class="ident">v</label>)</code></span>
+<span class="codeline" id="line-19"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

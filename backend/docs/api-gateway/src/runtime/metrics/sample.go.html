@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: sample.go in package runtime/metrics</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	sample.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../pkg/runtime/metrics.html">runtime/metrics</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2020 The Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="keyword">package</span> metrics</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-8"><code>	<a href="../../../pkg/runtime.html" class="ident i0">_</a> <label for="i0"><span class="lit-string i0">"runtime"</span></label> <span class="comment">// depends on the runtime via a linkname'd function</span></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i1"><span class="lit-string i1">"unsafe"</span></label></code></span>
+<span class="codeline" id="line-10"><code>)</code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// Sample captures a single metric sample.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">type</span> <a href="../../../pkg/runtime/metrics.html#name-Sample" class="ident">Sample</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-14"><code>	<span class="comment">// Name is the name of the metric sampled.</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">	// It must correspond to a name in one of the metric descriptions</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">	// returned by All.</span></code></span>
+<span class="codeline" id="line-18"><code>	Name <a href="../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code>	<span class="comment">// Value is the value of the metric sample.</span></code></span>
+<span class="codeline" id="line-21"><code>	Value <a href="value.go.html#line-30" class="ident">Value</a></code></span>
+<span class="codeline" id="line-22"><code>}</code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// Implemented in the runtime.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../pkg/runtime/metrics.html#name-runtime_readMetrics" class="ident">runtime_readMetrics</a></label>(<a href="../../../pkg/unsafe.html" class="ident i1">unsafe</a>.<a href="../../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>, <a href="../../../pkg/builtin.html#name-int" class="ident">int</a>, <a href="../../../pkg/builtin.html#name-int" class="ident">int</a>)</code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">// Read populates each [Value] field in the given slice of metric samples.</span></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// Desired metrics should be present in the slice with the appropriate name.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">// The user of this API is encouraged to re-use the same slice between calls for</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">// efficiency, but is not required to do so.</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">// Note that re-use has some caveats. Notably, Values should not be read or</span></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">// manipulated while a Read with that value is outstanding; that is a data race.</span></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">// This property includes pointer-typed Values (for example, [Float64Histogram])</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">// whose underlying storage will be reused by Read when possible. To safely use</span></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// such values in a concurrent setting, all data must be deep-copied.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// It is safe to execute multiple Read calls concurrently, but their arguments</span></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">// must share no underlying memory. When in doubt, create a new []Sample from</span></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">// scratch, which is always safe, though may be inefficient.</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// Sample values with names not appearing in [All] will have their Value populated</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// as KindBad to indicate that the name is unknown.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="keyword">func</span> <label for="r1" class="ident"><a href="../../../pkg/runtime/metrics.html#name-Read" class="ident">Read</a></label>(<label for="r2" class="ident">m</label> []<a href="#line-13" class="ident">Sample</a>) {</code></span>
+<span class="codeline" id="line-46"><code>	<a href="#line-25" class="ident">runtime_readMetrics</a>(<a href="../../../pkg/unsafe.html" class="ident i1">unsafe</a>.<a href="../../../pkg/unsafe.html#name-Pointer" class="ident">Pointer</a>(&amp;<label for="r2" class="ident">m</label>[<span class="lit-number">0</span>]), <a href="../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r2" class="ident">m</label>), <a href="../../../pkg/builtin.html#name-cap" class="ident">cap</a>(<label for="r2" class="ident">m</label>))</code></span>
+<span class="codeline" id="line-47"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

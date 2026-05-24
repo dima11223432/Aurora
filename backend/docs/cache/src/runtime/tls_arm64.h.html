@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: tls_arm64.h in package runtime</title>
+<link href="../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	tls_arm64.h
+
+<span class="title">Belonging Package</span>
+	<a href="../../pkg/runtime.html">runtime</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2015 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>#ifdef GOOS_android</code></span>
+<span class="codeline" id="line-6"><code>#define TLS_linux</code></span>
+<span class="codeline" id="line-7"><code>#define TLSG_IS_VARIABLE</code></span>
+<span class="codeline" id="line-8"><code>#endif</code></span>
+<span class="codeline" id="line-9"><code>#ifdef GOOS_linux</code></span>
+<span class="codeline" id="line-10"><code>#define TLS_linux</code></span>
+<span class="codeline" id="line-11"><code>#endif</code></span>
+<span class="codeline" id="line-12"><code>#ifdef TLS_linux</code></span>
+<span class="codeline" id="line-13"><code>#define MRS_TPIDR_R0 WORD $0xd53bd040 // MRS TPIDR_EL0, R0</code></span>
+<span class="codeline" id="line-14"><code>#endif</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code>#ifdef GOOS_darwin</code></span>
+<span class="codeline" id="line-17"><code>#define TLS_darwin</code></span>
+<span class="codeline" id="line-18"><code>#endif</code></span>
+<span class="codeline" id="line-19"><code>#ifdef GOOS_ios</code></span>
+<span class="codeline" id="line-20"><code>#define TLS_darwin</code></span>
+<span class="codeline" id="line-21"><code>#endif</code></span>
+<span class="codeline" id="line-22"><code>#ifdef TLS_darwin</code></span>
+<span class="codeline" id="line-23"><code>#define TLSG_IS_VARIABLE</code></span>
+<span class="codeline" id="line-24"><code>#define MRS_TPIDR_R0 WORD $0xd53bd060 // MRS TPIDRRO_EL0, R0</code></span>
+<span class="codeline" id="line-25"><code>#endif</code></span>
+<span class="codeline" id="line-26"><code></code></span>
+<span class="codeline" id="line-27"><code>#ifdef GOOS_freebsd</code></span>
+<span class="codeline" id="line-28"><code>#define MRS_TPIDR_R0 WORD $0xd53bd040 // MRS TPIDR_EL0, R0</code></span>
+<span class="codeline" id="line-29"><code>#endif</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code>#ifdef GOOS_netbsd</code></span>
+<span class="codeline" id="line-32"><code>#define MRS_TPIDR_R0 WORD $0xd53bd040 // MRS TPIDRRO_EL0, R0</code></span>
+<span class="codeline" id="line-33"><code>#endif</code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code>#ifdef GOOS_openbsd</code></span>
+<span class="codeline" id="line-36"><code>#define MRS_TPIDR_R0 WORD $0xd53bd040 // MRS TPIDR_EL0, R0</code></span>
+<span class="codeline" id="line-37"><code>#endif</code></span>
+<span class="codeline" id="line-38"><code></code></span>
+<span class="codeline" id="line-39"><code>#ifdef GOOS_windows</code></span>
+<span class="codeline" id="line-40"><code>#define TLS_windows</code></span>
+<span class="codeline" id="line-41"><code>#endif</code></span>
+<span class="codeline" id="line-42"><code>#ifdef TLS_windows</code></span>
+<span class="codeline" id="line-43"><code>#define TLSG_IS_VARIABLE</code></span>
+<span class="codeline" id="line-44"><code>#define MRS_TPIDR_R0 MOVD R18_PLATFORM, R0</code></span>
+<span class="codeline" id="line-45"><code>#endif</code></span>
+<span class="codeline" id="line-46"><code></code></span>
+<span class="codeline" id="line-47"><code>// Define something that will break the build if</code></span>
+<span class="codeline" id="line-48"><code>// the GOOS is unknown.</code></span>
+<span class="codeline" id="line-49"><code>#ifndef MRS_TPIDR_R0</code></span>
+<span class="codeline" id="line-50"><code>#define MRS_TPIDR_R0 unknown_TLS_implementation_in_tls_arm64_h</code></span>
+<span class="codeline" id="line-51"><code>#endif</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

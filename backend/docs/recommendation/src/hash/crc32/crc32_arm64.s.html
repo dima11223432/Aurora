@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: crc32_arm64.s in package hash/crc32</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	crc32_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../../pkg/hash/crc32.html">hash/crc32</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2017 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>// castagnoliUpdate updates the non-inverted crc with the given data.</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code>// func castagnoliUpdate(crc uint32, p []byte) uint32</code></span>
+<span class="codeline" id="line-10"><code>TEXT ·castagnoliUpdate(SB),NOSPLIT,$0-36</code></span>
+<span class="codeline" id="line-11"><code>	MOVWU	crc+0(FP), R9  // CRC value</code></span>
+<span class="codeline" id="line-12"><code>	MOVD	p+8(FP), R13  // data pointer</code></span>
+<span class="codeline" id="line-13"><code>	MOVD	p_len+16(FP), R11  // len(p)</code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code>update:</code></span>
+<span class="codeline" id="line-16"><code>	CMP	$16, R11</code></span>
+<span class="codeline" id="line-17"><code>	BLT	less_than_16</code></span>
+<span class="codeline" id="line-18"><code>	LDP.P	16(R13), (R8, R10)</code></span>
+<span class="codeline" id="line-19"><code>	CRC32CX	R8, R9</code></span>
+<span class="codeline" id="line-20"><code>	CRC32CX	R10, R9</code></span>
+<span class="codeline" id="line-21"><code>	SUB	$16, R11</code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code>	JMP	update</code></span>
+<span class="codeline" id="line-24"><code></code></span>
+<span class="codeline" id="line-25"><code>less_than_16:</code></span>
+<span class="codeline" id="line-26"><code>	TBZ	$3, R11, less_than_8</code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	MOVD.P	8(R13), R10</code></span>
+<span class="codeline" id="line-29"><code>	CRC32CX	R10, R9</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code>less_than_8:</code></span>
+<span class="codeline" id="line-32"><code>	TBZ	$2, R11, less_than_4</code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code>	MOVWU.P	4(R13), R10</code></span>
+<span class="codeline" id="line-35"><code>	CRC32CW	R10, R9</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code>less_than_4:</code></span>
+<span class="codeline" id="line-38"><code>	TBZ	$1, R11, less_than_2</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code>	MOVHU.P	2(R13), R10</code></span>
+<span class="codeline" id="line-41"><code>	CRC32CH	R10, R9</code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code>less_than_2:</code></span>
+<span class="codeline" id="line-44"><code>	TBZ	$0, R11, done</code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code>	MOVBU	(R13), R10</code></span>
+<span class="codeline" id="line-47"><code>	CRC32CB	R10, R9</code></span>
+<span class="codeline" id="line-48"><code></code></span>
+<span class="codeline" id="line-49"><code>done:</code></span>
+<span class="codeline" id="line-50"><code>	MOVWU	R9, ret+32(FP)</code></span>
+<span class="codeline" id="line-51"><code>	RET</code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code>// ieeeUpdate updates the non-inverted crc with the given data.</code></span>
+<span class="codeline" id="line-54"><code></code></span>
+<span class="codeline" id="line-55"><code>// func ieeeUpdate(crc uint32, p []byte) uint32</code></span>
+<span class="codeline" id="line-56"><code>TEXT ·ieeeUpdate(SB),NOSPLIT,$0-36</code></span>
+<span class="codeline" id="line-57"><code>	MOVWU	crc+0(FP), R9  // CRC value</code></span>
+<span class="codeline" id="line-58"><code>	MOVD	p+8(FP), R13  // data pointer</code></span>
+<span class="codeline" id="line-59"><code>	MOVD	p_len+16(FP), R11  // len(p)</code></span>
+<span class="codeline" id="line-60"><code></code></span>
+<span class="codeline" id="line-61"><code>update:</code></span>
+<span class="codeline" id="line-62"><code>	CMP	$16, R11</code></span>
+<span class="codeline" id="line-63"><code>	BLT	less_than_16</code></span>
+<span class="codeline" id="line-64"><code>	LDP.P	16(R13), (R8, R10)</code></span>
+<span class="codeline" id="line-65"><code>	CRC32X	R8, R9</code></span>
+<span class="codeline" id="line-66"><code>	CRC32X	R10, R9</code></span>
+<span class="codeline" id="line-67"><code>	SUB	$16, R11</code></span>
+<span class="codeline" id="line-68"><code></code></span>
+<span class="codeline" id="line-69"><code>	JMP	update</code></span>
+<span class="codeline" id="line-70"><code></code></span>
+<span class="codeline" id="line-71"><code>less_than_16:</code></span>
+<span class="codeline" id="line-72"><code>	TBZ $3, R11, less_than_8</code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code>	MOVD.P	8(R13), R10</code></span>
+<span class="codeline" id="line-75"><code>	CRC32X	R10, R9</code></span>
+<span class="codeline" id="line-76"><code></code></span>
+<span class="codeline" id="line-77"><code>less_than_8:</code></span>
+<span class="codeline" id="line-78"><code>	TBZ	$2, R11, less_than_4</code></span>
+<span class="codeline" id="line-79"><code></code></span>
+<span class="codeline" id="line-80"><code>	MOVWU.P	4(R13), R10</code></span>
+<span class="codeline" id="line-81"><code>	CRC32W	R10, R9</code></span>
+<span class="codeline" id="line-82"><code></code></span>
+<span class="codeline" id="line-83"><code>less_than_4:</code></span>
+<span class="codeline" id="line-84"><code>	TBZ	$1, R11, less_than_2</code></span>
+<span class="codeline" id="line-85"><code></code></span>
+<span class="codeline" id="line-86"><code>	MOVHU.P	2(R13), R10</code></span>
+<span class="codeline" id="line-87"><code>	CRC32H	R10, R9</code></span>
+<span class="codeline" id="line-88"><code></code></span>
+<span class="codeline" id="line-89"><code>less_than_2:</code></span>
+<span class="codeline" id="line-90"><code>	TBZ	$0, R11, done</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code>	MOVBU	(R13), R10</code></span>
+<span class="codeline" id="line-93"><code>	CRC32B	R10, R9</code></span>
+<span class="codeline" id="line-94"><code></code></span>
+<span class="codeline" id="line-95"><code>done:</code></span>
+<span class="codeline" id="line-96"><code>	MOVWU	R9, ret+32(FP)</code></span>
+<span class="codeline" id="line-97"><code>	RET</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

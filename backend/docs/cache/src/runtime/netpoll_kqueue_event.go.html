@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: netpoll_kqueue_event.go in package runtime</title>
+<link href="../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	netpoll_kqueue_event.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../pkg/runtime.html">runtime</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14]
+{background: #226; color: #ff8;}
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2024 The Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">//go:build darwin || dragonfly || freebsd</span></code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="keyword">package</span> runtime</code></span>
+<span class="codeline" id="line-8"><code></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// Magic number of identifier used for EVFILT_USER.</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">// This number had zero Google results when it's created.</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// That way, people will be directed here when this number</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// get printed somehow and they search for it.</span></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">const</span> <a href="../../pkg/runtime.html#name-kqIdent" class="ident">kqIdent</a> = <span class="lit-number">0xee1eb9f4</span></code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../pkg/runtime.html#name-addWakeupEvent" class="ident">addWakeupEvent</a></label>(<label for="r1" class="ident">kq</label> <a href="../../pkg/builtin.html#name-int32" class="ident">int32</a>) {</code></span>
+<span class="codeline" id="line-16"><code>	<label for="r2" class="ident">ev</label> := <a href="defs_darwin_arm64.go.html#line-212" class="ident">keventt</a>{</code></span>
+<span class="codeline" id="line-17"><code>		<a href="defs_darwin_arm64.go.html#line-213" class="ident">ident</a>:  <a href="#line-13" class="ident">kqIdent</a>,</code></span>
+<span class="codeline" id="line-18"><code>		<a href="defs_darwin_arm64.go.html#line-214" class="ident">filter</a>: <a href="defs_darwin_arm64.go.html#line-96" class="ident">_EVFILT_USER</a>,</code></span>
+<span class="codeline" id="line-19"><code>		<a href="defs_darwin_arm64.go.html#line-215" class="ident">flags</a>:  <a href="defs_darwin_arm64.go.html#line-86" class="ident">_EV_ADD</a> | <a href="defs_darwin_arm64.go.html#line-90" class="ident">_EV_CLEAR</a>,</code></span>
+<span class="codeline" id="line-20"><code>	}</code></span>
+<span class="codeline" id="line-21"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-22"><code>		<label for="r3" class="ident">n</label> := <a href="sys_darwin.go.html#line-438" class="ident">kevent</a>(<label for="r1" class="ident">kq</label>, &amp;<label for="r2" class="ident">ev</label>, <span class="lit-number">1</span>, <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a>, <span class="lit-number">0</span>, <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a>)</code></span>
+<span class="codeline" id="line-23"><code>		<span class="keyword">if</span> <label for="r3" class="ident">n</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-24"><code>			<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-25"><code>		}</code></span>
+<span class="codeline" id="line-26"><code>		<span class="keyword">if</span> <label for="r3" class="ident">n</label> == -<a href="defs_darwin_arm64.go.html#line-9" class="ident">_EINTR</a> {</code></span>
+<span class="codeline" id="line-27"><code>			<span class="comment">// All changes contained in the changelist should have been applied</span></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">			// before returning EINTR. But let's be skeptical and retry it anyway,</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">			// to make a 100% commitment.</span></code></span>
+<span class="codeline" id="line-30"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-31"><code>		}</code></span>
+<span class="codeline" id="line-32"><code>		<a href="../../pkg/builtin.html#name-println" class="ident">println</a>(<span class="lit-string">"runtime: kevent for EVFILT_USER failed with"</span>, -<label for="r3" class="ident">n</label>)</code></span>
+<span class="codeline" id="line-33"><code>		<a href="panic.go.html#line-1220" class="ident">throw</a>(<span class="lit-string">"runtime: kevent failed"</span>)</code></span>
+<span class="codeline" id="line-34"><code>	}</code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="keyword">func</span> <label for="r4" class="ident"><a href="../../pkg/runtime.html#name-wakeNetpoll" class="ident">wakeNetpoll</a></label>(<label for="r5" class="ident">kq</label> <a href="../../pkg/builtin.html#name-int32" class="ident">int32</a>) {</code></span>
+<span class="codeline" id="line-38"><code>	<label for="r6" class="ident">ev</label> := <a href="defs_darwin_arm64.go.html#line-212" class="ident">keventt</a>{</code></span>
+<span class="codeline" id="line-39"><code>		<a href="defs_darwin_arm64.go.html#line-213" class="ident">ident</a>:  <a href="#line-13" class="ident">kqIdent</a>,</code></span>
+<span class="codeline" id="line-40"><code>		<a href="defs_darwin_arm64.go.html#line-214" class="ident">filter</a>: <a href="defs_darwin_arm64.go.html#line-96" class="ident">_EVFILT_USER</a>,</code></span>
+<span class="codeline" id="line-41"><code>		<a href="defs_darwin_arm64.go.html#line-216" class="ident">fflags</a>: <a href="defs_darwin_arm64.go.html#line-98" class="ident">_NOTE_TRIGGER</a>,</code></span>
+<span class="codeline" id="line-42"><code>	}</code></span>
+<span class="codeline" id="line-43"><code>	<span class="keyword">for</span> {</code></span>
+<span class="codeline" id="line-44"><code>		<label for="r7" class="ident">n</label> := <a href="sys_darwin.go.html#line-438" class="ident">kevent</a>(<label for="r5" class="ident">kq</label>, &amp;<label for="r6" class="ident">ev</label>, <span class="lit-number">1</span>, <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a>, <span class="lit-number">0</span>, <a href="../../pkg/builtin.html#name-nil" class="ident">nil</a>)</code></span>
+<span class="codeline" id="line-45"><code>		<span class="keyword">if</span> <label for="r7" class="ident">n</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-46"><code>			<span class="keyword">break</span></code></span>
+<span class="codeline" id="line-47"><code>		}</code></span>
+<span class="codeline" id="line-48"><code>		<span class="keyword">if</span> <label for="r7" class="ident">n</label> == -<a href="defs_darwin_arm64.go.html#line-9" class="ident">_EINTR</a> {</code></span>
+<span class="codeline" id="line-49"><code>			<span class="comment">// Check out the comment in addWakeupEvent.</span></code></span>
+<span class="codeline" id="line-50"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-51"><code>		}</code></span>
+<span class="codeline" id="line-52"><code>		<a href="../../pkg/builtin.html#name-println" class="ident">println</a>(<span class="lit-string">"runtime: netpollBreak write failed with"</span>, -<label for="r7" class="ident">n</label>)</code></span>
+<span class="codeline" id="line-53"><code>		<a href="panic.go.html#line-1220" class="ident">throw</a>(<span class="lit-string">"runtime: netpollBreak write failed"</span>)</code></span>
+<span class="codeline" id="line-54"><code>	}</code></span>
+<span class="codeline" id="line-55"><code>}</code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code><span class="keyword">func</span> <label for="r8" class="ident"><a href="../../pkg/runtime.html#name-isWakeup" class="ident">isWakeup</a></label>(<label for="r9" class="ident">ev</label> *<a href="defs_darwin_arm64.go.html#line-212" class="ident">keventt</a>) <a href="../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-58"><code>	<span class="keyword">if</span> <label for="r9" class="ident">ev</label>.<a href="defs_darwin_arm64.go.html#line-214" class="ident">filter</a> == <a href="defs_darwin_arm64.go.html#line-96" class="ident">_EVFILT_USER</a> {</code></span>
+<span class="codeline" id="line-59"><code>		<span class="keyword">if</span> <label for="r9" class="ident">ev</label>.<a href="defs_darwin_arm64.go.html#line-213" class="ident">ident</a> == <a href="#line-13" class="ident">kqIdent</a> {</code></span>
+<span class="codeline" id="line-60"><code>			<span class="keyword">return</span> <a href="../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-61"><code>		}</code></span>
+<span class="codeline" id="line-62"><code>		<a href="../../pkg/builtin.html#name-println" class="ident">println</a>(<span class="lit-string">"runtime: netpoll: break fd ready for"</span>, <label for="r9" class="ident">ev</label>.<a href="defs_darwin_arm64.go.html#line-213" class="ident">ident</a>)</code></span>
+<span class="codeline" id="line-63"><code>		<a href="panic.go.html#line-1220" class="ident">throw</a>(<span class="lit-string">"runtime: netpoll: break fd ready for something unexpected"</span>)</code></span>
+<span class="codeline" id="line-64"><code>	}</code></span>
+<span class="codeline" id="line-65"><code>	<span class="keyword">return</span> <a href="../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-66"><code>}</code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code><span class="keyword">func</span> <label for="r10" class="ident"><a href="../../pkg/runtime.html#name-processWakeupEvent" class="ident">processWakeupEvent</a></label>(<label for="r11" class="ident">kq</label> <a href="../../pkg/builtin.html#name-int32" class="ident">int32</a>, <label for="r12" class="ident">isBlocking</label> <a href="../../pkg/builtin.html#name-bool" class="ident">bool</a>) {</code></span>
+<span class="codeline" id="line-69"><code>	<span class="keyword">if</span> !<label for="r12" class="ident">isBlocking</label> {</code></span>
+<span class="codeline" id="line-70"><code>		<span class="comment">// Got a wrong thread, relay</span></code></span>
+<span class="codeline" id="line-71"><code>		<a href="#line-37" class="ident">wakeNetpoll</a>(<label for="r11" class="ident">kq</label>)</code></span>
+<span class="codeline" id="line-72"><code>	}</code></span>
+<span class="codeline" id="line-73"><code>}</code></span>
+<span class="codeline" id="line-74"><code></code></span>
+<span class="codeline" id="line-75"><code><span class="keyword">func</span> <label for="r13" class="ident"><a href="../../pkg/runtime.html#name-netpollIsPollDescriptor" class="ident">netpollIsPollDescriptor</a></label>(<label for="r14" class="ident">fd</label> <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>) <a href="../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-76"><code>	<span class="keyword">return</span> <label for="r14" class="ident">fd</label> == <a href="../../pkg/builtin.html#name-uintptr" class="ident">uintptr</a>(<a href="netpoll_kqueue.go.html#line-18" class="ident">kq</a>)</code></span>
+<span class="codeline" id="line-77"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

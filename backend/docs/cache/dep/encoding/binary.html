@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dependency Relation: encoding/binary</title>
+<link href="../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre><code><span style="font-size:xx-large;">package <b>binary</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../pkg/encoding/binary.html">encoding/binary</a>
+
+<span class="title">Imports</span><div id="packages">
+<code>     <span class="order">1</span>. <a href="../../pkg/errors.html">errors</a></code>
+<code>     <span class="order">2</span>. <a href="../../pkg/io.html">io</a></code>
+<code>     <span class="order">3</span>. <a href="../../pkg/math.html">math</a></code>
+<code>     <span class="order">4</span>. <a href="../../pkg/reflect.html">reflect</a></code>
+<code>     <span class="order">5</span>. <a href="../../pkg/slices.html">slices</a></code>
+<code>     <span class="order">6</span>. <a href="../../pkg/sync.html">sync</a></code></div>
+<span class="title" id="imported-by">Imported By</span><div id="packages">
+<code>     <span class="order"> 1</span>. <a href="../../pkg/compress/gzip.html">compress/gzip</a></code>
+<code>     <span class="order"> 2</span>. <a href="../../pkg/github.com/cespare/xxhash/v2.html">github.com/cespare/xxhash/v2</a></code>
+<code>     <span class="order"> 3</span>. <a href="../../pkg/github.com/google/uuid.html" class="path-duplicate">github.com</a><a href="../../pkg/github.com/google/uuid.html">/google/uuid</a></code>
+<code>     <span class="order"> 4</span>. <a href="../../pkg/github.com/klauspost/compress/flate.html" class="path-duplicate">github.com</a><a href="../../pkg/github.com/klauspost/compress/flate.html">/klauspost/compress/flate</a></code>
+<code>     <span class="order"> 5</span>. <a href="../../pkg/github.com/klauspost/compress/fse.html" class="path-duplicate">github.com/klauspost/compress</a><a href="../../pkg/github.com/klauspost/compress/fse.html">/fse</a></code>
+<code>     <span class="order"> 6</span>. <a href="../../pkg/github.com/klauspost/compress/gzip.html" class="path-duplicate">github.com/klauspost/compress</a><a href="../../pkg/github.com/klauspost/compress/gzip.html">/gzip</a></code>
+<code>     <span class="order"> 7</span>. <a href="../../pkg/github.com/klauspost/compress/huff0.html" class="path-duplicate">github.com/klauspost/compress</a><a href="../../pkg/github.com/klauspost/compress/huff0.html">/huff0</a></code>
+<code>     <span class="order"> 8</span>. <a href="../../pkg/github.com/klauspost/compress/internal/snapref.html" class="path-duplicate">github.com/klauspost/compress</a><a href="../../pkg/github.com/klauspost/compress/internal/snapref.html">/internal/snapref</a></code>
+<code>     <span class="order"> 9</span>. <a href="../../pkg/github.com/klauspost/compress/s2.html" class="path-duplicate">github.com/klauspost/compress</a><a href="../../pkg/github.com/klauspost/compress/s2.html">/s2</a></code>
+<code>     <span class="order">10</span>. <a href="../../pkg/github.com/klauspost/compress/zstd.html" class="path-duplicate">github.com/klauspost/compress</a><a href="../../pkg/github.com/klauspost/compress/zstd.html">/zstd</a></code>
+<code>     <span class="order">11</span>. <a href="../../pkg/github.com/klauspost/compress/zstd/internal/xxhash.html" class="path-duplicate">github.com/klauspost/compress/zstd</a><a href="../../pkg/github.com/klauspost/compress/zstd/internal/xxhash.html">/internal/xxhash</a></code>
+<code>     <span class="order">12</span>. <a href="../../pkg/github.com/lib/pq.html" class="path-duplicate">github.com</a><a href="../../pkg/github.com/lib/pq.html">/lib/pq</a></code>
+<code>     <span class="order">13</span>. <a href="../../pkg/github.com/pierrec/lz4/v4/internal/lz4block.html" class="path-duplicate">github.com</a><a href="../../pkg/github.com/pierrec/lz4/v4/internal/lz4block.html">/pierrec/lz4/v4/internal/lz4block</a></code>
+<code>     <span class="order">14</span>. <a href="../../pkg/github.com/pierrec/lz4/v4/internal/lz4stream.html" class="path-duplicate">github.com/pierrec/lz4/v4/internal</a><a href="../../pkg/github.com/pierrec/lz4/v4/internal/lz4stream.html">/lz4stream</a></code>
+<code>     <span class="order">15</span>. <a href="../../pkg/github.com/pierrec/lz4/v4/internal/xxh32.html" class="path-duplicate">github.com/pierrec/lz4/v4/internal</a><a href="../../pkg/github.com/pierrec/lz4/v4/internal/xxh32.html">/xxh32</a></code>
+<code>     <span class="order">16</span>. <a href="../../pkg/github.com/segmentio/kafka-go.html" class="path-duplicate">github.com</a><a href="../../pkg/github.com/segmentio/kafka-go.html">/segmentio/kafka-go</a></code>
+<code>     <span class="order">17</span>. <a href="../../pkg/github.com/segmentio/kafka-go/compress/snappy.html" class="path-duplicate">github.com/segmentio/kafka-go</a><a href="../../pkg/github.com/segmentio/kafka-go/compress/snappy.html">/compress/snappy</a></code>
+<code>     <span class="order">18</span>. <a href="../../pkg/github.com/segmentio/kafka-go/protocol.html" class="path-duplicate">github.com/segmentio/kafka-go</a><a href="../../pkg/github.com/segmentio/kafka-go/protocol.html">/protocol</a></code>
+<code>     <span class="order">19</span>. <a href="../../pkg/github.com/segmentio/kafka-go/protocol/saslauthenticate.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../pkg/github.com/segmentio/kafka-go/protocol/saslauthenticate.html">/saslauthenticate</a></code>
+<code>     <span class="order">20</span>. <a href="../../pkg/golang.org/x/net/http2.html">golang.org/x/net/http2</a></code>
+<code>     <span class="order">21</span>. <a href="../../pkg/golang.org/x/text/unicode/norm.html" class="path-duplicate">golang.org/x</a><a href="../../pkg/golang.org/x/text/unicode/norm.html">/text/unicode/norm</a></code>
+<code>     <span class="order">22</span>. <a href="../../pkg/google.golang.org/grpc.html">google.golang.org/grpc</a></code>
+<code>     <span class="order">23</span>. <a href="../../pkg/google.golang.org/grpc/internal/binarylog.html" class="path-duplicate">google.golang.org/grpc</a><a href="../../pkg/google.golang.org/grpc/internal/binarylog.html">/internal/binarylog</a></code>
+<code>     <span class="order">24</span>. <a href="../../pkg/google.golang.org/protobuf/internal/detrand.html" class="path-duplicate">google.golang.org</a><a href="../../pkg/google.golang.org/protobuf/internal/detrand.html">/protobuf/internal/detrand</a></code>
+<code>     <span class="order">25</span>. <a href="../../pkg/google.golang.org/protobuf/internal/impl.html" class="path-duplicate">google.golang.org/protobuf/internal</a><a href="../../pkg/google.golang.org/protobuf/internal/impl.html">/impl</a></code>
+<code>     <span class="order">26</span>. <a href="../../pkg/net/http.html">net/http</a></code>
+<code>     <span class="order">27</span>. <a href="../../pkg/runtime/pprof.html">runtime/pprof</a></code>
+<code>     <span class="order">28</span>. <a href="../../pkg/vendor/golang.org/x/crypto/chacha20.html">vendor/golang.org/x/crypto/chacha20</a></code>
+<code>     <span class="order">29</span>. <a href="../../pkg/vendor/golang.org/x/crypto/chacha20poly1305.html" class="path-duplicate">vendor/golang.org/x/crypto</a><a href="../../pkg/vendor/golang.org/x/crypto/chacha20poly1305.html">/chacha20poly1305</a></code>
+<code>     <span class="order">30</span>. <a href="../../pkg/vendor/golang.org/x/crypto/internal/poly1305.html" class="path-duplicate">vendor/golang.org/x/crypto</a><a href="../../pkg/vendor/golang.org/x/crypto/internal/poly1305.html">/internal/poly1305</a></code>
+<code>     <span class="order">31</span>. <a href="../../pkg/vendor/golang.org/x/text/unicode/norm.html" class="path-duplicate">vendor/golang.org/x</a><a href="../../pkg/vendor/golang.org/x/text/unicode/norm.html">/text/unicode/norm</a></code></div><pre id="footer">
+<table><tr><td><img src="../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

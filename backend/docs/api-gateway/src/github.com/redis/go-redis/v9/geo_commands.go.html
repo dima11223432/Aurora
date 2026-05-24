@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: geo_commands.go in package github.com/redis/go-redis/v9</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	geo_commands.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/redis/go-redis/v9.html">github.com/redis/go-redis/v9</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86],
+input[id=r87]:checked ~pre label[for=r87],
+input[id=r88]:checked ~pre label[for=r88]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="r87" type="radio" name="g"/>
+<input id="r88" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> redis</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"errors"</span></label></code></span>
+<span class="codeline" id="line-6"><code>)</code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/redis/go-redis/v9.html#name-GeoCmdable" class="ident">GeoCmdable</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-9"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoAdd" class="ident">GeoAdd</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, geoLocation ...*<a href="command.go.html#line-3915" class="ident">GeoLocation</a>) *<a href="command.go.html#line-847" class="ident">IntCmd</a></code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoPos" class="ident">GeoPos</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, members ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="command.go.html#line-4311" class="ident">GeoPosCmd</a></code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoRadius" class="ident">GeoRadius</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, longitude, latitude <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>, query *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>) *<a href="command.go.html#line-3939" class="ident">GeoLocationCmd</a></code></span>
+<span class="codeline" id="line-12"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoRadiusStore" class="ident">GeoRadiusStore</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, longitude, latitude <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>, query *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>) *<a href="command.go.html#line-847" class="ident">IntCmd</a></code></span>
+<span class="codeline" id="line-13"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoRadiusByMember" class="ident">GeoRadiusByMember</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key, member <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, query *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>) *<a href="command.go.html#line-3939" class="ident">GeoLocationCmd</a></code></span>
+<span class="codeline" id="line-14"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoRadiusByMemberStore" class="ident">GeoRadiusByMemberStore</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key, member <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, query *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>) *<a href="command.go.html#line-847" class="ident">IntCmd</a></code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoSearch" class="ident">GeoSearch</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, q *<a href="command.go.html#line-4092" class="ident">GeoSearchQuery</a>) *<a href="command.go.html#line-1434" class="ident">StringSliceCmd</a></code></span>
+<span class="codeline" id="line-16"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoSearchLocation" class="ident">GeoSearchLocation</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, q *<a href="command.go.html#line-4116" class="ident">GeoSearchLocationQuery</a>) *<a href="command.go.html#line-4182" class="ident">GeoSearchLocationCmd</a></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoSearchStore" class="ident">GeoSearchStore</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key, store <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, q *<a href="command.go.html#line-4124" class="ident">GeoSearchStoreQuery</a>) *<a href="command.go.html#line-847" class="ident">IntCmd</a></code></span>
+<span class="codeline" id="line-18"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoDist" class="ident">GeoDist</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, member1, member2, unit <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="command.go.html#line-1318" class="ident">FloatCmd</a></code></span>
+<span class="codeline" id="line-19"><code>	<a href="../../../../../imp/github.com/redis/go-redis/v9.GeoCmdable.html#name-GeoHash" class="ident">GeoHash</a>(ctx <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, key <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, members ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="command.go.html#line-1434" class="ident">StringSliceCmd</a></code></span>
+<span class="codeline" id="line-20"><code>}</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">func</span> (<label for="r0" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r1" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoAdd" class="ident">GeoAdd</a></label>(<label for="r2" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r3" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r4" class="ident">geoLocation</label> ...*<a href="command.go.html#line-3915" class="ident">GeoLocation</a>) *<a href="command.go.html#line-847" class="ident">IntCmd</a> {</code></span>
+<span class="codeline" id="line-23"><code>	<label for="r5" class="ident">args</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">interface</span>{}, <span class="lit-number">2</span>+<span class="lit-number">3</span>*<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r4" class="ident">geoLocation</label>))</code></span>
+<span class="codeline" id="line-24"><code>	<label for="r5" class="ident">args</label>[<span class="lit-number">0</span>] = <span class="lit-string">"geoadd"</span></code></span>
+<span class="codeline" id="line-25"><code>	<label for="r5" class="ident">args</label>[<span class="lit-number">1</span>] = <label for="r3" class="ident">key</label></code></span>
+<span class="codeline" id="line-26"><code>	<span class="keyword">for</span> <label for="r6" class="ident">i</label>, <label for="r7" class="ident">eachLoc</label> := <span class="keyword">range</span> <label for="r4" class="ident">geoLocation</label> {</code></span>
+<span class="codeline" id="line-27"><code>		<label for="r5" class="ident">args</label>[<span class="lit-number">2</span>+<span class="lit-number">3</span>*<label for="r6" class="ident">i</label>] = <label for="r7" class="ident">eachLoc</label>.<a href="command.go.html#line-3917" class="ident">Longitude</a></code></span>
+<span class="codeline" id="line-28"><code>		<label for="r5" class="ident">args</label>[<span class="lit-number">2</span>+<span class="lit-number">3</span>*<label for="r6" class="ident">i</label>+<span class="lit-number">1</span>] = <label for="r7" class="ident">eachLoc</label>.<a href="command.go.html#line-3917" class="ident">Latitude</a></code></span>
+<span class="codeline" id="line-29"><code>		<label for="r5" class="ident">args</label>[<span class="lit-number">2</span>+<span class="lit-number">3</span>*<label for="r6" class="ident">i</label>+<span class="lit-number">2</span>] = <label for="r7" class="ident">eachLoc</label>.<a href="command.go.html#line-3916" class="ident">Name</a></code></span>
+<span class="codeline" id="line-30"><code>	}</code></span>
+<span class="codeline" id="line-31"><code>	<label for="r8" class="ident">cmd</label> := <a href="command.go.html#line-855" class="ident">NewIntCmd</a>(<label for="r2" class="ident">ctx</label>, <label for="r5" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-32"><code>	_ = <label for="r0" class="ident">c</label>(<label for="r2" class="ident">ctx</label>, <label for="r8" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-33"><code>	<span class="keyword">return</span> <label for="r8" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-34"><code>}</code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">// GeoRadius queries a geospatial index for members within a distance from a coordinate.</span></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// This is a read-only variant that does not support Store or StoreDist options.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">// Deprecated: Use GeoSearch with BYRADIUS argument instead as of Redis 6.2.0.</span></code></span>
+<span class="codeline" id="line-40"><code><span class="keyword">func</span> (<label for="r9" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r10" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoRadius" class="ident">GeoRadius</a></label>(</code></span>
+<span class="codeline" id="line-41"><code>	<label for="r11" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r12" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r13" class="ident">longitude</label>, <label for="r14" class="ident">latitude</label> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>, <label for="r15" class="ident">query</label> *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>,</code></span>
+<span class="codeline" id="line-42"><code>) *<a href="command.go.html#line-3939" class="ident">GeoLocationCmd</a> {</code></span>
+<span class="codeline" id="line-43"><code>	<label for="r16" class="ident">cmd</label> := <a href="command.go.html#line-3948" class="ident">NewGeoLocationCmd</a>(<label for="r11" class="ident">ctx</label>, <label for="r15" class="ident">query</label>, <span class="lit-string">"georadius_ro"</span>, <label for="r12" class="ident">key</label>, <label for="r13" class="ident">longitude</label>, <label for="r14" class="ident">latitude</label>)</code></span>
+<span class="codeline" id="line-44"><code>	<span class="keyword">if</span> <label for="r15" class="ident">query</label>.<a href="command.go.html#line-3932" class="ident">Store</a> != <span class="lit-string">""</span> || <label for="r15" class="ident">query</label>.<a href="command.go.html#line-3933" class="ident">StoreDist</a> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-45"><code>		<label for="r16" class="ident">cmd</label>.<a href="command.go.html#line-379" class="ident">SetErr</a>(<a href="../../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"GeoRadius does not support Store or StoreDist"</span>))</code></span>
+<span class="codeline" id="line-46"><code>		<span class="keyword">return</span> <label for="r16" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-47"><code>	}</code></span>
+<span class="codeline" id="line-48"><code>	_ = <label for="r9" class="ident">c</label>(<label for="r11" class="ident">ctx</label>, <label for="r16" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-49"><code>	<span class="keyword">return</span> <label for="r16" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-50"><code>}</code></span>
+<span class="codeline" id="line-51"><code></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">// GeoRadiusStore is a writing GEORADIUS command.</span></code></span>
+<span class="codeline" id="line-53"><code><span class="keyword">func</span> (<label for="r17" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r18" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoRadiusStore" class="ident">GeoRadiusStore</a></label>(</code></span>
+<span class="codeline" id="line-54"><code>	<label for="r19" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r20" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r21" class="ident">longitude</label>, <label for="r22" class="ident">latitude</label> <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>, <label for="r23" class="ident">query</label> *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>,</code></span>
+<span class="codeline" id="line-55"><code>) *<a href="command.go.html#line-847" class="ident">IntCmd</a> {</code></span>
+<span class="codeline" id="line-56"><code>	<label for="r24" class="ident">args</label> := <a href="command.go.html#line-3959" class="ident">geoLocationArgs</a>(<label for="r23" class="ident">query</label>, <span class="lit-string">"georadius"</span>, <label for="r20" class="ident">key</label>, <label for="r21" class="ident">longitude</label>, <label for="r22" class="ident">latitude</label>)</code></span>
+<span class="codeline" id="line-57"><code>	<label for="r25" class="ident">cmd</label> := <a href="command.go.html#line-855" class="ident">NewIntCmd</a>(<label for="r19" class="ident">ctx</label>, <label for="r24" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-58"><code>	<span class="keyword">if</span> <label for="r23" class="ident">query</label>.<a href="command.go.html#line-3932" class="ident">Store</a> == <span class="lit-string">""</span> &amp;&amp; <label for="r23" class="ident">query</label>.<a href="command.go.html#line-3933" class="ident">StoreDist</a> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-59"><code>		<label for="r25" class="ident">cmd</label>.<a href="command.go.html#line-379" class="ident">SetErr</a>(<a href="../../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"GeoRadiusStore requires Store or StoreDist"</span>))</code></span>
+<span class="codeline" id="line-60"><code>		<span class="keyword">return</span> <label for="r25" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-61"><code>	}</code></span>
+<span class="codeline" id="line-62"><code>	_ = <label for="r17" class="ident">c</label>(<label for="r19" class="ident">ctx</label>, <label for="r25" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-63"><code>	<span class="keyword">return</span> <label for="r25" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-64"><code>}</code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code><span class="comment">// GeoRadiusByMember queries a geospatial index for members within a distance from a member.</span></code></span>
+<span class="codeline" id="line-67"><code><span class="comment">// This is a read-only variant that does not support Store or StoreDist options.</span></code></span>
+<span class="codeline" id="line-68"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">// Deprecated: Use GeoSearch with BYRADIUS and FROMMEMBER arguments instead as of Redis 6.2.0.</span></code></span>
+<span class="codeline" id="line-70"><code><span class="keyword">func</span> (<label for="r26" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r27" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoRadiusByMember" class="ident">GeoRadiusByMember</a></label>(</code></span>
+<span class="codeline" id="line-71"><code>	<label for="r28" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r29" class="ident">key</label>, <label for="r30" class="ident">member</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r31" class="ident">query</label> *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>,</code></span>
+<span class="codeline" id="line-72"><code>) *<a href="command.go.html#line-3939" class="ident">GeoLocationCmd</a> {</code></span>
+<span class="codeline" id="line-73"><code>	<label for="r32" class="ident">cmd</label> := <a href="command.go.html#line-3948" class="ident">NewGeoLocationCmd</a>(<label for="r28" class="ident">ctx</label>, <label for="r31" class="ident">query</label>, <span class="lit-string">"georadiusbymember_ro"</span>, <label for="r29" class="ident">key</label>, <label for="r30" class="ident">member</label>)</code></span>
+<span class="codeline" id="line-74"><code>	<span class="keyword">if</span> <label for="r31" class="ident">query</label>.<a href="command.go.html#line-3932" class="ident">Store</a> != <span class="lit-string">""</span> || <label for="r31" class="ident">query</label>.<a href="command.go.html#line-3933" class="ident">StoreDist</a> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-75"><code>		<label for="r32" class="ident">cmd</label>.<a href="command.go.html#line-379" class="ident">SetErr</a>(<a href="../../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"GeoRadiusByMember does not support Store or StoreDist"</span>))</code></span>
+<span class="codeline" id="line-76"><code>		<span class="keyword">return</span> <label for="r32" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-77"><code>	}</code></span>
+<span class="codeline" id="line-78"><code>	_ = <label for="r26" class="ident">c</label>(<label for="r28" class="ident">ctx</label>, <label for="r32" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-79"><code>	<span class="keyword">return</span> <label for="r32" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-80"><code>}</code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code><span class="comment">// GeoRadiusByMemberStore is a writing GEORADIUSBYMEMBER command.</span></code></span>
+<span class="codeline" id="line-83"><code><span class="keyword">func</span> (<label for="r33" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r34" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoRadiusByMemberStore" class="ident">GeoRadiusByMemberStore</a></label>(</code></span>
+<span class="codeline" id="line-84"><code>	<label for="r35" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r36" class="ident">key</label>, <label for="r37" class="ident">member</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r38" class="ident">query</label> *<a href="command.go.html#line-3922" class="ident">GeoRadiusQuery</a>,</code></span>
+<span class="codeline" id="line-85"><code>) *<a href="command.go.html#line-847" class="ident">IntCmd</a> {</code></span>
+<span class="codeline" id="line-86"><code>	<label for="r39" class="ident">args</label> := <a href="command.go.html#line-3959" class="ident">geoLocationArgs</a>(<label for="r38" class="ident">query</label>, <span class="lit-string">"georadiusbymember"</span>, <label for="r36" class="ident">key</label>, <label for="r37" class="ident">member</label>)</code></span>
+<span class="codeline" id="line-87"><code>	<label for="r40" class="ident">cmd</label> := <a href="command.go.html#line-855" class="ident">NewIntCmd</a>(<label for="r35" class="ident">ctx</label>, <label for="r39" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-88"><code>	<span class="keyword">if</span> <label for="r38" class="ident">query</label>.<a href="command.go.html#line-3932" class="ident">Store</a> == <span class="lit-string">""</span> &amp;&amp; <label for="r38" class="ident">query</label>.<a href="command.go.html#line-3933" class="ident">StoreDist</a> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-89"><code>		<label for="r40" class="ident">cmd</label>.<a href="command.go.html#line-379" class="ident">SetErr</a>(<a href="../../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"GeoRadiusByMemberStore requires Store or StoreDist"</span>))</code></span>
+<span class="codeline" id="line-90"><code>		<span class="keyword">return</span> <label for="r40" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-91"><code>	}</code></span>
+<span class="codeline" id="line-92"><code>	_ = <label for="r33" class="ident">c</label>(<label for="r35" class="ident">ctx</label>, <label for="r40" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-93"><code>	<span class="keyword">return</span> <label for="r40" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-94"><code>}</code></span>
+<span class="codeline" id="line-95"><code></code></span>
+<span class="codeline" id="line-96"><code><span class="keyword">func</span> (<label for="r41" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r42" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoSearch" class="ident">GeoSearch</a></label>(<label for="r43" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r44" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r45" class="ident">q</label> *<a href="command.go.html#line-4092" class="ident">GeoSearchQuery</a>) *<a href="command.go.html#line-1434" class="ident">StringSliceCmd</a> {</code></span>
+<span class="codeline" id="line-97"><code>	<label for="r46" class="ident">args</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">interface</span>{}, <span class="lit-number">0</span>, <span class="lit-number">13</span>)</code></span>
+<span class="codeline" id="line-98"><code>	<label for="r46" class="ident">args</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r46" class="ident">args</label>, <span class="lit-string">"geosearch"</span>, <label for="r44" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-99"><code>	<label for="r46" class="ident">args</label> = <a href="command.go.html#line-4149" class="ident">geoSearchArgs</a>(<label for="r45" class="ident">q</label>, <label for="r46" class="ident">args</label>)</code></span>
+<span class="codeline" id="line-100"><code>	<label for="r47" class="ident">cmd</label> := <a href="command.go.html#line-1442" class="ident">NewStringSliceCmd</a>(<label for="r43" class="ident">ctx</label>, <label for="r46" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-101"><code>	_ = <label for="r41" class="ident">c</label>(<label for="r43" class="ident">ctx</label>, <label for="r47" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-102"><code>	<span class="keyword">return</span> <label for="r47" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-103"><code>}</code></span>
+<span class="codeline" id="line-104"><code></code></span>
+<span class="codeline" id="line-105"><code><span class="keyword">func</span> (<label for="r48" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r49" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoSearchLocation" class="ident">GeoSearchLocation</a></label>(</code></span>
+<span class="codeline" id="line-106"><code>	<label for="r50" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r51" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r52" class="ident">q</label> *<a href="command.go.html#line-4116" class="ident">GeoSearchLocationQuery</a>,</code></span>
+<span class="codeline" id="line-107"><code>) *<a href="command.go.html#line-4182" class="ident">GeoSearchLocationCmd</a> {</code></span>
+<span class="codeline" id="line-108"><code>	<label for="r53" class="ident">args</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">interface</span>{}, <span class="lit-number">0</span>, <span class="lit-number">16</span>)</code></span>
+<span class="codeline" id="line-109"><code>	<label for="r53" class="ident">args</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r53" class="ident">args</label>, <span class="lit-string">"geosearch"</span>, <label for="r51" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-110"><code>	<label for="r53" class="ident">args</label> = <a href="command.go.html#line-4133" class="ident">geoSearchLocationArgs</a>(<label for="r52" class="ident">q</label>, <label for="r53" class="ident">args</label>)</code></span>
+<span class="codeline" id="line-111"><code>	<label for="r54" class="ident">cmd</label> := <a href="command.go.html#line-4191" class="ident">NewGeoSearchLocationCmd</a>(<label for="r50" class="ident">ctx</label>, <label for="r52" class="ident">q</label>, <label for="r53" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-112"><code>	_ = <label for="r48" class="ident">c</label>(<label for="r50" class="ident">ctx</label>, <label for="r54" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-113"><code>	<span class="keyword">return</span> <label for="r54" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-114"><code>}</code></span>
+<span class="codeline" id="line-115"><code></code></span>
+<span class="codeline" id="line-116"><code><span class="keyword">func</span> (<label for="r55" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r56" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoSearchStore" class="ident">GeoSearchStore</a></label>(<label for="r57" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r58" class="ident">key</label>, <label for="r59" class="ident">store</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r60" class="ident">q</label> *<a href="command.go.html#line-4124" class="ident">GeoSearchStoreQuery</a>) *<a href="command.go.html#line-847" class="ident">IntCmd</a> {</code></span>
+<span class="codeline" id="line-117"><code>	<label for="r61" class="ident">args</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">interface</span>{}, <span class="lit-number">0</span>, <span class="lit-number">15</span>)</code></span>
+<span class="codeline" id="line-118"><code>	<label for="r61" class="ident">args</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r61" class="ident">args</label>, <span class="lit-string">"geosearchstore"</span>, <label for="r59" class="ident">store</label>, <label for="r58" class="ident">key</label>)</code></span>
+<span class="codeline" id="line-119"><code>	<label for="r61" class="ident">args</label> = <a href="command.go.html#line-4149" class="ident">geoSearchArgs</a>(&amp;<label for="r60" class="ident">q</label>.<a href="command.go.html#line-4125" class="ident">GeoSearchQuery</a>, <label for="r61" class="ident">args</label>)</code></span>
+<span class="codeline" id="line-120"><code>	<span class="keyword">if</span> <label for="r60" class="ident">q</label>.<a href="command.go.html#line-4130" class="ident">StoreDist</a> {</code></span>
+<span class="codeline" id="line-121"><code>		<label for="r61" class="ident">args</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r61" class="ident">args</label>, <span class="lit-string">"storedist"</span>)</code></span>
+<span class="codeline" id="line-122"><code>	}</code></span>
+<span class="codeline" id="line-123"><code>	<label for="r62" class="ident">cmd</label> := <a href="command.go.html#line-855" class="ident">NewIntCmd</a>(<label for="r57" class="ident">ctx</label>, <label for="r61" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-124"><code>	_ = <label for="r55" class="ident">c</label>(<label for="r57" class="ident">ctx</label>, <label for="r62" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-125"><code>	<span class="keyword">return</span> <label for="r62" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-126"><code>}</code></span>
+<span class="codeline" id="line-127"><code></code></span>
+<span class="codeline" id="line-128"><code><span class="keyword">func</span> (<label for="r63" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r64" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoDist" class="ident">GeoDist</a></label>(</code></span>
+<span class="codeline" id="line-129"><code>	<label for="r65" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r66" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r67" class="ident">member1</label>, <label for="r68" class="ident">member2</label>, <label for="r69" class="ident">unit</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>,</code></span>
+<span class="codeline" id="line-130"><code>) *<a href="command.go.html#line-1318" class="ident">FloatCmd</a> {</code></span>
+<span class="codeline" id="line-131"><code>	<span class="keyword">if</span> <label for="r69" class="ident">unit</label> == <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-132"><code>		<label for="r69" class="ident">unit</label> = <span class="lit-string">"km"</span></code></span>
+<span class="codeline" id="line-133"><code>	}</code></span>
+<span class="codeline" id="line-134"><code>	<label for="r70" class="ident">cmd</label> := <a href="command.go.html#line-1326" class="ident">NewFloatCmd</a>(<label for="r65" class="ident">ctx</label>, <span class="lit-string">"geodist"</span>, <label for="r66" class="ident">key</label>, <label for="r67" class="ident">member1</label>, <label for="r68" class="ident">member2</label>, <label for="r69" class="ident">unit</label>)</code></span>
+<span class="codeline" id="line-135"><code>	_ = <label for="r63" class="ident">c</label>(<label for="r65" class="ident">ctx</label>, <label for="r70" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-136"><code>	<span class="keyword">return</span> <label for="r70" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-137"><code>}</code></span>
+<span class="codeline" id="line-138"><code></code></span>
+<span class="codeline" id="line-139"><code><span class="keyword">func</span> (<label for="r71" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r72" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoHash" class="ident">GeoHash</a></label>(<label for="r73" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r74" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r75" class="ident">members</label> ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="command.go.html#line-1434" class="ident">StringSliceCmd</a> {</code></span>
+<span class="codeline" id="line-140"><code>	<label for="r76" class="ident">args</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">interface</span>{}, <span class="lit-number">2</span>+<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r75" class="ident">members</label>))</code></span>
+<span class="codeline" id="line-141"><code>	<label for="r76" class="ident">args</label>[<span class="lit-number">0</span>] = <span class="lit-string">"geohash"</span></code></span>
+<span class="codeline" id="line-142"><code>	<label for="r76" class="ident">args</label>[<span class="lit-number">1</span>] = <label for="r74" class="ident">key</label></code></span>
+<span class="codeline" id="line-143"><code>	<span class="keyword">for</span> <label for="r77" class="ident">i</label>, <label for="r78" class="ident">member</label> := <span class="keyword">range</span> <label for="r75" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-144"><code>		<label for="r76" class="ident">args</label>[<span class="lit-number">2</span>+<label for="r77" class="ident">i</label>] = <label for="r78" class="ident">member</label></code></span>
+<span class="codeline" id="line-145"><code>	}</code></span>
+<span class="codeline" id="line-146"><code>	<label for="r79" class="ident">cmd</label> := <a href="command.go.html#line-1442" class="ident">NewStringSliceCmd</a>(<label for="r73" class="ident">ctx</label>, <label for="r76" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-147"><code>	_ = <label for="r71" class="ident">c</label>(<label for="r73" class="ident">ctx</label>, <label for="r79" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-148"><code>	<span class="keyword">return</span> <label for="r79" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-149"><code>}</code></span>
+<span class="codeline" id="line-150"><code></code></span>
+<span class="codeline" id="line-151"><code><span class="keyword">func</span> (<label for="r80" class="ident">c</label> <a href="commands.go.html#line-269" class="ident">cmdable</a>) <label for="r81" class="ident"><a href="../../../../../imp/github.com/redis/go-redis/v9.cmdable^31386.html#name-.GeoPos" class="ident">GeoPos</a></label>(<label for="r82" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r83" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r84" class="ident">members</label> ...<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) *<a href="command.go.html#line-4311" class="ident">GeoPosCmd</a> {</code></span>
+<span class="codeline" id="line-152"><code>	<label for="r85" class="ident">args</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">interface</span>{}, <span class="lit-number">2</span>+<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r84" class="ident">members</label>))</code></span>
+<span class="codeline" id="line-153"><code>	<label for="r85" class="ident">args</label>[<span class="lit-number">0</span>] = <span class="lit-string">"geopos"</span></code></span>
+<span class="codeline" id="line-154"><code>	<label for="r85" class="ident">args</label>[<span class="lit-number">1</span>] = <label for="r83" class="ident">key</label></code></span>
+<span class="codeline" id="line-155"><code>	<span class="keyword">for</span> <label for="r86" class="ident">i</label>, <label for="r87" class="ident">member</label> := <span class="keyword">range</span> <label for="r84" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-156"><code>		<label for="r85" class="ident">args</label>[<span class="lit-number">2</span>+<label for="r86" class="ident">i</label>] = <label for="r87" class="ident">member</label></code></span>
+<span class="codeline" id="line-157"><code>	}</code></span>
+<span class="codeline" id="line-158"><code>	<label for="r88" class="ident">cmd</label> := <a href="command.go.html#line-4319" class="ident">NewGeoPosCmd</a>(<label for="r82" class="ident">ctx</label>, <label for="r85" class="ident">args</label>...)</code></span>
+<span class="codeline" id="line-159"><code>	_ = <label for="r80" class="ident">c</label>(<label for="r82" class="ident">ctx</label>, <label for="r88" class="ident">cmd</label>)</code></span>
+<span class="codeline" id="line-160"><code>	<span class="keyword">return</span> <label for="r88" class="ident">cmd</label></code></span>
+<span class="codeline" id="line-161"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

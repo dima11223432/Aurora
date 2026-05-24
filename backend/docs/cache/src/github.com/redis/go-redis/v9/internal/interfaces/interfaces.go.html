@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: interfaces.go in package github.com/redis/go-redis/v9/internal/interfaces</title>
+<link href="../../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	interfaces.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/interfaces.html">github.com/redis/go-redis/v9/internal/interfaces</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">// Package interfaces provides shared interfaces used by both the main redis package</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// and the maintnotifications upgrade package to avoid circular dependencies.</span></code></span></div><span class="codeline" id="line-3"><code><span class="keyword">package</span> interfaces</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-6"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i1"><span class="lit-string i1">"net"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i2"><span class="lit-string i2">"time"</span></label></code></span>
+<span class="codeline" id="line-9"><code>)</code></span>
+<span class="codeline" id="line-10"><code></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// NotificationProcessor is (most probably) a push.NotificationProcessor</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// forward declaration to avoid circular imports</span></code></span>
+<span class="codeline" id="line-13"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/interfaces.html#name-NotificationProcessor" class="ident">NotificationProcessor</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-14"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.NotificationProcessor.html#name-RegisterHandler" class="ident">RegisterHandler</a>(pushNotificationName <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, handler <span class="keyword">interface</span>{}, protected <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.NotificationProcessor.html#name-UnregisterHandler" class="ident">UnregisterHandler</a>(pushNotificationName <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-16"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.NotificationProcessor.html#name-GetHandler" class="ident">GetHandler</a>(pushNotificationName <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <span class="keyword">interface</span>{}</code></span>
+<span class="codeline" id="line-17"><code>}</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">// ClientInterface defines the interface that clients must implement for maintnotifications upgrades.</span></code></span>
+<span class="codeline" id="line-20"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/interfaces.html#name-ClientInterface" class="ident">ClientInterface</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-21"><code>	<span class="comment">// GetOptions returns the client options.</span></code></span>
+<span class="codeline" id="line-22"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.ClientInterface.html#name-GetOptions" class="ident">GetOptions</a>() <a href="#line-30" class="ident">OptionsInterface</a></code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code>	<span class="comment">// GetPushProcessor returns the client's push notification processor.</span></code></span>
+<span class="codeline" id="line-25"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.ClientInterface.html#name-GetPushProcessor" class="ident">GetPushProcessor</a>() <a href="#line-13" class="ident">NotificationProcessor</a></code></span>
+<span class="codeline" id="line-26"><code>}</code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code><span class="comment">// OptionsInterface defines the interface for client options.</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// Uses an adapter pattern to avoid circular dependencies.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="keyword">type</span> <a href="../../../../../../../pkg/github.com/redis/go-redis/v9/internal/interfaces.html#name-OptionsInterface" class="ident">OptionsInterface</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-31"><code>	<span class="comment">// GetReadTimeout returns the read timeout.</span></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetReadTimeout" class="ident">GetReadTimeout</a>() <a href="../../../../../../../pkg/time.html" class="ident i2">time</a>.<a href="../../../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code>	<span class="comment">// GetWriteTimeout returns the write timeout.</span></code></span>
+<span class="codeline" id="line-35"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetWriteTimeout" class="ident">GetWriteTimeout</a>() <a href="../../../../../../../pkg/time.html" class="ident i2">time</a>.<a href="../../../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code>	<span class="comment">// GetNetwork returns the network type.</span></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetNetwork" class="ident">GetNetwork</a>() <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code>	<span class="comment">// GetAddr returns the connection address.</span></code></span>
+<span class="codeline" id="line-41"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetAddr" class="ident">GetAddr</a>() <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code>	<span class="comment">// GetNodeAddress returns the address of the Redis node as reported by the server.</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">	// For cluster clients, this is the endpoint from CLUSTER SLOTS before any transformation.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">	// For standalone clients, this defaults to Addr.</span></code></span>
+<span class="codeline" id="line-46"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetNodeAddress" class="ident">GetNodeAddress</a>() <a href="../../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-47"><code></code></span>
+<span class="codeline" id="line-48"><code>	<span class="comment">// IsTLSEnabled returns true if TLS is enabled.</span></code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-IsTLSEnabled" class="ident">IsTLSEnabled</a>() <a href="../../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-50"><code></code></span>
+<span class="codeline" id="line-51"><code>	<span class="comment">// GetProtocol returns the protocol version.</span></code></span>
+<span class="codeline" id="line-52"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetProtocol" class="ident">GetProtocol</a>() <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-53"><code></code></span>
+<span class="codeline" id="line-54"><code>	<span class="comment">// GetPoolSize returns the connection pool size.</span></code></span>
+<span class="codeline" id="line-55"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-GetPoolSize" class="ident">GetPoolSize</a>() <a href="../../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code>	<span class="comment">// NewDialer returns a new dialer function for the connection.</span></code></span>
+<span class="codeline" id="line-58"><code>	<a href="../../../../../../../imp/github.com/redis/go-redis/v9/internal/interfaces.OptionsInterface.html#name-NewDialer" class="ident">NewDialer</a>() <span class="keyword">func</span>(<a href="../../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../../context/context.go.html#line-71" class="ident">Context</a>) (<a href="../../../../../../../pkg/net.html" class="ident i1">net</a>.<a href="../../../../../../net/net.go.html#line-124" class="ident">Conn</a>, <a href="../../../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-59"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
