@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: fse.go in package github.com/klauspost/compress/fse</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	fse.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html">github.com/klauspost/compress/fse</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2018 Klaus Post. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code><span class="comment">// Based on work Copyright (c) 2013, Yann Collet, released under BSD License.</span></code></span>
+<span class="codeline" id="line-5"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-6"><code><span class="comment">// Package fse provides Finite State Entropy encoding and decoding.</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// Finite State Entropy encoding provides a fast near-optimal symbol encoding/decoding</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// for byte blocks as implemented in zstd.</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// See https://github.com/klauspost/compress/tree/master/fse for more information.</span></code></span></div><span class="codeline" id="line-12"><code><span class="keyword">package</span> fse</code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-15"><code>	<label for="i0"><span class="lit-string i0">"errors"</span></label></code></span>
+<span class="codeline" id="line-16"><code>	<label for="i1"><span class="lit-string i1">"fmt"</span></label></code></span>
+<span class="codeline" id="line-17"><code>	<label for="i2"><span class="lit-string i2">"math/bits"</span></label></code></span>
+<span class="codeline" id="line-18"><code>)</code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-21"><code>	<span class="comment">/*!MEMORY_USAGE :</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">	 *  Memory usage formula : N-&gt;2^N Bytes (examples : 10 -&gt; 1KB; 12 -&gt; 4KB ; 16 -&gt; 64KB; 20 -&gt; 1MB; etc.)</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">	 *  Increasing memory usage improves compression ratio</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	 *  Reduced memory usage can improve speed, due to cache effect</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">	 *  Recommended max value is 14, for 16KB, which nicely fits into Intel x86 L1 cache */</span></code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-maxMemoryUsage" class="ident">maxMemoryUsage</a>     = <span class="lit-number">14</span></code></span>
+<span class="codeline" id="line-27"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-defaultMemoryUsage" class="ident">defaultMemoryUsage</a> = <span class="lit-number">13</span></code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-maxTableLog" class="ident">maxTableLog</a>     = <a href="#line-26" class="ident">maxMemoryUsage</a> - <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-30"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-maxTablesize" class="ident">maxTablesize</a>    = <span class="lit-number">1</span> &lt;&lt; <a href="#line-29" class="ident">maxTableLog</a></code></span>
+<span class="codeline" id="line-31"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-defaultTablelog" class="ident">defaultTablelog</a> = <a href="#line-27" class="ident">defaultMemoryUsage</a> - <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-minTablelog" class="ident">minTablelog</a>     = <span class="lit-number">5</span></code></span>
+<span class="codeline" id="line-33"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-maxSymbolValue" class="ident">maxSymbolValue</a>  = <span class="lit-number">255</span></code></span>
+<span class="codeline" id="line-34"><code>)</code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-37"><code>	<span class="comment">// ErrIncompressible is returned when input is judged to be too hard to compress.</span></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-ErrIncompressible" class="ident">ErrIncompressible</a> = <a href="../../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"input is not compressible"</span>)</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code>	<span class="comment">// ErrUseRLE is returned from the compressor when the input is a single byte value repeated.</span></code></span>
+<span class="codeline" id="line-41"><code>	<a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-ErrUseRLE" class="ident">ErrUseRLE</a> = <a href="../../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"input is single value repeated"</span>)</code></span>
+<span class="codeline" id="line-42"><code>)</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// Scratch provides temporary storage for compression and decompression.</span></code></span>
+<span class="codeline" id="line-45"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-Scratch" class="ident">Scratch</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-46"><code>	<span class="comment">// Private</span></code></span>
+<span class="codeline" id="line-47"><code>	count    [<a href="#line-33" class="ident">maxSymbolValue</a> + <span class="lit-number">1</span>]<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a></code></span>
+<span class="codeline" id="line-48"><code>	norm     [<a href="#line-33" class="ident">maxSymbolValue</a> + <span class="lit-number">1</span>]<a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-49"><code>	br       <a href="bytereader.go.html#line-12" class="ident">byteReader</a></code></span>
+<span class="codeline" id="line-50"><code>	bits     <a href="bitreader.go.html#line-17" class="ident">bitReader</a></code></span>
+<span class="codeline" id="line-51"><code>	bw       <a href="bitwriter.go.html#line-12" class="ident">bitWriter</a></code></span>
+<span class="codeline" id="line-52"><code>	ct       <a href="compress.go.html#line-320" class="ident">cTable</a>      <span class="comment">// Compression tables.</span></code></span>
+<span class="codeline" id="line-53"><code>	decTable []<a href="decompress.go.html#line-166" class="ident">decSymbol</a> <span class="comment">// Decompression table.</span></code></span>
+<span class="codeline" id="line-54"><code>	maxCount <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>         <span class="comment">// count of the most probable symbol</span></code></span>
+<span class="codeline" id="line-55"><code></code></span>
+<span class="codeline" id="line-56"><code>	<span class="comment">// Per block parameters.</span></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">	// These can be used to override compression parameters of the block.</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">	// Do not touch, unless you know what you are doing.</span></code></span>
+<span class="codeline" id="line-59"><code></code></span>
+<span class="codeline" id="line-60"><code>	<span class="comment">// Out is output buffer.</span></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">	// If the scratch is re-used before the caller is done processing the output,</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">	// set this field to nil.</span></code></span>
+<span class="codeline" id="line-63"><code><span class="comment">	// Otherwise the output buffer will be re-used for next Compression/Decompression step</span></code></span>
+<span class="codeline" id="line-64"><code><span class="comment">	// and allocation will be avoided.</span></code></span>
+<span class="codeline" id="line-65"><code>	Out []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-66"><code></code></span>
+<span class="codeline" id="line-67"><code>	<span class="comment">// DecompressLimit limits the maximum decoded size acceptable.</span></code></span>
+<span class="codeline" id="line-68"><code><span class="comment">	// If &gt; 0 decompression will stop when approximately this many bytes</span></code></span>
+<span class="codeline" id="line-69"><code><span class="comment">	// has been decoded.</span></code></span>
+<span class="codeline" id="line-70"><code><span class="comment">	// If 0, maximum size will be 2GB.</span></code></span>
+<span class="codeline" id="line-71"><code>	DecompressLimit <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-72"><code></code></span>
+<span class="codeline" id="line-73"><code>	symbolLen      <a href="../../../../../pkg/builtin.html#name-uint16" class="ident">uint16</a> <span class="comment">// Length of active part of the symbol table.</span></code></span>
+<span class="codeline" id="line-74"><code>	actualTableLog <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>  <span class="comment">// Selected tablelog.</span></code></span>
+<span class="codeline" id="line-75"><code>	zeroBits       <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>   <span class="comment">// no bits has prob &gt; 50%.</span></code></span>
+<span class="codeline" id="line-76"><code>	clearCount     <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>   <span class="comment">// clear count</span></code></span>
+<span class="codeline" id="line-77"><code></code></span>
+<span class="codeline" id="line-78"><code>	<span class="comment">// MaxSymbolValue will override the maximum symbol value of the next block.</span></code></span>
+<span class="codeline" id="line-79"><code>	MaxSymbolValue <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a></code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>	<span class="comment">// TableLog will attempt to override the tablelog for the next block.</span></code></span>
+<span class="codeline" id="line-82"><code>	TableLog <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a></code></span>
+<span class="codeline" id="line-83"><code>}</code></span>
+<span class="codeline" id="line-84"><code></code></span>
+<span class="codeline" id="line-85"><code><span class="comment">// Histogram allows to populate the histogram and skip that step in the compression,</span></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">// It otherwise allows to inspect the histogram when compression is done.</span></code></span>
+<span class="codeline" id="line-87"><code><span class="comment">// To indicate that you have populated the histogram call HistogramFinished</span></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">// with the value of the highest populated symbol, as well as the number of entries</span></code></span>
+<span class="codeline" id="line-89"><code><span class="comment">// in the most populated entry. These are accepted at face value.</span></code></span>
+<span class="codeline" id="line-90"><code><span class="comment">// The returned slice will always be length 256.</span></code></span>
+<span class="codeline" id="line-91"><code><span class="keyword">func</span> (<label for="r0" class="ident">s</label> *<a href="#line-45" class="ident">Scratch</a>) <label for="r1" class="ident">Histogram</label>() []<a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-92"><code>	<span class="keyword">return</span> <label for="r0" class="ident">s</label>.<a href="#line-47" class="ident">count</a>[:]</code></span>
+<span class="codeline" id="line-93"><code>}</code></span>
+<span class="codeline" id="line-94"><code></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">// HistogramFinished can be called to indicate that the histogram has been populated.</span></code></span>
+<span class="codeline" id="line-96"><code><span class="comment">// maxSymbol is the index of the highest set symbol of the next data segment.</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">// maxCount is the number of entries in the most populated entry.</span></code></span>
+<span class="codeline" id="line-98"><code><span class="comment">// These are accepted at face value.</span></code></span>
+<span class="codeline" id="line-99"><code><span class="keyword">func</span> (<label for="r2" class="ident">s</label> *<a href="#line-45" class="ident">Scratch</a>) <label for="r3" class="ident">HistogramFinished</label>(<label for="r4" class="ident">maxSymbol</label> <a href="../../../../../pkg/builtin.html#name-uint8" class="ident">uint8</a>, <label for="r5" class="ident">maxCount</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>) {</code></span>
+<span class="codeline" id="line-100"><code>	<label for="r2" class="ident">s</label>.<a href="#line-54" class="ident">maxCount</a> = <label for="r5" class="ident">maxCount</label></code></span>
+<span class="codeline" id="line-101"><code>	<label for="r2" class="ident">s</label>.<a href="#line-73" class="ident">symbolLen</a> = <a href="../../../../../pkg/builtin.html#name-uint16" class="ident">uint16</a>(<label for="r4" class="ident">maxSymbol</label>) + <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-102"><code>	<label for="r2" class="ident">s</label>.<a href="#line-76" class="ident">clearCount</a> = <label for="r5" class="ident">maxCount</label> != <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-103"><code>}</code></span>
+<span class="codeline" id="line-104"><code></code></span>
+<span class="codeline" id="line-105"><code><span class="comment">// prepare will prepare and allocate scratch tables used for both compression and decompression.</span></code></span>
+<span class="codeline" id="line-106"><code><span class="keyword">func</span> (<label for="r6" class="ident">s</label> *<a href="#line-45" class="ident">Scratch</a>) <label for="r7" class="ident">prepare</label>(<label for="r8" class="ident">in</label> []<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>) (*<a href="#line-45" class="ident">Scratch</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-107"><code>	<span class="keyword">if</span> <label for="r6" class="ident">s</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-108"><code>		<label for="r6" class="ident">s</label> = &amp;<a href="#line-45" class="ident">Scratch</a>{}</code></span>
+<span class="codeline" id="line-109"><code>	}</code></span>
+<span class="codeline" id="line-110"><code>	<span class="keyword">if</span> <label for="r6" class="ident">s</label>.<a href="#line-79" class="ident">MaxSymbolValue</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-111"><code>		<label for="r6" class="ident">s</label>.<a href="#line-79" class="ident">MaxSymbolValue</a> = <span class="lit-number">255</span></code></span>
+<span class="codeline" id="line-112"><code>	}</code></span>
+<span class="codeline" id="line-113"><code>	<span class="keyword">if</span> <label for="r6" class="ident">s</label>.<a href="#line-82" class="ident">TableLog</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-114"><code>		<label for="r6" class="ident">s</label>.<a href="#line-82" class="ident">TableLog</a> = <a href="#line-31" class="ident">defaultTablelog</a></code></span>
+<span class="codeline" id="line-115"><code>	}</code></span>
+<span class="codeline" id="line-116"><code>	<span class="keyword">if</span> <label for="r6" class="ident">s</label>.<a href="#line-82" class="ident">TableLog</a> &gt; <a href="#line-29" class="ident">maxTableLog</a> {</code></span>
+<span class="codeline" id="line-117"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"tableLog (%d) &gt; maxTableLog (%d)"</span>, <label for="r6" class="ident">s</label>.<a href="#line-82" class="ident">TableLog</a>, <a href="#line-29" class="ident">maxTableLog</a>)</code></span>
+<span class="codeline" id="line-118"><code>	}</code></span>
+<span class="codeline" id="line-119"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-cap" class="ident">cap</a>(<label for="r6" class="ident">s</label>.<a href="#line-65" class="ident">Out</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-120"><code>		<label for="r6" class="ident">s</label>.<a href="#line-65" class="ident">Out</a> = <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <span class="lit-number">0</span>, <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r8" class="ident">in</label>))</code></span>
+<span class="codeline" id="line-121"><code>	}</code></span>
+<span class="codeline" id="line-122"><code>	<span class="keyword">if</span> <label for="r6" class="ident">s</label>.<a href="#line-76" class="ident">clearCount</a> &amp;&amp; <label for="r6" class="ident">s</label>.<a href="#line-54" class="ident">maxCount</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-123"><code>		<span class="keyword">for</span> <label for="r9" class="ident">i</label> := <span class="keyword">range</span> <label for="r6" class="ident">s</label>.<a href="#line-47" class="ident">count</a> {</code></span>
+<span class="codeline" id="line-124"><code>			<label for="r6" class="ident">s</label>.<a href="#line-47" class="ident">count</a>[<label for="r9" class="ident">i</label>] = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-125"><code>		}</code></span>
+<span class="codeline" id="line-126"><code>		<label for="r6" class="ident">s</label>.<a href="#line-76" class="ident">clearCount</a> = <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-127"><code>	}</code></span>
+<span class="codeline" id="line-128"><code>	<label for="r6" class="ident">s</label>.<a href="#line-49" class="ident">br</a>.<a href="bytereader.go.html#line-18" class="ident">init</a>(<label for="r8" class="ident">in</label>)</code></span>
+<span class="codeline" id="line-129"><code>	<span class="keyword">if</span> <label for="r6" class="ident">s</label>.<a href="#line-71" class="ident">DecompressLimit</a> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-130"><code>		<span class="comment">// Max size 2GB.</span></code></span>
+<span class="codeline" id="line-131"><code>		<label for="r6" class="ident">s</label>.<a href="#line-71" class="ident">DecompressLimit</a> = (<span class="lit-number">2</span> &lt;&lt; <span class="lit-number">30</span>) - <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-132"><code>	}</code></span>
+<span class="codeline" id="line-133"><code></code></span>
+<span class="codeline" id="line-134"><code>	<span class="keyword">return</span> <label for="r6" class="ident">s</label>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-135"><code>}</code></span>
+<span class="codeline" id="line-136"><code></code></span>
+<span class="codeline" id="line-137"><code><span class="comment">// tableStep returns the next table index.</span></code></span>
+<span class="codeline" id="line-138"><code><span class="keyword">func</span> <label for="r10" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-tableStep" class="ident">tableStep</a></label>(<label for="r11" class="ident">tableSize</label> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>) <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a> {</code></span>
+<span class="codeline" id="line-139"><code>	<span class="keyword">return</span> (<label for="r11" class="ident">tableSize</label> &gt;&gt; <span class="lit-number">1</span>) + (<label for="r11" class="ident">tableSize</label> &gt;&gt; <span class="lit-number">3</span>) + <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-140"><code>}</code></span>
+<span class="codeline" id="line-141"><code></code></span>
+<span class="codeline" id="line-142"><code><span class="keyword">func</span> <label for="r12" class="ident"><a href="../../../../../pkg/github.com/klauspost/compress/fse.html#name-highBits" class="ident">highBits</a></label>(<label for="r13" class="ident">val</label> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>) (<label for="r14" class="ident">n</label> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>) {</code></span>
+<span class="codeline" id="line-143"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-uint32" class="ident">uint32</a>(<a href="../../../../../pkg/math/bits.html" class="ident i2">bits</a>.<a href="../../../../math/bits/bits.go.html#line-324" class="ident">Len32</a>(<label for="r13" class="ident">val</label>) - <span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-144"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

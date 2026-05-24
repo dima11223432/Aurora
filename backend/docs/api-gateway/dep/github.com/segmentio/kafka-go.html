@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dependency Relation: github.com/segmentio/kafka-go</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre><code><span style="font-size:xx-large;">package <b>kafka</b></span>
+
+<span class="title">Import Path</span>
+	<a href="../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+
+<span class="title">Imports</span><div id="packages">
+<code>     <span class="order"> 1</span>. <a href="../../../pkg/bufio.html">bufio</a></code>
+<code>     <span class="order"> 2</span>. <a href="../../../pkg/bytes.html">bytes</a></code>
+<code>     <span class="order"> 3</span>. <a href="../../../pkg/context.html">context</a></code>
+<code>     <span class="order"> 4</span>. <a href="../../../pkg/crypto/tls.html">crypto/tls</a></code>
+<code>     <span class="order"> 5</span>. <a href="../../../pkg/encoding.html">encoding</a></code>
+<code>     <span class="order"> 6</span>. <a href="../../../pkg/encoding/binary.html" class="path-duplicate">encoding</a><a href="../../../pkg/encoding/binary.html">/binary</a></code>
+<code>     <span class="order"> 7</span>. <a href="../../../pkg/errors.html">errors</a></code>
+<code>     <span class="order"> 8</span>. <a href="../../../pkg/fmt.html">fmt</a></code>
+<code>     <span class="order"> 9</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/compress.html">github.com/segmentio/kafka-go/compress</a></code>
+<code>     <span class="order">10</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol.html" class="path-duplicate">github.com/segmentio/kafka-go</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol.html">/protocol</a></code>
+<code>     <span class="order">11</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/addoffsetstotxn.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/addoffsetstotxn.html">/addoffsetstotxn</a></code>
+<code>     <span class="order">12</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/addpartitionstotxn.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/addpartitionstotxn.html">/addpartitionstotxn</a></code>
+<code>     <span class="order">13</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alterclientquotas.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alterclientquotas.html">/alterclientquotas</a></code>
+<code>     <span class="order">14</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alterconfigs.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alterconfigs.html">/alterconfigs</a></code>
+<code>     <span class="order">15</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alterpartitionreassignments.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alterpartitionreassignments.html">/alterpartitionreassignments</a></code>
+<code>     <span class="order">16</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alteruserscramcredentials.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/alteruserscramcredentials.html">/alteruserscramcredentials</a></code>
+<code>     <span class="order">17</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/apiversions.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/apiversions.html">/apiversions</a></code>
+<code>     <span class="order">18</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/consumer.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/consumer.html">/consumer</a></code>
+<code>     <span class="order">19</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/createacls.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/createacls.html">/createacls</a></code>
+<code>     <span class="order">20</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/createpartitions.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/createpartitions.html">/createpartitions</a></code>
+<code>     <span class="order">21</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/createtopics.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/createtopics.html">/createtopics</a></code>
+<code>     <span class="order">22</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/deleteacls.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/deleteacls.html">/deleteacls</a></code>
+<code>     <span class="order">23</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/deletegroups.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/deletegroups.html">/deletegroups</a></code>
+<code>     <span class="order">24</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/deletetopics.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/deletetopics.html">/deletetopics</a></code>
+<code>     <span class="order">25</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeacls.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeacls.html">/describeacls</a></code>
+<code>     <span class="order">26</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeclientquotas.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeclientquotas.html">/describeclientquotas</a></code>
+<code>     <span class="order">27</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeconfigs.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeconfigs.html">/describeconfigs</a></code>
+<code>     <span class="order">28</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describegroups.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describegroups.html">/describegroups</a></code>
+<code>     <span class="order">29</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeuserscramcredentials.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/describeuserscramcredentials.html">/describeuserscramcredentials</a></code>
+<code>     <span class="order">30</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/electleaders.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/electleaders.html">/electleaders</a></code>
+<code>     <span class="order">31</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/endtxn.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/endtxn.html">/endtxn</a></code>
+<code>     <span class="order">32</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/fetch.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/fetch.html">/fetch</a></code>
+<code>     <span class="order">33</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/findcoordinator.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/findcoordinator.html">/findcoordinator</a></code>
+<code>     <span class="order">34</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/heartbeat.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/heartbeat.html">/heartbeat</a></code>
+<code>     <span class="order">35</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/incrementalalterconfigs.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/incrementalalterconfigs.html">/incrementalalterconfigs</a></code>
+<code>     <span class="order">36</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/initproducerid.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/initproducerid.html">/initproducerid</a></code>
+<code>     <span class="order">37</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/joingroup.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/joingroup.html">/joingroup</a></code>
+<code>     <span class="order">38</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/leavegroup.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/leavegroup.html">/leavegroup</a></code>
+<code>     <span class="order">39</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/listgroups.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/listgroups.html">/listgroups</a></code>
+<code>     <span class="order">40</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/listoffsets.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/listoffsets.html">/listoffsets</a></code>
+<code>     <span class="order">41</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/listpartitionreassignments.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/listpartitionreassignments.html">/listpartitionreassignments</a></code>
+<code>     <span class="order">42</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/metadata.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/metadata.html">/metadata</a></code>
+<code>     <span class="order">43</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/offsetcommit.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/offsetcommit.html">/offsetcommit</a></code>
+<code>     <span class="order">44</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/offsetdelete.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/offsetdelete.html">/offsetdelete</a></code>
+<code>     <span class="order">45</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/offsetfetch.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/offsetfetch.html">/offsetfetch</a></code>
+<code>     <span class="order">46</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/produce.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/produce.html">/produce</a></code>
+<code>     <span class="order">47</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/rawproduce.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/rawproduce.html">/rawproduce</a></code>
+<code>     <span class="order">48</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/saslauthenticate.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/saslauthenticate.html">/saslauthenticate</a></code>
+<code>     <span class="order">49</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/saslhandshake.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/saslhandshake.html">/saslhandshake</a></code>
+<code>     <span class="order">50</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/syncgroup.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/syncgroup.html">/syncgroup</a></code>
+<code>     <span class="order">51</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/protocol/txnoffsetcommit.html" class="path-duplicate">github.com/segmentio/kafka-go/protocol</a><a href="../../../pkg/github.com/segmentio/kafka-go/protocol/txnoffsetcommit.html">/txnoffsetcommit</a></code>
+<code>     <span class="order">52</span>. <a href="../../../pkg/github.com/segmentio/kafka-go/sasl.html" class="path-duplicate">github.com/segmentio/kafka-go</a><a href="../../../pkg/github.com/segmentio/kafka-go/sasl.html">/sasl</a></code>
+<code>     <span class="order">53</span>. <a href="../../../pkg/hash.html">hash</a></code>
+<code>     <span class="order">54</span>. <a href="../../../pkg/hash/crc32.html" class="path-duplicate">hash</a><a href="../../../pkg/hash/crc32.html">/crc32</a></code>
+<code>     <span class="order">55</span>. <a href="../../../pkg/hash/fnv.html" class="path-duplicate">hash</a><a href="../../../pkg/hash/fnv.html">/fnv</a></code>
+<code>     <span class="order">56</span>. <a href="../../../pkg/io.html">io</a></code>
+<code>     <span class="order">57</span>. <a href="../../../pkg/log.html">log</a></code>
+<code>     <span class="order">58</span>. <a href="../../../pkg/math.html">math</a></code>
+<code>     <span class="order">59</span>. <a href="../../../pkg/math/rand.html" class="path-duplicate">math</a><a href="../../../pkg/math/rand.html">/rand</a></code>
+<code>     <span class="order">60</span>. <a href="../../../pkg/net.html">net</a></code>
+<code>     <span class="order">61</span>. <a href="../../../pkg/os.html">os</a></code>
+<code>     <span class="order">62</span>. <a href="../../../pkg/path/filepath.html">path/filepath</a></code>
+<code>     <span class="order">63</span>. <a href="../../../pkg/reflect.html">reflect</a></code>
+<code>     <span class="order">64</span>. <a href="../../../pkg/runtime/pprof.html">runtime/pprof</a></code>
+<code>     <span class="order">65</span>. <a href="../../../pkg/sort.html">sort</a></code>
+<code>     <span class="order">66</span>. <a href="../../../pkg/strconv.html">strconv</a></code>
+<code>     <span class="order">67</span>. <a href="../../../pkg/strings.html">strings</a></code>
+<code>     <span class="order">68</span>. <a href="../../../pkg/sync.html">sync</a></code>
+<code>     <span class="order">69</span>. <a href="../../../pkg/sync/atomic.html" class="path-duplicate">sync</a><a href="../../../pkg/sync/atomic.html">/atomic</a></code>
+<code>     <span class="order">70</span>. <a href="../../../pkg/syscall.html">syscall</a></code>
+<code>     <span class="order">71</span>. <a href="../../../pkg/time.html">time</a></code></div>
+<span class="title" id="imported-by">Imported By</span><div id="packages">
+<code>     <span class="order">1</span>. <a href="../../../pkg/API_Service^d53e1/internal/broker/kafka.html">API_Service/internal/broker/kafka</a></code></div><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: groupbalancer.go in package github.com/segmentio/kafka-go</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	groupbalancer.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/github.com/segmentio/kafka-go.html">github.com/segmentio/kafka-go</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86],
+input[id=r87]:checked ~pre label[for=r87],
+input[id=r88]:checked ~pre label[for=r88],
+input[id=r89]:checked ~pre label[for=r89],
+input[id=r90]:checked ~pre label[for=r90],
+input[id=r91]:checked ~pre label[for=r91],
+input[id=r92]:checked ~pre label[for=r92],
+input[id=r93]:checked ~pre label[for=r93],
+input[id=r94]:checked ~pre label[for=r94],
+input[id=r95]:checked ~pre label[for=r95],
+input[id=r96]:checked ~pre label[for=r96],
+input[id=r97]:checked ~pre label[for=r97],
+input[id=r98]:checked ~pre label[for=r98],
+input[id=r99]:checked ~pre label[for=r99],
+input[id=r100]:checked ~pre label[for=r100],
+input[id=r101]:checked ~pre label[for=r101],
+input[id=r102]:checked ~pre label[for=r102],
+input[id=r103]:checked ~pre label[for=r103],
+input[id=r104]:checked ~pre label[for=r104],
+input[id=r105]:checked ~pre label[for=r105],
+input[id=r106]:checked ~pre label[for=r106],
+input[id=r107]:checked ~pre label[for=r107],
+input[id=r108]:checked ~pre label[for=r108],
+input[id=r109]:checked ~pre label[for=r109],
+input[id=r110]:checked ~pre label[for=r110],
+input[id=r111]:checked ~pre label[for=r111],
+input[id=r112]:checked ~pre label[for=r112],
+input[id=r113]:checked ~pre label[for=r113],
+input[id=r114]:checked ~pre label[for=r114],
+input[id=r115]:checked ~pre label[for=r115],
+input[id=r116]:checked ~pre label[for=r116],
+input[id=r117]:checked ~pre label[for=r117]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="r87" type="radio" name="g"/>
+<input id="r88" type="radio" name="g"/>
+<input id="r89" type="radio" name="g"/>
+<input id="r90" type="radio" name="g"/>
+<input id="r91" type="radio" name="g"/>
+<input id="r92" type="radio" name="g"/>
+<input id="r93" type="radio" name="g"/>
+<input id="r94" type="radio" name="g"/>
+<input id="r95" type="radio" name="g"/>
+<input id="r96" type="radio" name="g"/>
+<input id="r97" type="radio" name="g"/>
+<input id="r98" type="radio" name="g"/>
+<input id="r99" type="radio" name="g"/>
+<input id="r100" type="radio" name="g"/>
+<input id="r101" type="radio" name="g"/>
+<input id="r102" type="radio" name="g"/>
+<input id="r103" type="radio" name="g"/>
+<input id="r104" type="radio" name="g"/>
+<input id="r105" type="radio" name="g"/>
+<input id="r106" type="radio" name="g"/>
+<input id="r107" type="radio" name="g"/>
+<input id="r108" type="radio" name="g"/>
+<input id="r109" type="radio" name="g"/>
+<input id="r110" type="radio" name="g"/>
+<input id="r111" type="radio" name="g"/>
+<input id="r112" type="radio" name="g"/>
+<input id="r113" type="radio" name="g"/>
+<input id="r114" type="radio" name="g"/>
+<input id="r115" type="radio" name="g"/>
+<input id="r116" type="radio" name="g"/>
+<input id="r117" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> kafka</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"sort"</span></label></code></span>
+<span class="codeline" id="line-5"><code>)</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// GroupMember describes a single participant in a consumer group.</span></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupMember" class="ident">GroupMember</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-9"><code>	<span class="comment">// ID is the unique ID for this member as taken from the JoinGroup response.</span></code></span>
+<span class="codeline" id="line-10"><code>	ID <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code>	<span class="comment">// Topics is a list of topics that this member is consuming.</span></code></span>
+<span class="codeline" id="line-13"><code>	Topics []<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-14"><code></code></span>
+<span class="codeline" id="line-15"><code>	<span class="comment">// UserData contains any information that the GroupBalancer sent to the</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">	// consumer group coordinator.</span></code></span>
+<span class="codeline" id="line-17"><code>	UserData []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-18"><code>}</code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">// GroupMemberAssignments holds MemberID =&gt; topic =&gt; partitions.</span></code></span>
+<span class="codeline" id="line-21"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupMemberAssignments" class="ident">GroupMemberAssignments</a> <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>]<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-22"><code></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">// GroupBalancer encapsulates the client side rebalancing logic.</span></code></span>
+<span class="codeline" id="line-24"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-GroupBalancer" class="ident">GroupBalancer</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-25"><code>	<span class="comment">// ProtocolName of the GroupBalancer</span></code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../imp/github.com/segmentio/kafka-go.GroupBalancer.html#name-ProtocolName" class="ident">ProtocolName</a>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	<span class="comment">// UserData provides the GroupBalancer an opportunity to embed custom</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">	// UserData into the metadata.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">	// Will be used by JoinGroup to begin the consumer group handshake.</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-33"><code><span class="comment">	// See https://cwiki.apache.org/confluence/display/KAFKA/A+Guide+To+The+Kafka+Protocol#AGuideToTheKafkaProtocol-JoinGroupRequest</span></code></span>
+<span class="codeline" id="line-34"><code>	<a href="../../../../imp/github.com/segmentio/kafka-go.GroupBalancer.html#name-UserData" class="ident">UserData</a>() ([]<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code>	<span class="comment">// DefineMemberships returns which members will be consuming</span></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">	// which topic partitions</span></code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../imp/github.com/segmentio/kafka-go.GroupBalancer.html#name-AssignGroups" class="ident">AssignGroups</a>(members []<a href="#line-8" class="ident">GroupMember</a>, partitions []<a href="kafka.go.html#line-34" class="ident">Partition</a>) <a href="#line-21" class="ident">GroupMemberAssignments</a></code></span>
+<span class="codeline" id="line-39"><code>}</code></span>
+<span class="codeline" id="line-40"><code></code></span>
+<span class="codeline" id="line-41"><code><span class="comment">// RangeGroupBalancer groups consumers by partition</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// Example: 5 partitions, 2 consumers</span></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// 		C0: [0, 1, 2]</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">// 		C1: [3, 4]</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-47"><code><span class="comment">// Example: 6 partitions, 3 consumers</span></code></span>
+<span class="codeline" id="line-48"><code><span class="comment">// 		C0: [0, 1]</span></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">// 		C1: [2, 3]</span></code></span>
+<span class="codeline" id="line-50"><code><span class="comment">// 		C2: [4, 5]</span></code></span>
+<span class="codeline" id="line-51"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-52"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RangeGroupBalancer" class="ident">RangeGroupBalancer</a> <span class="keyword">struct</span>{}</code></span>
+<span class="codeline" id="line-53"><code></code></span>
+<span class="codeline" id="line-54"><code><span class="keyword">func</span> (<label for="r0" class="ident">r</label> <a href="#line-52" class="ident">RangeGroupBalancer</a>) <label for="r1" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RangeGroupBalancer.html#name-.ProtocolName" class="ident">ProtocolName</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-55"><code>	<span class="keyword">return</span> <span class="lit-string">"range"</span></code></span>
+<span class="codeline" id="line-56"><code>}</code></span>
+<span class="codeline" id="line-57"><code></code></span>
+<span class="codeline" id="line-58"><code><span class="keyword">func</span> (<label for="r2" class="ident">r</label> <a href="#line-52" class="ident">RangeGroupBalancer</a>) <label for="r3" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RangeGroupBalancer.html#name-.UserData" class="ident">UserData</a></label>() ([]<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-59"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-60"><code>}</code></span>
+<span class="codeline" id="line-61"><code></code></span>
+<span class="codeline" id="line-62"><code><span class="keyword">func</span> (<label for="r4" class="ident">r</label> <a href="#line-52" class="ident">RangeGroupBalancer</a>) <label for="r5" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RangeGroupBalancer.html#name-.AssignGroups" class="ident">AssignGroups</a></label>(<label for="r6" class="ident">members</label> []<a href="#line-8" class="ident">GroupMember</a>, <label for="r7" class="ident">topicPartitions</label> []<a href="kafka.go.html#line-34" class="ident">Partition</a>) <a href="#line-21" class="ident">GroupMemberAssignments</a> {</code></span>
+<span class="codeline" id="line-63"><code>	<label for="r8" class="ident">groupAssignments</label> := <a href="#line-21" class="ident">GroupMemberAssignments</a>{}</code></span>
+<span class="codeline" id="line-64"><code>	<label for="r9" class="ident">membersByTopic</label> := <a href="#line-301" class="ident">findMembersByTopic</a>(<label for="r6" class="ident">members</label>)</code></span>
+<span class="codeline" id="line-65"><code></code></span>
+<span class="codeline" id="line-66"><code>	<span class="keyword">for</span> <label for="r10" class="ident">topic</label>, <label for="r11" class="ident">members</label> := <span class="keyword">range</span> <label for="r9" class="ident">membersByTopic</label> {</code></span>
+<span class="codeline" id="line-67"><code>		<label for="r12" class="ident">partitions</label> := <a href="#line-290" class="ident">findPartitions</a>(<label for="r10" class="ident">topic</label>, <label for="r7" class="ident">topicPartitions</label>)</code></span>
+<span class="codeline" id="line-68"><code>		<label for="r13" class="ident">partitionCount</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r12" class="ident">partitions</label>)</code></span>
+<span class="codeline" id="line-69"><code>		<label for="r14" class="ident">memberCount</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r11" class="ident">members</label>)</code></span>
+<span class="codeline" id="line-70"><code></code></span>
+<span class="codeline" id="line-71"><code>		<span class="keyword">for</span> <label for="r15" class="ident">memberIndex</label>, <label for="r16" class="ident">member</label> := <span class="keyword">range</span> <label for="r11" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-72"><code>			<label for="r17" class="ident">assignmentsByTopic</label>, <label for="r18" class="ident">ok</label> := <label for="r8" class="ident">groupAssignments</label>[<label for="r16" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>]</code></span>
+<span class="codeline" id="line-73"><code>			<span class="keyword">if</span> !<label for="r18" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-74"><code>				<label for="r17" class="ident">assignmentsByTopic</label> = <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>{}</code></span>
+<span class="codeline" id="line-75"><code>				<label for="r8" class="ident">groupAssignments</label>[<label for="r16" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>] = <label for="r17" class="ident">assignmentsByTopic</label></code></span>
+<span class="codeline" id="line-76"><code>			}</code></span>
+<span class="codeline" id="line-77"><code></code></span>
+<span class="codeline" id="line-78"><code>			<label for="r19" class="ident">minIndex</label> := <label for="r15" class="ident">memberIndex</label> * <label for="r13" class="ident">partitionCount</label> / <label for="r14" class="ident">memberCount</label></code></span>
+<span class="codeline" id="line-79"><code>			<label for="r20" class="ident">maxIndex</label> := (<label for="r15" class="ident">memberIndex</label> + <span class="lit-number">1</span>) * <label for="r13" class="ident">partitionCount</label> / <label for="r14" class="ident">memberCount</label></code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>			<span class="keyword">for</span> <label for="r21" class="ident">partitionIndex</label>, <label for="r22" class="ident">partition</label> := <span class="keyword">range</span> <label for="r12" class="ident">partitions</label> {</code></span>
+<span class="codeline" id="line-82"><code>				<span class="keyword">if</span> <label for="r21" class="ident">partitionIndex</label> &gt;= <label for="r19" class="ident">minIndex</label> &amp;&amp; <label for="r21" class="ident">partitionIndex</label> &lt; <label for="r20" class="ident">maxIndex</label> {</code></span>
+<span class="codeline" id="line-83"><code>					<label for="r17" class="ident">assignmentsByTopic</label>[<label for="r10" class="ident">topic</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r17" class="ident">assignmentsByTopic</label>[<label for="r10" class="ident">topic</label>], <label for="r22" class="ident">partition</label>)</code></span>
+<span class="codeline" id="line-84"><code>				}</code></span>
+<span class="codeline" id="line-85"><code>			}</code></span>
+<span class="codeline" id="line-86"><code>		}</code></span>
+<span class="codeline" id="line-87"><code>	}</code></span>
+<span class="codeline" id="line-88"><code></code></span>
+<span class="codeline" id="line-89"><code>	<span class="keyword">return</span> <label for="r8" class="ident">groupAssignments</label></code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// RoundrobinGroupBalancer divides partitions evenly among consumers</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-94"><code><span class="comment">// Example: 5 partitions, 2 consumers</span></code></span>
+<span class="codeline" id="line-95"><code><span class="comment">// 		C0: [0, 2, 4]</span></code></span>
+<span class="codeline" id="line-96"><code><span class="comment">// 		C1: [1, 3]</span></code></span>
+<span class="codeline" id="line-97"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-98"><code><span class="comment">// Example: 6 partitions, 3 consumers</span></code></span>
+<span class="codeline" id="line-99"><code><span class="comment">// 		C0: [0, 3]</span></code></span>
+<span class="codeline" id="line-100"><code><span class="comment">// 		C1: [1, 4]</span></code></span>
+<span class="codeline" id="line-101"><code><span class="comment">// 		C2: [2, 5]</span></code></span>
+<span class="codeline" id="line-102"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-103"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RoundRobinGroupBalancer" class="ident">RoundRobinGroupBalancer</a> <span class="keyword">struct</span>{}</code></span>
+<span class="codeline" id="line-104"><code></code></span>
+<span class="codeline" id="line-105"><code><span class="keyword">func</span> (<label for="r23" class="ident">r</label> <a href="#line-103" class="ident">RoundRobinGroupBalancer</a>) <label for="r24" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RoundRobinGroupBalancer.html#name-.ProtocolName" class="ident">ProtocolName</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-106"><code>	<span class="keyword">return</span> <span class="lit-string">"roundrobin"</span></code></span>
+<span class="codeline" id="line-107"><code>}</code></span>
+<span class="codeline" id="line-108"><code></code></span>
+<span class="codeline" id="line-109"><code><span class="keyword">func</span> (<label for="r25" class="ident">r</label> <a href="#line-103" class="ident">RoundRobinGroupBalancer</a>) <label for="r26" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RoundRobinGroupBalancer.html#name-.UserData" class="ident">UserData</a></label>() ([]<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-110"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-111"><code>}</code></span>
+<span class="codeline" id="line-112"><code></code></span>
+<span class="codeline" id="line-113"><code><span class="keyword">func</span> (<label for="r27" class="ident">r</label> <a href="#line-103" class="ident">RoundRobinGroupBalancer</a>) <label for="r28" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RoundRobinGroupBalancer.html#name-.AssignGroups" class="ident">AssignGroups</a></label>(<label for="r29" class="ident">members</label> []<a href="#line-8" class="ident">GroupMember</a>, <label for="r30" class="ident">topicPartitions</label> []<a href="kafka.go.html#line-34" class="ident">Partition</a>) <a href="#line-21" class="ident">GroupMemberAssignments</a> {</code></span>
+<span class="codeline" id="line-114"><code>	<label for="r31" class="ident">groupAssignments</label> := <a href="#line-21" class="ident">GroupMemberAssignments</a>{}</code></span>
+<span class="codeline" id="line-115"><code>	<label for="r32" class="ident">membersByTopic</label> := <a href="#line-301" class="ident">findMembersByTopic</a>(<label for="r29" class="ident">members</label>)</code></span>
+<span class="codeline" id="line-116"><code>	<span class="keyword">for</span> <label for="r33" class="ident">topic</label>, <label for="r34" class="ident">members</label> := <span class="keyword">range</span> <label for="r32" class="ident">membersByTopic</label> {</code></span>
+<span class="codeline" id="line-117"><code>		<label for="r35" class="ident">partitionIDs</label> := <a href="#line-290" class="ident">findPartitions</a>(<label for="r33" class="ident">topic</label>, <label for="r30" class="ident">topicPartitions</label>)</code></span>
+<span class="codeline" id="line-118"><code>		<label for="r36" class="ident">memberCount</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r34" class="ident">members</label>)</code></span>
+<span class="codeline" id="line-119"><code></code></span>
+<span class="codeline" id="line-120"><code>		<span class="keyword">for</span> <label for="r37" class="ident">memberIndex</label>, <label for="r38" class="ident">member</label> := <span class="keyword">range</span> <label for="r34" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-121"><code>			<label for="r39" class="ident">assignmentsByTopic</label>, <label for="r40" class="ident">ok</label> := <label for="r31" class="ident">groupAssignments</label>[<label for="r38" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>]</code></span>
+<span class="codeline" id="line-122"><code>			<span class="keyword">if</span> !<label for="r40" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-123"><code>				<label for="r39" class="ident">assignmentsByTopic</label> = <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>{}</code></span>
+<span class="codeline" id="line-124"><code>				<label for="r31" class="ident">groupAssignments</label>[<label for="r38" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>] = <label for="r39" class="ident">assignmentsByTopic</label></code></span>
+<span class="codeline" id="line-125"><code>			}</code></span>
+<span class="codeline" id="line-126"><code></code></span>
+<span class="codeline" id="line-127"><code>			<span class="keyword">for</span> <label for="r41" class="ident">partitionIndex</label>, <label for="r42" class="ident">partition</label> := <span class="keyword">range</span> <label for="r35" class="ident">partitionIDs</label> {</code></span>
+<span class="codeline" id="line-128"><code>				<span class="keyword">if</span> (<label for="r41" class="ident">partitionIndex</label> % <label for="r36" class="ident">memberCount</label>) == <label for="r37" class="ident">memberIndex</label> {</code></span>
+<span class="codeline" id="line-129"><code>					<label for="r39" class="ident">assignmentsByTopic</label>[<label for="r33" class="ident">topic</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r39" class="ident">assignmentsByTopic</label>[<label for="r33" class="ident">topic</label>], <label for="r42" class="ident">partition</label>)</code></span>
+<span class="codeline" id="line-130"><code>				}</code></span>
+<span class="codeline" id="line-131"><code>			}</code></span>
+<span class="codeline" id="line-132"><code>		}</code></span>
+<span class="codeline" id="line-133"><code>	}</code></span>
+<span class="codeline" id="line-134"><code></code></span>
+<span class="codeline" id="line-135"><code>	<span class="keyword">return</span> <label for="r31" class="ident">groupAssignments</label></code></span>
+<span class="codeline" id="line-136"><code>}</code></span>
+<span class="codeline" id="line-137"><code></code></span>
+<span class="codeline" id="line-138"><code><span class="comment">// RackAffinityGroupBalancer makes a best effort to pair up consumers with</span></code></span>
+<span class="codeline" id="line-139"><code><span class="comment">// partitions whose leader is in the same rack.  This strategy can have</span></code></span>
+<span class="codeline" id="line-140"><code><span class="comment">// performance benefits by minimizing round trip latency between the consumer</span></code></span>
+<span class="codeline" id="line-141"><code><span class="comment">// and the broker.  In environments where network traffic across racks incurs</span></code></span>
+<span class="codeline" id="line-142"><code><span class="comment">// charges (such as cross AZ data transfer in AWS), this strategy is also a cost</span></code></span>
+<span class="codeline" id="line-143"><code><span class="comment">// optimization measure because it keeps network traffic within the local rack</span></code></span>
+<span class="codeline" id="line-144"><code><span class="comment">// where possible.</span></code></span>
+<span class="codeline" id="line-145"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-146"><code><span class="comment">// The primary objective is to spread partitions evenly across consumers with a</span></code></span>
+<span class="codeline" id="line-147"><code><span class="comment">// secondary focus on maximizing the number of partitions where the leader and</span></code></span>
+<span class="codeline" id="line-148"><code><span class="comment">// the consumer are in the same rack.  For best affinity, it's recommended to</span></code></span>
+<span class="codeline" id="line-149"><code><span class="comment">// have a balanced spread of consumers and partition leaders across racks.</span></code></span>
+<span class="codeline" id="line-150"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-151"><code><span class="comment">// This balancer requires Kafka version 0.10.0.0+ or later.  Earlier versions do</span></code></span>
+<span class="codeline" id="line-152"><code><span class="comment">// not return the brokers' racks in the metadata request.</span></code></span>
+<span class="codeline" id="line-153"><code><span class="keyword">type</span> <a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-RackAffinityGroupBalancer" class="ident">RackAffinityGroupBalancer</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-154"><code>	<span class="comment">// Rack is the name of the rack where this consumer is running.  It will be</span></code></span>
+<span class="codeline" id="line-155"><code><span class="comment">	// communicated to the consumer group leader via the UserData so that</span></code></span>
+<span class="codeline" id="line-156"><code><span class="comment">	// assignments can be made with affinity to the partition leader.</span></code></span>
+<span class="codeline" id="line-157"><code>	Rack <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-158"><code>}</code></span>
+<span class="codeline" id="line-159"><code></code></span>
+<span class="codeline" id="line-160"><code><span class="keyword">func</span> (<label for="r43" class="ident">r</label> <a href="#line-153" class="ident">RackAffinityGroupBalancer</a>) <label for="r44" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RackAffinityGroupBalancer.html#name-.ProtocolName" class="ident">ProtocolName</a></label>() <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-161"><code>	<span class="keyword">return</span> <span class="lit-string">"rack-affinity"</span></code></span>
+<span class="codeline" id="line-162"><code>}</code></span>
+<span class="codeline" id="line-163"><code></code></span>
+<span class="codeline" id="line-164"><code><span class="keyword">func</span> (<label for="r45" class="ident">r</label> <a href="#line-153" class="ident">RackAffinityGroupBalancer</a>) <label for="r46" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RackAffinityGroupBalancer.html#name-.AssignGroups" class="ident">AssignGroups</a></label>(<label for="r47" class="ident">members</label> []<a href="#line-8" class="ident">GroupMember</a>, <label for="r48" class="ident">partitions</label> []<a href="kafka.go.html#line-34" class="ident">Partition</a>) <a href="#line-21" class="ident">GroupMemberAssignments</a> {</code></span>
+<span class="codeline" id="line-165"><code>	<label for="r49" class="ident">membersByTopic</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="#line-8" class="ident">GroupMember</a>)</code></span>
+<span class="codeline" id="line-166"><code>	<span class="keyword">for</span> <label for="r50" class="ident">_</label>, <label for="r51" class="ident">m</label> := <span class="keyword">range</span> <label for="r47" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-167"><code>		<span class="keyword">for</span> <label for="r52" class="ident">_</label>, <label for="r53" class="ident">t</label> := <span class="keyword">range</span> <label for="r51" class="ident">m</label>.<a href="#line-13" class="ident">Topics</a> {</code></span>
+<span class="codeline" id="line-168"><code>			<label for="r49" class="ident">membersByTopic</label>[<label for="r53" class="ident">t</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r49" class="ident">membersByTopic</label>[<label for="r53" class="ident">t</label>], <label for="r51" class="ident">m</label>)</code></span>
+<span class="codeline" id="line-169"><code>		}</code></span>
+<span class="codeline" id="line-170"><code>	}</code></span>
+<span class="codeline" id="line-171"><code></code></span>
+<span class="codeline" id="line-172"><code>	<label for="r54" class="ident">partitionsByTopic</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="kafka.go.html#line-34" class="ident">Partition</a>)</code></span>
+<span class="codeline" id="line-173"><code>	<span class="keyword">for</span> <label for="r55" class="ident">_</label>, <label for="r56" class="ident">p</label> := <span class="keyword">range</span> <label for="r48" class="ident">partitions</label> {</code></span>
+<span class="codeline" id="line-174"><code>		<label for="r54" class="ident">partitionsByTopic</label>[<label for="r56" class="ident">p</label>.<a href="kafka.go.html#line-37" class="ident">Topic</a>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r54" class="ident">partitionsByTopic</label>[<label for="r56" class="ident">p</label>.<a href="kafka.go.html#line-37" class="ident">Topic</a>], <label for="r56" class="ident">p</label>)</code></span>
+<span class="codeline" id="line-175"><code>	}</code></span>
+<span class="codeline" id="line-176"><code></code></span>
+<span class="codeline" id="line-177"><code>	<label for="r57" class="ident">assignments</label> := <a href="#line-21" class="ident">GroupMemberAssignments</a>{}</code></span>
+<span class="codeline" id="line-178"><code>	<span class="keyword">for</span> <label for="r58" class="ident">topic</label> := <span class="keyword">range</span> <label for="r49" class="ident">membersByTopic</label> {</code></span>
+<span class="codeline" id="line-179"><code>		<label for="r59" class="ident">topicAssignments</label> := <label for="r45" class="ident">r</label>.<a href="#line-196" class="ident">assignTopic</a>(<label for="r49" class="ident">membersByTopic</label>[<label for="r58" class="ident">topic</label>], <label for="r54" class="ident">partitionsByTopic</label>[<label for="r58" class="ident">topic</label>])</code></span>
+<span class="codeline" id="line-180"><code>		<span class="keyword">for</span> <label for="r60" class="ident">member</label>, <label for="r61" class="ident">parts</label> := <span class="keyword">range</span> <label for="r59" class="ident">topicAssignments</label> {</code></span>
+<span class="codeline" id="line-181"><code>			<label for="r62" class="ident">memberAssignments</label>, <label for="r63" class="ident">ok</label> := <label for="r57" class="ident">assignments</label>[<label for="r60" class="ident">member</label>]</code></span>
+<span class="codeline" id="line-182"><code>			<span class="keyword">if</span> !<label for="r63" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-183"><code>				<label for="r62" class="ident">memberAssignments</label> = <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>)</code></span>
+<span class="codeline" id="line-184"><code>				<label for="r57" class="ident">assignments</label>[<label for="r60" class="ident">member</label>] = <label for="r62" class="ident">memberAssignments</label></code></span>
+<span class="codeline" id="line-185"><code>			}</code></span>
+<span class="codeline" id="line-186"><code>			<label for="r62" class="ident">memberAssignments</label>[<label for="r58" class="ident">topic</label>] = <label for="r61" class="ident">parts</label></code></span>
+<span class="codeline" id="line-187"><code>		}</code></span>
+<span class="codeline" id="line-188"><code>	}</code></span>
+<span class="codeline" id="line-189"><code>	<span class="keyword">return</span> <label for="r57" class="ident">assignments</label></code></span>
+<span class="codeline" id="line-190"><code>}</code></span>
+<span class="codeline" id="line-191"><code></code></span>
+<span class="codeline" id="line-192"><code><span class="keyword">func</span> (<label for="r64" class="ident">r</label> <a href="#line-153" class="ident">RackAffinityGroupBalancer</a>) <label for="r65" class="ident"><a href="../../../../imp/github.com/segmentio/kafka-go.RackAffinityGroupBalancer.html#name-.UserData" class="ident">UserData</a></label>() ([]<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-193"><code>	<span class="keyword">return</span> []<a href="../../../../pkg/builtin.html#name-byte" class="ident">byte</a>(<label for="r64" class="ident">r</label>.<a href="#line-157" class="ident">Rack</a>), <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-194"><code>}</code></span>
+<span class="codeline" id="line-195"><code></code></span>
+<span class="codeline" id="line-196"><code><span class="keyword">func</span> (<label for="r66" class="ident">r</label> *<a href="#line-153" class="ident">RackAffinityGroupBalancer</a>) <label for="r67" class="ident">assignTopic</label>(<label for="r68" class="ident">members</label> []<a href="#line-8" class="ident">GroupMember</a>, <label for="r69" class="ident">partitions</label> []<a href="kafka.go.html#line-34" class="ident">Partition</a>) <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-197"><code>	<label for="r70" class="ident">zonedPartitions</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>)</code></span>
+<span class="codeline" id="line-198"><code>	<span class="keyword">for</span> <label for="r71" class="ident">_</label>, <label for="r72" class="ident">part</label> := <span class="keyword">range</span> <label for="r69" class="ident">partitions</label> {</code></span>
+<span class="codeline" id="line-199"><code>		<label for="r73" class="ident">zone</label> := <label for="r72" class="ident">part</label>.<a href="kafka.go.html#line-46" class="ident">Leader</a>.<a href="kafka.go.html#line-10" class="ident">Rack</a></code></span>
+<span class="codeline" id="line-200"><code>		<label for="r70" class="ident">zonedPartitions</label>[<label for="r73" class="ident">zone</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r70" class="ident">zonedPartitions</label>[<label for="r73" class="ident">zone</label>], <label for="r72" class="ident">part</label>.<a href="kafka.go.html#line-38" class="ident">ID</a>)</code></span>
+<span class="codeline" id="line-201"><code>	}</code></span>
+<span class="codeline" id="line-202"><code></code></span>
+<span class="codeline" id="line-203"><code>	<label for="r74" class="ident">zonedConsumers</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-204"><code>	<span class="keyword">for</span> <label for="r75" class="ident">_</label>, <label for="r76" class="ident">member</label> := <span class="keyword">range</span> <label for="r68" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-205"><code>		<label for="r77" class="ident">zone</label> := <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>(<label for="r76" class="ident">member</label>.<a href="#line-17" class="ident">UserData</a>)</code></span>
+<span class="codeline" id="line-206"><code>		<label for="r74" class="ident">zonedConsumers</label>[<label for="r77" class="ident">zone</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r74" class="ident">zonedConsumers</label>[<label for="r77" class="ident">zone</label>], <label for="r76" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>)</code></span>
+<span class="codeline" id="line-207"><code>	}</code></span>
+<span class="codeline" id="line-208"><code></code></span>
+<span class="codeline" id="line-209"><code>	<label for="r78" class="ident">targetPerMember</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r69" class="ident">partitions</label>) / <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r68" class="ident">members</label>)</code></span>
+<span class="codeline" id="line-210"><code>	<label for="r79" class="ident">remainder</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r69" class="ident">partitions</label>) % <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r68" class="ident">members</label>)</code></span>
+<span class="codeline" id="line-211"><code>	<label for="r80" class="ident">assignments</label> := <a href="../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>)</code></span>
+<span class="codeline" id="line-212"><code></code></span>
+<span class="codeline" id="line-213"><code>	<span class="comment">// assign as many as possible in zone.  this will assign up to partsPerMember</span></code></span>
+<span class="codeline" id="line-214"><code><span class="comment">	// to each consumer.  it will also prefer to allocate remainder partitions</span></code></span>
+<span class="codeline" id="line-215"><code><span class="comment">	// in zone if possible.</span></code></span>
+<span class="codeline" id="line-216"><code>	<span class="keyword">for</span> <label for="r81" class="ident">zone</label>, <label for="r82" class="ident">parts</label> := <span class="keyword">range</span> <label for="r70" class="ident">zonedPartitions</label> {</code></span>
+<span class="codeline" id="line-217"><code>		<label for="r83" class="ident">consumers</label> := <label for="r74" class="ident">zonedConsumers</label>[<label for="r81" class="ident">zone</label>]</code></span>
+<span class="codeline" id="line-218"><code>		<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r83" class="ident">consumers</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-219"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-220"><code>		}</code></span>
+<span class="codeline" id="line-221"><code></code></span>
+<span class="codeline" id="line-222"><code>		<span class="comment">// don't over-allocate.  cap partition assignments at the calculated</span></code></span>
+<span class="codeline" id="line-223"><code><span class="comment">		// target.</span></code></span>
+<span class="codeline" id="line-224"><code>		<label for="r84" class="ident">partsPerMember</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r82" class="ident">parts</label>) / <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r83" class="ident">consumers</label>)</code></span>
+<span class="codeline" id="line-225"><code>		<span class="keyword">if</span> <label for="r84" class="ident">partsPerMember</label> &gt; <label for="r78" class="ident">targetPerMember</label> {</code></span>
+<span class="codeline" id="line-226"><code>			<label for="r84" class="ident">partsPerMember</label> = <label for="r78" class="ident">targetPerMember</label></code></span>
+<span class="codeline" id="line-227"><code>		}</code></span>
+<span class="codeline" id="line-228"><code></code></span>
+<span class="codeline" id="line-229"><code>		<span class="keyword">for</span> <label for="r85" class="ident">_</label>, <label for="r86" class="ident">consumer</label> := <span class="keyword">range</span> <label for="r83" class="ident">consumers</label> {</code></span>
+<span class="codeline" id="line-230"><code>			<label for="r80" class="ident">assignments</label>[<label for="r86" class="ident">consumer</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r80" class="ident">assignments</label>[<label for="r86" class="ident">consumer</label>], <label for="r82" class="ident">parts</label>[:<label for="r84" class="ident">partsPerMember</label>]...)</code></span>
+<span class="codeline" id="line-231"><code>			<label for="r82" class="ident">parts</label> = <label for="r82" class="ident">parts</label>[<label for="r84" class="ident">partsPerMember</label>:]</code></span>
+<span class="codeline" id="line-232"><code>		}</code></span>
+<span class="codeline" id="line-233"><code></code></span>
+<span class="codeline" id="line-234"><code>		<span class="comment">// if we had enough partitions for each consumer in this zone to hit its</span></code></span>
+<span class="codeline" id="line-235"><code><span class="comment">		// target, attempt to use any leftover partitions to satisfy the total</span></code></span>
+<span class="codeline" id="line-236"><code><span class="comment">		// remainder by adding at most 1 partition per consumer.</span></code></span>
+<span class="codeline" id="line-237"><code>		<label for="r87" class="ident">leftover</label> := <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r82" class="ident">parts</label>)</code></span>
+<span class="codeline" id="line-238"><code>		<span class="keyword">if</span> <label for="r84" class="ident">partsPerMember</label> == <label for="r78" class="ident">targetPerMember</label> {</code></span>
+<span class="codeline" id="line-239"><code>			<span class="keyword">if</span> <label for="r87" class="ident">leftover</label> &gt; <label for="r79" class="ident">remainder</label> {</code></span>
+<span class="codeline" id="line-240"><code>				<label for="r87" class="ident">leftover</label> = <label for="r79" class="ident">remainder</label></code></span>
+<span class="codeline" id="line-241"><code>			}</code></span>
+<span class="codeline" id="line-242"><code>			<span class="keyword">if</span> <label for="r87" class="ident">leftover</label> &gt; <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r83" class="ident">consumers</label>) {</code></span>
+<span class="codeline" id="line-243"><code>				<label for="r87" class="ident">leftover</label> = <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r83" class="ident">consumers</label>)</code></span>
+<span class="codeline" id="line-244"><code>			}</code></span>
+<span class="codeline" id="line-245"><code>			<label for="r79" class="ident">remainder</label> -= <label for="r87" class="ident">leftover</label></code></span>
+<span class="codeline" id="line-246"><code>		}</code></span>
+<span class="codeline" id="line-247"><code></code></span>
+<span class="codeline" id="line-248"><code>		<span class="comment">// this loop covers the case where we're assigning extra partitions or</span></code></span>
+<span class="codeline" id="line-249"><code><span class="comment">		// if there weren't enough to satisfy the targetPerMember and the zoned</span></code></span>
+<span class="codeline" id="line-250"><code><span class="comment">		// partitions didn't divide evenly.</span></code></span>
+<span class="codeline" id="line-251"><code>		<span class="keyword">for</span> <label for="r88" class="ident">i</label> := <span class="lit-number">0</span>; <label for="r88" class="ident">i</label> &lt; <label for="r87" class="ident">leftover</label>; <label for="r88" class="ident">i</label>++ {</code></span>
+<span class="codeline" id="line-252"><code>			<label for="r80" class="ident">assignments</label>[<label for="r83" class="ident">consumers</label>[<label for="r88" class="ident">i</label>]] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r80" class="ident">assignments</label>[<label for="r83" class="ident">consumers</label>[<label for="r88" class="ident">i</label>]], <label for="r82" class="ident">parts</label>[<label for="r88" class="ident">i</label>])</code></span>
+<span class="codeline" id="line-253"><code>		}</code></span>
+<span class="codeline" id="line-254"><code>		<label for="r82" class="ident">parts</label> = <label for="r82" class="ident">parts</label>[<label for="r87" class="ident">leftover</label>:]</code></span>
+<span class="codeline" id="line-255"><code></code></span>
+<span class="codeline" id="line-256"><code>		<span class="keyword">if</span> <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r82" class="ident">parts</label>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-257"><code>			<a href="../../../../pkg/builtin.html#name-delete" class="ident">delete</a>(<label for="r70" class="ident">zonedPartitions</label>, <label for="r81" class="ident">zone</label>)</code></span>
+<span class="codeline" id="line-258"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-259"><code>			<label for="r70" class="ident">zonedPartitions</label>[<label for="r81" class="ident">zone</label>] = <label for="r82" class="ident">parts</label></code></span>
+<span class="codeline" id="line-260"><code>		}</code></span>
+<span class="codeline" id="line-261"><code>	}</code></span>
+<span class="codeline" id="line-262"><code></code></span>
+<span class="codeline" id="line-263"><code>	<span class="comment">// assign out remainders regardless of zone.</span></code></span>
+<span class="codeline" id="line-264"><code>	<span class="keyword">var</span> <label for="r89" class="ident">remaining</label> []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-265"><code>	<span class="keyword">for</span> <label for="r90" class="ident">_</label>, <label for="r91" class="ident">partitions</label> := <span class="keyword">range</span> <label for="r70" class="ident">zonedPartitions</label> {</code></span>
+<span class="codeline" id="line-266"><code>		<label for="r89" class="ident">remaining</label> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r89" class="ident">remaining</label>, <label for="r91" class="ident">partitions</label>...)</code></span>
+<span class="codeline" id="line-267"><code>	}</code></span>
+<span class="codeline" id="line-268"><code></code></span>
+<span class="codeline" id="line-269"><code>	<span class="keyword">for</span> <label for="r92" class="ident">_</label>, <label for="r93" class="ident">member</label> := <span class="keyword">range</span> <label for="r68" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-270"><code>		<label for="r94" class="ident">assigned</label> := <label for="r80" class="ident">assignments</label>[<label for="r93" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>]</code></span>
+<span class="codeline" id="line-271"><code>		<label for="r95" class="ident">delta</label> := <label for="r78" class="ident">targetPerMember</label> - <a href="../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r94" class="ident">assigned</label>)</code></span>
+<span class="codeline" id="line-272"><code>		<span class="comment">// if it were possible to assign the remainder in zone, it's been taken</span></code></span>
+<span class="codeline" id="line-273"><code><span class="comment">		// care of already.  now we will portion out any remainder to a member</span></code></span>
+<span class="codeline" id="line-274"><code><span class="comment">		// that can take it.</span></code></span>
+<span class="codeline" id="line-275"><code>		<span class="keyword">if</span> <label for="r95" class="ident">delta</label> &gt;= <span class="lit-number">0</span> &amp;&amp; <label for="r79" class="ident">remainder</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-276"><code>			<label for="r95" class="ident">delta</label>++</code></span>
+<span class="codeline" id="line-277"><code>			<label for="r79" class="ident">remainder</label>--</code></span>
+<span class="codeline" id="line-278"><code>		}</code></span>
+<span class="codeline" id="line-279"><code>		<span class="keyword">if</span> <label for="r95" class="ident">delta</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-280"><code>			<label for="r80" class="ident">assignments</label>[<label for="r93" class="ident">member</label>.<a href="#line-10" class="ident">ID</a>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r94" class="ident">assigned</label>, <label for="r89" class="ident">remaining</label>[:<label for="r95" class="ident">delta</label>]...)</code></span>
+<span class="codeline" id="line-281"><code>			<label for="r89" class="ident">remaining</label> = <label for="r89" class="ident">remaining</label>[<label for="r95" class="ident">delta</label>:]</code></span>
+<span class="codeline" id="line-282"><code>		}</code></span>
+<span class="codeline" id="line-283"><code>	}</code></span>
+<span class="codeline" id="line-284"><code></code></span>
+<span class="codeline" id="line-285"><code>	<span class="keyword">return</span> <label for="r80" class="ident">assignments</label></code></span>
+<span class="codeline" id="line-286"><code>}</code></span>
+<span class="codeline" id="line-287"><code></code></span>
+<span class="codeline" id="line-288"><code><span class="comment">// findPartitions extracts the partition ids associated with the topic from the</span></code></span>
+<span class="codeline" id="line-289"><code><span class="comment">// list of Partitions provided.</span></code></span>
+<span class="codeline" id="line-290"><code><span class="keyword">func</span> <label for="r96" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-findPartitions" class="ident">findPartitions</a></label>(<label for="r97" class="ident">topic</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r98" class="ident">partitions</label> []<a href="kafka.go.html#line-34" class="ident">Partition</a>) []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a> {</code></span>
+<span class="codeline" id="line-291"><code>	<span class="keyword">var</span> <label for="r99" class="ident">ids</label> []<a href="../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-292"><code>	<span class="keyword">for</span> <label for="r100" class="ident">_</label>, <label for="r101" class="ident">partition</label> := <span class="keyword">range</span> <label for="r98" class="ident">partitions</label> {</code></span>
+<span class="codeline" id="line-293"><code>		<span class="keyword">if</span> <label for="r101" class="ident">partition</label>.<a href="kafka.go.html#line-37" class="ident">Topic</a> == <label for="r97" class="ident">topic</label> {</code></span>
+<span class="codeline" id="line-294"><code>			<label for="r99" class="ident">ids</label> = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r99" class="ident">ids</label>, <label for="r101" class="ident">partition</label>.<a href="kafka.go.html#line-38" class="ident">ID</a>)</code></span>
+<span class="codeline" id="line-295"><code>		}</code></span>
+<span class="codeline" id="line-296"><code>	}</code></span>
+<span class="codeline" id="line-297"><code>	<span class="keyword">return</span> <label for="r99" class="ident">ids</label></code></span>
+<span class="codeline" id="line-298"><code>}</code></span>
+<span class="codeline" id="line-299"><code></code></span>
+<span class="codeline" id="line-300"><code><span class="comment">// findMembersByTopic groups the memberGroupMetadata by topic.</span></code></span>
+<span class="codeline" id="line-301"><code><span class="keyword">func</span> <label for="r102" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-findMembersByTopic" class="ident">findMembersByTopic</a></label>(<label for="r103" class="ident">members</label> []<a href="#line-8" class="ident">GroupMember</a>) <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="#line-8" class="ident">GroupMember</a> {</code></span>
+<span class="codeline" id="line-302"><code>	<label for="r104" class="ident">membersByTopic</label> := <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="#line-8" class="ident">GroupMember</a>{}</code></span>
+<span class="codeline" id="line-303"><code>	<span class="keyword">for</span> <label for="r105" class="ident">_</label>, <label for="r106" class="ident">member</label> := <span class="keyword">range</span> <label for="r103" class="ident">members</label> {</code></span>
+<span class="codeline" id="line-304"><code>		<span class="keyword">for</span> <label for="r107" class="ident">_</label>, <label for="r108" class="ident">topic</label> := <span class="keyword">range</span> <label for="r106" class="ident">member</label>.<a href="#line-13" class="ident">Topics</a> {</code></span>
+<span class="codeline" id="line-305"><code>			<label for="r104" class="ident">membersByTopic</label>[<label for="r108" class="ident">topic</label>] = <a href="../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r104" class="ident">membersByTopic</label>[<label for="r108" class="ident">topic</label>], <label for="r106" class="ident">member</label>)</code></span>
+<span class="codeline" id="line-306"><code>		}</code></span>
+<span class="codeline" id="line-307"><code>	}</code></span>
+<span class="codeline" id="line-308"><code></code></span>
+<span class="codeline" id="line-309"><code>	<span class="comment">// normalize ordering of members to enabling grouping across topics by partitions</span></code></span>
+<span class="codeline" id="line-310"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-311"><code><span class="comment">	// Want:</span></code></span>
+<span class="codeline" id="line-312"><code><span class="comment">	// 		C0 [T0/P0, T1/P0]</span></code></span>
+<span class="codeline" id="line-313"><code><span class="comment">	// 		C1 [T0/P1, T1/P1]</span></code></span>
+<span class="codeline" id="line-314"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-315"><code><span class="comment">	// Not:</span></code></span>
+<span class="codeline" id="line-316"><code><span class="comment">	// 		C0 [T0/P0, T1/P1]</span></code></span>
+<span class="codeline" id="line-317"><code><span class="comment">	// 		C1 [T0/P1, T1/P0]</span></code></span>
+<span class="codeline" id="line-318"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-319"><code><span class="comment">	// Even though the later is still round robin, the partitions are crossed</span></code></span>
+<span class="codeline" id="line-320"><code><span class="comment">	//</span></code></span>
+<span class="codeline" id="line-321"><code>	<span class="keyword">for</span> <label for="r109" class="ident">_</label>, <label for="r110" class="ident">members</label> := <span class="keyword">range</span> <label for="r104" class="ident">membersByTopic</label> {</code></span>
+<span class="codeline" id="line-322"><code>		<a href="../../../../pkg/sort.html" class="ident i0">sort</a>.<a href="../../../sort/slice.go.html#line-24" class="ident">Slice</a>(<label for="r110" class="ident">members</label>, <span class="keyword">func</span>(<label for="r111" class="ident">i</label>, <label for="r112" class="ident">j</label> <a href="../../../../pkg/builtin.html#name-int" class="ident">int</a>) <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-323"><code>			<span class="keyword">return</span> <label for="r110" class="ident">members</label>[<label for="r111" class="ident">i</label>].<a href="#line-10" class="ident">ID</a> &lt; <label for="r110" class="ident">members</label>[<label for="r112" class="ident">j</label>].<a href="#line-10" class="ident">ID</a></code></span>
+<span class="codeline" id="line-324"><code>		})</code></span>
+<span class="codeline" id="line-325"><code>	}</code></span>
+<span class="codeline" id="line-326"><code></code></span>
+<span class="codeline" id="line-327"><code>	<span class="keyword">return</span> <label for="r104" class="ident">membersByTopic</label></code></span>
+<span class="codeline" id="line-328"><code>}</code></span>
+<span class="codeline" id="line-329"><code></code></span>
+<span class="codeline" id="line-330"><code><span class="comment">// findGroupBalancer returns the GroupBalancer with the specified protocolName</span></code></span>
+<span class="codeline" id="line-331"><code><span class="comment">// from the slice provided.</span></code></span>
+<span class="codeline" id="line-332"><code><span class="keyword">func</span> <label for="r113" class="ident"><a href="../../../../pkg/github.com/segmentio/kafka-go.html#name-findGroupBalancer" class="ident">findGroupBalancer</a></label>(<label for="r114" class="ident">protocolName</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r115" class="ident">balancers</label> []<a href="#line-24" class="ident">GroupBalancer</a>) (<a href="#line-24" class="ident">GroupBalancer</a>, <a href="../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) {</code></span>
+<span class="codeline" id="line-333"><code>	<span class="keyword">for</span> <label for="r116" class="ident">_</label>, <label for="r117" class="ident">balancer</label> := <span class="keyword">range</span> <label for="r115" class="ident">balancers</label> {</code></span>
+<span class="codeline" id="line-334"><code>		<span class="keyword">if</span> <label for="r117" class="ident">balancer</label>.<a href="#line-26" class="ident">ProtocolName</a>() == <label for="r114" class="ident">protocolName</label> {</code></span>
+<span class="codeline" id="line-335"><code>			<span class="keyword">return</span> <label for="r117" class="ident">balancer</label>, <a href="../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-336"><code>		}</code></span>
+<span class="codeline" id="line-337"><code>	}</code></span>
+<span class="codeline" id="line-338"><code>	<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-339"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: editions.go in package google.golang.org/protobuf/internal/editionssupport</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	editions.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/google.golang.org/protobuf/internal/editionssupport.html">google.golang.org/protobuf/internal/editionssupport</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2024 The Go Authors. All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-5"><code><span class="comment">// Package editionssupport defines constants for editions that are supported.</span></code></span></div><span class="codeline" id="line-6"><code><span class="keyword">package</span> editionssupport</code></span>
+<span class="codeline" id="line-7"><code></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">import</span> <label for="i0"><span class="lit-string i0">"google.golang.org/protobuf/types/descriptorpb"</span></label></code></span>
+<span class="codeline" id="line-9"><code></code></span>
+<span class="codeline" id="line-10"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-11"><code>	<a href="../../../../../pkg/google.golang.org/protobuf/internal/editionssupport.html#name-Minimum" class="ident">Minimum</a> = <a href="../../../../../pkg/google.golang.org/protobuf/types/descriptorpb.html" class="ident i0">descriptorpb</a>.<a href="../../types/descriptorpb/descriptor.pb.go.html#line-65" class="ident">Edition_EDITION_PROTO2</a></code></span>
+<span class="codeline" id="line-12"><code>	<a href="../../../../../pkg/google.golang.org/protobuf/internal/editionssupport.html#name-Maximum" class="ident">Maximum</a> = <a href="../../../../../pkg/google.golang.org/protobuf/types/descriptorpb.html" class="ident i0">descriptorpb</a>.<a href="../../types/descriptorpb/descriptor.pb.go.html#line-71" class="ident">Edition_EDITION_2024</a></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code>	<span class="comment">// MaximumKnown is the maximum edition that is known to Go Protobuf, but not</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">	// declared as supported. In other words: end users cannot use it, but</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">	// testprotos inside Go Protobuf can.</span></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../../pkg/google.golang.org/protobuf/internal/editionssupport.html#name-MaximumKnown" class="ident">MaximumKnown</a> = <a href="../../../../../pkg/google.golang.org/protobuf/types/descriptorpb.html" class="ident i0">descriptorpb</a>.<a href="../../types/descriptorpb/descriptor.pb.go.html#line-71" class="ident">Edition_EDITION_2024</a></code></span>
+<span class="codeline" id="line-18"><code>)</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: protocol.go in package github.com/segmentio/kafka-go/protocol</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	protocol.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html">github.com/segmentio/kafka-go/protocol</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> protocol</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"errors"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"fmt"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"io"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"net"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i4"><span class="lit-string i4">"reflect"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i5"><span class="lit-string i5">"strconv"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i6"><span class="lit-string i6">"strings"</span></label></code></span>
+<span class="codeline" id="line-11"><code>)</code></span>
+<span class="codeline" id="line-12"><code></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// Message is an interface implemented by all request and response types of the</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// kafka protocol.</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">// This interface is used mostly as a safe-guard to provide a compile-time check</span></code></span>
+<span class="codeline" id="line-17"><code><span class="comment">// for values passed to functions dealing kafka message types.</span></code></span>
+<span class="codeline" id="line-18"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Message" class="ident">Message</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-19"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.Message.html#name-ApiKey" class="ident">ApiKey</a>() <a href="#line-22" class="ident">ApiKey</a></code></span>
+<span class="codeline" id="line-20"><code>}</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ApiKey" class="ident">ApiKey</a> <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="keyword">func</span> (<label for="r0" class="ident">k</label> <a href="#line-22" class="ident">ApiKey</a>) <label for="r1" class="ident"><a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.ApiKey.html#name-.String" class="ident">String</a></label>() <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-25"><code>	<span class="keyword">if</span> <label for="r2" class="ident">i</label> := <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r0" class="ident">k</label>); <label for="r2" class="ident">i</label> &gt;= <span class="lit-number">0</span> &amp;&amp; <label for="r2" class="ident">i</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<a href="#line-112" class="ident">apiNames</a>) {</code></span>
+<span class="codeline" id="line-26"><code>		<span class="keyword">return</span> <a href="#line-112" class="ident">apiNames</a>[<label for="r2" class="ident">i</label>]</code></span>
+<span class="codeline" id="line-27"><code>	}</code></span>
+<span class="codeline" id="line-28"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/strconv.html" class="ident i5">strconv</a>.<a href="../../../../strconv/number.go.html#line-214" class="ident">Itoa</a>(<a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r0" class="ident">k</label>))</code></span>
+<span class="codeline" id="line-29"><code>}</code></span>
+<span class="codeline" id="line-30"><code></code></span>
+<span class="codeline" id="line-31"><code><span class="keyword">func</span> (<label for="r3" class="ident">k</label> <a href="#line-22" class="ident">ApiKey</a>) <label for="r4" class="ident">MinVersion</label>() <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a> { <span class="keyword">return</span> <label for="r3" class="ident">k</label>.<a href="#line-48" class="ident">apiType</a>().<a href="#line-184" class="ident">minVersion</a>() }</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">func</span> (<label for="r5" class="ident">k</label> <a href="#line-22" class="ident">ApiKey</a>) <label for="r6" class="ident">MaxVersion</label>() <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a> { <span class="keyword">return</span> <label for="r5" class="ident">k</label>.<a href="#line-48" class="ident">apiType</a>().<a href="#line-191" class="ident">maxVersion</a>() }</code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">func</span> (<label for="r7" class="ident">k</label> <a href="#line-22" class="ident">ApiKey</a>) <label for="r8" class="ident">SelectVersion</label>(<label for="r9" class="ident">minVersion</label>, <label for="r10" class="ident">maxVersion</label> <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>) <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a> {</code></span>
+<span class="codeline" id="line-36"><code>	<label for="r11" class="ident">min</label> := <label for="r7" class="ident">k</label>.<a href="#line-31" class="ident">MinVersion</a>()</code></span>
+<span class="codeline" id="line-37"><code>	<label for="r12" class="ident">max</label> := <label for="r7" class="ident">k</label>.<a href="#line-33" class="ident">MaxVersion</a>()</code></span>
+<span class="codeline" id="line-38"><code>	<span class="keyword">switch</span> {</code></span>
+<span class="codeline" id="line-39"><code>	<span class="keyword">case</span> <label for="r11" class="ident">min</label> &gt; <label for="r10" class="ident">maxVersion</label>:</code></span>
+<span class="codeline" id="line-40"><code>		<span class="keyword">return</span> <label for="r11" class="ident">min</label></code></span>
+<span class="codeline" id="line-41"><code>	<span class="keyword">case</span> <label for="r12" class="ident">max</label> &lt; <label for="r10" class="ident">maxVersion</label>:</code></span>
+<span class="codeline" id="line-42"><code>		<span class="keyword">return</span> <label for="r12" class="ident">max</label></code></span>
+<span class="codeline" id="line-43"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-44"><code>		<span class="keyword">return</span> <label for="r10" class="ident">maxVersion</label></code></span>
+<span class="codeline" id="line-45"><code>	}</code></span>
+<span class="codeline" id="line-46"><code>}</code></span>
+<span class="codeline" id="line-47"><code></code></span>
+<span class="codeline" id="line-48"><code><span class="keyword">func</span> (<label for="r13" class="ident">k</label> <a href="#line-22" class="ident">ApiKey</a>) <label for="r14" class="ident">apiType</label>() <a href="#line-179" class="ident">apiType</a> {</code></span>
+<span class="codeline" id="line-49"><code>	<span class="keyword">if</span> <label for="r15" class="ident">i</label> := <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r13" class="ident">k</label>); <label for="r15" class="ident">i</label> &gt;= <span class="lit-number">0</span> &amp;&amp; <label for="r15" class="ident">i</label> &lt; <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<a href="#line-198" class="ident">apiTypes</a>) {</code></span>
+<span class="codeline" id="line-50"><code>		<span class="keyword">return</span> <a href="#line-198" class="ident">apiTypes</a>[<label for="r15" class="ident">i</label>]</code></span>
+<span class="codeline" id="line-51"><code>	}</code></span>
+<span class="codeline" id="line-52"><code>	<span class="keyword">return</span> <a href="#line-179" class="ident">apiType</a>{}</code></span>
+<span class="codeline" id="line-53"><code>}</code></span>
+<span class="codeline" id="line-54"><code></code></span>
+<span class="codeline" id="line-55"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-56"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Produce" class="ident">Produce</a>                      <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-57"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Fetch" class="ident">Fetch</a>                        <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-58"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ListOffsets" class="ident">ListOffsets</a>                  <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">2</span></code></span>
+<span class="codeline" id="line-59"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Metadata" class="ident">Metadata</a>                     <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">3</span></code></span>
+<span class="codeline" id="line-60"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-LeaderAndIsr" class="ident">LeaderAndIsr</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">4</span></code></span>
+<span class="codeline" id="line-61"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-StopReplica" class="ident">StopReplica</a>                  <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">5</span></code></span>
+<span class="codeline" id="line-62"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-UpdateMetadata" class="ident">UpdateMetadata</a>               <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">6</span></code></span>
+<span class="codeline" id="line-63"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ControlledShutdown" class="ident">ControlledShutdown</a>           <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">7</span></code></span>
+<span class="codeline" id="line-64"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-OffsetCommit" class="ident">OffsetCommit</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">8</span></code></span>
+<span class="codeline" id="line-65"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-OffsetFetch" class="ident">OffsetFetch</a>                  <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">9</span></code></span>
+<span class="codeline" id="line-66"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-FindCoordinator" class="ident">FindCoordinator</a>              <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">10</span></code></span>
+<span class="codeline" id="line-67"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-JoinGroup" class="ident">JoinGroup</a>                    <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">11</span></code></span>
+<span class="codeline" id="line-68"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Heartbeat" class="ident">Heartbeat</a>                    <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">12</span></code></span>
+<span class="codeline" id="line-69"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-LeaveGroup" class="ident">LeaveGroup</a>                   <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">13</span></code></span>
+<span class="codeline" id="line-70"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-SyncGroup" class="ident">SyncGroup</a>                    <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">14</span></code></span>
+<span class="codeline" id="line-71"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeGroups" class="ident">DescribeGroups</a>               <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">15</span></code></span>
+<span class="codeline" id="line-72"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ListGroups" class="ident">ListGroups</a>                   <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">16</span></code></span>
+<span class="codeline" id="line-73"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-SaslHandshake" class="ident">SaslHandshake</a>                <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">17</span></code></span>
+<span class="codeline" id="line-74"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ApiVersions" class="ident">ApiVersions</a>                  <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">18</span></code></span>
+<span class="codeline" id="line-75"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-CreateTopics" class="ident">CreateTopics</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">19</span></code></span>
+<span class="codeline" id="line-76"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DeleteTopics" class="ident">DeleteTopics</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">20</span></code></span>
+<span class="codeline" id="line-77"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DeleteRecords" class="ident">DeleteRecords</a>                <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">21</span></code></span>
+<span class="codeline" id="line-78"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-InitProducerId" class="ident">InitProducerId</a>               <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">22</span></code></span>
+<span class="codeline" id="line-79"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-OffsetForLeaderEpoch" class="ident">OffsetForLeaderEpoch</a>         <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">23</span></code></span>
+<span class="codeline" id="line-80"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AddPartitionsToTxn" class="ident">AddPartitionsToTxn</a>           <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">24</span></code></span>
+<span class="codeline" id="line-81"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AddOffsetsToTxn" class="ident">AddOffsetsToTxn</a>              <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">25</span></code></span>
+<span class="codeline" id="line-82"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-EndTxn" class="ident">EndTxn</a>                       <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">26</span></code></span>
+<span class="codeline" id="line-83"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-WriteTxnMarkers" class="ident">WriteTxnMarkers</a>              <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">27</span></code></span>
+<span class="codeline" id="line-84"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-TxnOffsetCommit" class="ident">TxnOffsetCommit</a>              <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">28</span></code></span>
+<span class="codeline" id="line-85"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeAcls" class="ident">DescribeAcls</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">29</span></code></span>
+<span class="codeline" id="line-86"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-CreateAcls" class="ident">CreateAcls</a>                   <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">30</span></code></span>
+<span class="codeline" id="line-87"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DeleteAcls" class="ident">DeleteAcls</a>                   <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">31</span></code></span>
+<span class="codeline" id="line-88"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeConfigs" class="ident">DescribeConfigs</a>              <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">32</span></code></span>
+<span class="codeline" id="line-89"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AlterConfigs" class="ident">AlterConfigs</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">33</span></code></span>
+<span class="codeline" id="line-90"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AlterReplicaLogDirs" class="ident">AlterReplicaLogDirs</a>          <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">34</span></code></span>
+<span class="codeline" id="line-91"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeLogDirs" class="ident">DescribeLogDirs</a>              <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">35</span></code></span>
+<span class="codeline" id="line-92"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-SaslAuthenticate" class="ident">SaslAuthenticate</a>             <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">36</span></code></span>
+<span class="codeline" id="line-93"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-CreatePartitions" class="ident">CreatePartitions</a>             <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">37</span></code></span>
+<span class="codeline" id="line-94"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-CreateDelegationToken" class="ident">CreateDelegationToken</a>        <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">38</span></code></span>
+<span class="codeline" id="line-95"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-RenewDelegationToken" class="ident">RenewDelegationToken</a>         <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">39</span></code></span>
+<span class="codeline" id="line-96"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ExpireDelegationToken" class="ident">ExpireDelegationToken</a>        <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">40</span></code></span>
+<span class="codeline" id="line-97"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeDelegationToken" class="ident">DescribeDelegationToken</a>      <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">41</span></code></span>
+<span class="codeline" id="line-98"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DeleteGroups" class="ident">DeleteGroups</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">42</span></code></span>
+<span class="codeline" id="line-99"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ElectLeaders" class="ident">ElectLeaders</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">43</span></code></span>
+<span class="codeline" id="line-100"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-IncrementalAlterConfigs" class="ident">IncrementalAlterConfigs</a>      <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">44</span></code></span>
+<span class="codeline" id="line-101"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AlterPartitionReassignments" class="ident">AlterPartitionReassignments</a>  <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">45</span></code></span>
+<span class="codeline" id="line-102"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-ListPartitionReassignments" class="ident">ListPartitionReassignments</a>   <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">46</span></code></span>
+<span class="codeline" id="line-103"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-OffsetDelete" class="ident">OffsetDelete</a>                 <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">47</span></code></span>
+<span class="codeline" id="line-104"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeClientQuotas" class="ident">DescribeClientQuotas</a>         <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">48</span></code></span>
+<span class="codeline" id="line-105"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AlterClientQuotas" class="ident">AlterClientQuotas</a>            <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">49</span></code></span>
+<span class="codeline" id="line-106"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-DescribeUserScramCredentials" class="ident">DescribeUserScramCredentials</a> <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">50</span></code></span>
+<span class="codeline" id="line-107"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-AlterUserScramCredentials" class="ident">AlterUserScramCredentials</a>    <a href="#line-22" class="ident">ApiKey</a> = <span class="lit-number">51</span></code></span>
+<span class="codeline" id="line-108"><code></code></span>
+<span class="codeline" id="line-109"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-numApis" class="ident">numApis</a> = <span class="lit-number">52</span></code></span>
+<span class="codeline" id="line-110"><code>)</code></span>
+<span class="codeline" id="line-111"><code></code></span>
+<span class="codeline" id="line-112"><code><span class="keyword">var</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-apiNames" class="ident">apiNames</a> = [<a href="#line-109" class="ident">numApis</a>]<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>{</code></span>
+<span class="codeline" id="line-113"><code>	<a href="#line-56" class="ident">Produce</a>:                      <span class="lit-string">"Produce"</span>,</code></span>
+<span class="codeline" id="line-114"><code>	<a href="#line-57" class="ident">Fetch</a>:                        <span class="lit-string">"Fetch"</span>,</code></span>
+<span class="codeline" id="line-115"><code>	<a href="#line-58" class="ident">ListOffsets</a>:                  <span class="lit-string">"ListOffsets"</span>,</code></span>
+<span class="codeline" id="line-116"><code>	<a href="#line-59" class="ident">Metadata</a>:                     <span class="lit-string">"Metadata"</span>,</code></span>
+<span class="codeline" id="line-117"><code>	<a href="#line-60" class="ident">LeaderAndIsr</a>:                 <span class="lit-string">"LeaderAndIsr"</span>,</code></span>
+<span class="codeline" id="line-118"><code>	<a href="#line-61" class="ident">StopReplica</a>:                  <span class="lit-string">"StopReplica"</span>,</code></span>
+<span class="codeline" id="line-119"><code>	<a href="#line-62" class="ident">UpdateMetadata</a>:               <span class="lit-string">"UpdateMetadata"</span>,</code></span>
+<span class="codeline" id="line-120"><code>	<a href="#line-63" class="ident">ControlledShutdown</a>:           <span class="lit-string">"ControlledShutdown"</span>,</code></span>
+<span class="codeline" id="line-121"><code>	<a href="#line-64" class="ident">OffsetCommit</a>:                 <span class="lit-string">"OffsetCommit"</span>,</code></span>
+<span class="codeline" id="line-122"><code>	<a href="#line-65" class="ident">OffsetFetch</a>:                  <span class="lit-string">"OffsetFetch"</span>,</code></span>
+<span class="codeline" id="line-123"><code>	<a href="#line-66" class="ident">FindCoordinator</a>:              <span class="lit-string">"FindCoordinator"</span>,</code></span>
+<span class="codeline" id="line-124"><code>	<a href="#line-67" class="ident">JoinGroup</a>:                    <span class="lit-string">"JoinGroup"</span>,</code></span>
+<span class="codeline" id="line-125"><code>	<a href="#line-68" class="ident">Heartbeat</a>:                    <span class="lit-string">"Heartbeat"</span>,</code></span>
+<span class="codeline" id="line-126"><code>	<a href="#line-69" class="ident">LeaveGroup</a>:                   <span class="lit-string">"LeaveGroup"</span>,</code></span>
+<span class="codeline" id="line-127"><code>	<a href="#line-70" class="ident">SyncGroup</a>:                    <span class="lit-string">"SyncGroup"</span>,</code></span>
+<span class="codeline" id="line-128"><code>	<a href="#line-71" class="ident">DescribeGroups</a>:               <span class="lit-string">"DescribeGroups"</span>,</code></span>
+<span class="codeline" id="line-129"><code>	<a href="#line-72" class="ident">ListGroups</a>:                   <span class="lit-string">"ListGroups"</span>,</code></span>
+<span class="codeline" id="line-130"><code>	<a href="#line-73" class="ident">SaslHandshake</a>:                <span class="lit-string">"SaslHandshake"</span>,</code></span>
+<span class="codeline" id="line-131"><code>	<a href="#line-74" class="ident">ApiVersions</a>:                  <span class="lit-string">"ApiVersions"</span>,</code></span>
+<span class="codeline" id="line-132"><code>	<a href="#line-75" class="ident">CreateTopics</a>:                 <span class="lit-string">"CreateTopics"</span>,</code></span>
+<span class="codeline" id="line-133"><code>	<a href="#line-76" class="ident">DeleteTopics</a>:                 <span class="lit-string">"DeleteTopics"</span>,</code></span>
+<span class="codeline" id="line-134"><code>	<a href="#line-77" class="ident">DeleteRecords</a>:                <span class="lit-string">"DeleteRecords"</span>,</code></span>
+<span class="codeline" id="line-135"><code>	<a href="#line-78" class="ident">InitProducerId</a>:               <span class="lit-string">"InitProducerId"</span>,</code></span>
+<span class="codeline" id="line-136"><code>	<a href="#line-79" class="ident">OffsetForLeaderEpoch</a>:         <span class="lit-string">"OffsetForLeaderEpoch"</span>,</code></span>
+<span class="codeline" id="line-137"><code>	<a href="#line-80" class="ident">AddPartitionsToTxn</a>:           <span class="lit-string">"AddPartitionsToTxn"</span>,</code></span>
+<span class="codeline" id="line-138"><code>	<a href="#line-81" class="ident">AddOffsetsToTxn</a>:              <span class="lit-string">"AddOffsetsToTxn"</span>,</code></span>
+<span class="codeline" id="line-139"><code>	<a href="#line-82" class="ident">EndTxn</a>:                       <span class="lit-string">"EndTxn"</span>,</code></span>
+<span class="codeline" id="line-140"><code>	<a href="#line-83" class="ident">WriteTxnMarkers</a>:              <span class="lit-string">"WriteTxnMarkers"</span>,</code></span>
+<span class="codeline" id="line-141"><code>	<a href="#line-84" class="ident">TxnOffsetCommit</a>:              <span class="lit-string">"TxnOffsetCommit"</span>,</code></span>
+<span class="codeline" id="line-142"><code>	<a href="#line-85" class="ident">DescribeAcls</a>:                 <span class="lit-string">"DescribeAcls"</span>,</code></span>
+<span class="codeline" id="line-143"><code>	<a href="#line-86" class="ident">CreateAcls</a>:                   <span class="lit-string">"CreateAcls"</span>,</code></span>
+<span class="codeline" id="line-144"><code>	<a href="#line-87" class="ident">DeleteAcls</a>:                   <span class="lit-string">"DeleteAcls"</span>,</code></span>
+<span class="codeline" id="line-145"><code>	<a href="#line-88" class="ident">DescribeConfigs</a>:              <span class="lit-string">"DescribeConfigs"</span>,</code></span>
+<span class="codeline" id="line-146"><code>	<a href="#line-89" class="ident">AlterConfigs</a>:                 <span class="lit-string">"AlterConfigs"</span>,</code></span>
+<span class="codeline" id="line-147"><code>	<a href="#line-90" class="ident">AlterReplicaLogDirs</a>:          <span class="lit-string">"AlterReplicaLogDirs"</span>,</code></span>
+<span class="codeline" id="line-148"><code>	<a href="#line-91" class="ident">DescribeLogDirs</a>:              <span class="lit-string">"DescribeLogDirs"</span>,</code></span>
+<span class="codeline" id="line-149"><code>	<a href="#line-92" class="ident">SaslAuthenticate</a>:             <span class="lit-string">"SaslAuthenticate"</span>,</code></span>
+<span class="codeline" id="line-150"><code>	<a href="#line-93" class="ident">CreatePartitions</a>:             <span class="lit-string">"CreatePartitions"</span>,</code></span>
+<span class="codeline" id="line-151"><code>	<a href="#line-94" class="ident">CreateDelegationToken</a>:        <span class="lit-string">"CreateDelegationToken"</span>,</code></span>
+<span class="codeline" id="line-152"><code>	<a href="#line-95" class="ident">RenewDelegationToken</a>:         <span class="lit-string">"RenewDelegationToken"</span>,</code></span>
+<span class="codeline" id="line-153"><code>	<a href="#line-96" class="ident">ExpireDelegationToken</a>:        <span class="lit-string">"ExpireDelegationToken"</span>,</code></span>
+<span class="codeline" id="line-154"><code>	<a href="#line-97" class="ident">DescribeDelegationToken</a>:      <span class="lit-string">"DescribeDelegationToken"</span>,</code></span>
+<span class="codeline" id="line-155"><code>	<a href="#line-98" class="ident">DeleteGroups</a>:                 <span class="lit-string">"DeleteGroups"</span>,</code></span>
+<span class="codeline" id="line-156"><code>	<a href="#line-99" class="ident">ElectLeaders</a>:                 <span class="lit-string">"ElectLeaders"</span>,</code></span>
+<span class="codeline" id="line-157"><code>	<a href="#line-100" class="ident">IncrementalAlterConfigs</a>:      <span class="lit-string">"IncrementalAlterConfigs"</span>,</code></span>
+<span class="codeline" id="line-158"><code>	<a href="#line-101" class="ident">AlterPartitionReassignments</a>:  <span class="lit-string">"AlterPartitionReassignments"</span>,</code></span>
+<span class="codeline" id="line-159"><code>	<a href="#line-102" class="ident">ListPartitionReassignments</a>:   <span class="lit-string">"ListPartitionReassignments"</span>,</code></span>
+<span class="codeline" id="line-160"><code>	<a href="#line-103" class="ident">OffsetDelete</a>:                 <span class="lit-string">"OffsetDelete"</span>,</code></span>
+<span class="codeline" id="line-161"><code>	<a href="#line-104" class="ident">DescribeClientQuotas</a>:         <span class="lit-string">"DescribeClientQuotas"</span>,</code></span>
+<span class="codeline" id="line-162"><code>	<a href="#line-105" class="ident">AlterClientQuotas</a>:            <span class="lit-string">"AlterClientQuotas"</span>,</code></span>
+<span class="codeline" id="line-163"><code>	<a href="#line-106" class="ident">DescribeUserScramCredentials</a>: <span class="lit-string">"DescribeUserScramCredentials"</span>,</code></span>
+<span class="codeline" id="line-164"><code>	<a href="#line-107" class="ident">AlterUserScramCredentials</a>:    <span class="lit-string">"AlterUserScramCredentials"</span>,</code></span>
+<span class="codeline" id="line-165"><code>}</code></span>
+<span class="codeline" id="line-166"><code></code></span>
+<span class="codeline" id="line-167"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-messageType" class="ident">messageType</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-168"><code>	version  <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-169"><code>	flexible <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-170"><code>	gotype   <a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/type.go.html#line-41" class="ident">Type</a></code></span>
+<span class="codeline" id="line-171"><code>	decode   <a href="decode.go.html#line-333" class="ident">decodeFunc</a></code></span>
+<span class="codeline" id="line-172"><code>	encode   <a href="encode.go.html#line-365" class="ident">encodeFunc</a></code></span>
+<span class="codeline" id="line-173"><code>}</code></span>
+<span class="codeline" id="line-174"><code></code></span>
+<span class="codeline" id="line-175"><code><span class="keyword">func</span> (<label for="r16" class="ident">t</label> *<a href="#line-167" class="ident">messageType</a>) <label for="r17" class="ident">new</label>() <a href="#line-18" class="ident">Message</a> {</code></span>
+<span class="codeline" id="line-176"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/value.go.html#line-3154" class="ident">New</a>(<label for="r16" class="ident">t</label>.<a href="#line-170" class="ident">gotype</a>).<a href="../../../../reflect/value.go.html#line-1489" class="ident">Interface</a>().(<a href="#line-18" class="ident">Message</a>)</code></span>
+<span class="codeline" id="line-177"><code>}</code></span>
+<span class="codeline" id="line-178"><code></code></span>
+<span class="codeline" id="line-179"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-apiType" class="ident">apiType</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-180"><code>	requests  []<a href="#line-167" class="ident">messageType</a></code></span>
+<span class="codeline" id="line-181"><code>	responses []<a href="#line-167" class="ident">messageType</a></code></span>
+<span class="codeline" id="line-182"><code>}</code></span>
+<span class="codeline" id="line-183"><code></code></span>
+<span class="codeline" id="line-184"><code><span class="keyword">func</span> (<label for="r18" class="ident">t</label> <a href="#line-179" class="ident">apiType</a>) <label for="r19" class="ident">minVersion</label>() <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a> {</code></span>
+<span class="codeline" id="line-185"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r18" class="ident">t</label>.<a href="#line-180" class="ident">requests</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-186"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-187"><code>	}</code></span>
+<span class="codeline" id="line-188"><code>	<span class="keyword">return</span> <label for="r18" class="ident">t</label>.<a href="#line-180" class="ident">requests</a>[<span class="lit-number">0</span>].<a href="#line-168" class="ident">version</a></code></span>
+<span class="codeline" id="line-189"><code>}</code></span>
+<span class="codeline" id="line-190"><code></code></span>
+<span class="codeline" id="line-191"><code><span class="keyword">func</span> (<label for="r20" class="ident">t</label> <a href="#line-179" class="ident">apiType</a>) <label for="r21" class="ident">maxVersion</label>() <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a> {</code></span>
+<span class="codeline" id="line-192"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r20" class="ident">t</label>.<a href="#line-180" class="ident">requests</a>) == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-193"><code>		<span class="keyword">return</span> <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-194"><code>	}</code></span>
+<span class="codeline" id="line-195"><code>	<span class="keyword">return</span> <label for="r20" class="ident">t</label>.<a href="#line-180" class="ident">requests</a>[<a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r20" class="ident">t</label>.<a href="#line-180" class="ident">requests</a>)-<span class="lit-number">1</span>].<a href="#line-168" class="ident">version</a></code></span>
+<span class="codeline" id="line-196"><code>}</code></span>
+<span class="codeline" id="line-197"><code></code></span>
+<span class="codeline" id="line-198"><code><span class="keyword">var</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-apiTypes" class="ident">apiTypes</a> [<a href="#line-109" class="ident">numApis</a>]<a href="#line-179" class="ident">apiType</a></code></span>
+<span class="codeline" id="line-199"><code></code></span>
+<span class="codeline" id="line-200"><code><span class="comment">// Register is automatically called by sub-packages are imported to install a</span></code></span>
+<span class="codeline" id="line-201"><code><span class="comment">// new pair of request/response message types.</span></code></span>
+<span class="codeline" id="line-202"><code><span class="keyword">func</span> <label for="r22" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Register" class="ident">Register</a></label>(<label for="r23" class="ident">req</label>, <label for="r24" class="ident">res</label> <a href="#line-18" class="ident">Message</a>) {</code></span>
+<span class="codeline" id="line-203"><code>	<label for="r25" class="ident">k1</label> := <label for="r23" class="ident">req</label>.<a href="#line-19" class="ident">ApiKey</a>()</code></span>
+<span class="codeline" id="line-204"><code>	<label for="r26" class="ident">k2</label> := <label for="r24" class="ident">res</label>.<a href="#line-19" class="ident">ApiKey</a>()</code></span>
+<span class="codeline" id="line-205"><code></code></span>
+<span class="codeline" id="line-206"><code>	<span class="keyword">if</span> <label for="r25" class="ident">k1</label> != <label for="r26" class="ident">k2</label> {</code></span>
+<span class="codeline" id="line-207"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"[%T/%T]: request and response API keys mismatch: %d != %d"</span>, <label for="r23" class="ident">req</label>, <label for="r24" class="ident">res</label>, <label for="r25" class="ident">k1</label>, <label for="r26" class="ident">k2</label>))</code></span>
+<span class="codeline" id="line-208"><code>	}</code></span>
+<span class="codeline" id="line-209"><code></code></span>
+<span class="codeline" id="line-210"><code>	<a href="#line-198" class="ident">apiTypes</a>[<label for="r25" class="ident">k1</label>] = <a href="#line-179" class="ident">apiType</a>{</code></span>
+<span class="codeline" id="line-211"><code>		<a href="#line-180" class="ident">requests</a>:  <a href="#line-247" class="ident">typesOf</a>(<label for="r23" class="ident">req</label>),</code></span>
+<span class="codeline" id="line-212"><code>		<a href="#line-181" class="ident">responses</a>: <a href="#line-247" class="ident">typesOf</a>(<label for="r24" class="ident">res</label>),</code></span>
+<span class="codeline" id="line-213"><code>	}</code></span>
+<span class="codeline" id="line-214"><code>}</code></span>
+<span class="codeline" id="line-215"><code></code></span>
+<span class="codeline" id="line-216"><code><span class="comment">// OverrideTypeMessage is an interface implemented by messages that want to override the standard</span></code></span>
+<span class="codeline" id="line-217"><code><span class="comment">// request/response types for a given API.</span></code></span>
+<span class="codeline" id="line-218"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-OverrideTypeMessage" class="ident">OverrideTypeMessage</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-219"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.OverrideTypeMessage.html#name-TypeKey" class="ident">TypeKey</a>() <a href="#line-222" class="ident">OverrideTypeKey</a></code></span>
+<span class="codeline" id="line-220"><code>}</code></span>
+<span class="codeline" id="line-221"><code></code></span>
+<span class="codeline" id="line-222"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-OverrideTypeKey" class="ident">OverrideTypeKey</a> <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-223"><code></code></span>
+<span class="codeline" id="line-224"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-225"><code>	<a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-RawProduceOverride" class="ident">RawProduceOverride</a> <a href="#line-222" class="ident">OverrideTypeKey</a> = <span class="lit-number">0</span></code></span>
+<span class="codeline" id="line-226"><code>)</code></span>
+<span class="codeline" id="line-227"><code></code></span>
+<span class="codeline" id="line-228"><code><span class="keyword">var</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-overrideApiTypes" class="ident">overrideApiTypes</a> [<a href="#line-109" class="ident">numApis</a>]<span class="keyword">map</span>[<a href="#line-222" class="ident">OverrideTypeKey</a>]<a href="#line-179" class="ident">apiType</a></code></span>
+<span class="codeline" id="line-229"><code></code></span>
+<span class="codeline" id="line-230"><code><span class="keyword">func</span> <label for="r27" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-RegisterOverride" class="ident">RegisterOverride</a></label>(<label for="r28" class="ident">req</label>, <label for="r29" class="ident">res</label> <a href="#line-18" class="ident">Message</a>, <label for="r30" class="ident">key</label> <a href="#line-222" class="ident">OverrideTypeKey</a>) {</code></span>
+<span class="codeline" id="line-231"><code>	<label for="r31" class="ident">k1</label> := <label for="r28" class="ident">req</label>.<a href="#line-19" class="ident">ApiKey</a>()</code></span>
+<span class="codeline" id="line-232"><code>	<label for="r32" class="ident">k2</label> := <label for="r29" class="ident">res</label>.<a href="#line-19" class="ident">ApiKey</a>()</code></span>
+<span class="codeline" id="line-233"><code></code></span>
+<span class="codeline" id="line-234"><code>	<span class="keyword">if</span> <label for="r31" class="ident">k1</label> != <label for="r32" class="ident">k2</label> {</code></span>
+<span class="codeline" id="line-235"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"[%T/%T]: request and response API keys mismatch: %d != %d"</span>, <label for="r28" class="ident">req</label>, <label for="r29" class="ident">res</label>, <label for="r31" class="ident">k1</label>, <label for="r32" class="ident">k2</label>))</code></span>
+<span class="codeline" id="line-236"><code>	}</code></span>
+<span class="codeline" id="line-237"><code></code></span>
+<span class="codeline" id="line-238"><code>	<span class="keyword">if</span> <a href="#line-228" class="ident">overrideApiTypes</a>[<label for="r31" class="ident">k1</label>] == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-239"><code>		<a href="#line-228" class="ident">overrideApiTypes</a>[<label for="r31" class="ident">k1</label>] = <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="#line-222" class="ident">OverrideTypeKey</a>]<a href="#line-179" class="ident">apiType</a>)</code></span>
+<span class="codeline" id="line-240"><code>	}</code></span>
+<span class="codeline" id="line-241"><code>	<a href="#line-228" class="ident">overrideApiTypes</a>[<label for="r31" class="ident">k1</label>][<label for="r30" class="ident">key</label>] = <a href="#line-179" class="ident">apiType</a>{</code></span>
+<span class="codeline" id="line-242"><code>		<a href="#line-180" class="ident">requests</a>:  <a href="#line-247" class="ident">typesOf</a>(<label for="r28" class="ident">req</label>),</code></span>
+<span class="codeline" id="line-243"><code>		<a href="#line-181" class="ident">responses</a>: <a href="#line-247" class="ident">typesOf</a>(<label for="r29" class="ident">res</label>),</code></span>
+<span class="codeline" id="line-244"><code>	}</code></span>
+<span class="codeline" id="line-245"><code>}</code></span>
+<span class="codeline" id="line-246"><code></code></span>
+<span class="codeline" id="line-247"><code><span class="keyword">func</span> <label for="r33" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-typesOf" class="ident">typesOf</a></label>(<label for="r34" class="ident">v</label> <span class="keyword">interface</span>{}) []<a href="#line-167" class="ident">messageType</a> {</code></span>
+<span class="codeline" id="line-248"><code>	<span class="keyword">return</span> <a href="#line-251" class="ident">makeTypes</a>(<a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/type.go.html#line-1383" class="ident">TypeOf</a>(<label for="r34" class="ident">v</label>).<a href="../../../../reflect/type.go.html#line-173" class="ident">Elem</a>())</code></span>
+<span class="codeline" id="line-249"><code>}</code></span>
+<span class="codeline" id="line-250"><code></code></span>
+<span class="codeline" id="line-251"><code><span class="keyword">func</span> <label for="r35" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-makeTypes" class="ident">makeTypes</a></label>(<label for="r36" class="ident">t</label> <a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/type.go.html#line-41" class="ident">Type</a>) []<a href="#line-167" class="ident">messageType</a> {</code></span>
+<span class="codeline" id="line-252"><code>	<label for="r37" class="ident">minVersion</label> := <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>(-<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-253"><code>	<label for="r38" class="ident">maxVersion</label> := <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>(-<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-254"><code></code></span>
+<span class="codeline" id="line-255"><code>	<span class="comment">// All future versions will be flexible (according to spec), so don't need to</span></code></span>
+<span class="codeline" id="line-256"><code><span class="comment">	// worry about maxes here.</span></code></span>
+<span class="codeline" id="line-257"><code>	<label for="r39" class="ident">minFlexibleVersion</label> := <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>(-<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-258"><code></code></span>
+<span class="codeline" id="line-259"><code>	<a href="#line-372" class="ident">forEachStructField</a>(<label for="r36" class="ident">t</label>, <span class="keyword">func</span>(<label for="r40" class="ident">_</label> <a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/type.go.html#line-41" class="ident">Type</a>, <label for="r41" class="ident">_</label> <a href="reflect.go.html#line-10" class="ident">index</a>, <label for="r42" class="ident">tag</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-260"><code>		<a href="#line-299" class="ident">forEachStructTag</a>(<label for="r42" class="ident">tag</label>, <span class="keyword">func</span>(<label for="r43" class="ident">tag</label> <a href="#line-291" class="ident">structTag</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-261"><code>			<span class="keyword">if</span> <label for="r37" class="ident">minVersion</label> &lt; <span class="lit-number">0</span> || <label for="r43" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a> &lt; <label for="r37" class="ident">minVersion</label> {</code></span>
+<span class="codeline" id="line-262"><code>				<label for="r37" class="ident">minVersion</label> = <label for="r43" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a></code></span>
+<span class="codeline" id="line-263"><code>			}</code></span>
+<span class="codeline" id="line-264"><code>			<span class="keyword">if</span> <label for="r38" class="ident">maxVersion</label> &lt; <span class="lit-number">0</span> || <label for="r43" class="ident">tag</label>.<a href="#line-293" class="ident">MaxVersion</a> &gt; <label for="r38" class="ident">maxVersion</label> {</code></span>
+<span class="codeline" id="line-265"><code>				<label for="r38" class="ident">maxVersion</label> = <label for="r43" class="ident">tag</label>.<a href="#line-293" class="ident">MaxVersion</a></code></span>
+<span class="codeline" id="line-266"><code>			}</code></span>
+<span class="codeline" id="line-267"><code>			<span class="keyword">if</span> <label for="r43" class="ident">tag</label>.<a href="#line-296" class="ident">TagID</a> &gt; -<span class="lit-number">2</span> &amp;&amp; (<label for="r39" class="ident">minFlexibleVersion</label> &lt; <span class="lit-number">0</span> || <label for="r43" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a> &lt; <label for="r39" class="ident">minFlexibleVersion</label>) {</code></span>
+<span class="codeline" id="line-268"><code>				<label for="r39" class="ident">minFlexibleVersion</label> = <label for="r43" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a></code></span>
+<span class="codeline" id="line-269"><code>			}</code></span>
+<span class="codeline" id="line-270"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-271"><code>		})</code></span>
+<span class="codeline" id="line-272"><code>	})</code></span>
+<span class="codeline" id="line-273"><code></code></span>
+<span class="codeline" id="line-274"><code>	<label for="r44" class="ident">types</label> := <a href="../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="#line-167" class="ident">messageType</a>, <span class="lit-number">0</span>, (<label for="r38" class="ident">maxVersion</label>-<label for="r37" class="ident">minVersion</label>)+<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-275"><code></code></span>
+<span class="codeline" id="line-276"><code>	<span class="keyword">for</span> <label for="r45" class="ident">v</label> := <label for="r37" class="ident">minVersion</label>; <label for="r45" class="ident">v</label> &lt;= <label for="r38" class="ident">maxVersion</label>; <label for="r45" class="ident">v</label>++ {</code></span>
+<span class="codeline" id="line-277"><code>		<label for="r46" class="ident">flexible</label> := <label for="r39" class="ident">minFlexibleVersion</label> &gt;= <span class="lit-number">0</span> &amp;&amp; <label for="r45" class="ident">v</label> &gt;= <label for="r39" class="ident">minFlexibleVersion</label></code></span>
+<span class="codeline" id="line-278"><code></code></span>
+<span class="codeline" id="line-279"><code>		<label for="r44" class="ident">types</label> = <a href="../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r44" class="ident">types</label>, <a href="#line-167" class="ident">messageType</a>{</code></span>
+<span class="codeline" id="line-280"><code>			<a href="#line-168" class="ident">version</a>:  <label for="r45" class="ident">v</label>,</code></span>
+<span class="codeline" id="line-281"><code>			<a href="#line-170" class="ident">gotype</a>:   <label for="r36" class="ident">t</label>,</code></span>
+<span class="codeline" id="line-282"><code>			<a href="#line-169" class="ident">flexible</a>: <label for="r46" class="ident">flexible</label>,</code></span>
+<span class="codeline" id="line-283"><code>			<a href="#line-171" class="ident">decode</a>:   <a href="decode.go.html#line-342" class="ident">decodeFuncOf</a>(<label for="r36" class="ident">t</label>, <label for="r45" class="ident">v</label>, <label for="r46" class="ident">flexible</label>, <a href="#line-291" class="ident">structTag</a>{}),</code></span>
+<span class="codeline" id="line-284"><code>			<a href="#line-172" class="ident">encode</a>:   <a href="encode.go.html#line-376" class="ident">encodeFuncOf</a>(<label for="r36" class="ident">t</label>, <label for="r45" class="ident">v</label>, <label for="r46" class="ident">flexible</label>, <a href="#line-291" class="ident">structTag</a>{}),</code></span>
+<span class="codeline" id="line-285"><code>		})</code></span>
+<span class="codeline" id="line-286"><code>	}</code></span>
+<span class="codeline" id="line-287"><code></code></span>
+<span class="codeline" id="line-288"><code>	<span class="keyword">return</span> <label for="r44" class="ident">types</label></code></span>
+<span class="codeline" id="line-289"><code>}</code></span>
+<span class="codeline" id="line-290"><code></code></span>
+<span class="codeline" id="line-291"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-structTag" class="ident">structTag</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-292"><code>	MinVersion <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-293"><code>	MaxVersion <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-294"><code>	Compact    <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-295"><code>	Nullable   <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-296"><code>	TagID      <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-297"><code>}</code></span>
+<span class="codeline" id="line-298"><code></code></span>
+<span class="codeline" id="line-299"><code><span class="keyword">func</span> <label for="r47" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-forEachStructTag" class="ident">forEachStructTag</a></label>(<label for="r48" class="ident">tag</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r49" class="ident">do</label> <span class="keyword">func</span>(<a href="#line-291" class="ident">structTag</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) {</code></span>
+<span class="codeline" id="line-300"><code>	<span class="keyword">if</span> <label for="r48" class="ident">tag</label> == <span class="lit-string">"-"</span> {</code></span>
+<span class="codeline" id="line-301"><code>		<span class="keyword">return</span> <span class="comment">// special case to ignore the field</span></code></span>
+<span class="codeline" id="line-302"><code>	}</code></span>
+<span class="codeline" id="line-303"><code></code></span>
+<span class="codeline" id="line-304"><code>	<a href="#line-356" class="ident">forEach</a>(<label for="r48" class="ident">tag</label>, <span class="lit-number">'|'</span>, <span class="keyword">func</span>(<label for="r50" class="ident">s</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-305"><code>		<label for="r51" class="ident">tag</label> := <a href="#line-291" class="ident">structTag</a>{</code></span>
+<span class="codeline" id="line-306"><code>			<a href="#line-292" class="ident">MinVersion</a>: -<span class="lit-number">1</span>,</code></span>
+<span class="codeline" id="line-307"><code>			<a href="#line-293" class="ident">MaxVersion</a>: -<span class="lit-number">1</span>,</code></span>
+<span class="codeline" id="line-308"><code></code></span>
+<span class="codeline" id="line-309"><code>			<span class="comment">// Legitimate tag IDs can start at 0. We use -1 as a placeholder to indicate</span></code></span>
+<span class="codeline" id="line-310"><code><span class="comment">			// that the message type is flexible, so that leaves -2 as the default for</span></code></span>
+<span class="codeline" id="line-311"><code><span class="comment">			// indicating that there is no tag ID and the message is not flexible.</span></code></span>
+<span class="codeline" id="line-312"><code>			<a href="#line-296" class="ident">TagID</a>: -<span class="lit-number">2</span>,</code></span>
+<span class="codeline" id="line-313"><code>		}</code></span>
+<span class="codeline" id="line-314"><code></code></span>
+<span class="codeline" id="line-315"><code>		<span class="keyword">var</span> <label for="r52" class="ident">err</label> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-316"><code>		<a href="#line-356" class="ident">forEach</a>(<label for="r50" class="ident">s</label>, <span class="lit-number">','</span>, <span class="keyword">func</span>(<label for="r53" class="ident">s</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-317"><code>			<span class="keyword">switch</span> {</code></span>
+<span class="codeline" id="line-318"><code>			<span class="keyword">case</span> <a href="../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../strings/strings.go.html#line-520" class="ident">HasPrefix</a>(<label for="r53" class="ident">s</label>, <span class="lit-string">"min="</span>):</code></span>
+<span class="codeline" id="line-319"><code>				<label for="r51" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a>, <label for="r52" class="ident">err</label> = <a href="#line-389" class="ident">parseVersion</a>(<label for="r53" class="ident">s</label>[<span class="lit-number">4</span>:])</code></span>
+<span class="codeline" id="line-320"><code>			<span class="keyword">case</span> <a href="../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../strings/strings.go.html#line-520" class="ident">HasPrefix</a>(<label for="r53" class="ident">s</label>, <span class="lit-string">"max="</span>):</code></span>
+<span class="codeline" id="line-321"><code>				<label for="r51" class="ident">tag</label>.<a href="#line-293" class="ident">MaxVersion</a>, <label for="r52" class="ident">err</label> = <a href="#line-389" class="ident">parseVersion</a>(<label for="r53" class="ident">s</label>[<span class="lit-number">4</span>:])</code></span>
+<span class="codeline" id="line-322"><code>			<span class="keyword">case</span> <label for="r53" class="ident">s</label> == <span class="lit-string">"tag"</span>:</code></span>
+<span class="codeline" id="line-323"><code>				<label for="r51" class="ident">tag</label>.<a href="#line-296" class="ident">TagID</a> = -<span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-324"><code>			<span class="keyword">case</span> <a href="../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../strings/strings.go.html#line-520" class="ident">HasPrefix</a>(<label for="r53" class="ident">s</label>, <span class="lit-string">"tag="</span>):</code></span>
+<span class="codeline" id="line-325"><code>				<label for="r51" class="ident">tag</label>.<a href="#line-296" class="ident">TagID</a>, <label for="r52" class="ident">err</label> = <a href="../../../../../pkg/strconv.html" class="ident i5">strconv</a>.<a href="../../../../strconv/number.go.html#line-146" class="ident">Atoi</a>(<label for="r53" class="ident">s</label>[<span class="lit-number">4</span>:])</code></span>
+<span class="codeline" id="line-326"><code>			<span class="keyword">case</span> <label for="r53" class="ident">s</label> == <span class="lit-string">"compact"</span>:</code></span>
+<span class="codeline" id="line-327"><code>				<label for="r51" class="ident">tag</label>.<a href="#line-294" class="ident">Compact</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-328"><code>			<span class="keyword">case</span> <label for="r53" class="ident">s</label> == <span class="lit-string">"nullable"</span>:</code></span>
+<span class="codeline" id="line-329"><code>				<label for="r51" class="ident">tag</label>.<a href="#line-295" class="ident">Nullable</a> = <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-330"><code>			<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-331"><code>				<label for="r52" class="ident">err</label> = <a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"unrecognized option: %q"</span>, <label for="r53" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-332"><code>			}</code></span>
+<span class="codeline" id="line-333"><code>			<span class="keyword">return</span> <label for="r52" class="ident">err</label> == <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-334"><code>		})</code></span>
+<span class="codeline" id="line-335"><code></code></span>
+<span class="codeline" id="line-336"><code>		<span class="keyword">if</span> <label for="r52" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-337"><code>			<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"malformed struct tag: %w"</span>, <label for="r52" class="ident">err</label>))</code></span>
+<span class="codeline" id="line-338"><code>		}</code></span>
+<span class="codeline" id="line-339"><code></code></span>
+<span class="codeline" id="line-340"><code>		<span class="keyword">if</span> <label for="r51" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a> &lt; <span class="lit-number">0</span> &amp;&amp; <label for="r51" class="ident">tag</label>.<a href="#line-293" class="ident">MaxVersion</a> &gt;= <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-341"><code>			<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"missing minimum version in struct tag: %q"</span>, <label for="r50" class="ident">s</label>))</code></span>
+<span class="codeline" id="line-342"><code>		}</code></span>
+<span class="codeline" id="line-343"><code></code></span>
+<span class="codeline" id="line-344"><code>		<span class="keyword">if</span> <label for="r51" class="ident">tag</label>.<a href="#line-293" class="ident">MaxVersion</a> &lt; <span class="lit-number">0</span> &amp;&amp; <label for="r51" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a> &gt;= <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-345"><code>			<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"missing maximum version in struct tag: %q"</span>, <label for="r50" class="ident">s</label>))</code></span>
+<span class="codeline" id="line-346"><code>		}</code></span>
+<span class="codeline" id="line-347"><code></code></span>
+<span class="codeline" id="line-348"><code>		<span class="keyword">if</span> <label for="r51" class="ident">tag</label>.<a href="#line-292" class="ident">MinVersion</a> &gt; <label for="r51" class="ident">tag</label>.<a href="#line-293" class="ident">MaxVersion</a> {</code></span>
+<span class="codeline" id="line-349"><code>			<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"invalid version range in struct tag: %q"</span>, <label for="r50" class="ident">s</label>))</code></span>
+<span class="codeline" id="line-350"><code>		}</code></span>
+<span class="codeline" id="line-351"><code></code></span>
+<span class="codeline" id="line-352"><code>		<span class="keyword">return</span> <label for="r49" class="ident">do</label>(<label for="r51" class="ident">tag</label>)</code></span>
+<span class="codeline" id="line-353"><code>	})</code></span>
+<span class="codeline" id="line-354"><code>}</code></span>
+<span class="codeline" id="line-355"><code></code></span>
+<span class="codeline" id="line-356"><code><span class="keyword">func</span> <label for="r54" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-forEach" class="ident">forEach</a></label>(<label for="r55" class="ident">s</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r56" class="ident">sep</label> <a href="../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <label for="r57" class="ident">do</label> <span class="keyword">func</span>(<a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-357"><code>	<span class="keyword">for</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r55" class="ident">s</label>) != <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-358"><code>		<label for="r58" class="ident">p</label> := <span class="lit-string">""</span></code></span>
+<span class="codeline" id="line-359"><code>		<label for="r59" class="ident">i</label> := <a href="../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../strings/strings.go.html#line-119" class="ident">IndexByte</a>(<label for="r55" class="ident">s</label>, <label for="r56" class="ident">sep</label>)</code></span>
+<span class="codeline" id="line-360"><code>		<span class="keyword">if</span> <label for="r59" class="ident">i</label> &lt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-361"><code>			<label for="r58" class="ident">p</label>, <label for="r55" class="ident">s</label> = <label for="r55" class="ident">s</label>, <span class="lit-string">""</span></code></span>
+<span class="codeline" id="line-362"><code>		} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-363"><code>			<label for="r58" class="ident">p</label>, <label for="r55" class="ident">s</label> = <label for="r55" class="ident">s</label>[:<label for="r59" class="ident">i</label>], <label for="r55" class="ident">s</label>[<label for="r59" class="ident">i</label>+<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-364"><code>		}</code></span>
+<span class="codeline" id="line-365"><code>		<span class="keyword">if</span> !<label for="r57" class="ident">do</label>(<label for="r58" class="ident">p</label>) {</code></span>
+<span class="codeline" id="line-366"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-367"><code>		}</code></span>
+<span class="codeline" id="line-368"><code>	}</code></span>
+<span class="codeline" id="line-369"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-370"><code>}</code></span>
+<span class="codeline" id="line-371"><code></code></span>
+<span class="codeline" id="line-372"><code><span class="keyword">func</span> <label for="r60" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-forEachStructField" class="ident">forEachStructField</a></label>(<label for="r61" class="ident">t</label> <a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/type.go.html#line-41" class="ident">Type</a>, <label for="r62" class="ident">do</label> <span class="keyword">func</span>(<a href="../../../../../pkg/reflect.html" class="ident i4">reflect</a>.<a href="../../../../reflect/type.go.html#line-41" class="ident">Type</a>, <a href="reflect.go.html#line-10" class="ident">index</a>, <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>)) {</code></span>
+<span class="codeline" id="line-373"><code>	<span class="keyword">for</span> <label for="r63" class="ident">i</label>, <label for="r64" class="ident">n</label> := <span class="lit-number">0</span>, <label for="r61" class="ident">t</label>.<a href="../../../../reflect/type.go.html#line-236" class="ident">NumField</a>(); <label for="r63" class="ident">i</label> &lt; <label for="r64" class="ident">n</label>; <label for="r63" class="ident">i</label>++ {</code></span>
+<span class="codeline" id="line-374"><code>		<label for="r65" class="ident">f</label> := <label for="r61" class="ident">t</label>.<a href="../../../../reflect/type.go.html#line-178" class="ident">Field</a>(<label for="r63" class="ident">i</label>)</code></span>
+<span class="codeline" id="line-375"><code></code></span>
+<span class="codeline" id="line-376"><code>		<span class="keyword">if</span> <label for="r65" class="ident">f</label>.<a href="../../../../reflect/type.go.html#line-1088" class="ident">PkgPath</a> != <span class="lit-string">""</span> &amp;&amp; <label for="r65" class="ident">f</label>.<a href="../../../../reflect/type.go.html#line-1083" class="ident">Name</a> != <span class="lit-string">"_"</span> {</code></span>
+<span class="codeline" id="line-377"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-378"><code>		}</code></span>
+<span class="codeline" id="line-379"><code></code></span>
+<span class="codeline" id="line-380"><code>		<label for="r66" class="ident">kafkaTag</label>, <label for="r67" class="ident">ok</label> := <label for="r65" class="ident">f</label>.<a href="../../../../reflect/type.go.html#line-1091" class="ident">Tag</a>.<a href="../../../../reflect/type.go.html#line-1128" class="ident">Lookup</a>(<span class="lit-string">"kafka"</span>)</code></span>
+<span class="codeline" id="line-381"><code>		<span class="keyword">if</span> !<label for="r67" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-382"><code>			<label for="r66" class="ident">kafkaTag</label> = <span class="lit-string">"|"</span></code></span>
+<span class="codeline" id="line-383"><code>		}</code></span>
+<span class="codeline" id="line-384"><code></code></span>
+<span class="codeline" id="line-385"><code>		<label for="r62" class="ident">do</label>(<label for="r65" class="ident">f</label>.<a href="../../../../reflect/type.go.html#line-1090" class="ident">Type</a>, <a href="reflect.go.html#line-100" class="ident">indexOf</a>(<label for="r65" class="ident">f</label>), <label for="r66" class="ident">kafkaTag</label>)</code></span>
+<span class="codeline" id="line-386"><code>	}</code></span>
+<span class="codeline" id="line-387"><code>}</code></span>
+<span class="codeline" id="line-388"><code></code></span>
+<span class="codeline" id="line-389"><code><span class="keyword">func</span> <label for="r68" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-parseVersion" class="ident">parseVersion</a></label>(<label for="r69" class="ident">s</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-390"><code>	<span class="keyword">if</span> !<a href="../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../strings/strings.go.html#line-520" class="ident">HasPrefix</a>(<label for="r69" class="ident">s</label>, <span class="lit-string">"v"</span>) {</code></span>
+<span class="codeline" id="line-391"><code>		<span class="keyword">return</span> <span class="lit-number">0</span>, <a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"invalid version number: %q"</span>, <label for="r69" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-392"><code>	}</code></span>
+<span class="codeline" id="line-393"><code>	<label for="r70" class="ident">i</label>, <label for="r71" class="ident">err</label> := <a href="../../../../../pkg/strconv.html" class="ident i5">strconv</a>.<a href="../../../../strconv/number.go.html#line-137" class="ident">ParseInt</a>(<label for="r69" class="ident">s</label>[<span class="lit-number">1</span>:], <span class="lit-number">10</span>, <span class="lit-number">16</span>)</code></span>
+<span class="codeline" id="line-394"><code>	<span class="keyword">if</span> <label for="r71" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-395"><code>		<span class="keyword">return</span> <span class="lit-number">0</span>, <a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"invalid version number: %q: %w"</span>, <label for="r69" class="ident">s</label>, <label for="r71" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-396"><code>	}</code></span>
+<span class="codeline" id="line-397"><code>	<span class="keyword">if</span> <label for="r70" class="ident">i</label> &lt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-398"><code>		<span class="keyword">return</span> <span class="lit-number">0</span>, <a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"invalid negative version number: %q"</span>, <label for="r69" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-399"><code>	}</code></span>
+<span class="codeline" id="line-400"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>(<label for="r70" class="ident">i</label>), <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-401"><code>}</code></span>
+<span class="codeline" id="line-402"><code></code></span>
+<span class="codeline" id="line-403"><code><span class="keyword">func</span> <label for="r72" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-dontExpectEOF" class="ident">dontExpectEOF</a></label>(<label for="r73" class="ident">err</label> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-404"><code>	<span class="keyword">if</span> <label for="r73" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-405"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/errors.html" class="ident i0">errors</a>.<a href="../../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r73" class="ident">err</label>, <a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-44" class="ident">EOF</a>) {</code></span>
+<span class="codeline" id="line-406"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-48" class="ident">ErrUnexpectedEOF</a></code></span>
+<span class="codeline" id="line-407"><code>		}</code></span>
+<span class="codeline" id="line-408"><code></code></span>
+<span class="codeline" id="line-409"><code>		<span class="keyword">return</span> <label for="r73" class="ident">err</label></code></span>
+<span class="codeline" id="line-410"><code>	}</code></span>
+<span class="codeline" id="line-411"><code></code></span>
+<span class="codeline" id="line-412"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-413"><code>}</code></span>
+<span class="codeline" id="line-414"><code></code></span>
+<span class="codeline" id="line-415"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Broker" class="ident">Broker</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-416"><code>	Rack <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-417"><code>	Host <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-418"><code>	Port <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-419"><code>	ID   <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-420"><code>}</code></span>
+<span class="codeline" id="line-421"><code></code></span>
+<span class="codeline" id="line-422"><code><span class="keyword">func</span> (<label for="r74" class="ident">b</label> <a href="#line-415" class="ident">Broker</a>) <label for="r75" class="ident"><a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.Broker.html#name-.String" class="ident">String</a></label>() <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-423"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/net.html" class="ident i3">net</a>.<a href="../../../../net/ipsock.go.html#line-236" class="ident">JoinHostPort</a>(<label for="r74" class="ident">b</label>.<a href="#line-417" class="ident">Host</a>, <a href="#line-443" class="ident">itoa</a>(<label for="r74" class="ident">b</label>.<a href="#line-418" class="ident">Port</a>))</code></span>
+<span class="codeline" id="line-424"><code>}</code></span>
+<span class="codeline" id="line-425"><code></code></span>
+<span class="codeline" id="line-426"><code><span class="keyword">func</span> (<label for="r76" class="ident">b</label> <a href="#line-415" class="ident">Broker</a>) <label for="r77" class="ident"><a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.Broker.html#name-.Format" class="ident">Format</a></label>(<label for="r78" class="ident">w</label> <a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/print.go.html#line-39" class="ident">State</a>, <label for="r79" class="ident">v</label> <a href="../../../../../pkg/builtin.html#name-rune" class="ident">rune</a>) {</code></span>
+<span class="codeline" id="line-427"><code>	<span class="keyword">switch</span> <label for="r79" class="ident">v</label> {</code></span>
+<span class="codeline" id="line-428"><code>	<span class="keyword">case</span> <span class="lit-number">'d'</span>:</code></span>
+<span class="codeline" id="line-429"><code>		<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <a href="#line-443" class="ident">itoa</a>(<label for="r76" class="ident">b</label>.<a href="#line-419" class="ident">ID</a>))</code></span>
+<span class="codeline" id="line-430"><code>	<span class="keyword">case</span> <span class="lit-number">'s'</span>:</code></span>
+<span class="codeline" id="line-431"><code>		<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <label for="r76" class="ident">b</label>.<a href="#line-422" class="ident">String</a>())</code></span>
+<span class="codeline" id="line-432"><code>	<span class="keyword">case</span> <span class="lit-number">'v'</span>:</code></span>
+<span class="codeline" id="line-433"><code>		<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <a href="#line-443" class="ident">itoa</a>(<label for="r76" class="ident">b</label>.<a href="#line-419" class="ident">ID</a>))</code></span>
+<span class="codeline" id="line-434"><code>		<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <span class="lit-string">" "</span>)</code></span>
+<span class="codeline" id="line-435"><code>		<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <label for="r76" class="ident">b</label>.<a href="#line-422" class="ident">String</a>())</code></span>
+<span class="codeline" id="line-436"><code>		<span class="keyword">if</span> <label for="r76" class="ident">b</label>.<a href="#line-416" class="ident">Rack</a> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-437"><code>			<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <span class="lit-string">" "</span>)</code></span>
+<span class="codeline" id="line-438"><code>			<a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-314" class="ident">WriteString</a>(<label for="r78" class="ident">w</label>, <label for="r76" class="ident">b</label>.<a href="#line-416" class="ident">Rack</a>)</code></span>
+<span class="codeline" id="line-439"><code>		}</code></span>
+<span class="codeline" id="line-440"><code>	}</code></span>
+<span class="codeline" id="line-441"><code>}</code></span>
+<span class="codeline" id="line-442"><code></code></span>
+<span class="codeline" id="line-443"><code><span class="keyword">func</span> <label for="r80" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-itoa" class="ident">itoa</a></label>(<label for="r81" class="ident">i</label> <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a>) <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-444"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/strconv.html" class="ident i5">strconv</a>.<a href="../../../../strconv/number.go.html#line-214" class="ident">Itoa</a>(<a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>(<label for="r81" class="ident">i</label>))</code></span>
+<span class="codeline" id="line-445"><code>}</code></span>
+<span class="codeline" id="line-446"><code></code></span>
+<span class="codeline" id="line-447"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Topic" class="ident">Topic</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-448"><code>	Name       <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-449"><code>	Error      <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-450"><code>	Partitions <span class="keyword">map</span>[<a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a>]<a href="#line-453" class="ident">Partition</a></code></span>
+<span class="codeline" id="line-451"><code>}</code></span>
+<span class="codeline" id="line-452"><code></code></span>
+<span class="codeline" id="line-453"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Partition" class="ident">Partition</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-454"><code>	ID       <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-455"><code>	Error    <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a></code></span>
+<span class="codeline" id="line-456"><code>	Leader   <a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-457"><code>	Replicas []<a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-458"><code>	ISR      []<a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-459"><code>	Offline  []<a href="../../../../../pkg/builtin.html#name-int32" class="ident">int32</a></code></span>
+<span class="codeline" id="line-460"><code>}</code></span>
+<span class="codeline" id="line-461"><code></code></span>
+<span class="codeline" id="line-462"><code><span class="comment">// RawExchanger is an extention to the Message interface to allow messages</span></code></span>
+<span class="codeline" id="line-463"><code><span class="comment">// to control the request response cycle for the message. This is currently</span></code></span>
+<span class="codeline" id="line-464"><code><span class="comment">// only used to facilitate v0 SASL Authenticate requests being written in</span></code></span>
+<span class="codeline" id="line-465"><code><span class="comment">// a non-standard fashion when the SASL Handshake was done at v0 but not</span></code></span>
+<span class="codeline" id="line-466"><code><span class="comment">// when done at v1.</span></code></span>
+<span class="codeline" id="line-467"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-RawExchanger" class="ident">RawExchanger</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-468"><code>	<span class="comment">// Required should return true when a RawExchange is needed.</span></code></span>
+<span class="codeline" id="line-469"><code><span class="comment">	// The passed in versions are the negotiated versions for the connection</span></code></span>
+<span class="codeline" id="line-470"><code><span class="comment">	// performing the request.</span></code></span>
+<span class="codeline" id="line-471"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.RawExchanger.html#name-Required" class="ident">Required</a>(versions <span class="keyword">map</span>[<a href="#line-22" class="ident">ApiKey</a>]<a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>) <a href="../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-472"><code>	<span class="comment">// RawExchange is given the raw connection to the broker and the Message</span></code></span>
+<span class="codeline" id="line-473"><code><span class="comment">	// is responsible for writing itself to the connection as well as reading</span></code></span>
+<span class="codeline" id="line-474"><code><span class="comment">	// the response.</span></code></span>
+<span class="codeline" id="line-475"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.RawExchanger.html#name-RawExchange" class="ident">RawExchange</a>(rw <a href="../../../../../pkg/io.html" class="ident i2">io</a>.<a href="../../../../io/io.go.html#line-131" class="ident">ReadWriter</a>) (<a href="#line-18" class="ident">Message</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-476"><code>}</code></span>
+<span class="codeline" id="line-477"><code></code></span>
+<span class="codeline" id="line-478"><code><span class="comment">// BrokerMessage is an extension of the Message interface implemented by some</span></code></span>
+<span class="codeline" id="line-479"><code><span class="comment">// request types to customize the broker assignment logic.</span></code></span>
+<span class="codeline" id="line-480"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-BrokerMessage" class="ident">BrokerMessage</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-481"><code>	<span class="comment">// Given a representation of the kafka cluster state as argument, returns</span></code></span>
+<span class="codeline" id="line-482"><code><span class="comment">	// the broker that the message should be routed to.</span></code></span>
+<span class="codeline" id="line-483"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.BrokerMessage.html#name-Broker" class="ident">Broker</a>(<a href="cluster.go.html#line-10" class="ident">Cluster</a>) (<a href="#line-415" class="ident">Broker</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-484"><code>}</code></span>
+<span class="codeline" id="line-485"><code></code></span>
+<span class="codeline" id="line-486"><code><span class="comment">// GroupMessage is an extension of the Message interface implemented by some</span></code></span>
+<span class="codeline" id="line-487"><code><span class="comment">// request types to inform the program that they should be routed to a group</span></code></span>
+<span class="codeline" id="line-488"><code><span class="comment">// coordinator.</span></code></span>
+<span class="codeline" id="line-489"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-GroupMessage" class="ident">GroupMessage</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-490"><code>	<span class="comment">// Returns the group configured on the message.</span></code></span>
+<span class="codeline" id="line-491"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.GroupMessage.html#name-Group" class="ident">Group</a>() <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-492"><code>}</code></span>
+<span class="codeline" id="line-493"><code></code></span>
+<span class="codeline" id="line-494"><code><span class="comment">// TransactionalMessage is an extension of the Message interface implemented by some</span></code></span>
+<span class="codeline" id="line-495"><code><span class="comment">// request types to inform the program that they should be routed to a transaction</span></code></span>
+<span class="codeline" id="line-496"><code><span class="comment">// coordinator.</span></code></span>
+<span class="codeline" id="line-497"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-TransactionalMessage" class="ident">TransactionalMessage</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-498"><code>	<span class="comment">// Returns the transactional id configured on the message.</span></code></span>
+<span class="codeline" id="line-499"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.TransactionalMessage.html#name-Transaction" class="ident">Transaction</a>() <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-500"><code>}</code></span>
+<span class="codeline" id="line-501"><code></code></span>
+<span class="codeline" id="line-502"><code><span class="comment">// PreparedMessage is an extension of the Message interface implemented by some</span></code></span>
+<span class="codeline" id="line-503"><code><span class="comment">// request types which may need to run some pre-processing on their state before</span></code></span>
+<span class="codeline" id="line-504"><code><span class="comment">// being sent.</span></code></span>
+<span class="codeline" id="line-505"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-PreparedMessage" class="ident">PreparedMessage</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-506"><code>	<span class="comment">// Prepares the message before being sent to a kafka broker using the API</span></code></span>
+<span class="codeline" id="line-507"><code><span class="comment">	// version passed as argument.</span></code></span>
+<span class="codeline" id="line-508"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.PreparedMessage.html#name-Prepare" class="ident">Prepare</a>(apiVersion <a href="../../../../../pkg/builtin.html#name-int16" class="ident">int16</a>)</code></span>
+<span class="codeline" id="line-509"><code>}</code></span>
+<span class="codeline" id="line-510"><code></code></span>
+<span class="codeline" id="line-511"><code><span class="comment">// Splitter is an interface implemented by messages that can be split into</span></code></span>
+<span class="codeline" id="line-512"><code><span class="comment">// multiple requests and have their results merged back by a Merger.</span></code></span>
+<span class="codeline" id="line-513"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Splitter" class="ident">Splitter</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-514"><code>	<span class="comment">// For a given cluster layout, returns the list of messages constructed</span></code></span>
+<span class="codeline" id="line-515"><code><span class="comment">	// from the receiver for each requests that should be sent to the cluster.</span></code></span>
+<span class="codeline" id="line-516"><code><span class="comment">	// The second return value is a Merger which can be used to merge back the</span></code></span>
+<span class="codeline" id="line-517"><code><span class="comment">	// results of each request into a single message (or an error).</span></code></span>
+<span class="codeline" id="line-518"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.Splitter.html#name-Split" class="ident">Split</a>(<a href="cluster.go.html#line-10" class="ident">Cluster</a>) ([]<a href="#line-18" class="ident">Message</a>, <a href="#line-523" class="ident">Merger</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-519"><code>}</code></span>
+<span class="codeline" id="line-520"><code></code></span>
+<span class="codeline" id="line-521"><code><span class="comment">// Merger is an interface implemented by messages which can merge multiple</span></code></span>
+<span class="codeline" id="line-522"><code><span class="comment">// results into one response.</span></code></span>
+<span class="codeline" id="line-523"><code><span class="keyword">type</span> <a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Merger" class="ident">Merger</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-524"><code>	<span class="comment">// Given a list of message and associated results, merge them back into a</span></code></span>
+<span class="codeline" id="line-525"><code><span class="comment">	// response (or an error). The results must be either Message or error</span></code></span>
+<span class="codeline" id="line-526"><code><span class="comment">	// values, other types should trigger a panic.</span></code></span>
+<span class="codeline" id="line-527"><code>	<a href="../../../../../imp/github.com/segmentio/kafka-go/protocol.Merger.html#name-Merge" class="ident">Merge</a>(messages []<a href="#line-18" class="ident">Message</a>, results []<span class="keyword">interface</span>{}) (<a href="#line-18" class="ident">Message</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-528"><code>}</code></span>
+<span class="codeline" id="line-529"><code></code></span>
+<span class="codeline" id="line-530"><code><span class="comment">// Result converts r to a Message or an error, or panics if r could not be</span></code></span>
+<span class="codeline" id="line-531"><code><span class="comment">// converted to these types.</span></code></span>
+<span class="codeline" id="line-532"><code><span class="keyword">func</span> <label for="r82" class="ident"><a href="../../../../../pkg/github.com/segmentio/kafka-go/protocol.html#name-Result" class="ident">Result</a></label>(<label for="r83" class="ident">r</label> <span class="keyword">interface</span>{}) (<a href="#line-18" class="ident">Message</a>, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-533"><code>	<span class="keyword">switch</span> v := <label for="r83" class="ident">r</label>.(<span class="keyword">type</span>) {</code></span>
+<span class="codeline" id="line-534"><code>	<span class="keyword">case</span> <a href="#line-18" class="ident">Message</a>:</code></span>
+<span class="codeline" id="line-535"><code>		<span class="keyword">return</span> <label for="r84" class="ident">v</label>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-536"><code>	<span class="keyword">case</span> <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>:</code></span>
+<span class="codeline" id="line-537"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <label for="r85" class="ident">v</label></code></span>
+<span class="codeline" id="line-538"><code>	<span class="keyword">default</span>:</code></span>
+<span class="codeline" id="line-539"><code>		<a href="../../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<a href="../../../../../pkg/fmt.html" class="ident i1">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"BUG: result must be a message or an error but not %T"</span>, <label for="r86" class="ident">v</label>))</code></span>
+<span class="codeline" id="line-540"><code>	}</code></span>
+<span class="codeline" id="line-541"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: mux.go in package github.com/grpc-ecosystem/grpc-gateway/v2/runtime</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	mux.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">github.com/grpc-ecosystem/grpc-gateway/v2/runtime</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34],
+input[id=r35]:checked ~pre label[for=r35],
+input[id=r36]:checked ~pre label[for=r36],
+input[id=r37]:checked ~pre label[for=r37],
+input[id=r38]:checked ~pre label[for=r38],
+input[id=r39]:checked ~pre label[for=r39],
+input[id=r40]:checked ~pre label[for=r40],
+input[id=r41]:checked ~pre label[for=r41],
+input[id=r42]:checked ~pre label[for=r42],
+input[id=r43]:checked ~pre label[for=r43],
+input[id=r44]:checked ~pre label[for=r44],
+input[id=r45]:checked ~pre label[for=r45],
+input[id=r46]:checked ~pre label[for=r46],
+input[id=r47]:checked ~pre label[for=r47],
+input[id=r48]:checked ~pre label[for=r48],
+input[id=r49]:checked ~pre label[for=r49],
+input[id=r50]:checked ~pre label[for=r50],
+input[id=r51]:checked ~pre label[for=r51],
+input[id=r52]:checked ~pre label[for=r52],
+input[id=r53]:checked ~pre label[for=r53],
+input[id=r54]:checked ~pre label[for=r54],
+input[id=r55]:checked ~pre label[for=r55],
+input[id=r56]:checked ~pre label[for=r56],
+input[id=r57]:checked ~pre label[for=r57],
+input[id=r58]:checked ~pre label[for=r58],
+input[id=r59]:checked ~pre label[for=r59],
+input[id=r60]:checked ~pre label[for=r60],
+input[id=r61]:checked ~pre label[for=r61],
+input[id=r62]:checked ~pre label[for=r62],
+input[id=r63]:checked ~pre label[for=r63],
+input[id=r64]:checked ~pre label[for=r64],
+input[id=r65]:checked ~pre label[for=r65],
+input[id=r66]:checked ~pre label[for=r66],
+input[id=r67]:checked ~pre label[for=r67],
+input[id=r68]:checked ~pre label[for=r68],
+input[id=r69]:checked ~pre label[for=r69],
+input[id=r70]:checked ~pre label[for=r70],
+input[id=r71]:checked ~pre label[for=r71],
+input[id=r72]:checked ~pre label[for=r72],
+input[id=r73]:checked ~pre label[for=r73],
+input[id=r74]:checked ~pre label[for=r74],
+input[id=r75]:checked ~pre label[for=r75],
+input[id=r76]:checked ~pre label[for=r76],
+input[id=r77]:checked ~pre label[for=r77],
+input[id=r78]:checked ~pre label[for=r78],
+input[id=r79]:checked ~pre label[for=r79],
+input[id=r80]:checked ~pre label[for=r80],
+input[id=r81]:checked ~pre label[for=r81],
+input[id=r82]:checked ~pre label[for=r82],
+input[id=r83]:checked ~pre label[for=r83],
+input[id=r84]:checked ~pre label[for=r84],
+input[id=r85]:checked ~pre label[for=r85],
+input[id=r86]:checked ~pre label[for=r86],
+input[id=r87]:checked ~pre label[for=r87],
+input[id=r88]:checked ~pre label[for=r88],
+input[id=r89]:checked ~pre label[for=r89],
+input[id=r90]:checked ~pre label[for=r90],
+input[id=r91]:checked ~pre label[for=r91],
+input[id=r92]:checked ~pre label[for=r92],
+input[id=r93]:checked ~pre label[for=r93],
+input[id=r94]:checked ~pre label[for=r94],
+input[id=r95]:checked ~pre label[for=r95],
+input[id=r96]:checked ~pre label[for=r96],
+input[id=r97]:checked ~pre label[for=r97],
+input[id=r98]:checked ~pre label[for=r98],
+input[id=r99]:checked ~pre label[for=r99],
+input[id=r100]:checked ~pre label[for=r100],
+input[id=r101]:checked ~pre label[for=r101],
+input[id=r102]:checked ~pre label[for=r102],
+input[id=r103]:checked ~pre label[for=r103],
+input[id=r104]:checked ~pre label[for=r104],
+input[id=r105]:checked ~pre label[for=r105],
+input[id=r106]:checked ~pre label[for=r106],
+input[id=r107]:checked ~pre label[for=r107],
+input[id=r108]:checked ~pre label[for=r108],
+input[id=r109]:checked ~pre label[for=r109],
+input[id=r110]:checked ~pre label[for=r110],
+input[id=r111]:checked ~pre label[for=r111],
+input[id=r112]:checked ~pre label[for=r112],
+input[id=r113]:checked ~pre label[for=r113],
+input[id=r114]:checked ~pre label[for=r114],
+input[id=r115]:checked ~pre label[for=r115],
+input[id=r116]:checked ~pre label[for=r116],
+input[id=r117]:checked ~pre label[for=r117],
+input[id=r118]:checked ~pre label[for=r118],
+input[id=r119]:checked ~pre label[for=r119],
+input[id=r120]:checked ~pre label[for=r120],
+input[id=r121]:checked ~pre label[for=r121],
+input[id=r122]:checked ~pre label[for=r122],
+input[id=r123]:checked ~pre label[for=r123],
+input[id=r124]:checked ~pre label[for=r124],
+input[id=r125]:checked ~pre label[for=r125],
+input[id=r126]:checked ~pre label[for=r126],
+input[id=r127]:checked ~pre label[for=r127],
+input[id=r128]:checked ~pre label[for=r128],
+input[id=r129]:checked ~pre label[for=r129],
+input[id=r130]:checked ~pre label[for=r130],
+input[id=r131]:checked ~pre label[for=r131],
+input[id=r132]:checked ~pre label[for=r132],
+input[id=r133]:checked ~pre label[for=r133],
+input[id=r134]:checked ~pre label[for=r134],
+input[id=r135]:checked ~pre label[for=r135],
+input[id=r136]:checked ~pre label[for=r136],
+input[id=r137]:checked ~pre label[for=r137],
+input[id=r138]:checked ~pre label[for=r138],
+input[id=r139]:checked ~pre label[for=r139],
+input[id=r140]:checked ~pre label[for=r140],
+input[id=r141]:checked ~pre label[for=r141],
+input[id=r142]:checked ~pre label[for=r142],
+input[id=r143]:checked ~pre label[for=r143],
+input[id=r144]:checked ~pre label[for=r144],
+input[id=r145]:checked ~pre label[for=r145],
+input[id=r146]:checked ~pre label[for=r146],
+input[id=r147]:checked ~pre label[for=r147],
+input[id=r148]:checked ~pre label[for=r148],
+input[id=r149]:checked ~pre label[for=r149],
+input[id=r150]:checked ~pre label[for=r150],
+input[id=r151]:checked ~pre label[for=r151],
+input[id=r152]:checked ~pre label[for=r152],
+input[id=r153]:checked ~pre label[for=r153],
+input[id=r154]:checked ~pre label[for=r154],
+input[id=r155]:checked ~pre label[for=r155],
+input[id=r156]:checked ~pre label[for=r156],
+input[id=r157]:checked ~pre label[for=r157]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6,
+input[id=i7]:checked ~pre .i7,
+input[id=i8]:checked ~pre .i8,
+input[id=i9]:checked ~pre .i9,
+input[id=i10]:checked ~pre .i10,
+input[id=i11]:checked ~pre .i11,
+input[id=i12]:checked ~pre .i12,
+input[id=i13]:checked ~pre .i13,
+input[id=i14]:checked ~pre .i14
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="r35" type="radio" name="g"/>
+<input id="r36" type="radio" name="g"/>
+<input id="r37" type="radio" name="g"/>
+<input id="r38" type="radio" name="g"/>
+<input id="r39" type="radio" name="g"/>
+<input id="r40" type="radio" name="g"/>
+<input id="r41" type="radio" name="g"/>
+<input id="r42" type="radio" name="g"/>
+<input id="r43" type="radio" name="g"/>
+<input id="r44" type="radio" name="g"/>
+<input id="r45" type="radio" name="g"/>
+<input id="r46" type="radio" name="g"/>
+<input id="r47" type="radio" name="g"/>
+<input id="r48" type="radio" name="g"/>
+<input id="r49" type="radio" name="g"/>
+<input id="r50" type="radio" name="g"/>
+<input id="r51" type="radio" name="g"/>
+<input id="r52" type="radio" name="g"/>
+<input id="r53" type="radio" name="g"/>
+<input id="r54" type="radio" name="g"/>
+<input id="r55" type="radio" name="g"/>
+<input id="r56" type="radio" name="g"/>
+<input id="r57" type="radio" name="g"/>
+<input id="r58" type="radio" name="g"/>
+<input id="r59" type="radio" name="g"/>
+<input id="r60" type="radio" name="g"/>
+<input id="r61" type="radio" name="g"/>
+<input id="r62" type="radio" name="g"/>
+<input id="r63" type="radio" name="g"/>
+<input id="r64" type="radio" name="g"/>
+<input id="r65" type="radio" name="g"/>
+<input id="r66" type="radio" name="g"/>
+<input id="r67" type="radio" name="g"/>
+<input id="r68" type="radio" name="g"/>
+<input id="r69" type="radio" name="g"/>
+<input id="r70" type="radio" name="g"/>
+<input id="r71" type="radio" name="g"/>
+<input id="r72" type="radio" name="g"/>
+<input id="r73" type="radio" name="g"/>
+<input id="r74" type="radio" name="g"/>
+<input id="r75" type="radio" name="g"/>
+<input id="r76" type="radio" name="g"/>
+<input id="r77" type="radio" name="g"/>
+<input id="r78" type="radio" name="g"/>
+<input id="r79" type="radio" name="g"/>
+<input id="r80" type="radio" name="g"/>
+<input id="r81" type="radio" name="g"/>
+<input id="r82" type="radio" name="g"/>
+<input id="r83" type="radio" name="g"/>
+<input id="r84" type="radio" name="g"/>
+<input id="r85" type="radio" name="g"/>
+<input id="r86" type="radio" name="g"/>
+<input id="r87" type="radio" name="g"/>
+<input id="r88" type="radio" name="g"/>
+<input id="r89" type="radio" name="g"/>
+<input id="r90" type="radio" name="g"/>
+<input id="r91" type="radio" name="g"/>
+<input id="r92" type="radio" name="g"/>
+<input id="r93" type="radio" name="g"/>
+<input id="r94" type="radio" name="g"/>
+<input id="r95" type="radio" name="g"/>
+<input id="r96" type="radio" name="g"/>
+<input id="r97" type="radio" name="g"/>
+<input id="r98" type="radio" name="g"/>
+<input id="r99" type="radio" name="g"/>
+<input id="r100" type="radio" name="g"/>
+<input id="r101" type="radio" name="g"/>
+<input id="r102" type="radio" name="g"/>
+<input id="r103" type="radio" name="g"/>
+<input id="r104" type="radio" name="g"/>
+<input id="r105" type="radio" name="g"/>
+<input id="r106" type="radio" name="g"/>
+<input id="r107" type="radio" name="g"/>
+<input id="r108" type="radio" name="g"/>
+<input id="r109" type="radio" name="g"/>
+<input id="r110" type="radio" name="g"/>
+<input id="r111" type="radio" name="g"/>
+<input id="r112" type="radio" name="g"/>
+<input id="r113" type="radio" name="g"/>
+<input id="r114" type="radio" name="g"/>
+<input id="r115" type="radio" name="g"/>
+<input id="r116" type="radio" name="g"/>
+<input id="r117" type="radio" name="g"/>
+<input id="r118" type="radio" name="g"/>
+<input id="r119" type="radio" name="g"/>
+<input id="r120" type="radio" name="g"/>
+<input id="r121" type="radio" name="g"/>
+<input id="r122" type="radio" name="g"/>
+<input id="r123" type="radio" name="g"/>
+<input id="r124" type="radio" name="g"/>
+<input id="r125" type="radio" name="g"/>
+<input id="r126" type="radio" name="g"/>
+<input id="r127" type="radio" name="g"/>
+<input id="r128" type="radio" name="g"/>
+<input id="r129" type="radio" name="g"/>
+<input id="r130" type="radio" name="g"/>
+<input id="r131" type="radio" name="g"/>
+<input id="r132" type="radio" name="g"/>
+<input id="r133" type="radio" name="g"/>
+<input id="r134" type="radio" name="g"/>
+<input id="r135" type="radio" name="g"/>
+<input id="r136" type="radio" name="g"/>
+<input id="r137" type="radio" name="g"/>
+<input id="r138" type="radio" name="g"/>
+<input id="r139" type="radio" name="g"/>
+<input id="r140" type="radio" name="g"/>
+<input id="r141" type="radio" name="g"/>
+<input id="r142" type="radio" name="g"/>
+<input id="r143" type="radio" name="g"/>
+<input id="r144" type="radio" name="g"/>
+<input id="r145" type="radio" name="g"/>
+<input id="r146" type="radio" name="g"/>
+<input id="r147" type="radio" name="g"/>
+<input id="r148" type="radio" name="g"/>
+<input id="r149" type="radio" name="g"/>
+<input id="r150" type="radio" name="g"/>
+<input id="r151" type="radio" name="g"/>
+<input id="r152" type="radio" name="g"/>
+<input id="r153" type="radio" name="g"/>
+<input id="r154" type="radio" name="g"/>
+<input id="r155" type="radio" name="g"/>
+<input id="r156" type="radio" name="g"/>
+<input id="r157" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+<input id="i7" type="radio" name="i"/>
+<input id="i8" type="radio" name="i"/>
+<input id="i9" type="radio" name="i"/>
+<input id="i10" type="radio" name="i"/>
+<input id="i11" type="radio" name="i"/>
+<input id="i12" type="radio" name="i"/>
+<input id="i13" type="radio" name="i"/>
+<input id="i14" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> runtime</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"context"</span></label></code></span>
+<span class="codeline" id="line-5"><code>	<label for="i1"><span class="lit-string i1">"errors"</span></label></code></span>
+<span class="codeline" id="line-6"><code>	<label for="i2"><span class="lit-string i2">"fmt"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i3"><span class="lit-string i3">"net/http"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i4"><span class="lit-string i4">"net/textproto"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i5"><span class="lit-string i5">"regexp"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i6"><span class="lit-string i6">"strings"</span></label></code></span>
+<span class="codeline" id="line-11"><code></code></span>
+<span class="codeline" id="line-12"><code>	<label for="i7"><span class="lit-string i7">"github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule"</span></label></code></span>
+<span class="codeline" id="line-13"><code>	<label for="i8"><span class="lit-string i8">"google.golang.org/grpc"</span></label></code></span>
+<span class="codeline" id="line-14"><code>	<label for="i9"><span class="lit-string i9">"google.golang.org/grpc/codes"</span></label></code></span>
+<span class="codeline" id="line-15"><code>	<label for="i10"><span class="lit-string i10">"google.golang.org/grpc/grpclog"</span></label></code></span>
+<span class="codeline" id="line-16"><code>	<label for="i11"><span class="lit-string i11">"google.golang.org/grpc/health/grpc_health_v1"</span></label></code></span>
+<span class="codeline" id="line-17"><code>	<label for="i12"><span class="lit-string i12">"google.golang.org/grpc/metadata"</span></label></code></span>
+<span class="codeline" id="line-18"><code>	<label for="i13"><span class="lit-string i13">"google.golang.org/grpc/status"</span></label></code></span>
+<span class="codeline" id="line-19"><code>	<label for="i14"><span class="lit-string i14">"google.golang.org/protobuf/proto"</span></label></code></span>
+<span class="codeline" id="line-20"><code>)</code></span>
+<span class="codeline" id="line-21"><code></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">// UnescapingMode defines the behavior of ServeMux when unescaping path parameters.</span></code></span>
+<span class="codeline" id="line-23"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-UnescapingMode" class="ident">UnescapingMode</a> <a href="../../../../../../pkg/builtin.html#name-int" class="ident">int</a></code></span>
+<span class="codeline" id="line-24"><code></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">const</span> (</code></span>
+<span class="codeline" id="line-26"><code>	<span class="comment">// UnescapingModeLegacy is the default V2 behavior, which escapes the entire</span></code></span>
+<span class="codeline" id="line-27"><code><span class="comment">	// path string before doing any routing.</span></code></span>
+<span class="codeline" id="line-28"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-UnescapingModeLegacy" class="ident">UnescapingModeLegacy</a> <a href="#line-23" class="ident">UnescapingMode</a> = <a href="../../../../../../pkg/builtin.html#name-iota" class="ident">iota</a></code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code>	<span class="comment">// UnescapingModeAllExceptReserved unescapes all path parameters except RFC 6570</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">	// reserved characters.</span></code></span>
+<span class="codeline" id="line-32"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-UnescapingModeAllExceptReserved" class="ident">UnescapingModeAllExceptReserved</a></code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code>	<span class="comment">// UnescapingModeAllExceptSlash unescapes URL path parameters except path</span></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">	// separators, which will be left as "%2F".</span></code></span>
+<span class="codeline" id="line-36"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-UnescapingModeAllExceptSlash" class="ident">UnescapingModeAllExceptSlash</a></code></span>
+<span class="codeline" id="line-37"><code></code></span>
+<span class="codeline" id="line-38"><code>	<span class="comment">// UnescapingModeAllCharacters unescapes all URL path parameters.</span></code></span>
+<span class="codeline" id="line-39"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-UnescapingModeAllCharacters" class="ident">UnescapingModeAllCharacters</a></code></span>
+<span class="codeline" id="line-40"><code></code></span>
+<span class="codeline" id="line-41"><code>	<span class="comment">// UnescapingModeDefault is the default escaping type.</span></code></span>
+<span class="codeline" id="line-42"><code><span class="comment">	// TODO(v3): default this to UnescapingModeAllExceptReserved per grpc-httpjson-transcoding's</span></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">	// reference implementation</span></code></span>
+<span class="codeline" id="line-44"><code>	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-UnescapingModeDefault" class="ident">UnescapingModeDefault</a> = <a href="#line-28" class="ident">UnescapingModeLegacy</a></code></span>
+<span class="codeline" id="line-45"><code>)</code></span>
+<span class="codeline" id="line-46"><code></code></span>
+<span class="codeline" id="line-47"><code><span class="keyword">var</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-encodedPathSplitter" class="ident">encodedPathSplitter</a> = <a href="../../../../../../pkg/regexp.html" class="ident i5">regexp</a>.<a href="../../../../../regexp/regexp.go.html#line-310" class="ident">MustCompile</a>(<span class="lit-string">"(/|%2F)"</span>)</code></span>
+<span class="codeline" id="line-48"><code></code></span>
+<span class="codeline" id="line-49"><code><span class="comment">// A HandlerFunc handles a specific pair of path pattern and HTTP method.</span></code></span>
+<span class="codeline" id="line-50"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-HandlerFunc" class="ident">HandlerFunc</a> <span class="keyword">func</span>(w <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, r *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>, pathParams <span class="keyword">map</span>[<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>)</code></span>
+<span class="codeline" id="line-51"><code></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">// A Middleware handler wraps another HandlerFunc to do some pre- and/or post-processing of the request. This is used as an alternative to gRPC interceptors when using the direct-to-implementation</span></code></span>
+<span class="codeline" id="line-53"><code><span class="comment">// registration methods. It is generally recommended to use gRPC client or server interceptors instead</span></code></span>
+<span class="codeline" id="line-54"><code><span class="comment">// where possible.</span></code></span>
+<span class="codeline" id="line-55"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Middleware" class="ident">Middleware</a> <span class="keyword">func</span>(<a href="#line-50" class="ident">HandlerFunc</a>) <a href="#line-50" class="ident">HandlerFunc</a></code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code><span class="comment">// ServeMux is a request multiplexer for grpc-gateway.</span></code></span>
+<span class="codeline" id="line-58"><code><span class="comment">// It matches http requests to patterns and invokes the corresponding handler.</span></code></span>
+<span class="codeline" id="line-59"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ServeMux" class="ident">ServeMux</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-60"><code>	<span class="comment">// handlers maps HTTP method to a list of handlers.</span></code></span>
+<span class="codeline" id="line-61"><code>	handlers                  <span class="keyword">map</span>[<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="#line-548" class="ident">handler</a></code></span>
+<span class="codeline" id="line-62"><code>	middlewares               []<a href="#line-55" class="ident">Middleware</a></code></span>
+<span class="codeline" id="line-63"><code>	forwardResponseOptions    []<span class="keyword">func</span>(<a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <a href="../../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i14">proto</a>.<a href="../../../../../google.golang.org/protobuf/proto/proto.go.html#line-24" class="ident">Message</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-64"><code>	forwardResponseRewriter   <a href="#line-84" class="ident">ForwardResponseRewriter</a></code></span>
+<span class="codeline" id="line-65"><code>	marshalers                <a href="marshaler_registry.go.html#line-69" class="ident">marshalerRegistry</a></code></span>
+<span class="codeline" id="line-66"><code>	incomingHeaderMatcher     <a href="#line-149" class="ident">HeaderMatcherFunc</a></code></span>
+<span class="codeline" id="line-67"><code>	outgoingHeaderMatcher     <a href="#line-149" class="ident">HeaderMatcherFunc</a></code></span>
+<span class="codeline" id="line-68"><code>	outgoingTrailerMatcher    <a href="#line-149" class="ident">HeaderMatcherFunc</a></code></span>
+<span class="codeline" id="line-69"><code>	metadataAnnotators        []<span class="keyword">func</span>(<a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>) <a href="../../../../../../pkg/google.golang.org/grpc/metadata.html" class="ident i12">metadata</a>.<a href="../../../../../google.golang.org/grpc/metadata/metadata.go.html#line-45" class="ident">MD</a></code></span>
+<span class="codeline" id="line-70"><code>	errorHandler              <a href="errors.go.html#line-15" class="ident">ErrorHandlerFunc</a></code></span>
+<span class="codeline" id="line-71"><code>	streamErrorHandler        <a href="errors.go.html#line-18" class="ident">StreamErrorHandlerFunc</a></code></span>
+<span class="codeline" id="line-72"><code>	routingErrorHandler       <a href="errors.go.html#line-21" class="ident">RoutingErrorHandlerFunc</a></code></span>
+<span class="codeline" id="line-73"><code>	disablePathLengthFallback <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-74"><code>	unescapingMode            <a href="#line-23" class="ident">UnescapingMode</a></code></span>
+<span class="codeline" id="line-75"><code>	writeContentLength        <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-76"><code>	disableChunkedEncoding    <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-77"><code>}</code></span>
+<span class="codeline" id="line-78"><code></code></span>
+<span class="codeline" id="line-79"><code><span class="comment">// ServeMuxOption is an option that can be given to a ServeMux on construction.</span></code></span>
+<span class="codeline" id="line-80"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ServeMuxOption" class="ident">ServeMuxOption</a> <span class="keyword">func</span>(*<a href="#line-59" class="ident">ServeMux</a>)</code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code><span class="comment">// ForwardResponseRewriter is the signature of a function that is capable of rewriting messages</span></code></span>
+<span class="codeline" id="line-83"><code><span class="comment">// before they are forwarded in a unary, stream, or error response.</span></code></span>
+<span class="codeline" id="line-84"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-ForwardResponseRewriter" class="ident">ForwardResponseRewriter</a> <span class="keyword">func</span>(ctx <a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, response <a href="../../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i14">proto</a>.<a href="../../../../../google.golang.org/protobuf/proto/proto.go.html#line-24" class="ident">Message</a>) (<a href="../../../../../../pkg/builtin.html#name-any" class="ident">any</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-85"><code></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">// WithForwardResponseRewriter returns a ServeMuxOption that allows for implementers to insert logic</span></code></span>
+<span class="codeline" id="line-87"><code><span class="comment">// that can rewrite the final response before it is forwarded.</span></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-89"><code><span class="comment">// The response rewriter function is called during unary message forwarding, stream message</span></code></span>
+<span class="codeline" id="line-90"><code><span class="comment">// forwarding and when errors are being forwarded.</span></code></span>
+<span class="codeline" id="line-91"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// NOTE: Using this option will likely make what is generated by `protoc-gen-openapiv2` incorrect.</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// Since this option involves making runtime changes to the response shape or type.</span></code></span>
+<span class="codeline" id="line-94"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithForwardResponseRewriter" class="ident">WithForwardResponseRewriter</a></label>(<label for="r1" class="ident">fwdResponseRewriter</label> <a href="#line-84" class="ident">ForwardResponseRewriter</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-95"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r2" class="ident">sm</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-96"><code>		<label for="r2" class="ident">sm</label>.<a href="#line-64" class="ident">forwardResponseRewriter</a> = <label for="r1" class="ident">fwdResponseRewriter</label></code></span>
+<span class="codeline" id="line-97"><code>	}</code></span>
+<span class="codeline" id="line-98"><code>}</code></span>
+<span class="codeline" id="line-99"><code></code></span>
+<span class="codeline" id="line-100"><code><span class="comment">// WithForwardResponseOption returns a ServeMuxOption representing the forwardResponseOption.</span></code></span>
+<span class="codeline" id="line-101"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-102"><code><span class="comment">// forwardResponseOption is an option that will be called on the relevant context.Context,</span></code></span>
+<span class="codeline" id="line-103"><code><span class="comment">// http.ResponseWriter, and proto.Message before every forwarded response.</span></code></span>
+<span class="codeline" id="line-104"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-105"><code><span class="comment">// The message may be nil in the case where just a header is being sent.</span></code></span>
+<span class="codeline" id="line-106"><code><span class="keyword">func</span> <label for="r3" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithForwardResponseOption" class="ident">WithForwardResponseOption</a></label>(<label for="r4" class="ident">forwardResponseOption</label> <span class="keyword">func</span>(<a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <a href="../../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i14">proto</a>.<a href="../../../../../google.golang.org/protobuf/proto/proto.go.html#line-24" class="ident">Message</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-107"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r5" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-108"><code>		<label for="r5" class="ident">serveMux</label>.<a href="#line-63" class="ident">forwardResponseOptions</a> = <a href="../../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r5" class="ident">serveMux</label>.<a href="#line-63" class="ident">forwardResponseOptions</a>, <label for="r4" class="ident">forwardResponseOption</label>)</code></span>
+<span class="codeline" id="line-109"><code>	}</code></span>
+<span class="codeline" id="line-110"><code>}</code></span>
+<span class="codeline" id="line-111"><code></code></span>
+<span class="codeline" id="line-112"><code><span class="comment">// WithUnescapingMode sets the escaping type. See the definitions of UnescapingMode</span></code></span>
+<span class="codeline" id="line-113"><code><span class="comment">// for more information.</span></code></span>
+<span class="codeline" id="line-114"><code><span class="keyword">func</span> <label for="r6" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithUnescapingMode" class="ident">WithUnescapingMode</a></label>(<label for="r7" class="ident">mode</label> <a href="#line-23" class="ident">UnescapingMode</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-115"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r8" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-116"><code>		<label for="r8" class="ident">serveMux</label>.<a href="#line-74" class="ident">unescapingMode</a> = <label for="r7" class="ident">mode</label></code></span>
+<span class="codeline" id="line-117"><code>	}</code></span>
+<span class="codeline" id="line-118"><code>}</code></span>
+<span class="codeline" id="line-119"><code></code></span>
+<span class="codeline" id="line-120"><code><span class="comment">// WithMiddlewares sets server middleware for all handlers. This is useful as an alternative to gRPC</span></code></span>
+<span class="codeline" id="line-121"><code><span class="comment">// interceptors when using the direct-to-implementation registration methods and cannot rely</span></code></span>
+<span class="codeline" id="line-122"><code><span class="comment">// on gRPC interceptors. It's recommended to use gRPC interceptors instead if possible.</span></code></span>
+<span class="codeline" id="line-123"><code><span class="keyword">func</span> <label for="r9" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithMiddlewares" class="ident">WithMiddlewares</a></label>(<label for="r10" class="ident">middlewares</label> ...<a href="#line-55" class="ident">Middleware</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-124"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r11" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-125"><code>		<label for="r11" class="ident">serveMux</label>.<a href="#line-62" class="ident">middlewares</a> = <a href="../../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r11" class="ident">serveMux</label>.<a href="#line-62" class="ident">middlewares</a>, <label for="r10" class="ident">middlewares</label>...)</code></span>
+<span class="codeline" id="line-126"><code>	}</code></span>
+<span class="codeline" id="line-127"><code>}</code></span>
+<span class="codeline" id="line-128"><code></code></span>
+<span class="codeline" id="line-129"><code><span class="comment">// WithDisableChunkedEncoding disables the Transfer-Encoding: chunked header</span></code></span>
+<span class="codeline" id="line-130"><code><span class="comment">// for streaming responses. This is useful for streaming implementations that use</span></code></span>
+<span class="codeline" id="line-131"><code><span class="comment">// Content-Length, which is mutually exclusive with Transfer-Encoding:chunked.</span></code></span>
+<span class="codeline" id="line-132"><code><span class="comment">// Note that this option will not automatically add Content-Length headers, so it should be used with caution.</span></code></span>
+<span class="codeline" id="line-133"><code><span class="keyword">func</span> <label for="r12" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithDisableChunkedEncoding" class="ident">WithDisableChunkedEncoding</a></label>() <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-134"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r13" class="ident">mux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-135"><code>		<label for="r13" class="ident">mux</label>.<a href="#line-76" class="ident">disableChunkedEncoding</a> = <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-136"><code>	}</code></span>
+<span class="codeline" id="line-137"><code>}</code></span>
+<span class="codeline" id="line-138"><code></code></span>
+<span class="codeline" id="line-139"><code><span class="comment">// SetQueryParameterParser sets the query parameter parser, used to populate message from query parameters.</span></code></span>
+<span class="codeline" id="line-140"><code><span class="comment">// Configuring this will mean the generated OpenAPI output is no longer correct, and it should be</span></code></span>
+<span class="codeline" id="line-141"><code><span class="comment">// done with careful consideration.</span></code></span>
+<span class="codeline" id="line-142"><code><span class="keyword">func</span> <label for="r14" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-SetQueryParameterParser" class="ident">SetQueryParameterParser</a></label>(<label for="r15" class="ident">queryParameterParser</label> <a href="query.go.html#line-30" class="ident">QueryParameterParser</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-143"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r16" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-144"><code>		<a href="query.go.html#line-27" class="ident">currentQueryParser</a> = <label for="r15" class="ident">queryParameterParser</label></code></span>
+<span class="codeline" id="line-145"><code>	}</code></span>
+<span class="codeline" id="line-146"><code>}</code></span>
+<span class="codeline" id="line-147"><code></code></span>
+<span class="codeline" id="line-148"><code><span class="comment">// HeaderMatcherFunc checks whether a header key should be forwarded to/from gRPC context.</span></code></span>
+<span class="codeline" id="line-149"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-HeaderMatcherFunc" class="ident">HeaderMatcherFunc</a> <span class="keyword">func</span>(<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>)</code></span>
+<span class="codeline" id="line-150"><code></code></span>
+<span class="codeline" id="line-151"><code><span class="comment">// DefaultHeaderMatcher is used to pass http request headers to/from gRPC context. This adds permanent HTTP header</span></code></span>
+<span class="codeline" id="line-152"><code><span class="comment">// keys (as specified by the IANA, e.g: Accept, Cookie, Host) to the gRPC metadata with the grpcgateway- prefix. If you want to know which headers are considered permanent, you can view the isPermanentHTTPHeader function.</span></code></span>
+<span class="codeline" id="line-153"><code><span class="comment">// HTTP headers that start with 'Grpc-Metadata-' are mapped to gRPC metadata after removing the prefix 'Grpc-Metadata-'.</span></code></span>
+<span class="codeline" id="line-154"><code><span class="comment">// Other headers are not added to the gRPC metadata.</span></code></span>
+<span class="codeline" id="line-155"><code><span class="keyword">func</span> <label for="r17" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-DefaultHeaderMatcher" class="ident">DefaultHeaderMatcher</a></label>(<label for="r18" class="ident">key</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) {</code></span>
+<span class="codeline" id="line-156"><code>	<span class="keyword">switch</span> <label for="r18" class="ident">key</label> = <a href="../../../../../../pkg/net/textproto.html" class="ident i4">textproto</a>.<a href="../../../../../net/textproto/reader.go.html#line-653" class="ident">CanonicalMIMEHeaderKey</a>(<label for="r18" class="ident">key</label>); {</code></span>
+<span class="codeline" id="line-157"><code>	<span class="keyword">case</span> <a href="context.go.html#line-334" class="ident">isPermanentHTTPHeader</a>(<label for="r18" class="ident">key</label>):</code></span>
+<span class="codeline" id="line-158"><code>		<span class="keyword">return</span> <a href="context.go.html#line-27" class="ident">MetadataPrefix</a> + <label for="r18" class="ident">key</label>, <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-159"><code>	<span class="keyword">case</span> <a href="../../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../../strings/strings.go.html#line-520" class="ident">HasPrefix</a>(<label for="r18" class="ident">key</label>, <a href="context.go.html#line-23" class="ident">MetadataHeaderPrefix</a>):</code></span>
+<span class="codeline" id="line-160"><code>		<span class="keyword">return</span> <label for="r18" class="ident">key</label>[<a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<a href="context.go.html#line-23" class="ident">MetadataHeaderPrefix</a>):], <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-161"><code>	}</code></span>
+<span class="codeline" id="line-162"><code>	<span class="keyword">return</span> <span class="lit-string">""</span>, <a href="../../../../../../pkg/builtin.html#name-false" class="ident">false</a></code></span>
+<span class="codeline" id="line-163"><code>}</code></span>
+<span class="codeline" id="line-164"><code></code></span>
+<span class="codeline" id="line-165"><code><span class="keyword">func</span> <label for="r19" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-defaultOutgoingHeaderMatcher" class="ident">defaultOutgoingHeaderMatcher</a></label>(<label for="r20" class="ident">key</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) {</code></span>
+<span class="codeline" id="line-166"><code>	<span class="keyword">return</span> <a href="../../../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"%s%s"</span>, <a href="context.go.html#line-23" class="ident">MetadataHeaderPrefix</a>, <label for="r20" class="ident">key</label>), <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-167"><code>}</code></span>
+<span class="codeline" id="line-168"><code></code></span>
+<span class="codeline" id="line-169"><code><span class="keyword">func</span> <label for="r21" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-defaultOutgoingTrailerMatcher" class="ident">defaultOutgoingTrailerMatcher</a></label>(<label for="r22" class="ident">key</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a>) {</code></span>
+<span class="codeline" id="line-170"><code>	<span class="keyword">return</span> <a href="../../../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../../../fmt/print.go.html#line-237" class="ident">Sprintf</a>(<span class="lit-string">"%s%s"</span>, <a href="context.go.html#line-31" class="ident">MetadataTrailerPrefix</a>, <label for="r22" class="ident">key</label>), <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-171"><code>}</code></span>
+<span class="codeline" id="line-172"><code></code></span>
+<span class="codeline" id="line-173"><code><span class="comment">// WithIncomingHeaderMatcher returns a ServeMuxOption representing a headerMatcher for incoming request to gateway.</span></code></span>
+<span class="codeline" id="line-174"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-175"><code><span class="comment">// This matcher will be called with each header in http.Request. If matcher returns true, that header will be</span></code></span>
+<span class="codeline" id="line-176"><code><span class="comment">// passed to gRPC context. To transform the header before passing to gRPC context, matcher should return the modified header.</span></code></span>
+<span class="codeline" id="line-177"><code><span class="keyword">func</span> <label for="r23" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithIncomingHeaderMatcher" class="ident">WithIncomingHeaderMatcher</a></label>(<label for="r24" class="ident">fn</label> <a href="#line-149" class="ident">HeaderMatcherFunc</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-178"><code>	<span class="keyword">for</span> <label for="r25" class="ident">_</label>, <label for="r26" class="ident">header</label> := <span class="keyword">range</span> <label for="r24" class="ident">fn</label>.<a href="#line-188" class="ident">matchedMalformedHeaders</a>() {</code></span>
+<span class="codeline" id="line-179"><code>		<a href="../../../../../../pkg/google.golang.org/grpc/grpclog.html" class="ident i10">grpclog</a>.<a href="../../../../../google.golang.org/grpc/grpclog/grpclog.go.html#line-62" class="ident">Warningf</a>(<span class="lit-string">"The configured forwarding filter would allow %q to be sent to the gRPC server, which will likely cause errors. See https://github.com/grpc/grpc-go/pull/4803#issuecomment-986093310 for more information."</span>, <label for="r26" class="ident">header</label>)</code></span>
+<span class="codeline" id="line-180"><code>	}</code></span>
+<span class="codeline" id="line-181"><code></code></span>
+<span class="codeline" id="line-182"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r27" class="ident">mux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-183"><code>		<label for="r27" class="ident">mux</label>.<a href="#line-66" class="ident">incomingHeaderMatcher</a> = <label for="r24" class="ident">fn</label></code></span>
+<span class="codeline" id="line-184"><code>	}</code></span>
+<span class="codeline" id="line-185"><code>}</code></span>
+<span class="codeline" id="line-186"><code></code></span>
+<span class="codeline" id="line-187"><code><span class="comment">// matchedMalformedHeaders returns the malformed headers that would be forwarded to gRPC server.</span></code></span>
+<span class="codeline" id="line-188"><code><span class="keyword">func</span> (<label for="r28" class="ident">fn</label> <a href="#line-149" class="ident">HeaderMatcherFunc</a>) <label for="r29" class="ident">matchedMalformedHeaders</label>() []<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a> {</code></span>
+<span class="codeline" id="line-189"><code>	<span class="keyword">if</span> <label for="r28" class="ident">fn</label> == <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-190"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-191"><code>	}</code></span>
+<span class="codeline" id="line-192"><code>	<label for="r30" class="ident">headers</label> := <a href="../../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <span class="lit-number">0</span>)</code></span>
+<span class="codeline" id="line-193"><code>	<span class="keyword">for</span> <label for="r31" class="ident">header</label> := <span class="keyword">range</span> <a href="context.go.html#line-45" class="ident">malformedHTTPHeaders</a> {</code></span>
+<span class="codeline" id="line-194"><code>		<label for="r32" class="ident">out</label>, <label for="r33" class="ident">accept</label> := <label for="r28" class="ident">fn</label>(<label for="r31" class="ident">header</label>)</code></span>
+<span class="codeline" id="line-195"><code>		<span class="keyword">if</span> <label for="r33" class="ident">accept</label> &amp;&amp; <a href="context.go.html#line-368" class="ident">isMalformedHTTPHeader</a>(<label for="r32" class="ident">out</label>) {</code></span>
+<span class="codeline" id="line-196"><code>			<label for="r30" class="ident">headers</label> = <a href="../../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r30" class="ident">headers</label>, <label for="r32" class="ident">out</label>)</code></span>
+<span class="codeline" id="line-197"><code>		}</code></span>
+<span class="codeline" id="line-198"><code>	}</code></span>
+<span class="codeline" id="line-199"><code>	<span class="keyword">return</span> <label for="r30" class="ident">headers</label></code></span>
+<span class="codeline" id="line-200"><code>}</code></span>
+<span class="codeline" id="line-201"><code></code></span>
+<span class="codeline" id="line-202"><code><span class="comment">// WithOutgoingHeaderMatcher returns a ServeMuxOption representing a headerMatcher for outgoing response from gateway.</span></code></span>
+<span class="codeline" id="line-203"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-204"><code><span class="comment">// This matcher will be called with each header in response header metadata. If matcher returns true, that header will be</span></code></span>
+<span class="codeline" id="line-205"><code><span class="comment">// passed to http response returned from gateway. To transform the header before passing to response,</span></code></span>
+<span class="codeline" id="line-206"><code><span class="comment">// matcher should return the modified header.</span></code></span>
+<span class="codeline" id="line-207"><code><span class="keyword">func</span> <label for="r34" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithOutgoingHeaderMatcher" class="ident">WithOutgoingHeaderMatcher</a></label>(<label for="r35" class="ident">fn</label> <a href="#line-149" class="ident">HeaderMatcherFunc</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-208"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r36" class="ident">mux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-209"><code>		<label for="r36" class="ident">mux</label>.<a href="#line-67" class="ident">outgoingHeaderMatcher</a> = <label for="r35" class="ident">fn</label></code></span>
+<span class="codeline" id="line-210"><code>	}</code></span>
+<span class="codeline" id="line-211"><code>}</code></span>
+<span class="codeline" id="line-212"><code></code></span>
+<span class="codeline" id="line-213"><code><span class="comment">// WithOutgoingTrailerMatcher returns a ServeMuxOption representing a headerMatcher for outgoing response from gateway.</span></code></span>
+<span class="codeline" id="line-214"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-215"><code><span class="comment">// This matcher will be called with each header in response trailer metadata. If matcher returns true, that header will be</span></code></span>
+<span class="codeline" id="line-216"><code><span class="comment">// passed to http response returned from gateway. To transform the header before passing to response,</span></code></span>
+<span class="codeline" id="line-217"><code><span class="comment">// matcher should return the modified header.</span></code></span>
+<span class="codeline" id="line-218"><code><span class="keyword">func</span> <label for="r37" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithOutgoingTrailerMatcher" class="ident">WithOutgoingTrailerMatcher</a></label>(<label for="r38" class="ident">fn</label> <a href="#line-149" class="ident">HeaderMatcherFunc</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-219"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r39" class="ident">mux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-220"><code>		<label for="r39" class="ident">mux</label>.<a href="#line-68" class="ident">outgoingTrailerMatcher</a> = <label for="r38" class="ident">fn</label></code></span>
+<span class="codeline" id="line-221"><code>	}</code></span>
+<span class="codeline" id="line-222"><code>}</code></span>
+<span class="codeline" id="line-223"><code></code></span>
+<span class="codeline" id="line-224"><code><span class="comment">// WithMetadata returns a ServeMuxOption for passing metadata to a gRPC context.</span></code></span>
+<span class="codeline" id="line-225"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-226"><code><span class="comment">// This can be used by services that need to read from http.Request and modify gRPC context. A common use case</span></code></span>
+<span class="codeline" id="line-227"><code><span class="comment">// is reading token from cookie and adding it in gRPC context.</span></code></span>
+<span class="codeline" id="line-228"><code><span class="keyword">func</span> <label for="r40" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithMetadata" class="ident">WithMetadata</a></label>(<label for="r41" class="ident">annotator</label> <span class="keyword">func</span>(<a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>) <a href="../../../../../../pkg/google.golang.org/grpc/metadata.html" class="ident i12">metadata</a>.<a href="../../../../../google.golang.org/grpc/metadata/metadata.go.html#line-45" class="ident">MD</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-229"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r42" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-230"><code>		<label for="r42" class="ident">serveMux</label>.<a href="#line-69" class="ident">metadataAnnotators</a> = <a href="../../../../../../pkg/builtin.html#name-append" class="ident">append</a>(<label for="r42" class="ident">serveMux</label>.<a href="#line-69" class="ident">metadataAnnotators</a>, <label for="r41" class="ident">annotator</label>)</code></span>
+<span class="codeline" id="line-231"><code>	}</code></span>
+<span class="codeline" id="line-232"><code>}</code></span>
+<span class="codeline" id="line-233"><code></code></span>
+<span class="codeline" id="line-234"><code><span class="comment">// WithErrorHandler returns a ServeMuxOption for configuring a custom error handler.</span></code></span>
+<span class="codeline" id="line-235"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-236"><code><span class="comment">// This can be used to configure a custom error response.</span></code></span>
+<span class="codeline" id="line-237"><code><span class="keyword">func</span> <label for="r43" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithErrorHandler" class="ident">WithErrorHandler</a></label>(<label for="r44" class="ident">fn</label> <a href="errors.go.html#line-15" class="ident">ErrorHandlerFunc</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-238"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r45" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-239"><code>		<label for="r45" class="ident">serveMux</label>.<a href="#line-70" class="ident">errorHandler</a> = <label for="r44" class="ident">fn</label></code></span>
+<span class="codeline" id="line-240"><code>	}</code></span>
+<span class="codeline" id="line-241"><code>}</code></span>
+<span class="codeline" id="line-242"><code></code></span>
+<span class="codeline" id="line-243"><code><span class="comment">// WithStreamErrorHandler returns a ServeMuxOption that will use the given custom stream</span></code></span>
+<span class="codeline" id="line-244"><code><span class="comment">// error handler, which allows for customizing the error trailer for server-streaming</span></code></span>
+<span class="codeline" id="line-245"><code><span class="comment">// calls.</span></code></span>
+<span class="codeline" id="line-246"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-247"><code><span class="comment">// For stream errors that occur before any response has been written, the mux's</span></code></span>
+<span class="codeline" id="line-248"><code><span class="comment">// ErrorHandler will be invoked. However, once data has been written, the errors must</span></code></span>
+<span class="codeline" id="line-249"><code><span class="comment">// be handled differently: they must be included in the response body. The response body's</span></code></span>
+<span class="codeline" id="line-250"><code><span class="comment">// final message will include the error details returned by the stream error handler.</span></code></span>
+<span class="codeline" id="line-251"><code><span class="keyword">func</span> <label for="r46" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithStreamErrorHandler" class="ident">WithStreamErrorHandler</a></label>(<label for="r47" class="ident">fn</label> <a href="errors.go.html#line-18" class="ident">StreamErrorHandlerFunc</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-252"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r48" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-253"><code>		<label for="r48" class="ident">serveMux</label>.<a href="#line-71" class="ident">streamErrorHandler</a> = <label for="r47" class="ident">fn</label></code></span>
+<span class="codeline" id="line-254"><code>	}</code></span>
+<span class="codeline" id="line-255"><code>}</code></span>
+<span class="codeline" id="line-256"><code></code></span>
+<span class="codeline" id="line-257"><code><span class="comment">// WithRoutingErrorHandler returns a ServeMuxOption for configuring a custom error handler to  handle http routing errors.</span></code></span>
+<span class="codeline" id="line-258"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-259"><code><span class="comment">// Method called for errors which can happen before gRPC route selected or executed.</span></code></span>
+<span class="codeline" id="line-260"><code><span class="comment">// The following error codes: StatusMethodNotAllowed StatusNotFound StatusBadRequest</span></code></span>
+<span class="codeline" id="line-261"><code><span class="keyword">func</span> <label for="r49" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithRoutingErrorHandler" class="ident">WithRoutingErrorHandler</a></label>(<label for="r50" class="ident">fn</label> <a href="errors.go.html#line-21" class="ident">RoutingErrorHandlerFunc</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-262"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r51" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-263"><code>		<label for="r51" class="ident">serveMux</label>.<a href="#line-72" class="ident">routingErrorHandler</a> = <label for="r50" class="ident">fn</label></code></span>
+<span class="codeline" id="line-264"><code>	}</code></span>
+<span class="codeline" id="line-265"><code>}</code></span>
+<span class="codeline" id="line-266"><code></code></span>
+<span class="codeline" id="line-267"><code><span class="comment">// WithDisablePathLengthFallback returns a ServeMuxOption for disable path length fallback.</span></code></span>
+<span class="codeline" id="line-268"><code><span class="keyword">func</span> <label for="r52" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithDisablePathLengthFallback" class="ident">WithDisablePathLengthFallback</a></label>() <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-269"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r53" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-270"><code>		<label for="r53" class="ident">serveMux</label>.<a href="#line-73" class="ident">disablePathLengthFallback</a> = <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-271"><code>	}</code></span>
+<span class="codeline" id="line-272"><code>}</code></span>
+<span class="codeline" id="line-273"><code></code></span>
+<span class="codeline" id="line-274"><code><span class="comment">// WithWriteContentLength returns a ServeMuxOption to enable writing content length on non-streaming responses</span></code></span>
+<span class="codeline" id="line-275"><code><span class="keyword">func</span> <label for="r54" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithWriteContentLength" class="ident">WithWriteContentLength</a></label>() <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-276"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r55" class="ident">serveMux</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-277"><code>		<label for="r55" class="ident">serveMux</label>.<a href="#line-75" class="ident">writeContentLength</a> = <a href="../../../../../../pkg/builtin.html#name-true" class="ident">true</a></code></span>
+<span class="codeline" id="line-278"><code>	}</code></span>
+<span class="codeline" id="line-279"><code>}</code></span>
+<span class="codeline" id="line-280"><code></code></span>
+<span class="codeline" id="line-281"><code><span class="comment">// WithHealthEndpointAt returns a ServeMuxOption that will add an endpoint to the created ServeMux at the path specified by endpointPath.</span></code></span>
+<span class="codeline" id="line-282"><code><span class="comment">// When called the handler will forward the request to the upstream grpc service health check (defined in the</span></code></span>
+<span class="codeline" id="line-283"><code><span class="comment">// gRPC Health Checking Protocol).</span></code></span>
+<span class="codeline" id="line-284"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-285"><code><span class="comment">// See here https://grpc-ecosystem.github.io/grpc-gateway/docs/operations/health_check/ for more information on how</span></code></span>
+<span class="codeline" id="line-286"><code><span class="comment">// to setup the protocol in the grpc server.</span></code></span>
+<span class="codeline" id="line-287"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-288"><code><span class="comment">// If you define a service as query parameter, this will also be forwarded as service in the HealthCheckRequest.</span></code></span>
+<span class="codeline" id="line-289"><code><span class="keyword">func</span> <label for="r56" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithHealthEndpointAt" class="ident">WithHealthEndpointAt</a></label>(<label for="r57" class="ident">healthCheckClient</label> <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health_grpc.pb.go.html#line-51" class="ident">HealthClient</a>, <label for="r58" class="ident">endpointPath</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-290"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r59" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) {</code></span>
+<span class="codeline" id="line-291"><code>		<span class="comment">// error can be ignored since pattern is definitely valid</span></code></span>
+<span class="codeline" id="line-292"><code>		_ = <label for="r59" class="ident">s</label>.<a href="#line-378" class="ident">HandlePath</a>(</code></span>
+<span class="codeline" id="line-293"><code>			<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/method.go.html#line-11" class="ident">MethodGet</a>, <label for="r58" class="ident">endpointPath</label>, <span class="keyword">func</span>(<label for="r60" class="ident">w</label> <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r61" class="ident">r</label> *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>, <label for="r62" class="ident">_</label> <span class="keyword">map</span>[<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>,</code></span>
+<span class="codeline" id="line-294"><code>			) {</code></span>
+<span class="codeline" id="line-295"><code>				<label for="r63" class="ident">_</label>, <label for="r64" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r59" class="ident">s</label>, <label for="r61" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-296"><code>				<label for="r65" class="ident">annotatedContext</label>, <label for="r66" class="ident">err</label> := <a href="context.go.html#line-78" class="ident">AnnotateContext</a>(<label for="r61" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-352" class="ident">Context</a>(), <label for="r59" class="ident">s</label>, <label for="r61" class="ident">r</label>, <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health_grpc.pb.go.html#line-39" class="ident">Health_Check_FullMethodName</a>, <a href="context.go.html#line-57" class="ident">WithHTTPPathPattern</a>(<label for="r58" class="ident">endpointPath</label>))</code></span>
+<span class="codeline" id="line-297"><code>				<span class="keyword">if</span> <label for="r66" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-298"><code>					<label for="r59" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r61" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-352" class="ident">Context</a>(), <label for="r59" class="ident">s</label>, <label for="r64" class="ident">outboundMarshaler</label>, <label for="r60" class="ident">w</label>, <label for="r61" class="ident">r</label>, <label for="r66" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-299"><code>					<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-300"><code>				}</code></span>
+<span class="codeline" id="line-301"><code></code></span>
+<span class="codeline" id="line-302"><code>				<span class="keyword">var</span> <label for="r67" class="ident">md</label> <a href="context.go.html#line-215" class="ident">ServerMetadata</a></code></span>
+<span class="codeline" id="line-303"><code>				<label for="r68" class="ident">resp</label>, <label for="r66" class="ident">err</label> := <label for="r57" class="ident">healthCheckClient</label>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health_grpc.pb.go.html#line-59" class="ident">Check</a>(<label for="r65" class="ident">annotatedContext</label>, &amp;<a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-93" class="ident">HealthCheckRequest</a>{</code></span>
+<span class="codeline" id="line-304"><code>					<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-95" class="ident">Service</a>: <label for="r61" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-130" class="ident">URL</a>.<a href="../../../../../net/url/url.go.html#line-1154" class="ident">Query</a>().<a href="../../../../../net/url/url.go.html#line-890" class="ident">Get</a>(<span class="lit-string">"service"</span>),</code></span>
+<span class="codeline" id="line-305"><code>				}, <a href="../../../../../../pkg/google.golang.org/grpc.html" class="ident i8">grpc</a>.<a href="../../../../../google.golang.org/grpc/rpc_util.go.html#line-254" class="ident">Header</a>(&amp;<label for="r67" class="ident">md</label>.<a href="context.go.html#line-216" class="ident">HeaderMD</a>), <a href="../../../../../../pkg/google.golang.org/grpc.html" class="ident i8">grpc</a>.<a href="../../../../../google.golang.org/grpc/rpc_util.go.html#line-276" class="ident">Trailer</a>(&amp;<label for="r67" class="ident">md</label>.<a href="context.go.html#line-217" class="ident">TrailerMD</a>))</code></span>
+<span class="codeline" id="line-306"><code>				<label for="r65" class="ident">annotatedContext</label> = <a href="context.go.html#line-223" class="ident">NewServerMetadataContext</a>(<label for="r65" class="ident">annotatedContext</label>, <label for="r67" class="ident">md</label>)</code></span>
+<span class="codeline" id="line-307"><code>				<span class="keyword">if</span> <label for="r66" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-308"><code>					<label for="r59" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r65" class="ident">annotatedContext</label>, <label for="r59" class="ident">s</label>, <label for="r64" class="ident">outboundMarshaler</label>, <label for="r60" class="ident">w</label>, <label for="r61" class="ident">r</label>, <label for="r66" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-309"><code>					<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-310"><code>				}</code></span>
+<span class="codeline" id="line-311"><code></code></span>
+<span class="codeline" id="line-312"><code>				<label for="r60" class="ident">w</label>.<a href="../../../../../net/http/server.go.html#line-117" class="ident">Header</a>().<a href="../../../../../net/http/header.go.html#line-39" class="ident">Set</a>(<span class="lit-string">"Content-Type"</span>, <span class="lit-string">"application/json"</span>)</code></span>
+<span class="codeline" id="line-313"><code></code></span>
+<span class="codeline" id="line-314"><code>				<span class="keyword">if</span> <label for="r68" class="ident">resp</label>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-174" class="ident">GetStatus</a>() != <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-45" class="ident">HealthCheckResponse_SERVING</a> {</code></span>
+<span class="codeline" id="line-315"><code>					<span class="keyword">switch</span> <label for="r68" class="ident">resp</label>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-174" class="ident">GetStatus</a>() {</code></span>
+<span class="codeline" id="line-316"><code>					<span class="keyword">case</span> <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-46" class="ident">HealthCheckResponse_NOT_SERVING</a>, <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-44" class="ident">HealthCheckResponse_UNKNOWN</a>:</code></span>
+<span class="codeline" id="line-317"><code>						<label for="r66" class="ident">err</label> = <a href="../../../../../../pkg/google.golang.org/grpc/status.html" class="ident i13">status</a>.<a href="../../../../../google.golang.org/grpc/status/status.go.html#line-58" class="ident">Error</a>(<a href="../../../../../../pkg/google.golang.org/grpc/codes.html" class="ident i9">codes</a>.<a href="../../../../../google.golang.org/grpc/codes/codes.go.html#line-186" class="ident">Unavailable</a>, <label for="r68" class="ident">resp</label>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-151" class="ident">String</a>())</code></span>
+<span class="codeline" id="line-318"><code>					<span class="keyword">case</span> <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-47" class="ident">HealthCheckResponse_SERVICE_UNKNOWN</a>:</code></span>
+<span class="codeline" id="line-319"><code>						<label for="r66" class="ident">err</label> = <a href="../../../../../../pkg/google.golang.org/grpc/status.html" class="ident i13">status</a>.<a href="../../../../../google.golang.org/grpc/status/status.go.html#line-58" class="ident">Error</a>(<a href="../../../../../../pkg/google.golang.org/grpc/codes.html" class="ident i9">codes</a>.<a href="../../../../../google.golang.org/grpc/codes/codes.go.html#line-79" class="ident">NotFound</a>, <label for="r68" class="ident">resp</label>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health.pb.go.html#line-151" class="ident">String</a>())</code></span>
+<span class="codeline" id="line-320"><code>					}</code></span>
+<span class="codeline" id="line-321"><code></code></span>
+<span class="codeline" id="line-322"><code>					<label for="r59" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r65" class="ident">annotatedContext</label>, <label for="r59" class="ident">s</label>, <label for="r64" class="ident">outboundMarshaler</label>, <label for="r60" class="ident">w</label>, <label for="r61" class="ident">r</label>, <label for="r66" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-323"><code>					<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-324"><code>				}</code></span>
+<span class="codeline" id="line-325"><code></code></span>
+<span class="codeline" id="line-326"><code>				_ = <label for="r64" class="ident">outboundMarshaler</label>.<a href="marshaler.go.html#line-17" class="ident">NewEncoder</a>(<label for="r60" class="ident">w</label>).<a href="marshaler.go.html#line-31" class="ident">Encode</a>(<label for="r68" class="ident">resp</label>)</code></span>
+<span class="codeline" id="line-327"><code>			})</code></span>
+<span class="codeline" id="line-328"><code>	}</code></span>
+<span class="codeline" id="line-329"><code>}</code></span>
+<span class="codeline" id="line-330"><code></code></span>
+<span class="codeline" id="line-331"><code><span class="comment">// WithHealthzEndpoint returns a ServeMuxOption that will add a /healthz endpoint to the created ServeMux.</span></code></span>
+<span class="codeline" id="line-332"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-333"><code><span class="comment">// See WithHealthEndpointAt for the general implementation.</span></code></span>
+<span class="codeline" id="line-334"><code><span class="keyword">func</span> <label for="r69" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-WithHealthzEndpoint" class="ident">WithHealthzEndpoint</a></label>(<label for="r70" class="ident">healthCheckClient</label> <a href="../../../../../../pkg/google.golang.org/grpc/health/grpc_health_v1.html" class="ident i11">grpc_health_v1</a>.<a href="../../../../../google.golang.org/grpc/health/grpc_health_v1/health_grpc.pb.go.html#line-51" class="ident">HealthClient</a>) <a href="#line-80" class="ident">ServeMuxOption</a> {</code></span>
+<span class="codeline" id="line-335"><code>	<span class="keyword">return</span> <a href="#line-289" class="ident">WithHealthEndpointAt</a>(<label for="r70" class="ident">healthCheckClient</label>, <span class="lit-string">"/healthz"</span>)</code></span>
+<span class="codeline" id="line-336"><code>}</code></span>
+<span class="codeline" id="line-337"><code></code></span>
+<span class="codeline" id="line-338"><code><span class="comment">// NewServeMux returns a new ServeMux whose internal mapping is empty.</span></code></span>
+<span class="codeline" id="line-339"><code><span class="keyword">func</span> <label for="r71" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-NewServeMux" class="ident">NewServeMux</a></label>(<label for="r72" class="ident">opts</label> ...<a href="#line-80" class="ident">ServeMuxOption</a>) *<a href="#line-59" class="ident">ServeMux</a> {</code></span>
+<span class="codeline" id="line-340"><code>	<label for="r73" class="ident">serveMux</label> := &amp;<a href="#line-59" class="ident">ServeMux</a>{</code></span>
+<span class="codeline" id="line-341"><code>		<a href="#line-61" class="ident">handlers</a>:                <a href="../../../../../../pkg/builtin.html#name-make" class="ident">make</a>(<span class="keyword">map</span>[<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>][]<a href="#line-548" class="ident">handler</a>),</code></span>
+<span class="codeline" id="line-342"><code>		<a href="#line-63" class="ident">forwardResponseOptions</a>:  <a href="../../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<span class="keyword">func</span>(<a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <a href="../../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i14">proto</a>.<a href="../../../../../google.golang.org/protobuf/proto/proto.go.html#line-24" class="ident">Message</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>, <span class="lit-number">0</span>),</code></span>
+<span class="codeline" id="line-343"><code>		<a href="#line-64" class="ident">forwardResponseRewriter</a>: <span class="keyword">func</span>(<label for="r74" class="ident">ctx</label> <a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r75" class="ident">response</label> <a href="../../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i14">proto</a>.<a href="../../../../../google.golang.org/protobuf/proto/proto.go.html#line-24" class="ident">Message</a>) (<a href="../../../../../../pkg/builtin.html#name-any" class="ident">any</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>) { <span class="keyword">return</span> <label for="r75" class="ident">response</label>, <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> },</code></span>
+<span class="codeline" id="line-344"><code>		<a href="#line-65" class="ident">marshalers</a>:              <a href="marshaler_registry.go.html#line-93" class="ident">makeMarshalerMIMERegistry</a>(),</code></span>
+<span class="codeline" id="line-345"><code>		<a href="#line-70" class="ident">errorHandler</a>:            <a href="errors.go.html#line-108" class="ident">DefaultHTTPErrorHandler</a>,</code></span>
+<span class="codeline" id="line-346"><code>		<a href="#line-71" class="ident">streamErrorHandler</a>:      <a href="errors.go.html#line-182" class="ident">DefaultStreamErrorHandler</a>,</code></span>
+<span class="codeline" id="line-347"><code>		<a href="#line-72" class="ident">routingErrorHandler</a>:     <a href="errors.go.html#line-193" class="ident">DefaultRoutingErrorHandler</a>,</code></span>
+<span class="codeline" id="line-348"><code>		<a href="#line-74" class="ident">unescapingMode</a>:          <a href="#line-44" class="ident">UnescapingModeDefault</a>,</code></span>
+<span class="codeline" id="line-349"><code>	}</code></span>
+<span class="codeline" id="line-350"><code></code></span>
+<span class="codeline" id="line-351"><code>	<span class="keyword">for</span> <label for="r76" class="ident">_</label>, <label for="r77" class="ident">opt</label> := <span class="keyword">range</span> <label for="r72" class="ident">opts</label> {</code></span>
+<span class="codeline" id="line-352"><code>		<label for="r77" class="ident">opt</label>(<label for="r73" class="ident">serveMux</label>)</code></span>
+<span class="codeline" id="line-353"><code>	}</code></span>
+<span class="codeline" id="line-354"><code></code></span>
+<span class="codeline" id="line-355"><code>	<span class="keyword">if</span> <label for="r73" class="ident">serveMux</label>.<a href="#line-66" class="ident">incomingHeaderMatcher</a> == <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-356"><code>		<label for="r73" class="ident">serveMux</label>.<a href="#line-66" class="ident">incomingHeaderMatcher</a> = <a href="#line-155" class="ident">DefaultHeaderMatcher</a></code></span>
+<span class="codeline" id="line-357"><code>	}</code></span>
+<span class="codeline" id="line-358"><code>	<span class="keyword">if</span> <label for="r73" class="ident">serveMux</label>.<a href="#line-67" class="ident">outgoingHeaderMatcher</a> == <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-359"><code>		<label for="r73" class="ident">serveMux</label>.<a href="#line-67" class="ident">outgoingHeaderMatcher</a> = <a href="#line-165" class="ident">defaultOutgoingHeaderMatcher</a></code></span>
+<span class="codeline" id="line-360"><code>	}</code></span>
+<span class="codeline" id="line-361"><code>	<span class="keyword">if</span> <label for="r73" class="ident">serveMux</label>.<a href="#line-68" class="ident">outgoingTrailerMatcher</a> == <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-362"><code>		<label for="r73" class="ident">serveMux</label>.<a href="#line-68" class="ident">outgoingTrailerMatcher</a> = <a href="#line-169" class="ident">defaultOutgoingTrailerMatcher</a></code></span>
+<span class="codeline" id="line-363"><code>	}</code></span>
+<span class="codeline" id="line-364"><code></code></span>
+<span class="codeline" id="line-365"><code>	<span class="keyword">return</span> <label for="r73" class="ident">serveMux</label></code></span>
+<span class="codeline" id="line-366"><code>}</code></span>
+<span class="codeline" id="line-367"><code></code></span>
+<span class="codeline" id="line-368"><code><span class="comment">// Handle associates "h" to the pair of HTTP method and path pattern.</span></code></span>
+<span class="codeline" id="line-369"><code><span class="keyword">func</span> (<label for="r78" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) <label for="r79" class="ident">Handle</label>(<label for="r80" class="ident">meth</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r81" class="ident">pat</label> <a href="pattern.go.html#line-33" class="ident">Pattern</a>, <label for="r82" class="ident">h</label> <a href="#line-50" class="ident">HandlerFunc</a>) {</code></span>
+<span class="codeline" id="line-370"><code>	<span class="keyword">if</span> <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r78" class="ident">s</label>.<a href="#line-62" class="ident">middlewares</a>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-371"><code>		<label for="r82" class="ident">h</label> = <a href="#line-557" class="ident">chainMiddlewares</a>(<label for="r78" class="ident">s</label>.<a href="#line-62" class="ident">middlewares</a>)(<label for="r82" class="ident">h</label>)</code></span>
+<span class="codeline" id="line-372"><code>	}</code></span>
+<span class="codeline" id="line-373"><code>	<label for="r78" class="ident">s</label>.<a href="#line-61" class="ident">handlers</a>[<label for="r80" class="ident">meth</label>] = <a href="../../../../../../pkg/builtin.html#name-append" class="ident">append</a>([]<a href="#line-548" class="ident">handler</a>{{<a href="#line-549" class="ident">pat</a>: <label for="r81" class="ident">pat</label>, <a href="#line-550" class="ident">h</a>: <label for="r82" class="ident">h</label>}}, <label for="r78" class="ident">s</label>.<a href="#line-61" class="ident">handlers</a>[<label for="r80" class="ident">meth</label>]...)</code></span>
+<span class="codeline" id="line-374"><code>}</code></span>
+<span class="codeline" id="line-375"><code></code></span>
+<span class="codeline" id="line-376"><code><span class="comment">// HandlePath allows users to configure custom path handlers.</span></code></span>
+<span class="codeline" id="line-377"><code><span class="comment">// refer: https://grpc-ecosystem.github.io/grpc-gateway/docs/operations/inject_router/</span></code></span>
+<span class="codeline" id="line-378"><code><span class="keyword">func</span> (<label for="r83" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) <label for="r84" class="ident">HandlePath</label>(<label for="r85" class="ident">meth</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r86" class="ident">pathPattern</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r87" class="ident">h</label> <a href="#line-50" class="ident">HandlerFunc</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-379"><code>	<label for="r88" class="ident">compiler</label>, <label for="r89" class="ident">err</label> := <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/internal/httprule.html" class="ident i7">httprule</a>.<a href="../internal/httprule/parse.go.html#line-20" class="ident">Parse</a>(<label for="r86" class="ident">pathPattern</label>)</code></span>
+<span class="codeline" id="line-380"><code>	<span class="keyword">if</span> <label for="r89" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-381"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"parsing path pattern: %w"</span>, <label for="r89" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-382"><code>	}</code></span>
+<span class="codeline" id="line-383"><code>	<label for="r90" class="ident">tp</label> := <label for="r88" class="ident">compiler</label>.<a href="../internal/httprule/compile.go.html#line-30" class="ident">Compile</a>()</code></span>
+<span class="codeline" id="line-384"><code>	<label for="r91" class="ident">pattern</label>, <label for="r89" class="ident">err</label> := <a href="pattern.go.html#line-53" class="ident">NewPattern</a>(<label for="r90" class="ident">tp</label>.<a href="../internal/httprule/compile.go.html#line-14" class="ident">Version</a>, <label for="r90" class="ident">tp</label>.<a href="../internal/httprule/compile.go.html#line-16" class="ident">OpCodes</a>, <label for="r90" class="ident">tp</label>.<a href="../internal/httprule/compile.go.html#line-18" class="ident">Pool</a>, <label for="r90" class="ident">tp</label>.<a href="../internal/httprule/compile.go.html#line-20" class="ident">Verb</a>)</code></span>
+<span class="codeline" id="line-385"><code>	<span class="keyword">if</span> <label for="r89" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-386"><code>		<span class="keyword">return</span> <a href="../../../../../../pkg/fmt.html" class="ident i2">fmt</a>.<a href="../../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"creating new pattern: %w"</span>, <label for="r89" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-387"><code>	}</code></span>
+<span class="codeline" id="line-388"><code>	<label for="r83" class="ident">s</label>.<a href="#line-369" class="ident">Handle</a>(<label for="r85" class="ident">meth</label>, <label for="r91" class="ident">pattern</label>, <label for="r87" class="ident">h</label>)</code></span>
+<span class="codeline" id="line-389"><code>	<span class="keyword">return</span> <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-390"><code>}</code></span>
+<span class="codeline" id="line-391"><code></code></span>
+<span class="codeline" id="line-392"><code><span class="comment">// ServeHTTP dispatches the request to the first handler whose pattern matches to r.Method and r.URL.Path.</span></code></span>
+<span class="codeline" id="line-393"><code><span class="keyword">func</span> (<label for="r92" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) <label for="r93" class="ident"><a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.ServeMux.html#name-.ServeHTTP" class="ident">ServeHTTP</a></label>(<label for="r94" class="ident">w</label> <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r95" class="ident">r</label> *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>) {</code></span>
+<span class="codeline" id="line-394"><code>	<label for="r96" class="ident">ctx</label> := <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-352" class="ident">Context</a>()</code></span>
+<span class="codeline" id="line-395"><code></code></span>
+<span class="codeline" id="line-396"><code>	<label for="r97" class="ident">path</label> := <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-130" class="ident">URL</a>.<a href="../../../../../net/url/url.go.html#line-280" class="ident">Path</a></code></span>
+<span class="codeline" id="line-397"><code>	<span class="keyword">if</span> !<a href="../../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../../strings/strings.go.html#line-520" class="ident">HasPrefix</a>(<label for="r97" class="ident">path</label>, <span class="lit-string">"/"</span>) {</code></span>
+<span class="codeline" id="line-398"><code>		<label for="r98" class="ident">_</label>, <label for="r99" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-399"><code>		<label for="r92" class="ident">s</label>.<a href="#line-72" class="ident">routingErrorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r99" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/status.go.html#line-36" class="ident">StatusBadRequest</a>)</code></span>
+<span class="codeline" id="line-400"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-401"><code>	}</code></span>
+<span class="codeline" id="line-402"><code></code></span>
+<span class="codeline" id="line-403"><code>	<span class="comment">// TODO(v3): remove UnescapingModeLegacy</span></code></span>
+<span class="codeline" id="line-404"><code>	<span class="keyword">if</span> <label for="r92" class="ident">s</label>.<a href="#line-74" class="ident">unescapingMode</a> != <a href="#line-28" class="ident">UnescapingModeLegacy</a> &amp;&amp; <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-130" class="ident">URL</a>.<a href="../../../../../net/url/url.go.html#line-291" class="ident">RawPath</a> != <span class="lit-string">""</span> {</code></span>
+<span class="codeline" id="line-405"><code>		<label for="r97" class="ident">path</label> = <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-130" class="ident">URL</a>.<a href="../../../../../net/url/url.go.html#line-291" class="ident">RawPath</a></code></span>
+<span class="codeline" id="line-406"><code>	}</code></span>
+<span class="codeline" id="line-407"><code></code></span>
+<span class="codeline" id="line-408"><code>	<span class="keyword">if</span> <label for="r100" class="ident">override</label> := <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"X-HTTP-Method-Override"</span>); <label for="r100" class="ident">override</label> != <span class="lit-string">""</span> &amp;&amp; <label for="r92" class="ident">s</label>.<a href="#line-544" class="ident">isPathLengthFallback</a>(<label for="r95" class="ident">r</label>) {</code></span>
+<span class="codeline" id="line-409"><code>		<span class="keyword">if</span> <label for="r101" class="ident">err</label> := <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-1327" class="ident">ParseForm</a>(); <label for="r101" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-410"><code>			<label for="r102" class="ident">_</label>, <label for="r103" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-411"><code>			<label for="r104" class="ident">sterr</label> := <a href="../../../../../../pkg/google.golang.org/grpc/status.html" class="ident i13">status</a>.<a href="../../../../../google.golang.org/grpc/status/status.go.html#line-58" class="ident">Error</a>(<a href="../../../../../../pkg/google.golang.org/grpc/codes.html" class="ident i9">codes</a>.<a href="../../../../../google.golang.org/grpc/codes/codes.go.html#line-63" class="ident">InvalidArgument</a>, <label for="r101" class="ident">err</label>.Error())</code></span>
+<span class="codeline" id="line-412"><code>			<label for="r92" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r103" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <label for="r104" class="ident">sterr</label>)</code></span>
+<span class="codeline" id="line-413"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-414"><code>		}</code></span>
+<span class="codeline" id="line-415"><code>		<label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-116" class="ident">Method</a> = <a href="../../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../../strings/strings.go.html#line-687" class="ident">ToUpper</a>(<label for="r100" class="ident">override</label>)</code></span>
+<span class="codeline" id="line-416"><code>	}</code></span>
+<span class="codeline" id="line-417"><code></code></span>
+<span class="codeline" id="line-418"><code>	<span class="keyword">var</span> <label for="r105" class="ident">pathComponents</label> []<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-419"><code>	<span class="comment">// since in UnescapeModeLegacy, the URL will already have been fully unescaped, if we also split on "%2F"</span></code></span>
+<span class="codeline" id="line-420"><code><span class="comment">	// in this escaping mode we would be double unescaping but in UnescapingModeAllCharacters, we still do as the</span></code></span>
+<span class="codeline" id="line-421"><code><span class="comment">	// path is the RawPath (i.e. unescaped). That does mean that the behavior of this function will change its default</span></code></span>
+<span class="codeline" id="line-422"><code><span class="comment">	// behavior when the UnescapingModeDefault gets changed from UnescapingModeLegacy to UnescapingModeAllExceptReserved</span></code></span>
+<span class="codeline" id="line-423"><code>	<span class="keyword">if</span> <label for="r92" class="ident">s</label>.<a href="#line-74" class="ident">unescapingMode</a> == <a href="#line-39" class="ident">UnescapingModeAllCharacters</a> {</code></span>
+<span class="codeline" id="line-424"><code>		<label for="r105" class="ident">pathComponents</label> = <a href="#line-47" class="ident">encodedPathSplitter</a>.<a href="../../../../../regexp/regexp.go.html#line-1226" class="ident">Split</a>(<label for="r97" class="ident">path</label>[<span class="lit-number">1</span>:], -<span class="lit-number">1</span>)</code></span>
+<span class="codeline" id="line-425"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-426"><code>		<label for="r105" class="ident">pathComponents</label> = <a href="../../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../../strings/strings.go.html#line-361" class="ident">Split</a>(<label for="r97" class="ident">path</label>[<span class="lit-number">1</span>:], <span class="lit-string">"/"</span>)</code></span>
+<span class="codeline" id="line-427"><code>	}</code></span>
+<span class="codeline" id="line-428"><code></code></span>
+<span class="codeline" id="line-429"><code>	<label for="r106" class="ident">lastPathComponent</label> := <label for="r105" class="ident">pathComponents</label>[<a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r105" class="ident">pathComponents</label>)-<span class="lit-number">1</span>]</code></span>
+<span class="codeline" id="line-430"><code></code></span>
+<span class="codeline" id="line-431"><code>	<span class="keyword">for</span> <label for="r107" class="ident">_</label>, <label for="r108" class="ident">h</label> := <span class="keyword">range</span> <label for="r92" class="ident">s</label>.<a href="#line-61" class="ident">handlers</a>[<label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-116" class="ident">Method</a>] {</code></span>
+<span class="codeline" id="line-432"><code>		<span class="comment">// If the pattern has a verb, explicitly look for a suffix in the last</span></code></span>
+<span class="codeline" id="line-433"><code><span class="comment">		// component that matches a colon plus the verb. This allows us to</span></code></span>
+<span class="codeline" id="line-434"><code><span class="comment">		// handle some cases that otherwise can't be correctly handled by the</span></code></span>
+<span class="codeline" id="line-435"><code><span class="comment">		// former LastIndex case, such as when the verb literal itself contains</span></code></span>
+<span class="codeline" id="line-436"><code><span class="comment">		// a colon. This should work for all cases that have run through the</span></code></span>
+<span class="codeline" id="line-437"><code><span class="comment">		// parser because we know what verb we're looking for, however, there</span></code></span>
+<span class="codeline" id="line-438"><code><span class="comment">		// are still some cases that the parser itself cannot disambiguate. See</span></code></span>
+<span class="codeline" id="line-439"><code><span class="comment">		// the comment there if interested.</span></code></span>
+<span class="codeline" id="line-440"><code></code></span>
+<span class="codeline" id="line-441"><code>		<span class="keyword">var</span> <label for="r109" class="ident">verb</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-442"><code>		<label for="r110" class="ident">patVerb</label> := <label for="r108" class="ident">h</label>.<a href="#line-549" class="ident">pat</a>.<a href="pattern.go.html#line-236" class="ident">Verb</a>()</code></span>
+<span class="codeline" id="line-443"><code></code></span>
+<span class="codeline" id="line-444"><code>		<label for="r111" class="ident">idx</label> := -<span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-445"><code>		<span class="keyword">if</span> <label for="r110" class="ident">patVerb</label> != <span class="lit-string">""</span> &amp;&amp; <a href="../../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../../strings/strings.go.html#line-525" class="ident">HasSuffix</a>(<label for="r106" class="ident">lastPathComponent</label>, <span class="lit-string">":"</span>+<label for="r110" class="ident">patVerb</label>) {</code></span>
+<span class="codeline" id="line-446"><code>			<label for="r111" class="ident">idx</label> = <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r106" class="ident">lastPathComponent</label>) - <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r110" class="ident">patVerb</label>) - <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-447"><code>		}</code></span>
+<span class="codeline" id="line-448"><code>		<span class="keyword">if</span> <label for="r111" class="ident">idx</label> == <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-449"><code>			<label for="r112" class="ident">_</label>, <label for="r113" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-450"><code>			<label for="r92" class="ident">s</label>.<a href="#line-72" class="ident">routingErrorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r113" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/status.go.html#line-40" class="ident">StatusNotFound</a>)</code></span>
+<span class="codeline" id="line-451"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-452"><code>		}</code></span>
+<span class="codeline" id="line-453"><code></code></span>
+<span class="codeline" id="line-454"><code>		<label for="r114" class="ident">comps</label> := <a href="../../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r105" class="ident">pathComponents</label>))</code></span>
+<span class="codeline" id="line-455"><code>		<a href="../../../../../../pkg/builtin.html#name-copy" class="ident">copy</a>(<label for="r114" class="ident">comps</label>, <label for="r105" class="ident">pathComponents</label>)</code></span>
+<span class="codeline" id="line-456"><code></code></span>
+<span class="codeline" id="line-457"><code>		<span class="keyword">if</span> <label for="r111" class="ident">idx</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-458"><code>			<label for="r114" class="ident">comps</label>[<a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r114" class="ident">comps</label>)-<span class="lit-number">1</span>], <label for="r109" class="ident">verb</label> = <label for="r106" class="ident">lastPathComponent</label>[:<label for="r111" class="ident">idx</label>], <label for="r106" class="ident">lastPathComponent</label>[<label for="r111" class="ident">idx</label>+<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-459"><code>		}</code></span>
+<span class="codeline" id="line-460"><code></code></span>
+<span class="codeline" id="line-461"><code>		<label for="r115" class="ident">pathParams</label>, <label for="r116" class="ident">err</label> := <label for="r108" class="ident">h</label>.<a href="#line-549" class="ident">pat</a>.<a href="pattern.go.html#line-154" class="ident">MatchAndEscape</a>(<label for="r114" class="ident">comps</label>, <label for="r109" class="ident">verb</label>, <label for="r92" class="ident">s</label>.<a href="#line-74" class="ident">unescapingMode</a>)</code></span>
+<span class="codeline" id="line-462"><code>		<span class="keyword">if</span> <label for="r116" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-463"><code>			<span class="keyword">var</span> <label for="r117" class="ident">mse</label> <a href="pattern.go.html#line-20" class="ident">MalformedSequenceError</a></code></span>
+<span class="codeline" id="line-464"><code>			<span class="keyword">if</span> <label for="r118" class="ident">ok</label> := <a href="../../../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../../../errors/wrap.go.html#line-102" class="ident">As</a>(<label for="r116" class="ident">err</label>, &amp;<label for="r117" class="ident">mse</label>); <label for="r118" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-465"><code>				<label for="r119" class="ident">_</label>, <label for="r120" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-466"><code>				<label for="r92" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r120" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, &amp;<a href="errors.go.html#line-25" class="ident">HTTPStatusError</a>{</code></span>
+<span class="codeline" id="line-467"><code>					<a href="errors.go.html#line-26" class="ident">HTTPStatus</a>: <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/status.go.html#line-36" class="ident">StatusBadRequest</a>,</code></span>
+<span class="codeline" id="line-468"><code>					<a href="errors.go.html#line-27" class="ident">Err</a>:        <label for="r117" class="ident">mse</label>,</code></span>
+<span class="codeline" id="line-469"><code>				})</code></span>
+<span class="codeline" id="line-470"><code>			}</code></span>
+<span class="codeline" id="line-471"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-472"><code>		}</code></span>
+<span class="codeline" id="line-473"><code>		<label for="r92" class="ident">s</label>.<a href="#line-553" class="ident">handleHandler</a>(<label for="r108" class="ident">h</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <label for="r115" class="ident">pathParams</label>)</code></span>
+<span class="codeline" id="line-474"><code>		<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-475"><code>	}</code></span>
+<span class="codeline" id="line-476"><code></code></span>
+<span class="codeline" id="line-477"><code>	<span class="comment">// if no handler has found for the request, lookup for other methods</span></code></span>
+<span class="codeline" id="line-478"><code><span class="comment">	// to handle POST -&gt; GET fallback if the request is subject to path</span></code></span>
+<span class="codeline" id="line-479"><code><span class="comment">	// length fallback.</span></code></span>
+<span class="codeline" id="line-480"><code><span class="comment">	// Note we are not eagerly checking the request here as we want to return the</span></code></span>
+<span class="codeline" id="line-481"><code><span class="comment">	// right HTTP status code, and we need to process the fallback candidates in</span></code></span>
+<span class="codeline" id="line-482"><code><span class="comment">	// order to do that.</span></code></span>
+<span class="codeline" id="line-483"><code>	<span class="keyword">for</span> <label for="r121" class="ident">m</label>, <label for="r122" class="ident">handlers</label> := <span class="keyword">range</span> <label for="r92" class="ident">s</label>.<a href="#line-61" class="ident">handlers</a> {</code></span>
+<span class="codeline" id="line-484"><code>		<span class="keyword">if</span> <label for="r121" class="ident">m</label> == <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-116" class="ident">Method</a> {</code></span>
+<span class="codeline" id="line-485"><code>			<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-486"><code>		}</code></span>
+<span class="codeline" id="line-487"><code>		<span class="keyword">for</span> <label for="r123" class="ident">_</label>, <label for="r124" class="ident">h</label> := <span class="keyword">range</span> <label for="r122" class="ident">handlers</label> {</code></span>
+<span class="codeline" id="line-488"><code>			<span class="keyword">var</span> <label for="r125" class="ident">verb</label> <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-489"><code>			<label for="r126" class="ident">patVerb</label> := <label for="r124" class="ident">h</label>.<a href="#line-549" class="ident">pat</a>.<a href="pattern.go.html#line-236" class="ident">Verb</a>()</code></span>
+<span class="codeline" id="line-490"><code></code></span>
+<span class="codeline" id="line-491"><code>			<label for="r127" class="ident">idx</label> := -<span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-492"><code>			<span class="keyword">if</span> <label for="r126" class="ident">patVerb</label> != <span class="lit-string">""</span> &amp;&amp; <a href="../../../../../../pkg/strings.html" class="ident i6">strings</a>.<a href="../../../../../strings/strings.go.html#line-525" class="ident">HasSuffix</a>(<label for="r106" class="ident">lastPathComponent</label>, <span class="lit-string">":"</span>+<label for="r126" class="ident">patVerb</label>) {</code></span>
+<span class="codeline" id="line-493"><code>				<label for="r127" class="ident">idx</label> = <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r106" class="ident">lastPathComponent</label>) - <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r126" class="ident">patVerb</label>) - <span class="lit-number">1</span></code></span>
+<span class="codeline" id="line-494"><code>			}</code></span>
+<span class="codeline" id="line-495"><code></code></span>
+<span class="codeline" id="line-496"><code>			<label for="r128" class="ident">comps</label> := <a href="../../../../../../pkg/builtin.html#name-make" class="ident">make</a>([]<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r105" class="ident">pathComponents</label>))</code></span>
+<span class="codeline" id="line-497"><code>			<a href="../../../../../../pkg/builtin.html#name-copy" class="ident">copy</a>(<label for="r128" class="ident">comps</label>, <label for="r105" class="ident">pathComponents</label>)</code></span>
+<span class="codeline" id="line-498"><code></code></span>
+<span class="codeline" id="line-499"><code>			<span class="keyword">if</span> <label for="r127" class="ident">idx</label> &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-500"><code>				<label for="r128" class="ident">comps</label>[<a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r128" class="ident">comps</label>)-<span class="lit-number">1</span>], <label for="r125" class="ident">verb</label> = <label for="r106" class="ident">lastPathComponent</label>[:<label for="r127" class="ident">idx</label>], <label for="r106" class="ident">lastPathComponent</label>[<label for="r127" class="ident">idx</label>+<span class="lit-number">1</span>:]</code></span>
+<span class="codeline" id="line-501"><code>			}</code></span>
+<span class="codeline" id="line-502"><code></code></span>
+<span class="codeline" id="line-503"><code>			<label for="r129" class="ident">pathParams</label>, <label for="r130" class="ident">err</label> := <label for="r124" class="ident">h</label>.<a href="#line-549" class="ident">pat</a>.<a href="pattern.go.html#line-154" class="ident">MatchAndEscape</a>(<label for="r128" class="ident">comps</label>, <label for="r125" class="ident">verb</label>, <label for="r92" class="ident">s</label>.<a href="#line-74" class="ident">unescapingMode</a>)</code></span>
+<span class="codeline" id="line-504"><code>			<span class="keyword">if</span> <label for="r130" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-505"><code>				<span class="keyword">var</span> <label for="r131" class="ident">mse</label> <a href="pattern.go.html#line-20" class="ident">MalformedSequenceError</a></code></span>
+<span class="codeline" id="line-506"><code>				<span class="keyword">if</span> <label for="r132" class="ident">ok</label> := <a href="../../../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../../../errors/wrap.go.html#line-102" class="ident">As</a>(<label for="r130" class="ident">err</label>, &amp;<label for="r131" class="ident">mse</label>); <label for="r132" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-507"><code>					<label for="r133" class="ident">_</label>, <label for="r134" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-508"><code>					<label for="r92" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r134" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, &amp;<a href="errors.go.html#line-25" class="ident">HTTPStatusError</a>{</code></span>
+<span class="codeline" id="line-509"><code>						<a href="errors.go.html#line-26" class="ident">HTTPStatus</a>: <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/status.go.html#line-36" class="ident">StatusBadRequest</a>,</code></span>
+<span class="codeline" id="line-510"><code>						<a href="errors.go.html#line-27" class="ident">Err</a>:        <label for="r131" class="ident">mse</label>,</code></span>
+<span class="codeline" id="line-511"><code>					})</code></span>
+<span class="codeline" id="line-512"><code>				}</code></span>
+<span class="codeline" id="line-513"><code>				<span class="keyword">continue</span></code></span>
+<span class="codeline" id="line-514"><code>			}</code></span>
+<span class="codeline" id="line-515"><code></code></span>
+<span class="codeline" id="line-516"><code>			<span class="comment">// X-HTTP-Method-Override is optional. Always allow fallback to POST.</span></code></span>
+<span class="codeline" id="line-517"><code><span class="comment">			// Also, only consider POST -&gt; GET fallbacks, and avoid falling back to</span></code></span>
+<span class="codeline" id="line-518"><code><span class="comment">			// potentially dangerous operations like DELETE.</span></code></span>
+<span class="codeline" id="line-519"><code>			<span class="keyword">if</span> <label for="r92" class="ident">s</label>.<a href="#line-544" class="ident">isPathLengthFallback</a>(<label for="r95" class="ident">r</label>) &amp;&amp; <label for="r121" class="ident">m</label> == <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/method.go.html#line-11" class="ident">MethodGet</a> {</code></span>
+<span class="codeline" id="line-520"><code>				<span class="keyword">if</span> <label for="r135" class="ident">err</label> := <label for="r95" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-1327" class="ident">ParseForm</a>(); <label for="r135" class="ident">err</label> != <a href="../../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-521"><code>					<label for="r136" class="ident">_</label>, <label for="r137" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-522"><code>					<label for="r138" class="ident">sterr</label> := <a href="../../../../../../pkg/google.golang.org/grpc/status.html" class="ident i13">status</a>.<a href="../../../../../google.golang.org/grpc/status/status.go.html#line-58" class="ident">Error</a>(<a href="../../../../../../pkg/google.golang.org/grpc/codes.html" class="ident i9">codes</a>.<a href="../../../../../google.golang.org/grpc/codes/codes.go.html#line-63" class="ident">InvalidArgument</a>, <label for="r135" class="ident">err</label>.Error())</code></span>
+<span class="codeline" id="line-523"><code>					<label for="r92" class="ident">s</label>.<a href="#line-70" class="ident">errorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r137" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <label for="r138" class="ident">sterr</label>)</code></span>
+<span class="codeline" id="line-524"><code>					<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-525"><code>				}</code></span>
+<span class="codeline" id="line-526"><code>				<label for="r92" class="ident">s</label>.<a href="#line-553" class="ident">handleHandler</a>(<label for="r124" class="ident">h</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <label for="r129" class="ident">pathParams</label>)</code></span>
+<span class="codeline" id="line-527"><code>				<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-528"><code>			}</code></span>
+<span class="codeline" id="line-529"><code>			<label for="r139" class="ident">_</label>, <label for="r140" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-530"><code>			<label for="r92" class="ident">s</label>.<a href="#line-72" class="ident">routingErrorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r140" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/status.go.html#line-41" class="ident">StatusMethodNotAllowed</a>)</code></span>
+<span class="codeline" id="line-531"><code>			<span class="keyword">return</span></code></span>
+<span class="codeline" id="line-532"><code>		}</code></span>
+<span class="codeline" id="line-533"><code>	}</code></span>
+<span class="codeline" id="line-534"><code></code></span>
+<span class="codeline" id="line-535"><code>	<label for="r141" class="ident">_</label>, <label for="r142" class="ident">outboundMarshaler</label> := <a href="marshaler_registry.go.html#line-38" class="ident">MarshalerForRequest</a>(<label for="r92" class="ident">s</label>, <label for="r95" class="ident">r</label>)</code></span>
+<span class="codeline" id="line-536"><code>	<label for="r92" class="ident">s</label>.<a href="#line-72" class="ident">routingErrorHandler</a>(<label for="r96" class="ident">ctx</label>, <label for="r92" class="ident">s</label>, <label for="r142" class="ident">outboundMarshaler</label>, <label for="r94" class="ident">w</label>, <label for="r95" class="ident">r</label>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/status.go.html#line-40" class="ident">StatusNotFound</a>)</code></span>
+<span class="codeline" id="line-537"><code>}</code></span>
+<span class="codeline" id="line-538"><code></code></span>
+<span class="codeline" id="line-539"><code><span class="comment">// GetForwardResponseOptions returns the ForwardResponseOptions associated with this ServeMux.</span></code></span>
+<span class="codeline" id="line-540"><code><span class="keyword">func</span> (<label for="r143" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) <label for="r144" class="ident">GetForwardResponseOptions</label>() []<span class="keyword">func</span>(<a href="../../../../../../pkg/context.html" class="ident i0">context</a>.<a href="../../../../../context/context.go.html#line-71" class="ident">Context</a>, <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <a href="../../../../../../pkg/google.golang.org/protobuf/proto.html" class="ident i14">proto</a>.<a href="../../../../../google.golang.org/protobuf/proto/proto.go.html#line-24" class="ident">Message</a>) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-541"><code>	<span class="keyword">return</span> <label for="r143" class="ident">s</label>.<a href="#line-63" class="ident">forwardResponseOptions</a></code></span>
+<span class="codeline" id="line-542"><code>}</code></span>
+<span class="codeline" id="line-543"><code></code></span>
+<span class="codeline" id="line-544"><code><span class="keyword">func</span> (<label for="r145" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) <label for="r146" class="ident">isPathLengthFallback</label>(<label for="r147" class="ident">r</label> *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>) <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a> {</code></span>
+<span class="codeline" id="line-545"><code>	<span class="keyword">return</span> !<label for="r145" class="ident">s</label>.<a href="#line-73" class="ident">disablePathLengthFallback</a> &amp;&amp; <label for="r147" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-116" class="ident">Method</a> == <span class="lit-string">"POST"</span> &amp;&amp; <label for="r147" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-172" class="ident">Header</a>.<a href="../../../../../net/http/header.go.html#line-49" class="ident">Get</a>(<span class="lit-string">"Content-Type"</span>) == <span class="lit-string">"application/x-www-form-urlencoded"</span></code></span>
+<span class="codeline" id="line-546"><code>}</code></span>
+<span class="codeline" id="line-547"><code></code></span>
+<span class="codeline" id="line-548"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-handler" class="ident">handler</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-549"><code>	pat <a href="pattern.go.html#line-33" class="ident">Pattern</a></code></span>
+<span class="codeline" id="line-550"><code>	h   <a href="#line-50" class="ident">HandlerFunc</a></code></span>
+<span class="codeline" id="line-551"><code>}</code></span>
+<span class="codeline" id="line-552"><code></code></span>
+<span class="codeline" id="line-553"><code><span class="keyword">func</span> (<label for="r148" class="ident">s</label> *<a href="#line-59" class="ident">ServeMux</a>) <label for="r149" class="ident">handleHandler</label>(<label for="r150" class="ident">h</label> <a href="#line-548" class="ident">handler</a>, <label for="r151" class="ident">w</label> <a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/server.go.html#line-96" class="ident">ResponseWriter</a>, <label for="r152" class="ident">r</label> *<a href="../../../../../../pkg/net/http.html" class="ident i3">http</a>.<a href="../../../../../net/http/request.go.html#line-113" class="ident">Request</a>, <label for="r153" class="ident">pathParams</label> <span class="keyword">map</span>[<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a>) {</code></span>
+<span class="codeline" id="line-554"><code>	<label for="r150" class="ident">h</label>.<a href="#line-550" class="ident">h</a>(<label for="r151" class="ident">w</label>, <label for="r152" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-368" class="ident">WithContext</a>(<a href="context.go.html#line-415" class="ident">withHTTPPattern</a>(<label for="r152" class="ident">r</label>.<a href="../../../../../net/http/request.go.html#line-352" class="ident">Context</a>(), <label for="r150" class="ident">h</label>.<a href="#line-549" class="ident">pat</a>)), <label for="r153" class="ident">pathParams</label>)</code></span>
+<span class="codeline" id="line-555"><code>}</code></span>
+<span class="codeline" id="line-556"><code></code></span>
+<span class="codeline" id="line-557"><code><span class="keyword">func</span> <label for="r154" class="ident"><a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-chainMiddlewares" class="ident">chainMiddlewares</a></label>(<label for="r155" class="ident">mws</label> []<a href="#line-55" class="ident">Middleware</a>) <a href="#line-55" class="ident">Middleware</a> {</code></span>
+<span class="codeline" id="line-558"><code>	<span class="keyword">return</span> <span class="keyword">func</span>(<label for="r156" class="ident">next</label> <a href="#line-50" class="ident">HandlerFunc</a>) <a href="#line-50" class="ident">HandlerFunc</a> {</code></span>
+<span class="codeline" id="line-559"><code>		<span class="keyword">for</span> <label for="r157" class="ident">i</label> := <a href="../../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r155" class="ident">mws</label>); <label for="r157" class="ident">i</label> &gt; <span class="lit-number">0</span>; <label for="r157" class="ident">i</label>-- {</code></span>
+<span class="codeline" id="line-560"><code>			<label for="r156" class="ident">next</label> = <label for="r155" class="ident">mws</label>[<label for="r157" class="ident">i</label>-<span class="lit-number">1</span>](<label for="r156" class="ident">next</label>)</code></span>
+<span class="codeline" id="line-561"><code>		}</code></span>
+<span class="codeline" id="line-562"><code>		<span class="keyword">return</span> <label for="r156" class="ident">next</label></code></span>
+<span class="codeline" id="line-563"><code>	}</code></span>
+<span class="codeline" id="line-564"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

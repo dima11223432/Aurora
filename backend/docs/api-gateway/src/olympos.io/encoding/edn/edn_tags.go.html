@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: edn_tags.go in package olympos.io/encoding/edn</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	edn_tags.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../pkg/olympos.io/encoding/edn.html">olympos.io/encoding/edn</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="comment">// Copyright 2015 Jean Niklas L'orange.  All rights reserved.</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// Use of this source code is governed by a BSD-style</span></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// license that can be found in the LICENSE file.</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<div class="anchor" id="doc"><span class="codeline" id="line-5"><code><span class="comment">// Package edn implements encoding and decoding of EDN values as defined in</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// https://github.com/edn-format/edn. For a full introduction on how to use</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// go-edn, see https://github.com/go-edn/edn/blob/v1/docs/introduction.md. Fully</span></code></span>
+<span class="codeline" id="line-8"><code><span class="comment">// self-contained examples of go-edn can be found at</span></code></span>
+<span class="codeline" id="line-9"><code><span class="comment">// https://github.com/go-edn/edn/tree/v1/examples.</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">//</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">// Note that the small examples in this package is not checking errors as</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">// persively as you should do when you use this package. This is done because</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">// I'd like the examples to be easily readable and understandable. The bigger</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">// examples provide proper error handling.</span></code></span></div><span class="codeline" id="line-15"><code><span class="keyword">package</span> edn</code></span>
+<span class="codeline" id="line-16"><code></code></span>
+<span class="codeline" id="line-17"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-18"><code>	<label for="i0"><span class="lit-string i0">"encoding/base64"</span></label></code></span>
+<span class="codeline" id="line-19"><code>	<label for="i1"><span class="lit-string i1">"errors"</span></label></code></span>
+<span class="codeline" id="line-20"><code>	<label for="i2"><span class="lit-string i2">"math/big"</span></label></code></span>
+<span class="codeline" id="line-21"><code>	<label for="i3"><span class="lit-string i3">"reflect"</span></label></code></span>
+<span class="codeline" id="line-22"><code>	<label for="i4"><span class="lit-string i4">"sync"</span></label></code></span>
+<span class="codeline" id="line-23"><code>	<label for="i5"><span class="lit-string i5">"time"</span></label></code></span>
+<span class="codeline" id="line-24"><code>)</code></span>
+<span class="codeline" id="line-25"><code></code></span>
+<span class="codeline" id="line-26"><code><span class="keyword">var</span> (</code></span>
+<span class="codeline" id="line-27"><code>	<a href="../../../../pkg/olympos.io/encoding/edn.html#name-ErrNotFunc" class="ident">ErrNotFunc</a>         = <a href="../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"Value is not a function"</span>)</code></span>
+<span class="codeline" id="line-28"><code>	<a href="../../../../pkg/olympos.io/encoding/edn.html#name-ErrMismatchArities" class="ident">ErrMismatchArities</a> = <a href="../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"Function does not have single argument in, two argument out"</span>)</code></span>
+<span class="codeline" id="line-29"><code>	<a href="../../../../pkg/olympos.io/encoding/edn.html#name-ErrNotConcrete" class="ident">ErrNotConcrete</a>     = <a href="../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"Value is not a concrete non-function type"</span>)</code></span>
+<span class="codeline" id="line-30"><code>	<a href="../../../../pkg/olympos.io/encoding/edn.html#name-ErrTagOverwritten" class="ident">ErrTagOverwritten</a>  = <a href="../../../../pkg/errors.html" class="ident i1">errors</a>.<a href="../../../errors/errors.go.html#line-64" class="ident">New</a>(<span class="lit-string">"Previous tag implementation was overwritten"</span>)</code></span>
+<span class="codeline" id="line-31"><code>)</code></span>
+<span class="codeline" id="line-32"><code></code></span>
+<span class="codeline" id="line-33"><code><span class="keyword">var</span> <a href="../../../../pkg/olympos.io/encoding/edn.html#name-globalTags" class="ident">globalTags</a> <a href="#line-37" class="ident">TagMap</a></code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code><span class="comment">// A TagMap contains mappings from tag literals to functions and structs that is</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">// used when decoding.</span></code></span>
+<span class="codeline" id="line-37"><code><span class="keyword">type</span> <a href="../../../../pkg/olympos.io/encoding/edn.html#name-TagMap" class="ident">TagMap</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-38"><code>	<a href="../../../../pkg/sync.html" class="ident i4">sync</a>.<a href="../../../sync/rwmutex.go.html#line-39" class="ident">RWMutex</a></code></span>
+<span class="codeline" id="line-39"><code>	m <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/value.go.html#line-40" class="ident">Value</a></code></span>
+<span class="codeline" id="line-40"><code>}</code></span>
+<span class="codeline" id="line-41"><code></code></span>
+<span class="codeline" id="line-42"><code><span class="keyword">var</span> <a href="../../../../pkg/olympos.io/encoding/edn.html#name-errorType" class="ident">errorType</a> = <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-1383" class="ident">TypeOf</a>((*<a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>)(<a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a>)).<a href="../../../reflect/type.go.html#line-173" class="ident">Elem</a>()</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code><span class="comment">// AddTagFn adds fn as a converter function for tagname tags to this TagMap. fn</span></code></span>
+<span class="codeline" id="line-45"><code><span class="comment">// must have the signature func(T) (U, error), where T is the expected input</span></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">// type and U is the output type. See Decoder.AddTagFn for examples.</span></code></span>
+<span class="codeline" id="line-47"><code><span class="keyword">func</span> (<label for="r0" class="ident">tm</label> *<a href="#line-37" class="ident">TagMap</a>) <label for="r1" class="ident">AddTagFn</label>(<label for="r2" class="ident">tagname</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r3" class="ident">fn</label> <span class="keyword">interface</span>{}) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-48"><code>	<span class="comment">// TODO: check name</span></code></span>
+<span class="codeline" id="line-49"><code>	<label for="r4" class="ident">rfn</label> := <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/value.go.html#line-3119" class="ident">ValueOf</a>(<label for="r3" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-50"><code>	<label for="r5" class="ident">rtyp</label> := <label for="r4" class="ident">rfn</label>.<a href="../../../reflect/value.go.html#line-2480" class="ident">Type</a>()</code></span>
+<span class="codeline" id="line-51"><code>	<span class="keyword">if</span> <label for="r5" class="ident">rtyp</label>.<a href="../../../reflect/type.go.html#line-116" class="ident">Kind</a>() != <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-320" class="ident">Func</a> {</code></span>
+<span class="codeline" id="line-52"><code>		<span class="keyword">return</span> <a href="#line-27" class="ident">ErrNotFunc</a></code></span>
+<span class="codeline" id="line-53"><code>	}</code></span>
+<span class="codeline" id="line-54"><code>	<span class="keyword">if</span> <label for="r5" class="ident">rtyp</label>.<a href="../../../reflect/type.go.html#line-240" class="ident">NumIn</a>() != <span class="lit-number">1</span> || <label for="r5" class="ident">rtyp</label>.<a href="../../../reflect/type.go.html#line-244" class="ident">NumOut</a>() != <span class="lit-number">2</span> || !<label for="r5" class="ident">rtyp</label>.<a href="../../../reflect/type.go.html#line-249" class="ident">Out</a>(<span class="lit-number">1</span>).<a href="../../../reflect/type.go.html#line-119" class="ident">Implements</a>(<a href="#line-42" class="ident">errorType</a>) {</code></span>
+<span class="codeline" id="line-55"><code>		<span class="comment">// ok to have variadic arity?</span></code></span>
+<span class="codeline" id="line-56"><code>		<span class="keyword">return</span> <a href="#line-28" class="ident">ErrMismatchArities</a></code></span>
+<span class="codeline" id="line-57"><code>	}</code></span>
+<span class="codeline" id="line-58"><code>	<span class="keyword">return</span> <label for="r0" class="ident">tm</label>.<a href="#line-69" class="ident">addVal</a>(<label for="r2" class="ident">tagname</label>, <label for="r4" class="ident">rfn</label>)</code></span>
+<span class="codeline" id="line-59"><code>}</code></span>
+<span class="codeline" id="line-60"><code></code></span>
+<span class="codeline" id="line-61"><code><span class="comment">// MustAddTagFn adds fn as a converter function for tagname tags to this TagMap</span></code></span>
+<span class="codeline" id="line-62"><code><span class="comment">// like AddTagFn, except this function panics if the tag could not be added.</span></code></span>
+<span class="codeline" id="line-63"><code><span class="keyword">func</span> (<label for="r6" class="ident">tm</label> *<a href="#line-37" class="ident">TagMap</a>) <label for="r7" class="ident">MustAddTagFn</label>(<label for="r8" class="ident">tagname</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r9" class="ident">fn</label> <span class="keyword">interface</span>{}) {</code></span>
+<span class="codeline" id="line-64"><code>	<span class="keyword">if</span> <label for="r10" class="ident">err</label> := <label for="r6" class="ident">tm</label>.<a href="#line-47" class="ident">AddTagFn</a>(<label for="r8" class="ident">tagname</label>, <label for="r9" class="ident">fn</label>); <label for="r10" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-65"><code>		<a href="../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r10" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-66"><code>	}</code></span>
+<span class="codeline" id="line-67"><code>}</code></span>
+<span class="codeline" id="line-68"><code></code></span>
+<span class="codeline" id="line-69"><code><span class="keyword">func</span> (<label for="r11" class="ident">tm</label> *<a href="#line-37" class="ident">TagMap</a>) <label for="r12" class="ident">addVal</label>(<label for="r13" class="ident">name</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r14" class="ident">val</label> <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/value.go.html#line-40" class="ident">Value</a>) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-70"><code>	<label for="r11" class="ident">tm</label>.<a href="../../../sync/rwmutex.go.html#line-144" class="ident">Lock</a>()</code></span>
+<span class="codeline" id="line-71"><code>	<span class="keyword">if</span> <label for="r11" class="ident">tm</label>.<a href="#line-39" class="ident">m</a> == <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-72"><code>		<label for="r11" class="ident">tm</label>.<a href="#line-39" class="ident">m</a> = <span class="keyword">map</span>[<a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>]<a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/value.go.html#line-40" class="ident">Value</a>{}</code></span>
+<span class="codeline" id="line-73"><code>	}</code></span>
+<span class="codeline" id="line-74"><code>	<label for="r15" class="ident">_</label>, <label for="r16" class="ident">ok</label> := <label for="r11" class="ident">tm</label>.<a href="#line-39" class="ident">m</a>[<label for="r13" class="ident">name</label>]</code></span>
+<span class="codeline" id="line-75"><code>	<label for="r11" class="ident">tm</label>.<a href="#line-39" class="ident">m</a>[<label for="r13" class="ident">name</label>] = <label for="r14" class="ident">val</label></code></span>
+<span class="codeline" id="line-76"><code>	<label for="r11" class="ident">tm</label>.<a href="../../../sync/rwmutex.go.html#line-201" class="ident">Unlock</a>()</code></span>
+<span class="codeline" id="line-77"><code>	<span class="keyword">if</span> <label for="r16" class="ident">ok</label> {</code></span>
+<span class="codeline" id="line-78"><code>		<span class="keyword">return</span> <a href="#line-30" class="ident">ErrTagOverwritten</a></code></span>
+<span class="codeline" id="line-79"><code>	} <span class="keyword">else</span> {</code></span>
+<span class="codeline" id="line-80"><code>		<span class="keyword">return</span> <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-81"><code>	}</code></span>
+<span class="codeline" id="line-82"><code>}</code></span>
+<span class="codeline" id="line-83"><code></code></span>
+<span class="codeline" id="line-84"><code><span class="comment">// AddTagFn adds fn as a converter function for tagname tags to the global</span></code></span>
+<span class="codeline" id="line-85"><code><span class="comment">// TagMap. fn must have the signature func(T) (U, error), where T is the</span></code></span>
+<span class="codeline" id="line-86"><code><span class="comment">// expected input type and U is the output type. See Decoder.AddTagFn for</span></code></span>
+<span class="codeline" id="line-87"><code><span class="comment">// examples.</span></code></span>
+<span class="codeline" id="line-88"><code><span class="keyword">func</span> <label for="r17" class="ident"><a href="../../../../pkg/olympos.io/encoding/edn.html#name-AddTagFn" class="ident">AddTagFn</a></label>(<label for="r18" class="ident">tagname</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r19" class="ident">fn</label> <span class="keyword">interface</span>{}) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-89"><code>	<span class="keyword">return</span> <a href="#line-33" class="ident">globalTags</a>.<a href="#line-47" class="ident">AddTagFn</a>(<label for="r18" class="ident">tagname</label>, <label for="r19" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-90"><code>}</code></span>
+<span class="codeline" id="line-91"><code></code></span>
+<span class="codeline" id="line-92"><code><span class="comment">// MustAddTagFn adds fn as a converter function for tagname tags to the global</span></code></span>
+<span class="codeline" id="line-93"><code><span class="comment">// TagMap like AddTagFn, except this function panics if the tag could not be added.</span></code></span>
+<span class="codeline" id="line-94"><code><span class="keyword">func</span> <label for="r20" class="ident"><a href="../../../../pkg/olympos.io/encoding/edn.html#name-MustAddTagFn" class="ident">MustAddTagFn</a></label>(<label for="r21" class="ident">tagname</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r22" class="ident">fn</label> <span class="keyword">interface</span>{}) {</code></span>
+<span class="codeline" id="line-95"><code>	<a href="#line-33" class="ident">globalTags</a>.<a href="#line-63" class="ident">MustAddTagFn</a>(<label for="r21" class="ident">tagname</label>, <label for="r22" class="ident">fn</label>)</code></span>
+<span class="codeline" id="line-96"><code>}</code></span>
+<span class="codeline" id="line-97"><code></code></span>
+<span class="codeline" id="line-98"><code><span class="comment">// AddTagStructs adds the struct as a matching struct for tagname tags to this</span></code></span>
+<span class="codeline" id="line-99"><code><span class="comment">// TagMap. val can not be a channel, function, interface or an unsafe pointer.</span></code></span>
+<span class="codeline" id="line-100"><code><span class="comment">// See Decoder.AddTagStruct for examples.</span></code></span>
+<span class="codeline" id="line-101"><code><span class="keyword">func</span> (<label for="r23" class="ident">tm</label> *<a href="#line-37" class="ident">TagMap</a>) <label for="r24" class="ident">AddTagStruct</label>(<label for="r25" class="ident">tagname</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r26" class="ident">val</label> <span class="keyword">interface</span>{}) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-102"><code>	<label for="r27" class="ident">rstruct</label> := <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/value.go.html#line-3119" class="ident">ValueOf</a>(<label for="r26" class="ident">val</label>)</code></span>
+<span class="codeline" id="line-103"><code>	<span class="keyword">switch</span> <label for="r27" class="ident">rstruct</label>.<a href="../../../reflect/value.go.html#line-2480" class="ident">Type</a>().<a href="../../../reflect/type.go.html#line-116" class="ident">Kind</a>() {</code></span>
+<span class="codeline" id="line-104"><code>	<span class="keyword">case</span> <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-301" class="ident">Invalid</a>, <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-319" class="ident">Chan</a>, <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-320" class="ident">Func</a>, <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-321" class="ident">Interface</a>, <a href="../../../../pkg/reflect.html" class="ident i3">reflect</a>.<a href="../../../reflect/type.go.html#line-327" class="ident">UnsafePointer</a>:</code></span>
+<span class="codeline" id="line-105"><code>		<span class="keyword">return</span> <a href="#line-29" class="ident">ErrNotConcrete</a></code></span>
+<span class="codeline" id="line-106"><code>	}</code></span>
+<span class="codeline" id="line-107"><code>	<span class="keyword">return</span> <label for="r23" class="ident">tm</label>.<a href="#line-69" class="ident">addVal</a>(<label for="r25" class="ident">tagname</label>, <label for="r27" class="ident">rstruct</label>)</code></span>
+<span class="codeline" id="line-108"><code>}</code></span>
+<span class="codeline" id="line-109"><code></code></span>
+<span class="codeline" id="line-110"><code><span class="comment">// AddTagStructs adds the struct as a matching struct for tagname tags to the</span></code></span>
+<span class="codeline" id="line-111"><code><span class="comment">// global TagMap. val can not be a channel, function, interface or an unsafe</span></code></span>
+<span class="codeline" id="line-112"><code><span class="comment">// pointer. See Decoder.AddTagStruct for examples.</span></code></span>
+<span class="codeline" id="line-113"><code><span class="keyword">func</span> <label for="r28" class="ident"><a href="../../../../pkg/olympos.io/encoding/edn.html#name-AddTagStruct" class="ident">AddTagStruct</a></label>(<label for="r29" class="ident">tagname</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r30" class="ident">val</label> <span class="keyword">interface</span>{}) <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-114"><code>	<span class="keyword">return</span> <a href="#line-33" class="ident">globalTags</a>.<a href="#line-101" class="ident">AddTagStruct</a>(<label for="r29" class="ident">tagname</label>, <label for="r30" class="ident">val</label>)</code></span>
+<span class="codeline" id="line-115"><code>}</code></span>
+<span class="codeline" id="line-116"><code></code></span>
+<span class="codeline" id="line-117"><code><span class="keyword">func</span> <label for="r31" class="ident"><a href="../../../../pkg/olympos.io/encoding/edn.html#name-init" class="ident">init</a></label>() {</code></span>
+<span class="codeline" id="line-118"><code>	<label for="r32" class="ident">err</label> := <a href="#line-88" class="ident">AddTagFn</a>(<span class="lit-string">"inst"</span>, <span class="keyword">func</span>(<label for="r33" class="ident">s</label> <a href="../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<a href="../../../../pkg/time.html" class="ident i5">time</a>.<a href="../../../time/time.go.html#line-140" class="ident">Time</a>, <a href="../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-119"><code>		<span class="keyword">return</span> <a href="../../../../pkg/time.html" class="ident i5">time</a>.<a href="../../../time/format.go.html#line-1023" class="ident">Parse</a>(<a href="../../../../pkg/time.html" class="ident i5">time</a>.<a href="../../../time/format.go.html#line-120" class="ident">RFC3339Nano</a>, <label for="r33" class="ident">s</label>)</code></span>
+<span class="codeline" id="line-120"><code>	})</code></span>
+<span class="codeline" id="line-121"><code>	<span class="keyword">if</span> <label for="r32" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-122"><code>		<a href="../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r32" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-123"><code>	}</code></span>
+<span class="codeline" id="line-124"><code>	<label for="r32" class="ident">err</label> = <a href="#line-88" class="ident">AddTagFn</a>(<span class="lit-string">"base64"</span>, <a href="../../../../pkg/encoding/base64.html" class="ident i0">base64</a>.<a href="../../../encoding/base64/base64.go.html#line-119" class="ident">StdEncoding</a>.<a href="../../../encoding/base64/base64.go.html#line-429" class="ident">DecodeString</a>)</code></span>
+<span class="codeline" id="line-125"><code>	<span class="keyword">if</span> <label for="r32" class="ident">err</label> != <a href="../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-126"><code>		<a href="../../../../pkg/builtin.html#name-panic" class="ident">panic</a>(<label for="r32" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-127"><code>	}</code></span>
+<span class="codeline" id="line-128"><code>}</code></span>
+<span class="codeline" id="line-129"><code></code></span>
+<span class="codeline" id="line-130"><code><span class="comment">// A MathContext specifies the precision and rounding mode for</span></code></span>
+<span class="codeline" id="line-131"><code><span class="comment">// `math/big.Float`s when decoding.</span></code></span>
+<span class="codeline" id="line-132"><code><span class="keyword">type</span> <a href="../../../../pkg/olympos.io/encoding/edn.html#name-MathContext" class="ident">MathContext</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-133"><code>	Precision <a href="../../../../pkg/builtin.html#name-uint" class="ident">uint</a></code></span>
+<span class="codeline" id="line-134"><code>	Mode      <a href="../../../../pkg/math/big.html" class="ident i2">big</a>.<a href="../../../math/big/float.go.html#line-132" class="ident">RoundingMode</a></code></span>
+<span class="codeline" id="line-135"><code>}</code></span>
+<span class="codeline" id="line-136"><code></code></span>
+<span class="codeline" id="line-137"><code><span class="comment">// The GlobalMathContext is the global MathContext. It is used if no other</span></code></span>
+<span class="codeline" id="line-138"><code><span class="comment">// context is provided. See MathContext for example usage.</span></code></span>
+<span class="codeline" id="line-139"><code><span class="keyword">var</span> <a href="../../../../pkg/olympos.io/encoding/edn.html#name-GlobalMathContext" class="ident">GlobalMathContext</a> = <a href="#line-132" class="ident">MathContext</a>{</code></span>
+<span class="codeline" id="line-140"><code>	<a href="#line-134" class="ident">Mode</a>:      <a href="../../../../pkg/math/big.html" class="ident i2">big</a>.<a href="../../../math/big/float.go.html#line-136" class="ident">ToNearestEven</a>,</code></span>
+<span class="codeline" id="line-141"><code>	<a href="#line-133" class="ident">Precision</a>: <span class="lit-number">192</span>,</code></span>
+<span class="codeline" id="line-142"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

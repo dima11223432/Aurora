@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: marshaler.go in package github.com/grpc-ecosystem/grpc-gateway/v2/runtime</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	marshaler.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html">github.com/grpc-ecosystem/grpc-gateway/v2/runtime</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> runtime</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-4"><code>	<label for="i0"><span class="lit-string i0">"io"</span></label></code></span>
+<span class="codeline" id="line-5"><code>)</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// Marshaler defines a conversion between byte sequence and gRPC payloads / fields.</span></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Marshaler" class="ident">Marshaler</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-9"><code>	<span class="comment">// Marshal marshals "v" into byte sequence.</span></code></span>
+<span class="codeline" id="line-10"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Marshaler.html#name-Marshal" class="ident">Marshal</a>(v <span class="keyword">interface</span>{}) ([]<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a>)</code></span>
+<span class="codeline" id="line-11"><code>	<span class="comment">// Unmarshal unmarshals "data" into "v".</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">	// "v" must be a pointer value.</span></code></span>
+<span class="codeline" id="line-13"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Marshaler.html#name-Unmarshal" class="ident">Unmarshal</a>(data []<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a>, v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-14"><code>	<span class="comment">// NewDecoder returns a Decoder which reads byte sequence from "r".</span></code></span>
+<span class="codeline" id="line-15"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Marshaler.html#name-NewDecoder" class="ident">NewDecoder</a>(r <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-86" class="ident">Reader</a>) <a href="#line-25" class="ident">Decoder</a></code></span>
+<span class="codeline" id="line-16"><code>	<span class="comment">// NewEncoder returns an Encoder which writes bytes sequence into "w".</span></code></span>
+<span class="codeline" id="line-17"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Marshaler.html#name-NewEncoder" class="ident">NewEncoder</a>(w <a href="../../../../../../pkg/io.html" class="ident i0">io</a>.<a href="../../../../../io/io.go.html#line-99" class="ident">Writer</a>) <a href="#line-30" class="ident">Encoder</a></code></span>
+<span class="codeline" id="line-18"><code>	<span class="comment">// ContentType returns the Content-Type which this marshaler is responsible for.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="comment">	// The parameter describes the type which is being marshalled, which can sometimes</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	// affect the content type returned.</span></code></span>
+<span class="codeline" id="line-21"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Marshaler.html#name-ContentType" class="ident">ContentType</a>(v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-22"><code>}</code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// Decoder decodes a byte sequence</span></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Decoder" class="ident">Decoder</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-26"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Decoder.html#name-Decode" class="ident">Decode</a>(v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-27"><code>}</code></span>
+<span class="codeline" id="line-28"><code></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">// Encoder encodes gRPC payloads / fields into byte sequence.</span></code></span>
+<span class="codeline" id="line-30"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Encoder" class="ident">Encoder</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-31"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Encoder.html#name-Encode" class="ident">Encode</a>(v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-32"><code>}</code></span>
+<span class="codeline" id="line-33"><code></code></span>
+<span class="codeline" id="line-34"><code><span class="comment">// DecoderFunc adapts an decoder function into Decoder.</span></code></span>
+<span class="codeline" id="line-35"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-DecoderFunc" class="ident">DecoderFunc</a> <span class="keyword">func</span>(v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// Decode delegates invocations to the underlying function itself.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="keyword">func</span> (<label for="r0" class="ident">f</label> <a href="#line-35" class="ident">DecoderFunc</a>) <label for="r1" class="ident"><a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.DecoderFunc.html#name-.Decode" class="ident">Decode</a></label>(<label for="r2" class="ident">v</label> <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> { <span class="keyword">return</span> <label for="r0" class="ident">f</label>(<label for="r2" class="ident">v</label>) }</code></span>
+<span class="codeline" id="line-39"><code></code></span>
+<span class="codeline" id="line-40"><code><span class="comment">// EncoderFunc adapts an encoder function into Encoder</span></code></span>
+<span class="codeline" id="line-41"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-EncoderFunc" class="ident">EncoderFunc</a> <span class="keyword">func</span>(v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a></code></span>
+<span class="codeline" id="line-42"><code></code></span>
+<span class="codeline" id="line-43"><code><span class="comment">// Encode delegates invocations to the underlying function itself.</span></code></span>
+<span class="codeline" id="line-44"><code><span class="keyword">func</span> (<label for="r3" class="ident">f</label> <a href="#line-41" class="ident">EncoderFunc</a>) <label for="r4" class="ident"><a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.EncoderFunc.html#name-.Encode" class="ident">Encode</a></label>(<label for="r5" class="ident">v</label> <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-error" class="ident">error</a> { <span class="keyword">return</span> <label for="r3" class="ident">f</label>(<label for="r5" class="ident">v</label>) }</code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code><span class="comment">// Delimited defines the streaming delimiter.</span></code></span>
+<span class="codeline" id="line-47"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-Delimited" class="ident">Delimited</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-48"><code>	<span class="comment">// Delimiter returns the record separator for the stream.</span></code></span>
+<span class="codeline" id="line-49"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.Delimited.html#name-Delimiter" class="ident">Delimiter</a>() []<a href="../../../../../../pkg/builtin.html#name-byte" class="ident">byte</a></code></span>
+<span class="codeline" id="line-50"><code>}</code></span>
+<span class="codeline" id="line-51"><code></code></span>
+<span class="codeline" id="line-52"><code><span class="comment">// StreamContentType defines the streaming content type.</span></code></span>
+<span class="codeline" id="line-53"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.html#name-StreamContentType" class="ident">StreamContentType</a> <span class="keyword">interface</span> {</code></span>
+<span class="codeline" id="line-54"><code>	<span class="comment">// StreamContentType returns the content type for a stream. This shares the</span></code></span>
+<span class="codeline" id="line-55"><code><span class="comment">	// same behaviour as for `Marshaler.ContentType`, but is called, if present,</span></code></span>
+<span class="codeline" id="line-56"><code><span class="comment">	// in the case of a streamed response.</span></code></span>
+<span class="codeline" id="line-57"><code>	<a href="../../../../../../imp/github.com/grpc-ecosystem/grpc-gateway/v2/runtime.StreamContentType.html#name-StreamContentType" class="ident">StreamContentType</a>(v <span class="keyword">interface</span>{}) <a href="../../../../../../pkg/builtin.html#name-string" class="ident">string</a></code></span>
+<span class="codeline" id="line-58"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

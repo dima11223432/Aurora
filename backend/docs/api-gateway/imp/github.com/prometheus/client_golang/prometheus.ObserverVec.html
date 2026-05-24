@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Method Implmentations: github.com/prometheus/client_golang/prometheus.ObserverVec</title>
+<link href="../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+<pre><code><span style="font-size:x-large;">type <a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html">github.com/prometheus/client_golang/prometheus</a>.<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-43">ObserverVec</a></b></span><span style="font-size:large;"> <b><i>(interface)</i></b></span>
+
+<code><span class="title">Method Implmentations<span class="title-stat"><i></i></span></span>
+
+<div class="anchor" id="name-Collect">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/collector.go.html#line-62">Collect</a>(chan&lt;- <a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Metric">Metric</a>)
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<i><a href="../../../../src/github.com/prometheus/client_golang/prometheus/counter.go.html#line-189">MetricVec</a></i>.<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/vec.go.html#line-127">Collect</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<i><a href="../../../../src/github.com/prometheus/client_golang/prometheus/counter.go.html#line-189">MetricVec</a></i>.<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/vec.go.html#line-127">Collect</a></b></div>
+<div class="anchor" id="name-CurryWith">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-48">CurryWith</a>(<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Labels">Labels</a>) (<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-ObserverVec">ObserverVec</a>, <a href="../../../../pkg/builtin.html#name-error">error</a>)
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/histogram.go.html#line-1291">CurryWith</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/summary.go.html#line-679">CurryWith</a></b></div>
+<div class="anchor" id="name-Describe">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/collector.go.html#line-49">Describe</a>(chan&lt;- *<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Desc">Desc</a>)
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<i><a href="../../../../src/github.com/prometheus/client_golang/prometheus/counter.go.html#line-189">MetricVec</a></i>.<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/vec.go.html#line-124">Describe</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<i><a href="../../../../src/github.com/prometheus/client_golang/prometheus/counter.go.html#line-189">MetricVec</a></i>.<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/vec.go.html#line-124">Describe</a></b></div>
+<div class="anchor" id="name-GetMetricWith">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-44">GetMetricWith</a>(<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Labels">Labels</a>) (<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Observer">Observer</a>, <a href="../../../../pkg/builtin.html#name-error">error</a>)
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/histogram.go.html#line-1245">GetMetricWith</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/summary.go.html#line-633">GetMetricWith</a></b></div>
+<div class="anchor" id="name-GetMetricWithLabelValues">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-45">GetMetricWithLabelValues</a>(lvs ...<a href="../../../../pkg/builtin.html#name-string">string</a>) (<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Observer">Observer</a>, <a href="../../../../pkg/builtin.html#name-error">error</a>)
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/histogram.go.html#line-1225">GetMetricWithLabelValues</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/summary.go.html#line-613">GetMetricWithLabelValues</a></b></div>
+<div class="anchor" id="name-MustCurryWith">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-49">MustCurryWith</a>(<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Labels">Labels</a>) <a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-ObserverVec">ObserverVec</a>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/histogram.go.html#line-1301">MustCurryWith</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/summary.go.html#line-689">MustCurryWith</a></b></div>
+<div class="anchor" id="name-With">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-46">With</a>(<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Labels">Labels</a>) <a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Observer">Observer</a>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/histogram.go.html#line-1270">With</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/summary.go.html#line-658">With</a></b></div>
+<div class="anchor" id="name-WithLabelValues">	<a href="../../../../src/github.com/prometheus/client_golang/prometheus/observer.go.html#line-47">WithLabelValues</a>(...<a href="../../../../pkg/builtin.html#name-string">string</a>) <a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-Observer">Observer</a>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-HistogramVec">HistogramVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/histogram.go.html#line-1258">WithLabelValues</a></b>
+		(*<a href="../../../../pkg/github.com/prometheus/client_golang/prometheus.html#name-SummaryVec">SummaryVec</a>).<b><a href="../../../../src/github.com/prometheus/client_golang/prometheus/summary.go.html#line-646">WithLabelValues</a></b></div></code></pre><pre id="footer">
+<table><tr><td><img src="../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

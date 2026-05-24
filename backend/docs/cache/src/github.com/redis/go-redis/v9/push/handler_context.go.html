@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: handler_context.go in package github.com/redis/go-redis/v9/push</title>
+<link href="../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	handler_context.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../pkg/github.com/redis/go-redis/v9/push.html">github.com/redis/go-redis/v9/push</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code><span class="keyword">package</span> push</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code><span class="comment">// No imports needed for this file</span></code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="comment">// NotificationHandlerContext provides context information about where a push notification was received.</span></code></span>
+<span class="codeline" id="line-6"><code><span class="comment">// This struct allows handlers to make informed decisions based on the source of the notification</span></code></span>
+<span class="codeline" id="line-7"><code><span class="comment">// with strongly typed access to different client types using concrete types.</span></code></span>
+<span class="codeline" id="line-8"><code><span class="keyword">type</span> <a href="../../../../../../pkg/github.com/redis/go-redis/v9/push.html#name-NotificationHandlerContext" class="ident">NotificationHandlerContext</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-9"><code>	<span class="comment">// Client is the Redis client instance that received the notification.</span></code></span>
+<span class="codeline" id="line-10"><code><span class="comment">	// It is interface to both allow for future expansion and to avoid</span></code></span>
+<span class="codeline" id="line-11"><code><span class="comment">	// circular dependencies. The developer is responsible for type assertion.</span></code></span>
+<span class="codeline" id="line-12"><code><span class="comment">	// It can be one of the following types:</span></code></span>
+<span class="codeline" id="line-13"><code><span class="comment">	// - *redis.baseClient</span></code></span>
+<span class="codeline" id="line-14"><code><span class="comment">	// - *redis.Client</span></code></span>
+<span class="codeline" id="line-15"><code><span class="comment">	// - *redis.ClusterClient</span></code></span>
+<span class="codeline" id="line-16"><code><span class="comment">	// - *redis.Conn</span></code></span>
+<span class="codeline" id="line-17"><code>	Client <span class="keyword">interface</span>{}</code></span>
+<span class="codeline" id="line-18"><code></code></span>
+<span class="codeline" id="line-19"><code>	<span class="comment">// ConnPool is the connection pool from which the connection was obtained.</span></code></span>
+<span class="codeline" id="line-20"><code><span class="comment">	// It is interface to both allow for future expansion and to avoid</span></code></span>
+<span class="codeline" id="line-21"><code><span class="comment">	// circular dependencies. The developer is responsible for type assertion.</span></code></span>
+<span class="codeline" id="line-22"><code><span class="comment">	// It can be one of the following types:</span></code></span>
+<span class="codeline" id="line-23"><code><span class="comment">	// - *pool.ConnPool</span></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">	// - *pool.SingleConnPool</span></code></span>
+<span class="codeline" id="line-25"><code><span class="comment">	// - *pool.StickyConnPool</span></code></span>
+<span class="codeline" id="line-26"><code>	ConnPool <span class="keyword">interface</span>{}</code></span>
+<span class="codeline" id="line-27"><code></code></span>
+<span class="codeline" id="line-28"><code>	<span class="comment">// PubSub is the PubSub instance that received the notification.</span></code></span>
+<span class="codeline" id="line-29"><code><span class="comment">	// It is interface to both allow for future expansion and to avoid</span></code></span>
+<span class="codeline" id="line-30"><code><span class="comment">	// circular dependencies. The developer is responsible for type assertion.</span></code></span>
+<span class="codeline" id="line-31"><code><span class="comment">	// It can be one of the following types:</span></code></span>
+<span class="codeline" id="line-32"><code><span class="comment">	// - *redis.PubSub</span></code></span>
+<span class="codeline" id="line-33"><code>	PubSub <span class="keyword">interface</span>{}</code></span>
+<span class="codeline" id="line-34"><code></code></span>
+<span class="codeline" id="line-35"><code>	<span class="comment">// Conn is the specific connection on which the notification was received.</span></code></span>
+<span class="codeline" id="line-36"><code><span class="comment">	// It is interface to both allow for future expansion and to avoid</span></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">	// circular dependencies. The developer is responsible for type assertion.</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">	// It can be one of the following types:</span></code></span>
+<span class="codeline" id="line-39"><code><span class="comment">	// - *pool.Conn</span></code></span>
+<span class="codeline" id="line-40"><code>	Conn <span class="keyword">interface</span>{}</code></span>
+<span class="codeline" id="line-41"><code></code></span>
+<span class="codeline" id="line-42"><code>	<span class="comment">// IsBlocking indicates if the notification was received on a blocking connection.</span></code></span>
+<span class="codeline" id="line-43"><code>	IsBlocking <a href="../../../../../../pkg/builtin.html#name-bool" class="ident">bool</a></code></span>
+<span class="codeline" id="line-44"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

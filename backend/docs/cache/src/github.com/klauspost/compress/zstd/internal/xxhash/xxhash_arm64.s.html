@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: xxhash_arm64.s in package github.com/klauspost/compress/zstd/internal/xxhash</title>
+<link href="../../../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	xxhash_arm64.s
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../../../pkg/github.com/klauspost/compress/zstd/internal/xxhash.html">github.com/klauspost/compress/zstd/internal/xxhash</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// +build gc,!purego,!noasm</code></span>
+<span class="codeline" id="line-2"><code></code></span>
+<span class="codeline" id="line-3"><code>#include "textflag.h"</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>// Register allocation.</code></span>
+<span class="codeline" id="line-6"><code>#define digest	R1</code></span>
+<span class="codeline" id="line-7"><code>#define h	R2 // Return value.</code></span>
+<span class="codeline" id="line-8"><code>#define p	R3 // Input pointer.</code></span>
+<span class="codeline" id="line-9"><code>#define len	R4</code></span>
+<span class="codeline" id="line-10"><code>#define nblocks	R5 // len / 32.</code></span>
+<span class="codeline" id="line-11"><code>#define prime1	R7</code></span>
+<span class="codeline" id="line-12"><code>#define prime2	R8</code></span>
+<span class="codeline" id="line-13"><code>#define prime3	R9</code></span>
+<span class="codeline" id="line-14"><code>#define prime4	R10</code></span>
+<span class="codeline" id="line-15"><code>#define prime5	R11</code></span>
+<span class="codeline" id="line-16"><code>#define v1	R12</code></span>
+<span class="codeline" id="line-17"><code>#define v2	R13</code></span>
+<span class="codeline" id="line-18"><code>#define v3	R14</code></span>
+<span class="codeline" id="line-19"><code>#define v4	R15</code></span>
+<span class="codeline" id="line-20"><code>#define x1	R20</code></span>
+<span class="codeline" id="line-21"><code>#define x2	R21</code></span>
+<span class="codeline" id="line-22"><code>#define x3	R22</code></span>
+<span class="codeline" id="line-23"><code>#define x4	R23</code></span>
+<span class="codeline" id="line-24"><code></code></span>
+<span class="codeline" id="line-25"><code>#define round(acc, x) \</code></span>
+<span class="codeline" id="line-26"><code>	MADD prime2, acc, x, acc \</code></span>
+<span class="codeline" id="line-27"><code>	ROR  $64-31, acc         \</code></span>
+<span class="codeline" id="line-28"><code>	MUL  prime1, acc         \</code></span>
+<span class="codeline" id="line-29"><code></code></span>
+<span class="codeline" id="line-30"><code>// x = round(0, x).</code></span>
+<span class="codeline" id="line-31"><code>#define round0(x) \</code></span>
+<span class="codeline" id="line-32"><code>	MUL prime2, x \</code></span>
+<span class="codeline" id="line-33"><code>	ROR $64-31, x \</code></span>
+<span class="codeline" id="line-34"><code>	MUL prime1, x \</code></span>
+<span class="codeline" id="line-35"><code></code></span>
+<span class="codeline" id="line-36"><code>#define mergeRound(x) \</code></span>
+<span class="codeline" id="line-37"><code>	round0(x)                 \</code></span>
+<span class="codeline" id="line-38"><code>	EOR  x, h                 \</code></span>
+<span class="codeline" id="line-39"><code>	MADD h, prime4, prime1, h \</code></span>
+<span class="codeline" id="line-40"><code></code></span>
+<span class="codeline" id="line-41"><code>// Update v[1-4] with 32-byte blocks. Assumes len &gt;= 32.</code></span>
+<span class="codeline" id="line-42"><code>#define blocksLoop() \</code></span>
+<span class="codeline" id="line-43"><code>	LSR     $5, len, nblocks \</code></span>
+<span class="codeline" id="line-44"><code>	PCALIGN $16              \</code></span>
+<span class="codeline" id="line-45"><code>	loop:                    \</code></span>
+<span class="codeline" id="line-46"><code>	LDP.P   32(p), (x1, x2)  \</code></span>
+<span class="codeline" id="line-47"><code>	round(v1, x1)            \</code></span>
+<span class="codeline" id="line-48"><code>	LDP     -16(p), (x3, x4) \</code></span>
+<span class="codeline" id="line-49"><code>	round(v2, x2)            \</code></span>
+<span class="codeline" id="line-50"><code>	SUB     $1, nblocks      \</code></span>
+<span class="codeline" id="line-51"><code>	round(v3, x3)            \</code></span>
+<span class="codeline" id="line-52"><code>	round(v4, x4)            \</code></span>
+<span class="codeline" id="line-53"><code>	CBNZ    nblocks, loop    \</code></span>
+<span class="codeline" id="line-54"><code></code></span>
+<span class="codeline" id="line-55"><code>// The primes are repeated here to ensure that they're stored</code></span>
+<span class="codeline" id="line-56"><code>// in a contiguous array, so we can load them with LDP.</code></span>
+<span class="codeline" id="line-57"><code>DATA primes&lt;&gt; +0(SB)/8, $11400714785074694791</code></span>
+<span class="codeline" id="line-58"><code>DATA primes&lt;&gt; +8(SB)/8, $14029467366897019727</code></span>
+<span class="codeline" id="line-59"><code>DATA primes&lt;&gt;+16(SB)/8, $1609587929392839161</code></span>
+<span class="codeline" id="line-60"><code>DATA primes&lt;&gt;+24(SB)/8, $9650029242287828579</code></span>
+<span class="codeline" id="line-61"><code>DATA primes&lt;&gt;+32(SB)/8, $2870177450012600261</code></span>
+<span class="codeline" id="line-62"><code>GLOBL primes&lt;&gt;(SB), NOPTR+RODATA, $40</code></span>
+<span class="codeline" id="line-63"><code></code></span>
+<span class="codeline" id="line-64"><code>// func Sum64(b []byte) uint64</code></span>
+<span class="codeline" id="line-65"><code>TEXT ·Sum64(SB), NOFRAME+NOSPLIT, $0-32</code></span>
+<span class="codeline" id="line-66"><code>	LDP b_base+0(FP), (p, len)</code></span>
+<span class="codeline" id="line-67"><code></code></span>
+<span class="codeline" id="line-68"><code>	LDP  primes&lt;&gt; +0(SB), (prime1, prime2)</code></span>
+<span class="codeline" id="line-69"><code>	LDP  primes&lt;&gt;+16(SB), (prime3, prime4)</code></span>
+<span class="codeline" id="line-70"><code>	MOVD primes&lt;&gt;+32(SB), prime5</code></span>
+<span class="codeline" id="line-71"><code></code></span>
+<span class="codeline" id="line-72"><code>	CMP  $32, len</code></span>
+<span class="codeline" id="line-73"><code>	CSEL LO, prime5, ZR, h // if len &lt; 32 { h = prime5 } else { h = 0 }</code></span>
+<span class="codeline" id="line-74"><code>	BLO  afterLoop</code></span>
+<span class="codeline" id="line-75"><code></code></span>
+<span class="codeline" id="line-76"><code>	ADD  prime1, prime2, v1</code></span>
+<span class="codeline" id="line-77"><code>	MOVD prime2, v2</code></span>
+<span class="codeline" id="line-78"><code>	MOVD $0, v3</code></span>
+<span class="codeline" id="line-79"><code>	NEG  prime1, v4</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code>	blocksLoop()</code></span>
+<span class="codeline" id="line-82"><code></code></span>
+<span class="codeline" id="line-83"><code>	ROR $64-1, v1, x1</code></span>
+<span class="codeline" id="line-84"><code>	ROR $64-7, v2, x2</code></span>
+<span class="codeline" id="line-85"><code>	ADD x1, x2</code></span>
+<span class="codeline" id="line-86"><code>	ROR $64-12, v3, x3</code></span>
+<span class="codeline" id="line-87"><code>	ROR $64-18, v4, x4</code></span>
+<span class="codeline" id="line-88"><code>	ADD x3, x4</code></span>
+<span class="codeline" id="line-89"><code>	ADD x2, x4, h</code></span>
+<span class="codeline" id="line-90"><code></code></span>
+<span class="codeline" id="line-91"><code>	mergeRound(v1)</code></span>
+<span class="codeline" id="line-92"><code>	mergeRound(v2)</code></span>
+<span class="codeline" id="line-93"><code>	mergeRound(v3)</code></span>
+<span class="codeline" id="line-94"><code>	mergeRound(v4)</code></span>
+<span class="codeline" id="line-95"><code></code></span>
+<span class="codeline" id="line-96"><code>afterLoop:</code></span>
+<span class="codeline" id="line-97"><code>	ADD len, h</code></span>
+<span class="codeline" id="line-98"><code></code></span>
+<span class="codeline" id="line-99"><code>	TBZ   $4, len, try8</code></span>
+<span class="codeline" id="line-100"><code>	LDP.P 16(p), (x1, x2)</code></span>
+<span class="codeline" id="line-101"><code></code></span>
+<span class="codeline" id="line-102"><code>	round0(x1)</code></span>
+<span class="codeline" id="line-103"><code>	ROR  $64-27, h</code></span>
+<span class="codeline" id="line-104"><code>	EOR  x1 @&gt; 64-27, h, h</code></span>
+<span class="codeline" id="line-105"><code>	MADD h, prime4, prime1, h</code></span>
+<span class="codeline" id="line-106"><code></code></span>
+<span class="codeline" id="line-107"><code>	round0(x2)</code></span>
+<span class="codeline" id="line-108"><code>	ROR  $64-27, h</code></span>
+<span class="codeline" id="line-109"><code>	EOR  x2 @&gt; 64-27, h</code></span>
+<span class="codeline" id="line-110"><code>	MADD h, prime4, prime1, h</code></span>
+<span class="codeline" id="line-111"><code></code></span>
+<span class="codeline" id="line-112"><code>try8:</code></span>
+<span class="codeline" id="line-113"><code>	TBZ    $3, len, try4</code></span>
+<span class="codeline" id="line-114"><code>	MOVD.P 8(p), x1</code></span>
+<span class="codeline" id="line-115"><code></code></span>
+<span class="codeline" id="line-116"><code>	round0(x1)</code></span>
+<span class="codeline" id="line-117"><code>	ROR  $64-27, h</code></span>
+<span class="codeline" id="line-118"><code>	EOR  x1 @&gt; 64-27, h</code></span>
+<span class="codeline" id="line-119"><code>	MADD h, prime4, prime1, h</code></span>
+<span class="codeline" id="line-120"><code></code></span>
+<span class="codeline" id="line-121"><code>try4:</code></span>
+<span class="codeline" id="line-122"><code>	TBZ     $2, len, try2</code></span>
+<span class="codeline" id="line-123"><code>	MOVWU.P 4(p), x2</code></span>
+<span class="codeline" id="line-124"><code></code></span>
+<span class="codeline" id="line-125"><code>	MUL  prime1, x2</code></span>
+<span class="codeline" id="line-126"><code>	ROR  $64-23, h</code></span>
+<span class="codeline" id="line-127"><code>	EOR  x2 @&gt; 64-23, h</code></span>
+<span class="codeline" id="line-128"><code>	MADD h, prime3, prime2, h</code></span>
+<span class="codeline" id="line-129"><code></code></span>
+<span class="codeline" id="line-130"><code>try2:</code></span>
+<span class="codeline" id="line-131"><code>	TBZ     $1, len, try1</code></span>
+<span class="codeline" id="line-132"><code>	MOVHU.P 2(p), x3</code></span>
+<span class="codeline" id="line-133"><code>	AND     $255, x3, x1</code></span>
+<span class="codeline" id="line-134"><code>	LSR     $8, x3, x2</code></span>
+<span class="codeline" id="line-135"><code></code></span>
+<span class="codeline" id="line-136"><code>	MUL prime5, x1</code></span>
+<span class="codeline" id="line-137"><code>	ROR $64-11, h</code></span>
+<span class="codeline" id="line-138"><code>	EOR x1 @&gt; 64-11, h</code></span>
+<span class="codeline" id="line-139"><code>	MUL prime1, h</code></span>
+<span class="codeline" id="line-140"><code></code></span>
+<span class="codeline" id="line-141"><code>	MUL prime5, x2</code></span>
+<span class="codeline" id="line-142"><code>	ROR $64-11, h</code></span>
+<span class="codeline" id="line-143"><code>	EOR x2 @&gt; 64-11, h</code></span>
+<span class="codeline" id="line-144"><code>	MUL prime1, h</code></span>
+<span class="codeline" id="line-145"><code></code></span>
+<span class="codeline" id="line-146"><code>try1:</code></span>
+<span class="codeline" id="line-147"><code>	TBZ   $0, len, end</code></span>
+<span class="codeline" id="line-148"><code>	MOVBU (p), x4</code></span>
+<span class="codeline" id="line-149"><code></code></span>
+<span class="codeline" id="line-150"><code>	MUL prime5, x4</code></span>
+<span class="codeline" id="line-151"><code>	ROR $64-11, h</code></span>
+<span class="codeline" id="line-152"><code>	EOR x4 @&gt; 64-11, h</code></span>
+<span class="codeline" id="line-153"><code>	MUL prime1, h</code></span>
+<span class="codeline" id="line-154"><code></code></span>
+<span class="codeline" id="line-155"><code>end:</code></span>
+<span class="codeline" id="line-156"><code>	EOR h &gt;&gt; 33, h</code></span>
+<span class="codeline" id="line-157"><code>	MUL prime2, h</code></span>
+<span class="codeline" id="line-158"><code>	EOR h &gt;&gt; 29, h</code></span>
+<span class="codeline" id="line-159"><code>	MUL prime3, h</code></span>
+<span class="codeline" id="line-160"><code>	EOR h &gt;&gt; 32, h</code></span>
+<span class="codeline" id="line-161"><code></code></span>
+<span class="codeline" id="line-162"><code>	MOVD h, ret+24(FP)</code></span>
+<span class="codeline" id="line-163"><code>	RET</code></span>
+<span class="codeline" id="line-164"><code></code></span>
+<span class="codeline" id="line-165"><code>// func writeBlocks(d *Digest, b []byte) int</code></span>
+<span class="codeline" id="line-166"><code>//</code></span>
+<span class="codeline" id="line-167"><code>// Assumes len(b) &gt;= 32.</code></span>
+<span class="codeline" id="line-168"><code>TEXT ·writeBlocks(SB), NOFRAME+NOSPLIT, $0-40</code></span>
+<span class="codeline" id="line-169"><code>	LDP primes&lt;&gt;(SB), (prime1, prime2)</code></span>
+<span class="codeline" id="line-170"><code></code></span>
+<span class="codeline" id="line-171"><code>	// Load state. Assume v[1-4] are stored contiguously.</code></span>
+<span class="codeline" id="line-172"><code>	MOVD d+0(FP), digest</code></span>
+<span class="codeline" id="line-173"><code>	LDP  0(digest), (v1, v2)</code></span>
+<span class="codeline" id="line-174"><code>	LDP  16(digest), (v3, v4)</code></span>
+<span class="codeline" id="line-175"><code></code></span>
+<span class="codeline" id="line-176"><code>	LDP b_base+8(FP), (p, len)</code></span>
+<span class="codeline" id="line-177"><code></code></span>
+<span class="codeline" id="line-178"><code>	blocksLoop()</code></span>
+<span class="codeline" id="line-179"><code></code></span>
+<span class="codeline" id="line-180"><code>	// Store updated state.</code></span>
+<span class="codeline" id="line-181"><code>	STP (v1, v2), 0(digest)</code></span>
+<span class="codeline" id="line-182"><code>	STP (v3, v4), 16(digest)</code></span>
+<span class="codeline" id="line-183"><code></code></span>
+<span class="codeline" id="line-184"><code>	BIC  $31, len</code></span>
+<span class="codeline" id="line-185"><code>	MOVD len, ret+32(FP)</code></span>
+<span class="codeline" id="line-186"><code>	RET</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

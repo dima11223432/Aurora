@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: gcc_arm64.S in package runtime/cgo</title>
+<link href="../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	gcc_arm64.S
+
+<span class="title">Belonging Package</span>
+	<a href="../../../pkg/runtime/cgo.html">runtime/cgo</a>
+</code></pre>
+
+<pre class="line-numbers">
+<span class="codeline" id="line-1"><code>// Copyright 2015 The Go Authors. All rights reserved.</code></span>
+<span class="codeline" id="line-2"><code>// Use of this source code is governed by a BSD-style</code></span>
+<span class="codeline" id="line-3"><code>// license that can be found in the LICENSE file.</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code>.file "gcc_arm64.S"</code></span>
+<span class="codeline" id="line-6"><code></code></span>
+<span class="codeline" id="line-7"><code>/*</code></span>
+<span class="codeline" id="line-8"><code> * Apple still insists on underscore prefixes for C function names.</code></span>
+<span class="codeline" id="line-9"><code> */</code></span>
+<span class="codeline" id="line-10"><code>#if defined(__APPLE__)</code></span>
+<span class="codeline" id="line-11"><code>#define EXT(s) _##s</code></span>
+<span class="codeline" id="line-12"><code>#else</code></span>
+<span class="codeline" id="line-13"><code>#define EXT(s) s</code></span>
+<span class="codeline" id="line-14"><code>#endif</code></span>
+<span class="codeline" id="line-15"><code></code></span>
+<span class="codeline" id="line-16"><code>// Apple's ld64 wants 4-byte alignment for ARM code sections.</code></span>
+<span class="codeline" id="line-17"><code>// .align in both Apple as and GNU as treat n as aligning to 2**n bytes.</code></span>
+<span class="codeline" id="line-18"><code>.align	2</code></span>
+<span class="codeline" id="line-19"><code></code></span>
+<span class="codeline" id="line-20"><code>/*</code></span>
+<span class="codeline" id="line-21"><code> * void crosscall1(void (*fn)(void), void (*setg_gcc)(void *g), void *g)</code></span>
+<span class="codeline" id="line-22"><code> *</code></span>
+<span class="codeline" id="line-23"><code> * Calling into the gc tool chain, where all registers are caller save.</code></span>
+<span class="codeline" id="line-24"><code> * Called from standard ARM EABI, where x19-x29 are callee-save, so they</code></span>
+<span class="codeline" id="line-25"><code> * must be saved explicitly, along with x30 (LR).</code></span>
+<span class="codeline" id="line-26"><code> */</code></span>
+<span class="codeline" id="line-27"><code>.globl EXT(crosscall1)</code></span>
+<span class="codeline" id="line-28"><code>EXT(crosscall1):</code></span>
+<span class="codeline" id="line-29"><code>	.cfi_startproc</code></span>
+<span class="codeline" id="line-30"><code>	stp x29, x30, [sp, #-96]!</code></span>
+<span class="codeline" id="line-31"><code>	.cfi_def_cfa_offset 96</code></span>
+<span class="codeline" id="line-32"><code>	.cfi_offset 29, -96</code></span>
+<span class="codeline" id="line-33"><code>	.cfi_offset 30, -88</code></span>
+<span class="codeline" id="line-34"><code>	mov x29, sp</code></span>
+<span class="codeline" id="line-35"><code>	.cfi_def_cfa_register 29</code></span>
+<span class="codeline" id="line-36"><code>	stp x19, x20, [sp, #80]</code></span>
+<span class="codeline" id="line-37"><code>	.cfi_offset 19, -16</code></span>
+<span class="codeline" id="line-38"><code>	.cfi_offset 20, -8</code></span>
+<span class="codeline" id="line-39"><code>	stp x21, x22, [sp, #64]</code></span>
+<span class="codeline" id="line-40"><code>	.cfi_offset 21, -32</code></span>
+<span class="codeline" id="line-41"><code>	.cfi_offset 22, -24</code></span>
+<span class="codeline" id="line-42"><code>	stp x23, x24, [sp, #48]</code></span>
+<span class="codeline" id="line-43"><code>	.cfi_offset 23, -48</code></span>
+<span class="codeline" id="line-44"><code>	.cfi_offset 24, -40</code></span>
+<span class="codeline" id="line-45"><code>	stp x25, x26, [sp, #32]</code></span>
+<span class="codeline" id="line-46"><code>	.cfi_offset 25, -64</code></span>
+<span class="codeline" id="line-47"><code>	.cfi_offset 26, -56</code></span>
+<span class="codeline" id="line-48"><code>	stp x27, x28, [sp, #16]</code></span>
+<span class="codeline" id="line-49"><code>	.cfi_offset 27, -80</code></span>
+<span class="codeline" id="line-50"><code>	.cfi_offset 28, -72</code></span>
+<span class="codeline" id="line-51"><code></code></span>
+<span class="codeline" id="line-52"><code>	mov x19, x0</code></span>
+<span class="codeline" id="line-53"><code>	mov x20, x1</code></span>
+<span class="codeline" id="line-54"><code>	mov x0, x2</code></span>
+<span class="codeline" id="line-55"><code></code></span>
+<span class="codeline" id="line-56"><code>	blr x20</code></span>
+<span class="codeline" id="line-57"><code>	blr x19</code></span>
+<span class="codeline" id="line-58"><code></code></span>
+<span class="codeline" id="line-59"><code>	ldp x27, x28, [sp, #16]</code></span>
+<span class="codeline" id="line-60"><code>	.cfi_restore 27</code></span>
+<span class="codeline" id="line-61"><code>	.cfi_restore 28</code></span>
+<span class="codeline" id="line-62"><code>	ldp x25, x26, [sp, #32]</code></span>
+<span class="codeline" id="line-63"><code>	.cfi_restore 25</code></span>
+<span class="codeline" id="line-64"><code>	.cfi_restore 26</code></span>
+<span class="codeline" id="line-65"><code>	ldp x23, x24, [sp, #48]</code></span>
+<span class="codeline" id="line-66"><code>	.cfi_restore 23</code></span>
+<span class="codeline" id="line-67"><code>	.cfi_restore 24</code></span>
+<span class="codeline" id="line-68"><code>	ldp x21, x22, [sp, #64]</code></span>
+<span class="codeline" id="line-69"><code>	.cfi_restore 21</code></span>
+<span class="codeline" id="line-70"><code>	.cfi_restore 22</code></span>
+<span class="codeline" id="line-71"><code>	ldp x19, x20, [sp, #80]</code></span>
+<span class="codeline" id="line-72"><code>	.cfi_restore 19</code></span>
+<span class="codeline" id="line-73"><code>	.cfi_restore 20</code></span>
+<span class="codeline" id="line-74"><code>	ldp x29, x30, [sp], #96</code></span>
+<span class="codeline" id="line-75"><code>	.cfi_restore 29</code></span>
+<span class="codeline" id="line-76"><code>	.cfi_restore 30</code></span>
+<span class="codeline" id="line-77"><code>	.cfi_def_cfa 31, 0</code></span>
+<span class="codeline" id="line-78"><code>	ret</code></span>
+<span class="codeline" id="line-79"><code>	.cfi_endproc</code></span>
+<span class="codeline" id="line-80"><code></code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code>#ifdef __ELF__</code></span>
+<span class="codeline" id="line-83"><code>.section .note.GNU-stack,"",%progbits</code></span>
+<span class="codeline" id="line-84"><code>#endif</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>

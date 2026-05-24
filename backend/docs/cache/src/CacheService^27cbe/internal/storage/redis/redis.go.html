@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Source: redis.go in package CacheService/internal/storage/redis</title>
+<link href="../../../../../css/auto-v0.8.3.css" rel="stylesheet">
+<script src="../../../../../jvs/golds-v0.8.3.js"></script>
+<body onload="onPageLoad()"><div>
+
+<pre id="header"><code><span class="title">Source File</span>
+	redis.go
+
+<span class="title">Belonging Package</span>
+	<a href="../../../../../pkg/CacheService^27cbe/internal/storage/redis.html">CacheService/internal/storage/redis</a>
+</code></pre>
+<style>input[type=radio] {display: none;}
+input[id=r0]:checked ~pre label[for=r0],
+input[id=r1]:checked ~pre label[for=r1],
+input[id=r2]:checked ~pre label[for=r2],
+input[id=r3]:checked ~pre label[for=r3],
+input[id=r4]:checked ~pre label[for=r4],
+input[id=r5]:checked ~pre label[for=r5],
+input[id=r6]:checked ~pre label[for=r6],
+input[id=r7]:checked ~pre label[for=r7],
+input[id=r8]:checked ~pre label[for=r8],
+input[id=r9]:checked ~pre label[for=r9],
+input[id=r10]:checked ~pre label[for=r10],
+input[id=r11]:checked ~pre label[for=r11],
+input[id=r12]:checked ~pre label[for=r12],
+input[id=r13]:checked ~pre label[for=r13],
+input[id=r14]:checked ~pre label[for=r14],
+input[id=r15]:checked ~pre label[for=r15],
+input[id=r16]:checked ~pre label[for=r16],
+input[id=r17]:checked ~pre label[for=r17],
+input[id=r18]:checked ~pre label[for=r18],
+input[id=r19]:checked ~pre label[for=r19],
+input[id=r20]:checked ~pre label[for=r20],
+input[id=r21]:checked ~pre label[for=r21],
+input[id=r22]:checked ~pre label[for=r22],
+input[id=r23]:checked ~pre label[for=r23],
+input[id=r24]:checked ~pre label[for=r24],
+input[id=r25]:checked ~pre label[for=r25],
+input[id=r26]:checked ~pre label[for=r26],
+input[id=r27]:checked ~pre label[for=r27],
+input[id=r28]:checked ~pre label[for=r28],
+input[id=r29]:checked ~pre label[for=r29],
+input[id=r30]:checked ~pre label[for=r30],
+input[id=r31]:checked ~pre label[for=r31],
+input[id=r32]:checked ~pre label[for=r32],
+input[id=r33]:checked ~pre label[for=r33],
+input[id=r34]:checked ~pre label[for=r34]
+{background: #226; color: #ff8;}
+input[id=i0]:checked ~pre .i0,
+input[id=i1]:checked ~pre .i1,
+input[id=i2]:checked ~pre .i2,
+input[id=i3]:checked ~pre .i3,
+input[id=i4]:checked ~pre .i4,
+input[id=i5]:checked ~pre .i5,
+input[id=i6]:checked ~pre .i6,
+input[id=i7]:checked ~pre .i7,
+input[id=i8]:checked ~pre .i8
+{background: brown; color: #eed;}
+</style><input id="r0" type="radio" name="g"/>
+<input id="r1" type="radio" name="g"/>
+<input id="r2" type="radio" name="g"/>
+<input id="r3" type="radio" name="g"/>
+<input id="r4" type="radio" name="g"/>
+<input id="r5" type="radio" name="g"/>
+<input id="r6" type="radio" name="g"/>
+<input id="r7" type="radio" name="g"/>
+<input id="r8" type="radio" name="g"/>
+<input id="r9" type="radio" name="g"/>
+<input id="r10" type="radio" name="g"/>
+<input id="r11" type="radio" name="g"/>
+<input id="r12" type="radio" name="g"/>
+<input id="r13" type="radio" name="g"/>
+<input id="r14" type="radio" name="g"/>
+<input id="r15" type="radio" name="g"/>
+<input id="r16" type="radio" name="g"/>
+<input id="r17" type="radio" name="g"/>
+<input id="r18" type="radio" name="g"/>
+<input id="r19" type="radio" name="g"/>
+<input id="r20" type="radio" name="g"/>
+<input id="r21" type="radio" name="g"/>
+<input id="r22" type="radio" name="g"/>
+<input id="r23" type="radio" name="g"/>
+<input id="r24" type="radio" name="g"/>
+<input id="r25" type="radio" name="g"/>
+<input id="r26" type="radio" name="g"/>
+<input id="r27" type="radio" name="g"/>
+<input id="r28" type="radio" name="g"/>
+<input id="r29" type="radio" name="g"/>
+<input id="r30" type="radio" name="g"/>
+<input id="r31" type="radio" name="g"/>
+<input id="r32" type="radio" name="g"/>
+<input id="r33" type="radio" name="g"/>
+<input id="r34" type="radio" name="g"/>
+<input id="i0" type="radio" name="i"/>
+<input id="i1" type="radio" name="i"/>
+<input id="i2" type="radio" name="i"/>
+<input id="i3" type="radio" name="i"/>
+<input id="i4" type="radio" name="i"/>
+<input id="i5" type="radio" name="i"/>
+<input id="i6" type="radio" name="i"/>
+<input id="i7" type="radio" name="i"/>
+<input id="i8" type="radio" name="i"/>
+
+<pre class="line-numbers">
+<div class="anchor" id="doc"><span class="codeline" id="line-1"><code><span class="comment">// Package redis implements Redis-backed storage for the Cache Service,</span></code></span>
+<span class="codeline" id="line-2"><code><span class="comment">// handling analysed data storage with sorted-set indexing by channel and timestamp.</span></code></span></div><span class="codeline" id="line-3"><code><span class="keyword">package</span> redis</code></span>
+<span class="codeline" id="line-4"><code></code></span>
+<span class="codeline" id="line-5"><code><span class="keyword">import</span> (</code></span>
+<span class="codeline" id="line-6"><code>	<label for="i0"><span class="lit-string i0">"CacheService/internal/domain/models"</span></label></code></span>
+<span class="codeline" id="line-7"><code>	<label for="i1"><span class="lit-string i1">"CacheService/internal/storage"</span></label></code></span>
+<span class="codeline" id="line-8"><code>	<label for="i2"><span class="lit-string i2">"context"</span></label></code></span>
+<span class="codeline" id="line-9"><code>	<label for="i3"><span class="lit-string i3">"encoding/json"</span></label></code></span>
+<span class="codeline" id="line-10"><code>	<label for="i4"><span class="lit-string i4">"errors"</span></label></code></span>
+<span class="codeline" id="line-11"><code>	<label for="i5"><span class="lit-string i5">"fmt"</span></label></code></span>
+<span class="codeline" id="line-12"><code>	<label for="i6"><span class="lit-string i6">"time"</span></label></code></span>
+<span class="codeline" id="line-13"><code></code></span>
+<span class="codeline" id="line-14"><code>	<label for="i7"><span class="lit-string i7">"github.com/google/uuid"</span></label></code></span>
+<span class="codeline" id="line-15"><code>	<label for="i8"><span class="lit-string i8">"github.com/redis/go-redis/v9"</span></label></code></span>
+<span class="codeline" id="line-16"><code>)</code></span>
+<span class="codeline" id="line-17"><code></code></span>
+<span class="codeline" id="line-18"><code><span class="comment">// RedisController manages Redis operations for storing and retrieving analysed data.</span></code></span>
+<span class="codeline" id="line-19"><code><span class="keyword">type</span> <a href="../../../../../pkg/CacheService^27cbe/internal/storage/redis.html#name-RedisController" class="ident">RedisController</a> <span class="keyword">struct</span> {</code></span>
+<span class="codeline" id="line-20"><code>	redis      *<a href="../../../../../pkg/github.com/redis/go-redis/v9.html" class="ident i8">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/redis.go.html#line-1193" class="ident">Client</a></code></span>
+<span class="codeline" id="line-21"><code>	DefaultTTl <a href="../../../../../pkg/time.html" class="ident i6">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a></code></span>
+<span class="codeline" id="line-22"><code>}</code></span>
+<span class="codeline" id="line-23"><code></code></span>
+<span class="codeline" id="line-24"><code><span class="comment">// NewRedisController creates a new RedisController with the given connection config.</span></code></span>
+<span class="codeline" id="line-25"><code><span class="keyword">func</span> <label for="r0" class="ident"><a href="../../../../../pkg/CacheService^27cbe/internal/storage/redis.html#name-NewRedisController" class="ident">NewRedisController</a></label>(<label for="r1" class="ident">addr</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r2" class="ident">password</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r3" class="ident">db</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r4" class="ident">protocol</label> <a href="../../../../../pkg/builtin.html#name-int" class="ident">int</a>, <label for="r5" class="ident">ttl</label> <a href="../../../../../pkg/time.html" class="ident i6">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a>) *<a href="#line-19" class="ident">RedisController</a> {</code></span>
+<span class="codeline" id="line-26"><code>	<span class="keyword">return</span> &amp;<a href="#line-19" class="ident">RedisController</a>{</code></span>
+<span class="codeline" id="line-27"><code>		<a href="#line-20" class="ident">redis</a>: <a href="../../../../../pkg/github.com/redis/go-redis/v9.html" class="ident i8">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/redis.go.html#line-1199" class="ident">NewClient</a>(&amp;<a href="../../../../../pkg/github.com/redis/go-redis/v9.html" class="ident i8">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/options.go.html#line-47" class="ident">Options</a>{</code></span>
+<span class="codeline" id="line-28"><code>			<a href="../../../../github.com/redis/go-redis/v9/options.go.html#line-54" class="ident">Addr</a>:     <label for="r1" class="ident">addr</label>,</code></span>
+<span class="codeline" id="line-29"><code>			<a href="../../../../github.com/redis/go-redis/v9/options.go.html#line-91" class="ident">Password</a>: <label for="r2" class="ident">password</label>,</code></span>
+<span class="codeline" id="line-30"><code>			<a href="../../../../github.com/redis/go-redis/v9/options.go.html#line-112" class="ident">DB</a>:       <label for="r3" class="ident">db</label>,</code></span>
+<span class="codeline" id="line-31"><code>			<a href="../../../../github.com/redis/go-redis/v9/options.go.html#line-80" class="ident">Protocol</a>: <label for="r4" class="ident">protocol</label>,</code></span>
+<span class="codeline" id="line-32"><code>		}),</code></span>
+<span class="codeline" id="line-33"><code>		<a href="#line-21" class="ident">DefaultTTl</a>: <label for="r5" class="ident">ttl</label>,</code></span>
+<span class="codeline" id="line-34"><code>	}</code></span>
+<span class="codeline" id="line-35"><code>}</code></span>
+<span class="codeline" id="line-36"><code></code></span>
+<span class="codeline" id="line-37"><code><span class="comment">// SetCard stores analysed data in Redis as a JSON string and indexes it</span></code></span>
+<span class="codeline" id="line-38"><code><span class="comment">// in sorted sets by timestamp and channel username.</span></code></span>
+<span class="codeline" id="line-39"><code><span class="keyword">func</span> (<label for="r6" class="ident">r</label> *<a href="#line-19" class="ident">RedisController</a>) <label for="r7" class="ident"><a href="../../../../../imp/CacheService^27cbe/internal/storage/redis.RedisController.html#name-.SetCard" class="ident">SetCard</a></label>(<label for="r8" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i2">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r9" class="ident">value</label> <a href="../../../../../pkg/CacheService^27cbe/internal/domain/models.html" class="ident i0">models</a>.<a href="../../domain/models/analysedData.go^b584d.html#line-13" class="ident">AnalysedData</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-40"><code>	<span class="keyword">const</span> <label for="r10" class="ident">op</label> = <span class="lit-string">"Cache_Service.internal.storage.redis.SetCard"</span></code></span>
+<span class="codeline" id="line-41"><code>	<label for="r11" class="ident">id</label> := <a href="../../../../../pkg/github.com/google/uuid.html" class="ident i7">uuid</a>.<a href="../../../../github.com/google/uuid/version4.go.html#line-21" class="ident">NewString</a>()</code></span>
+<span class="codeline" id="line-42"><code>	<label for="r12" class="ident">timestamp</label> := <label for="r9" class="ident">value</label>.<a href="../../domain/models/analysedData.go^b584d.html#line-18" class="ident">Date</a>.<a href="../../../../time/time.go.html#line-1432" class="ident">Unix</a>()</code></span>
+<span class="codeline" id="line-43"><code></code></span>
+<span class="codeline" id="line-44"><code>	<label for="r13" class="ident">pipeline</label> := <label for="r6" class="ident">r</label>.<a href="#line-20" class="ident">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/redis.go.html#line-1378" class="ident">TxPipeline</a>()</code></span>
+<span class="codeline" id="line-45"><code></code></span>
+<span class="codeline" id="line-46"><code>	<label for="r14" class="ident">data</label>, <label for="r15" class="ident">err</label> := <a href="../../../../../pkg/encoding/json.html" class="ident i3">json</a>.<a href="../../../../encoding/json/encode.go.html#line-205" class="ident">Marshal</a>(<label for="r9" class="ident">value</label>)</code></span>
+<span class="codeline" id="line-47"><code>	<span class="keyword">if</span> <label for="r15" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-48"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/fmt.html" class="ident i5">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"%s: %w"</span>, <label for="r10" class="ident">op</label>, <label for="r15" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-49"><code>	}</code></span>
+<span class="codeline" id="line-50"><code></code></span>
+<span class="codeline" id="line-51"><code>	<label for="r15" class="ident">err</label> = <label for="r13" class="ident">pipeline</label>.<a href="../../../../github.com/redis/go-redis/v9/string_commands.go.html#line-28" class="ident">Set</a>(<label for="r8" class="ident">ctx</label>, <span class="lit-string">"post:"</span>+<label for="r11" class="ident">id</label>, <label for="r14" class="ident">data</label>, <label for="r6" class="ident">r</label>.<a href="#line-21" class="ident">DefaultTTl</a>).<a href="../../../../github.com/redis/go-redis/v9/command.go.html#line-383" class="ident">Err</a>()</code></span>
+<span class="codeline" id="line-52"><code></code></span>
+<span class="codeline" id="line-53"><code>	<span class="keyword">if</span> <label for="r15" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-54"><code>		<span class="keyword">return</span> <label for="r15" class="ident">err</label></code></span>
+<span class="codeline" id="line-55"><code>	}</code></span>
+<span class="codeline" id="line-56"><code></code></span>
+<span class="codeline" id="line-57"><code>	<label for="r13" class="ident">pipeline</label>.<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-16" class="ident">ZAdd</a>(<label for="r8" class="ident">ctx</label>, <span class="lit-string">"cards"</span>, <a href="../../../../../pkg/github.com/redis/go-redis/v9.html" class="ident i8">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-752" class="ident">Z</a>{</code></span>
+<span class="codeline" id="line-58"><code>		<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-753" class="ident">Score</a>:  <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r12" class="ident">timestamp</label>),</code></span>
+<span class="codeline" id="line-59"><code>		<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-754" class="ident">Member</a>: <label for="r11" class="ident">id</label>,</code></span>
+<span class="codeline" id="line-60"><code>	})</code></span>
+<span class="codeline" id="line-61"><code></code></span>
+<span class="codeline" id="line-62"><code>	<label for="r13" class="ident">pipeline</label>.<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-16" class="ident">ZAdd</a>(<label for="r8" class="ident">ctx</label>, <span class="lit-string">"post:channel:"</span>+<label for="r9" class="ident">value</label>.<a href="../../domain/models/analysedData.go^b584d.html#line-17" class="ident">ChannelUsername</a>, <a href="../../../../../pkg/github.com/redis/go-redis/v9.html" class="ident i8">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-752" class="ident">Z</a>{</code></span>
+<span class="codeline" id="line-63"><code>		<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-753" class="ident">Score</a>:  <a href="../../../../../pkg/builtin.html#name-float64" class="ident">float64</a>(<label for="r12" class="ident">timestamp</label>),</code></span>
+<span class="codeline" id="line-64"><code>		<a href="../../../../github.com/redis/go-redis/v9/sortedset_commands.go.html#line-754" class="ident">Member</a>: <label for="r11" class="ident">id</label>,</code></span>
+<span class="codeline" id="line-65"><code>	})</code></span>
+<span class="codeline" id="line-66"><code></code></span>
+<span class="codeline" id="line-67"><code>	_, <label for="r15" class="ident">err</label> = <label for="r13" class="ident">pipeline</label>.<a href="../../../../github.com/redis/go-redis/v9/pipeline.go.html#line-43" class="ident">Exec</a>(<label for="r8" class="ident">ctx</label>)</code></span>
+<span class="codeline" id="line-68"><code>	<span class="keyword">if</span> <label for="r15" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-69"><code>		<span class="keyword">return</span> <label for="r15" class="ident">err</label></code></span>
+<span class="codeline" id="line-70"><code>	}</code></span>
+<span class="codeline" id="line-71"><code>	<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-72"><code>}</code></span>
+<span class="codeline" id="line-73"><code></code></span>
+<span class="codeline" id="line-74"><code><span class="comment">// SetValue stores a JSON-serialized value in Redis with optional TTL.</span></code></span>
+<span class="codeline" id="line-75"><code><span class="keyword">func</span> (<label for="r16" class="ident">r</label> *<a href="#line-19" class="ident">RedisController</a>) <label for="r17" class="ident"><a href="../../../../../imp/CacheService^27cbe/internal/storage/redis.RedisController.html#name-.SetValue" class="ident">SetValue</a></label>(<label for="r18" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i2">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r19" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>, <label for="r20" class="ident">value</label> <span class="keyword">interface</span>{}, <label for="r21" class="ident">ttl</label> ...<a href="../../../../../pkg/time.html" class="ident i6">time</a>.<a href="../../../../time/time.go.html#line-915" class="ident">Duration</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-76"><code>	<span class="keyword">const</span> <label for="r22" class="ident">op</label> = <span class="lit-string">"Cahce_Service.internal.storage.redis.SetValue"</span></code></span>
+<span class="codeline" id="line-77"><code>	<label for="r23" class="ident">data</label>, <label for="r24" class="ident">err</label> := <a href="../../../../../pkg/encoding/json.html" class="ident i3">json</a>.<a href="../../../../encoding/json/encode.go.html#line-205" class="ident">Marshal</a>(<label for="r20" class="ident">value</label>)</code></span>
+<span class="codeline" id="line-78"><code>	<span class="keyword">if</span> <label for="r24" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-79"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/fmt.html" class="ident i5">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"%s: %w"</span>, <label for="r22" class="ident">op</label>, <label for="r24" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-80"><code>	}</code></span>
+<span class="codeline" id="line-81"><code></code></span>
+<span class="codeline" id="line-82"><code>	<span class="keyword">if</span> <a href="../../../../../pkg/builtin.html#name-len" class="ident">len</a>(<label for="r21" class="ident">ttl</label>) &gt; <span class="lit-number">0</span> {</code></span>
+<span class="codeline" id="line-83"><code>		<span class="keyword">return</span> <label for="r16" class="ident">r</label>.<a href="#line-20" class="ident">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/string_commands.go.html#line-323" class="ident">Set</a>(<label for="r18" class="ident">ctx</label>, <label for="r19" class="ident">key</label>, <label for="r23" class="ident">data</label>, <label for="r21" class="ident">ttl</label>[<span class="lit-number">0</span>]).<a href="../../../../github.com/redis/go-redis/v9/command.go.html#line-383" class="ident">Err</a>()</code></span>
+<span class="codeline" id="line-84"><code>	}</code></span>
+<span class="codeline" id="line-85"><code>	<span class="keyword">return</span> <label for="r16" class="ident">r</label>.<a href="#line-20" class="ident">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/string_commands.go.html#line-323" class="ident">Set</a>(<label for="r18" class="ident">ctx</label>, <label for="r19" class="ident">key</label>, <label for="r23" class="ident">data</label>, <label for="r16" class="ident">r</label>.<a href="#line-21" class="ident">DefaultTTl</a>).<a href="../../../../github.com/redis/go-redis/v9/command.go.html#line-383" class="ident">Err</a>()</code></span>
+<span class="codeline" id="line-86"><code>}</code></span>
+<span class="codeline" id="line-87"><code></code></span>
+<span class="codeline" id="line-88"><code><span class="comment">// GetValue retrieves raw bytes from Redis by key. Returns ErrCacheMiss if not found.</span></code></span>
+<span class="codeline" id="line-89"><code><span class="keyword">func</span> (<label for="r25" class="ident">r</label> *<a href="#line-19" class="ident">RedisController</a>) <label for="r26" class="ident"><a href="../../../../../imp/CacheService^27cbe/internal/storage/redis.RedisController.html#name-.GetValue" class="ident">GetValue</a></label>(<label for="r27" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i2">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>, <label for="r28" class="ident">key</label> <a href="../../../../../pkg/builtin.html#name-string" class="ident">string</a>) (<span class="keyword">interface</span>{}, <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a>) {</code></span>
+<span class="codeline" id="line-90"><code>	<span class="keyword">const</span> <label for="r29" class="ident">op</label> = <span class="lit-string">"Cahce_Service.internal.storage.redis.GetValue"</span></code></span>
+<span class="codeline" id="line-91"><code>	<label for="r30" class="ident">data</label>, <label for="r31" class="ident">err</label> := <label for="r25" class="ident">r</label>.<a href="#line-20" class="ident">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/string_commands.go.html#line-134" class="ident">Get</a>(<label for="r27" class="ident">ctx</label>, <label for="r28" class="ident">key</label>).<a href="../../../../github.com/redis/go-redis/v9/command.go.html#line-1236" class="ident">Bytes</a>()</code></span>
+<span class="codeline" id="line-92"><code>	<span class="keyword">if</span> <label for="r31" class="ident">err</label> != <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a> {</code></span>
+<span class="codeline" id="line-93"><code>		<span class="keyword">if</span> <a href="../../../../../pkg/errors.html" class="ident i4">errors</a>.<a href="../../../../errors/wrap.go.html#line-45" class="ident">Is</a>(<label for="r31" class="ident">err</label>, <a href="../../../../../pkg/github.com/redis/go-redis/v9.html" class="ident i8">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/redis.go.html#line-27" class="ident">Nil</a>) {</code></span>
+<span class="codeline" id="line-94"><code>			<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/CacheService^27cbe/internal/storage.html" class="ident i1">storage</a>.<a href="../storage.go.html#line-10" class="ident">ErrCacheMiss</a></code></span>
+<span class="codeline" id="line-95"><code>		}</code></span>
+<span class="codeline" id="line-96"><code>		<span class="keyword">return</span> <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a>, <a href="../../../../../pkg/fmt.html" class="ident i5">fmt</a>.<a href="../../../../fmt/errors.go.html#line-23" class="ident">Errorf</a>(<span class="lit-string">"%s: %w"</span>, <label for="r29" class="ident">op</label>, <label for="r31" class="ident">err</label>)</code></span>
+<span class="codeline" id="line-97"><code>	}</code></span>
+<span class="codeline" id="line-98"><code>	<span class="keyword">return</span> <label for="r30" class="ident">data</label>, <a href="../../../../../pkg/builtin.html#name-nil" class="ident">nil</a></code></span>
+<span class="codeline" id="line-99"><code>}</code></span>
+<span class="codeline" id="line-100"><code></code></span>
+<span class="codeline" id="line-101"><code><span class="comment">// Ping checks the Redis connection health.</span></code></span>
+<span class="codeline" id="line-102"><code><span class="keyword">func</span> (<label for="r32" class="ident">r</label> *<a href="#line-19" class="ident">RedisController</a>) <label for="r33" class="ident"><a href="../../../../../imp/CacheService^27cbe/internal/storage/redis.RedisController.html#name-.Ping" class="ident">Ping</a></label>(<label for="r34" class="ident">ctx</label> <a href="../../../../../pkg/context.html" class="ident i2">context</a>.<a href="../../../../context/context.go.html#line-71" class="ident">Context</a>) <a href="../../../../../pkg/builtin.html#name-error" class="ident">error</a> {</code></span>
+<span class="codeline" id="line-103"><code>	<span class="keyword">return</span> <label for="r32" class="ident">r</label>.<a href="#line-20" class="ident">redis</a>.<a href="../../../../github.com/redis/go-redis/v9/commands.go.html#line-439" class="ident">Ping</a>(<label for="r34" class="ident">ctx</label>).<a href="../../../../github.com/redis/go-redis/v9/command.go.html#line-383" class="ident">Err</a>()</code></span>
+<span class="codeline" id="line-104"><code>}</code></span>
+</pre><pre id="footer">
+<table><tr><td><img src="../../../../../png/zigo101-twitter.png"></td>
+<td>The pages are generated with <a href="https://go101.org/apps-and-libs/golds.html"><b>Golds</b></a> <i>v0.8.3</i>. (GOOS=darwin GOARCH=arm64)
+<b>Golds</b> is a <a href="https://go101.org">Go 101</a> project developed by <a href="https://tapirgames.com">Tapir Liu</a>.
+PR and bug reports are welcome and can be submitted to <a href="https://github.com/go101/golds">the issue list</a>.
+Please follow <a href="https://twitter.com/zigo_101">@zigo_101</a> (reachable from the left QR code) to get the latest news of <b>Golds</b>.</td></tr></table></pre>
