@@ -340,8 +340,14 @@ services:
       - -c
       - |
         set -e
-        apt-get update && apt-get install -y postgresql-client >/dev/null 2>&1
-        PGPASSWORD="${DB_PASSWORD}" createdb -h aurora-db -U postgres aurora_test 2>/dev/null || echo "DB aurora_test already exists"
+        if command -v apk >/dev/null 2>&1; then
+          echo "Using apk (Alpine)..."
+          apk add --no-cache postgresql-client
+        else
+          echo "Using apt-get (Debian)..."
+          apt-get update && apt-get install -y postgresql-client
+        fi
+        PGPASSWORD="${DB_PASSWORD}" createdb -h aurora-db -U postgres aurora_test 2>/dev/null && echo "Created DB aurora_test" || echo "DB aurora_test already exists"
         echo "Running SSO migrations on aurora_test..."
         go run ./cmd/migrator -db-dsn "postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable" -migrations-path ./migrations -migrations-table schema_migrations
         echo "SSO migrations done"
