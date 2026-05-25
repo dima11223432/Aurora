@@ -1,4 +1,4 @@
-FROM golang:1.25-alpine
+FROM golang:alpine
 
 ENV GOMODCACHE=/tmp/gocache
 

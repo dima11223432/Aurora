@@ -35,6 +35,11 @@ func (p *PostgresTestSuite) SetupTest() {
 	p.storage = s
 	p.createdUsers = nil
 	p.createdApps = nil
+
+	// Clean up seed data from migrations to ensure test isolation
+	p.storage.DB.Exec("DELETE FROM channels")
+	p.storage.DB.Exec("DELETE FROM users")
+	p.storage.DB.Exec("DELETE FROM apps")
 }
 
 func (p *PostgresTestSuite) TearDownTest() {
