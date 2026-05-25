@@ -9,7 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -98,27 +99,8 @@ func (s *AuthTestSuite) TestLogin_InvalidTelegramID() {
 		First_name:  "Dima",
 	}
 
-	regularUser := models.User{
-		Telegram_id: 222222222,
-		First_name:  "Regular",
-		Last_name:   "User",
-		Username:    "regular_user",
-		Is_admin:    false,
-	}
-
-	_, err := s.service.Login(ctx, adminUser, 1)
-	s.NoError(err)
-
-	_, err = s.service.Login(ctx, regularUser, 1)
-	s.NoError(err)
-
-	isAdmin, err := s.service.IsAdmin(ctx, adminUser.Telegram_id)
-	s.NoError(err)
-	s.True(isAdmin)
-
-	isAdmin, err = s.service.IsAdmin(ctx, regularUser.Telegram_id)
-	s.NoError(err)
-	s.False(isAdmin)
+	_, err := s.service.Login(context.Background(), user, 1)
+	s.Error(err)
 }
 
 func TestAuthSuite(t *testing.T) {
@@ -233,8 +215,4 @@ func (s *AuthTestSuite) TestIsAdmin_InternalError() {
 	s.Error(err)
 
 	s.mockUserProvider.AssertExpectations(s.T())
-}
-
-func TestAuthSuite(t *testing.T) {
-	suite.Run(t, new(AuthTestSuite))
 }

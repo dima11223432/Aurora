@@ -327,7 +327,7 @@ services:
     environment:
       - ENV=test
       - DB_PASSWORD=${DB_PASSWORD}
-      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
+      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/${DB_NAME_AURORA:-aurora}?sslmode=disable
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${SSO_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
@@ -336,10 +336,7 @@ services:
         condition: service_healthy
     networks:
       - aurora-network
-    entrypoint:
-      - sh
-      - -c
-      - "apt-get update && apt-get install -y postgresql-client >/dev/null 2>&1 && createdb -h aurora-db -U postgres aurora_test 2>/dev/null; go test ./... -cover -v"
+    entrypoint: ["go", "test", "./...", "-cover", "-v"]
 
   recommendation-service-tests:
     container_name: recommendation-service-tests
@@ -348,8 +345,8 @@ services:
       dockerfile: Dockerfile.test
     environment:
       - ENV=test
-      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
-      - PARSING_SERVICE_PASS=postgres://postgres:${DB_PASSWORD}@postgres-parser:5432/parser_test?sslmode=disable
+      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/${DB_NAME_AURORA:-aurora}?sslmode=disable
+      - PARSING_SERVICE_PASS=postgres://postgres:${DB_PASSWORD}@postgres-parser:5432/${DB_NAME_PARSER:-parser}?sslmode=disable
       - TOKEN_TTL=${TOKEN_TTL}
       - GRPC_PORT=${RECS_PORT}
       - GRPC_TIMEOUT=${GRPC_TIMEOUT}
@@ -366,10 +363,7 @@ services:
         condition: service_healthy
     networks:
       - aurora-network
-    entrypoint:
-      - sh
-      - -c
-      - "apt-get update && apt-get install -y postgresql-client >/dev/null 2>&1 && createdb -h aurora-db -U postgres aurora_test 2>/dev/null && createdb -h postgres-parser -U postgres parser_test 2>/dev/null; go test ./... -cover -v"
+    entrypoint: ["go", "test", "./...", "-cover", "-v"]
 
   cache-service-tests:
     container_name: cache-service-tests
