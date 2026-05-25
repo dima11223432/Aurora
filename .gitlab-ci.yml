@@ -1,4 +1,5 @@
 stages:
+  - docs
   # - test
   - deploy
 
@@ -28,6 +29,20 @@ stages:
 #   <<: *test-template
 #   script:
 #     - docker-compose run --rm cache-service-tests
+
+generate-docs:
+  stage: docs
+  before_script:
+    - cd backend
+    - pip install sphinx sphinx_rtd_theme 2>/dev/null || true
+  script:
+    - make doc-gen-all
+  artifacts:
+    paths:
+      - backend/docs/
+    expire_in: 30 days
+  only:
+    - main
 
 deploy-staging:
   stage: deploy
