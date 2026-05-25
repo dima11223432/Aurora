@@ -285,7 +285,7 @@ doc-all: doc-sso doc-api doc-recs doc-cache
 # ===== Документация (HTML — Sphinx-like) =====
 DOCS_DIR := docs
 
-doc-gen: doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache doc-gen-parsing doc-gen-analitic
+doc-gen: doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache 
 	@echo "$(GREEN)Генерация HTML-документации завершена.$(NC)"
 	@echo "$(GREEN)Откройте docs_build/index.html в браузере.$(NC)"
 
