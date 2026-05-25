@@ -5,12 +5,14 @@ stages:
 
 .test-template: &test-template
   stage: test
+  variables:
+    SERVICE_NAME: ""
   before_script:
     - cd backend
     - cp "$ENV_FILE" .env
-    - docker compose build "${CI_JOB_NAME}"
+    - docker compose build "${SERVICE_NAME}"
   script:
-    - docker compose up --exit-code-from "${CI_JOB_NAME}" "${CI_JOB_NAME}"
+    - docker compose up --exit-code-from "${SERVICE_NAME}" "${SERVICE_NAME}"
   after_script:
     - cd backend && docker compose down --remove-orphans -v 2>/dev/null || true
   only:
@@ -18,12 +20,18 @@ stages:
 
 test-sso:
   <<: *test-template
+  variables:
+    SERVICE_NAME: "sso-tests"
 
 test-recommendation-service:
   <<: *test-template
+  variables:
+    SERVICE_NAME: "recommendation-service-tests"
 
 test-cache-service:
   <<: *test-template
+  variables:
+    SERVICE_NAME: "cache-service-tests"
 
 generate-docs-python:
   stage: docs
