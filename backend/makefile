@@ -299,6 +299,9 @@ doc-gen-all: doc-gen doc-gen-parsing doc-gen-analitic
 	@echo "$(GREEN)Генерация HTML-документации всех сервисов завершена.$(NC)"
 	@echo "$(GREEN)Артефакты в $(DOCS_BUILD)/$(NC)"
 
+doc-gen-python: doc-gen-parsing doc-gen-analitic
+	@echo "$(GREEN)Python-документация сгенерирована в $(DOCS_BUILD)/$(NC)"
+
 doc-gen-parsing:
 	@echo "$(GREEN)Генерация документации Parsing Service...$(NC)"
 	cd Parsing_Service/docs && $(PYTHON) -m sphinx -b html source/ ../../$(DOCS_BUILD)/parsing/ -q

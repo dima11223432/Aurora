@@ -30,13 +30,29 @@ stages:
 #   script:
 #     - docker-compose run --rm cache-service-tests
 
-generate-docs:
+generate-docs-python:
   stage: docs
+  image: python:3.11-slim
+  before_script:
+    - apt-get update && apt-get install -y --no-install-recommends make && rm -rf /var/lib/apt/lists/*
+    - cd backend
+    - pip install sphinx 2>/dev/null || true
+  script:
+    - make doc-gen-python
+  artifacts:
+    paths:
+      - backend/docs/
+    expire_in: 30 days
+  only:
+    - main
+
+generate-docs-go:
+  stage: docs
+  image: golang:1.23
   before_script:
     - cd backend
-    - pip install sphinx sphinx_rtd_theme 2>/dev/null || true
   script:
-    - make doc-gen-all
+    - make doc-gen
   artifacts:
     paths:
       - backend/docs/
