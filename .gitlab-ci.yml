@@ -1,34 +1,31 @@
 stages:
   - docs
-  # - test
+  - test
   - deploy
 
-# .test-template: &test-template
-#   stage: test
-#   before_script:
-#     - cd backend
-#     - cp "$ENV_FILE" .env
-#     - docker-compose build sso-tests recommendation-service-tests cache-service-tests
-#   only:
-#     - PROD
-#     - feature/env
-#
-# test-sso:
-#   <<: *test-template
-#   script:
-#     - docker-compose run --rm sso-tests
-#
-# test-recommendation:
-#   <<: *test-template
-#   script:
-#     - docker-compose build --no-cache
-#
-#     - docker-compose run --rm recommendation-service-tests
-#
-# test-cache-service:
-#   <<: *test-template
-#   script:
-#     - docker-compose run --rm cache-service-tests
+.test-template: &test-template
+  stage: test
+  before_script:
+    - cd backend
+    - cp "$ENV_FILE" .env
+    - docker-compose build sso-tests recommendation-service-tests cache-service-tests
+  only:
+    - main
+
+test-sso:
+  <<: *test-template
+  script:
+    - docker-compose run --rm sso-tests
+
+test-recommendation:
+  <<: *test-template
+  script:
+    - docker-compose run --rm recommendation-service-tests
+
+test-cache-service:
+  <<: *test-template
+  script:
+    - docker-compose run --rm cache-service-tests
 
 generate-docs-python:
   stage: docs

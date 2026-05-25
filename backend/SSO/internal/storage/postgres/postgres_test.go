@@ -14,7 +14,9 @@ import (
 
 type PostgresTestSuite struct {
 	suite.Suite
-	storage *Storage
+	storage      *Storage
+	createdUsers []int64
+	createdApps  []int
 }
 
 func (p *PostgresTestSuite) SetupTest() {
@@ -31,11 +33,17 @@ func (p *PostgresTestSuite) SetupTest() {
 		log.Fatal(err)
 	}
 	p.storage = s
-
-	_, _ = p.storage.DB.Exec("TRUNCATE TABLE users, channels RESTART IDENTITY CASCADE")
+	p.createdUsers = nil
+	p.createdApps = nil
 }
 
 func (p *PostgresTestSuite) TearDownTest() {
+	for _, id := range p.createdApps {
+		p.storage.DB.Exec("DELETE FROM apps WHERE id = $1", id)
+	}
+	for _, tgID := range p.createdUsers {
+		p.storage.DB.Exec("DELETE FROM users WHERE telegram_id = $1", tgID)
+	}
 	p.storage.DB.Close()
 }
 
@@ -54,6 +62,7 @@ func (p *PostgresTestSuite) TestStorage_SaveUser_and_User() {
 
 	p.NoError(err)
 	p.NotZero(id)
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	gottedUser, err := p.storage.User(ctx, user.Telegram_id)
 	p.NoError(err)
@@ -98,6 +107,7 @@ func (p *PostgresTestSuite) Test_storage_get_user_by_id() {
 	p.NoError(err)
 	p.NotZero(id)
 	user.ID = id
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	gottedUser, err := p.storage.GetUserById(ctx, user.ID)
 	p.NoError(err)
@@ -117,6 +127,7 @@ func (p *PostgresTestSuite) TestApp() {
 	_, err := p.storage.DB.Exec(query)
 
 	p.NoError(err)
+	p.createdApps = append(p.createdApps, 3)
 
 	app, err := p.storage.App(ctx, 3)
 	p.NoError(err)
@@ -143,6 +154,7 @@ func (p *PostgresTestSuite) TestSetPriorityChannels() {
 	p.NoError(err)
 	p.NotZero(id)
 	user.ID = id
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	err = p.storage.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
 	p.NoError(err)
@@ -163,6 +175,7 @@ func (p *PostgresTestSuite) TestSetPriorityChannelsEmptyChannels() {
 	p.NoError(err)
 	p.NotZero(id)
 	user.ID = id
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	err = p.storage.SetPriorityChannels(ctx, user.ID, []string{})
 	p.Error(err)
@@ -184,6 +197,7 @@ func (p *PostgresTestSuite) TestDeletePriorityChannels() {
 	p.NoError(err)
 	p.NotZero(id)
 	user.ID = id
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	err = p.storage.SetPriorityChannels(ctx, user.ID, []string{"channel1", "channel2"})
 	p.NoError(err)
@@ -216,6 +230,7 @@ func (p *PostgresTestSuite) TestStorage_IsAdmin() {
 
 	_, _ = p.storage.SaveUser(ctx, admin)
 	_, _ = p.storage.SaveUser(ctx, user)
+	p.createdUsers = append(p.createdUsers, admin.Telegram_id, user.Telegram_id)
 
 	isAdmin, err := p.storage.IsAdmin(ctx, 1)
 	p.NoError(err)
@@ -273,6 +288,7 @@ func (p *PostgresTestSuite) TestSaveUser_Duplicate() {
 	id, err := p.storage.SaveUser(ctx, user)
 	p.NoError(err)
 	p.NotZero(id)
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	_, err = p.storage.SaveUser(ctx, user)
 	p.Error(err)
@@ -292,6 +308,7 @@ func (p *PostgresTestSuite) TestSetPriorityChannels_Existing() {
 	id, err := p.storage.SaveUser(ctx, user)
 	p.NoError(err)
 	p.NotZero(id)
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	err = p.storage.SetPriorityChannels(ctx, id, []string{"channel1", "channel2"})
 	p.NoError(err)
@@ -313,6 +330,7 @@ func (p *PostgresTestSuite) TestDeletePriorityChannels_DBError() {
 	}
 	id, err := p.storage.SaveUser(ctx, user)
 	p.NoError(err)
+	p.createdUsers = append(p.createdUsers, user.Telegram_id)
 
 	ctx, cancel = context.WithTimeout(ctx, time.Nanosecond)
 	defer cancel()
