@@ -1,5 +1,5 @@
-internal package
-================
+entrypoints package
+===================
 
 Subpackages
 -----------
@@ -7,15 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   internal.apps
-   internal.brokers
-   internal.config
-   internal.services
+   entrypoints.analytic
 
 Module contents
 ---------------
 
-.. automodule:: internal
+.. automodule:: entrypoints
    :members:
    :show-inheritance:
    :undoc-members:

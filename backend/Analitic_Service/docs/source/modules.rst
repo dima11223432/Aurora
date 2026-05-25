@@ -5,4 +5,5 @@ Analitic_Service
    :maxdepth: 4
 
    command
+   entrypoints
    internal

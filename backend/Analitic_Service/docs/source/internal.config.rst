@@ -1,5 +1,5 @@
-internal package
-================
+internal.config package
+=======================
 
 Subpackages
 -----------
@@ -7,15 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   internal.apps
-   internal.brokers
-   internal.config
-   internal.services
+   internal.config.config
 
 Module contents
 ---------------
 
-.. automodule:: internal
+.. automodule:: internal.config
    :members:
    :show-inheritance:
    :undoc-members:

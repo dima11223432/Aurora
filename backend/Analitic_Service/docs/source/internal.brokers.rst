@@ -1,5 +1,5 @@
-internal package
-================
+internal.brokers package
+========================
 
 Subpackages
 -----------
@@ -7,15 +7,12 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   internal.apps
-   internal.brokers
-   internal.config
-   internal.services
+   internal.brokers.kafka
 
 Module contents
 ---------------
 
-.. automodule:: internal
+.. automodule:: internal.brokers
    :members:
    :show-inheritance:
    :undoc-members:

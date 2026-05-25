@@ -20,6 +20,7 @@ release = '1.0'
 
 extensions = [
     'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
 ]
 
 templates_path = ['_templates']
@@ -32,5 +33,15 @@ language = 'ru'
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
-autodoc_mock_imports = ["confluent_kafka", "dotenv", "loguru", "internal"]
+autodoc_mock_imports = [
+    "confluent_kafka",
+    "dotenv",
+    "loguru",
+    "yfinance",
+    "tensorflow",
+    "sklearn",
+    "requests",
+    "openai",
+    "telethon",
+]
 
