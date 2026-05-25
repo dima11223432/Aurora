@@ -102,6 +102,8 @@ make migrate-all
 
 ### How to Build project?
 
+create .env file by .env.example, then run:
+
 ```bash
 docker compose up -d
 
