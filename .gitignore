@@ -508,3 +508,6 @@ backend/docs/api-gateway/src/github.com/redis/go-redis/v9/internal/maintnotifica
 backend/docs/api-gateway/src/github.com/redis/go-redis/v9/internal/maintnotifications/logs/log_messages.go.html
 backend/docs/api-gateway/src/github.com/redis/go-redis/v9/internal/maintnotifications/logs/log_messages.go.html
 .idea
+backend/Analitic_Service/command/analytic/__pycache__/__init__.cpython-311.pyc
+backend/Analitic_Service/command/analytic/__pycache__/__init__.cpython-311.pyc
+backend/Analitic_Service/command/analytic/__pycache__/main.cpython-311.pyc

@@ -1,3 +1,10 @@
+"""LSTM Laura price prediction model.
+
+Provides functions for downloading stock data, training/fine-tuning
+an LSTM neural network, and predicting price movement
+(drop / flat / rise) for a given ticker.
+"""
+
 import yfinance as yf
 import numpy as np
 import pandas as pd
@@ -26,6 +33,17 @@ SCALER_FILE = 'scaler.pkl'
 WINDOW = 10
 
 def get_data(ticker):
+    """Download one year of daily closing prices via yfinance.
+
+    Computes percentage change and creates a 3-class target column:
+    0 = drop (>1% down), 1 = flat, 2 = rise (>1% up).
+
+    Args:
+        ticker: Stock ticker symbol.
+
+    Returns:
+        DataFrame with 'Close', 'change', and 'target' columns.
+    """
     df = yf.download(ticker, period='1y', progress=False)
     if df.empty:
         raise Exception("Нет данных")
@@ -35,6 +53,19 @@ def get_data(ticker):
     return df.dropna()
 
 def sequences(df, scaler, fit=False):
+    """Create sliding window sequences for LSTM training/prediction.
+
+    Uses a window size of 10. When ``fit=True``, the scaler is fitted
+    on the data; otherwise it transforms using an already-fitted scaler.
+
+    Args:
+        df: DataFrame with 'Close' and 'target' columns.
+        scaler: sklearn MinMaxScaler instance.
+        fit: Whether to fit the scaler on the data.
+
+    Returns:
+        Tuple of (X, y) where X is a 3D numpy array and y is one-hot encoded.
+    """
     prices = df['Close'].values.reshape(-1, 1)
     
     if fit:
@@ -52,6 +83,17 @@ def sequences(df, scaler, fit=False):
     return np.array(X), to_categorical(np.array(y), num_classes=3)
 
 def create_model(shape):
+    """Build and compile an LSTM model.
+
+    Architecture: LSTM(64) -> Dropout(0.2) -> Dense(32, relu) -> Dense(3, softmax).
+    Compiled with Adam optimizer and categorical crossentropy loss.
+
+    Args:
+        shape: Input shape tuple (window_size, n_features).
+
+    Returns:
+        Compiled Keras Sequential model.
+    """
     model = Sequential([
         LSTM(64, input_shape=shape),
         Dropout(0.2),
@@ -62,6 +104,17 @@ def create_model(shape):
     return model
 
 def run(ticker):
+    """Train or fine-tune the LSTM model for a given ticker.
+
+    If a saved model (Laura.keras) and scaler (scaler.pkl) exist,
+    fine-tunes for 2 epochs; otherwise trains from scratch for 15 epochs.
+
+    Args:
+        ticker: Stock ticker symbol.
+
+    Returns:
+        Tuple of (trained model, scaler, DataFrame).
+    """
     logger.info(f"Загрузка {ticker}...")
     start = time.time()
     df = get_data(ticker)
@@ -91,6 +144,15 @@ def run(ticker):
     return model, scaler, df
 
 def predict(model, scaler, df):
+    """Predict price movement direction for the next day.
+
+    Uses the last WINDOW closing prices, scales them, and runs the model.
+
+    Args:
+        model: Trained Keras model.
+        scaler: Fitted MinMaxScaler.
+        df: DataFrame with historical price data.
+    """
     last_prices = df['Close'].tail(WINDOW).values.reshape(-1, 1)
     scaled = scaler.transform(last_prices).reshape(1, WINDOW, 1)
     pred = model.predict(scaled, verbose=0)[0]

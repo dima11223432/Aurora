@@ -1,4 +1,9 @@
-# import globals
+"""AI orchestration handler.
+
+Coordinates multiple AI models (DeepSeek, YandexGPT, LSTM Laura, QwenAnalis)
+to analyze news text and produce a final buy/sell signal with reasoning.
+"""
+
 import os
 import threading
 
@@ -21,6 +26,18 @@ from ..AI_API.QwenAI import answer as qws
 
 
 def AI_handler(context):
+    """Orchestrate multi-model AI analysis on news text.
+
+    Calls DeepSeek and YandexGPT for sentiment analysis, identifies
+    the stock ticker via AnalysAI, runs LSTM Laura for technical
+    prediction, and aggregates all results through QwenAnalis.
+
+    Args:
+        context: News text to analyze.
+
+    Returns:
+        Dict with ``{"ds": {"answer": ..., "reason": ...}}``.
+    """
     AI_answer = {
         "ds": {},
         "ge": {},
