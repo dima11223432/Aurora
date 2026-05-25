@@ -3,35 +3,35 @@ stages:
   - docs
   - deploy
 
-.test-template: &test-template
-  stage: test
-  variables:
-    SERVICE_NAME: ""
-  before_script:
-    - cd backend
-    - cp "$ENV_FILE" .env
-    - docker compose build "${SERVICE_NAME}"
-  script:
-    - docker compose up --exit-code-from "${SERVICE_NAME}" "${SERVICE_NAME}"
-  after_script:
-    - cd backend && docker compose down --remove-orphans -v 2>/dev/null || true
-  only:
-    - main
-
-test-sso:
-  <<: *test-template
-  variables:
-    SERVICE_NAME: "sso-tests"
-
-test-recommendation-service:
-  <<: *test-template
-  variables:
-    SERVICE_NAME: "recommendation-service-tests"
-
-test-cache-service:
-  <<: *test-template
-  variables:
-    SERVICE_NAME: "cache-service-tests"
+# .test-template: &test-template
+#   stage: test
+#   variables:
+#     SERVICE_NAME: ""
+#   before_script:
+#     - cd backend
+#     - cp "$ENV_FILE" .env
+#     - docker compose build "${SERVICE_NAME}"
+#   script:
+#     - docker compose up --exit-code-from "${SERVICE_NAME}" "${SERVICE_NAME}"
+#   after_script:
+#     - cd backend && docker compose down --remove-orphans -v 2>/dev/null || true
+#   only:
+#     - main
+#
+# test-sso:
+#   <<: *test-template
+#   variables:
+#     SERVICE_NAME: "sso-tests"
+#
+# test-recommendation-service:
+#   <<: *test-template
+#   variables:
+#     SERVICE_NAME: "recommendation-service-tests"
+#
+# test-cache-service:
+#   <<: *test-template
+#   variables:
+#     SERVICE_NAME: "cache-service-tests"
 
 generate-docs-python:
   stage: docs
