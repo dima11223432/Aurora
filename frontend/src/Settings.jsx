@@ -297,7 +297,14 @@ export default function Settings() {
               />
               <button
                 onClick={AddNewParsingChannel}
-                className="bg-[#0fd2f5] text-[#0A0F1F] font-bold py-3 px-6 rounded-2xl hover:bg-white active:scale-95 transition-all shadow-lg shadow-[#0fd2f5]/20"
+                disabled={!addedChannel.trim()}
+                className={`
+                  font-bold py-3 px-6 rounded-2xl transition-all
+                  ${!addedChannel.trim() 
+                  ? 'bg-gray-500 cursor-not-allowed opacity-50' 
+                  : 'bg-[#0fd2f5] text-[#0A0F1F] hover:bg-white active:scale-95 shadow-lg shadow-[#0fd2f5]/20'
+                  }
+                `}
               >
                 Добавить
               </button>

@@ -120,7 +120,6 @@ function Herozone() {
                       {item.description}
                     </p>
                   </div>
-                </div>
               </div>
             ))}
           </div>
