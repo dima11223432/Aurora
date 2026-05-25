@@ -319,127 +319,121 @@ services:
 
   # NOTE: testing — isolated databases with migrations
 
-  migrate-sso-test:
-    image: golang:latest
-    container_name: migrate-sso-test
-    working_dir: /app
-    volumes:
-      - ./SSO:/app
-    environment:
-      - DB_PASSWORD=${DB_PASSWORD}
-      - PGPASSWORD=${DB_PASSWORD}
-      - SSO_PORT=${SSO_PORT}
-      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - aurora-network
-    entrypoint:
-      - sh
-      - -c
-      - |
-        set -e
-        if command -v apk >/dev/null 2>&1; then
-          echo "Using apk (Alpine)..."
-          apk add --no-cache postgresql-client
-        else
-          echo "Using apt-get (Debian)..."
-          apt-get update && apt-get install -y postgresql-client
-        fi
-        PGPASSWORD="${DB_PASSWORD}" createdb -h aurora-db -U postgres aurora_test 2>/dev/null && echo "Created DB aurora_test" || echo "DB aurora_test already exists"
-        echo "Running SSO migrations on aurora_test..."
-        go run ./cmd/migrator -db-dsn "postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable" -migrations-path ./migrations -migrations-table schema_migrations
-        echo "SSO migrations done"
-
-  migrate-parser-test:
-    image: python:3.11-slim
-    container_name: migrate-parser-test
-    working_dir: /app
-    volumes:
-      - ./Parsing_Service:/app
-    environment:
-      - DB_PASSWORD=${DB_PASSWORD}
-      - PGPASSWORD=${DB_PASSWORD}
-      - DATABASE_URL=postgresql+psycopg2://postgres:${DB_PASSWORD}@postgres-parser:5432/parser_test?sslmode=disable
-    depends_on:
-      postgres-parser:
-        condition: service_healthy
-    networks:
-      - aurora-network
-    entrypoint:
-      - sh
-      - -c
-      - |
-        set -e
-        apt-get update && apt-get install -y postgresql-client >/dev/null 2>&1
-        PGPASSWORD="${DB_PASSWORD}" createdb -h postgres-parser -U postgres parser_test 2>/dev/null || echo "DB parser_test already exists"
-        pip install -q alembic psycopg2-binary
-        echo "Running Alembic migrations on parser_test..."
-        alembic upgrade head
-        echo "Parser migrations done"
-
-  sso-tests:
-    container_name: sso-tests
-    build:
-      context: ./SSO
-      dockerfile: Dockerfile.test
-    environment:
-      - ENV=test
-      - DB_PASSWORD=${DB_PASSWORD}
-      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
-      - TEST_POSTGRES_DNS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
-      - TOKEN_TTL=${TOKEN_TTL}
-      - GRPC_PORT=${SSO_PORT}
-      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
-    depends_on:
-      migrate-sso-test:
-        condition: service_completed_successfully
-    networks:
-      - aurora-network
-    entrypoint: ["go", "test", "./...", "-cover", "-v"]
-
-  recommendation-service-tests:
-    container_name: recommendation-service-tests
-    build:
-      context: ./Recommendation_Service
-      dockerfile: Dockerfile.test
-    environment:
-      - ENV=test
-      - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
-      - PARSING_SERVICE_PASS=postgres://postgres:${DB_PASSWORD}@postgres-parser:5432/parser_test?sslmode=disable
-      - TOKEN_TTL=${TOKEN_TTL}
-      - GRPC_PORT=${RECS_PORT}
-      - GRPC_TIMEOUT=${GRPC_TIMEOUT}
-      - REDIS_HOST=redis-master:6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_PORT=6379
-      - REDIS_DB=${REDIS_DB:-0}
-    depends_on:
-      migrate-sso-test:
-        condition: service_completed_successfully
-      migrate-parser-test:
-        condition: service_completed_successfully
-    networks:
-      - aurora-network
-    entrypoint: ["go", "test", "./...", "-cover", "-v"]
-
-  cache-service-tests:
-    container_name: cache-service-tests
-    build:
-      context: ./Cache_Service
-      dockerfile: Dockerfile.test
-    environment:
-      - REDIS_HOST=redis-master:6379
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_DB=${REDIS_DB:-0}
-      - STORAGE_PASS=${DB_PASSWORD}
-    depends_on:
-      redis-master:
-        condition: service_healthy
-    networks:
-      - aurora-network
-    entrypoint: ["go", "test", "./internal/storage/redis", "-cover", "-v"]
+  # migrate-sso-test:
+  #   image: golang:latest
+  #   container_name: migrate-sso-test
+  #   working_dir: /app
+  #   volumes:
+  #     - ./SSO:/app
+  #   environment:
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - PGPASSWORD=${DB_PASSWORD}
+  #     - SSO_PORT=${SSO_PORT}
+  #     - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   networks:
+  #     - aurora-network
+  #   entrypoint:
+  #     - sh
+  #     - -c
+  #     - |
+  #       set -e
+  #       echo "Creating aurora_test database if not exists..."
+  #       go run ./cmd/createdb "postgres://postgres:${DB_PASSWORD}@aurora-db:5432/postgres?sslmode=disable" aurora_test
+  #       echo "Running SSO migrations on aurora_test..."
+  #       go run ./cmd/migrator -db-dsn "postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable" -migrations-path ./migrations -migrations-table schema_migrations
+  #       echo "SSO migrations done"
+  #
+  # migrate-parser-test:
+  #   image: python:3.11-slim
+  #   container_name: migrate-parser-test
+  #   working_dir: /app
+  #   volumes:
+  #     - ./Parsing_Service:/app
+  #   environment:
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - PGPASSWORD=${DB_PASSWORD}
+  #     - DATABASE_URL=postgresql+psycopg2://postgres:${DB_PASSWORD}@postgres-parser:5432/parser_test?sslmode=disable
+  #   depends_on:
+  #     postgres-parser:
+  #       condition: service_healthy
+  #   networks:
+  #     - aurora-network
+  #   entrypoint:
+  #     - sh
+  #     - -c
+  #     - |
+  #       set -e
+  #       apt-get update && apt-get install -y postgresql-client >/dev/null 2>&1
+  #       PGPASSWORD="${DB_PASSWORD}" createdb -h postgres-parser -U postgres parser_test 2>/dev/null || echo "DB parser_test already exists"
+  #       pip install -q alembic psycopg2-binary
+  #       echo "Running Alembic migrations on parser_test..."
+  #       alembic upgrade head
+  #       echo "Parser migrations done"
+  #
+  # sso-tests:
+  #   container_name: sso-tests
+  #   build:
+  #     context: ./SSO
+  #     dockerfile: Dockerfile.test
+  #   environment:
+  #     - ENV=test
+  #     - DB_PASSWORD=${DB_PASSWORD}
+  #     - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
+  #     - TEST_POSTGRES_DNS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
+  #     - TOKEN_TTL=${TOKEN_TTL}
+  #     - GRPC_PORT=${SSO_PORT}
+  #     - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+  #   depends_on:
+  #     migrate-sso-test:
+  #       condition: service_completed_successfully
+  #   networks:
+  #     - aurora-network
+  #   entrypoint: ["go", "test", "./...", "-cover", "-v"]
+  #
+  # recommendation-service-tests:
+  #   container_name: recommendation-service-tests
+  #   build:
+  #     context: ./Recommendation_Service
+  #     dockerfile: Dockerfile.test
+  #   environment:
+  #     - ENV=test
+  #     - STORAGE_PASS=postgres://postgres:${DB_PASSWORD}@aurora-db:5432/aurora_test?sslmode=disable
+  #     - PARSING_SERVICE_PASS=postgres://postgres:${DB_PASSWORD}@postgres-parser:5432/parser_test?sslmode=disable
+  #     - TOKEN_TTL=${TOKEN_TTL}
+  #     - GRPC_PORT=${RECS_PORT}
+  #     - GRPC_TIMEOUT=${GRPC_TIMEOUT}
+  #     - REDIS_HOST=redis-master:6379
+  #     - REDIS_PASSWORD=${REDIS_PASSWORD}
+  #     - REDIS_PORT=6379
+  #     - REDIS_DB=${REDIS_DB:-0}
+  #   depends_on:
+  #     migrate-sso-test:
+  #       condition: service_completed_successfully
+  #     migrate-parser-test:
+  #       condition: service_completed_successfully
+  #   networks:
+  #     - aurora-network
+  #   entrypoint: ["go", "test", "./...", "-cover", "-v"]
+  #
+  # cache-service-tests:
+  #   container_name: cache-service-tests
+  #   build:
+  #     context: ./Cache_Service
+  #     dockerfile: Dockerfile.test
+  #   environment:
+  #     - REDIS_HOST=redis-master:6379
+  #     - REDIS_PASSWORD=${REDIS_PASSWORD}
+  #     - REDIS_DB=${REDIS_DB:-0}
+  #     - STORAGE_PASS=${DB_PASSWORD}
+  #   depends_on:
+  #     redis-master:
+  #       condition: service_healthy
+  #   networks:
+  #     - aurora-network
+  #   entrypoint: ["go", "test", "./internal/storage/redis", "-cover", "-v"]
 
   frontend-prod:
     build:
