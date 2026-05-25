@@ -120,6 +120,7 @@ function Herozone() {
                       {item.description}
                     </p>
                   </div>
+                </div>
               </div>
             ))}
           </div>
@@ -138,4 +139,3 @@ function Herozone() {
 }
 
 export default Herozone;
-
