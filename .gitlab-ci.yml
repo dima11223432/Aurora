@@ -39,9 +39,10 @@ generate-docs-python:
     - pip install sphinx 2>/dev/null || true
   script:
     - make doc-gen-python
+    - tar -czf ../docs-python.tar.gz docs/parsing/ docs/analitic/
   artifacts:
     paths:
-      - backend/docs/
+      - docs-python.tar.gz
     expire_in: 30 days
   only:
     - main
@@ -53,9 +54,10 @@ generate-docs-go:
     - cd backend
   script:
     - make doc-gen
+    - tar -czf ../docs-go.tar.gz docs/sso/ docs/api-gateway/ docs/recommendation/ docs/cache/
   artifacts:
     paths:
-      - backend/docs/
+      - docs-go.tar.gz
     expire_in: 30 days
   only:
     - main
