@@ -44,7 +44,7 @@ func (u *userDataProviderSuite) TestGetRecommendatedPosts() {
 	userID := int64(1)
 	u.mock.On("GetPriorityChannelsByUserID", ctx, userID).
 		Return([]models.PriorityChannel{{Channel: "Kafka_Channel1"}}, nil)
-	u.mock.On("GetPostsByChannels", ctx, []string{"Kafka_Channel1"}, userID, mock.Anything, int64(5)).
+	u.mock.On("GetPostsByChannels", ctx, []string{"Kafka_Channel1"}, userID, mock.Anything, int64(15)).
 		Return([]models.Post{}, (*models.Cursor)(nil), nil)
 	posts, cursor, err := u.service.GetRecommendatedPosts(ctx, userID, nil)
 	u.NoError(err)
@@ -167,7 +167,7 @@ func (u *userDataProviderSuite) TestGetRecommendatedPostsError() {
 	ctx := context.Background()
 	userID := int64(1)
 	u.mock.On("GetPriorityChannelsByUserID", ctx, userID).Return([]models.PriorityChannel{{Channel: "ch1"}}, nil)
-	u.mock.On("GetPostsByChannels", ctx, []string{"ch1"}, userID, mock.Anything, int64(5)).Return(nil, nil, errors.New("db error"))
+	u.mock.On("GetPostsByChannels", ctx, []string{"ch1"}, userID, mock.Anything, int64(15)).Return(nil, nil, errors.New("db error"))
 	_, _, err := u.service.GetRecommendatedPosts(ctx, userID, nil)
 	u.Error(err)
 }
