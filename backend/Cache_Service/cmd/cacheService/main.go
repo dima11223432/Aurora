@@ -1,3 +1,4 @@
+// Command main starts the Cache Service with graceful shutdown handling.
 package main
 
 import (

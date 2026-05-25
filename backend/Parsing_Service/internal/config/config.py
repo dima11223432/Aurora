@@ -1,18 +1,40 @@
-"""Configuration management for the application."""
+"""Configuration management for the Parser Service.
+
+Loads environment variables for Telegram API credentials,
+Kafka connection, database connection, and proxy settings.
+"""
 import os
 from pathlib import Path
 
 from dotenv import load_dotenv
 
 
-env_path = os.getenv("ENV_PATH", "/app/config/config.env")
-load_dotenv(env_path, override=True)
+env_path = os.getenv("ENV_PATH")
+if env_path and Path(env_path).exists():
+    load_dotenv(env_path, override=True)
 
 
 class Config:
-    """Application configuration loaded from environment variables."""
+    """Application configuration loaded from environment variables.
+
+    Attributes:
+        API_ID: Telegram API application ID.
+        API_HASH: Telegram API application hash.
+        PHONE_NUMBER: Phone number for Telegram authentication.
+        KAFKA_BOOTSTRAP_SERVERS: Kafka broker address.
+        KAFKA_TOPIC: Kafka topic for publishing posts.
+        DB_NAME: PostgreSQL database name.
+        DB_USER: PostgreSQL database user.
+        DB_PASSWORD: PostgreSQL database password.
+        DB_URL: PostgreSQL connection URL.
+        DB_HOST: PostgreSQL host.
+        DB_PORT: PostgreSQL port.
+        PROXY_HOST: SOCKS5 proxy host for Telegram.
+        PROXY_PORT: SOCKS5 proxy port.
+    """
 
     def __init__(self):
+        """Initialize config with default None values."""
         self.API_ID = None
         self.API_HASH = None
         self.PHONE_NUMBER = None
@@ -24,7 +46,7 @@ class Config:
         self.DB_URL = None
         self.DB_HOST = None
         self.DB_PORT = None
-        self.PROXY_URL = None
+        self.PROXY_HOST = None
         self.PROXY_PORT = None
 
     def load_config(self):
@@ -40,5 +62,5 @@ class Config:
         self.DB_URL = os.getenv("DB_URL", "")
         self.DB_HOST = os.getenv("DB_HOST", "")
         self.DB_PORT = os.getenv("DB_PORT", "")
-        self.PROXY_URL = os.getenv("PROXY_URL", "")
+        self.PROXY_HOST = os.getenv("PROXY_HOST", "")
         self.PROXY_PORT = os.getenv("PROXY_PORT", "")

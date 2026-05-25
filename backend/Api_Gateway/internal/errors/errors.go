@@ -1,3 +1,4 @@
+// Package errs defines sentinel errors used throughout the API Gateway service.
 package errs
 
 import "errors"

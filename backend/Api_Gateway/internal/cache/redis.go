@@ -1,3 +1,4 @@
+// Package cache provides a Redis-backed caching layer for the API Gateway.
 package cache
 
 import (
@@ -11,14 +12,17 @@ import (
 )
 
 var (
+	// ErrCacheMiss is returned when a requested key is not found in cache.
 	ErrCacheMiss = errors.New("cache miss")
 )
 
+// RedisCache provides a Redis-backed cache with JSON serialization.
 type RedisCache struct {
 	*redis.Client
 	DefaultTTl time.Duration
 }
 
+// NewRedisCache creates a new RedisCache client with the given configuration.
 func NewRedisCache(addr string, password string, db int, protocol int, ttl time.Duration) *RedisCache {
 
 	return &RedisCache{
@@ -32,6 +36,7 @@ func NewRedisCache(addr string, password string, db int, protocol int, ttl time.
 	}
 }
 
+// SetValue stores a JSON-serialized value in Redis with an optional TTL.
 func (r *RedisCache) SetValue(ctx context.Context, key string, value interface{}, ttl ...time.Duration) error {
 
 	data, err := json.Marshal(value)
@@ -47,6 +52,8 @@ func (r *RedisCache) SetValue(ctx context.Context, key string, value interface{}
 	return r.Client.Set(ctx, key, data, TTL).Err()
 }
 
+// GetValue retrieves and deserializes a JSON value from Redis by key.
+// Returns ErrCacheMiss if the key does not exist.
 func (r *RedisCache) GetValue(ctx context.Context, key string, dest interface{}) error {
 	data, err := r.Client.Get(ctx, key).Bytes()
 	if err != nil {
@@ -63,6 +70,7 @@ func (r *RedisCache) GetValue(ctx context.Context, key string, dest interface{})
 	return nil
 }
 
+// Ping checks the Redis connection health.
 func (r *RedisCache) Ping(ctx context.Context) error {
 	return r.Client.Ping(ctx).Err()
 }

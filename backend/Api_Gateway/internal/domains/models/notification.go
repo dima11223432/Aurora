@@ -1,5 +1,6 @@
 package models
 
+// Notification represents a notification message targeted to a group.
 type Notification struct {
 	ID      int64  `json:"id" db:"id"`
 	Title   string `json:"notification_title" db:"notification_title"`

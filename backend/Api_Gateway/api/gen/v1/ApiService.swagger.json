@@ -382,6 +382,28 @@
         ]
       }
     },
+    "/v1/is_admin_by_context": {
+      "get": {
+        "operationId": "ApiService_IsAdminByContext",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1IsAdminByContextResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ApiService"
+        ]
+      }
+    },
     "/v1/login": {
       "post": {
         "operationId": "ApiService_Login",
@@ -652,6 +674,14 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "v1IsAdminByContextResponse": {
+      "type": "object",
+      "properties": {
+        "isAdmin": {
+          "type": "boolean"
         }
       }
     },

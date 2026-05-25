@@ -22,6 +22,11 @@ service ApiService {
       body: "*"
     };
   }
+  rpc IsAdminByContext(IsAdminByContextRequest) returns (IsAdminByContextResponse){
+    option (google.api.http) = {
+      get: "/v1/is_admin_by_context"
+    };
+  }
 
   rpc SetPriorityChannels(SetPriorityChannelsRequest) returns (SetPriorityChannelsResponse) {
     option (google.api.http) = {
@@ -222,6 +227,14 @@ message IsAdminRequest {
 }
 
 message IsAdminResponse {
+  bool is_admin = 1;
+}
+
+message IsAdminByContextRequest{
+
+}
+
+message IsAdminByContextResponse{
   bool is_admin = 1;
 }
 

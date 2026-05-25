@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	ApiService_Login_FullMethodName                                      = "/api.v1.ApiService/Login"
 	ApiService_IsAdmin_FullMethodName                                    = "/api.v1.ApiService/IsAdmin"
+	ApiService_IsAdminByContext_FullMethodName                           = "/api.v1.ApiService/IsAdminByContext"
 	ApiService_SetPriorityChannels_FullMethodName                        = "/api.v1.ApiService/SetPriorityChannels"
 	ApiService_GetRecommendatedPosts_FullMethodName                      = "/api.v1.ApiService/GetRecommendatedPosts"
 	ApiService_GetUserPriorityChannels_FullMethodName                    = "/api.v1.ApiService/GetUserPriorityChannels"
@@ -42,6 +43,7 @@ const (
 type ApiServiceClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	IsAdmin(ctx context.Context, in *IsAdminRequest, opts ...grpc.CallOption) (*IsAdminResponse, error)
+	IsAdminByContext(ctx context.Context, in *IsAdminByContextRequest, opts ...grpc.CallOption) (*IsAdminByContextResponse, error)
 	SetPriorityChannels(ctx context.Context, in *SetPriorityChannelsRequest, opts ...grpc.CallOption) (*SetPriorityChannelsResponse, error)
 	GetRecommendatedPosts(ctx context.Context, in *GetRecommendatedPostsRequest, opts ...grpc.CallOption) (*GetRecommendatedPostsResponse, error)
 	GetUserPriorityChannels(ctx context.Context, in *GetUserPriorityChannelsRequest, opts ...grpc.CallOption) (*GetUserPriorityChannelsResponse, error)
@@ -79,6 +81,16 @@ func (c *apiServiceClient) IsAdmin(ctx context.Context, in *IsAdminRequest, opts
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(IsAdminResponse)
 	err := c.cc.Invoke(ctx, ApiService_IsAdmin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *apiServiceClient) IsAdminByContext(ctx context.Context, in *IsAdminByContextRequest, opts ...grpc.CallOption) (*IsAdminByContextResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(IsAdminByContextResponse)
+	err := c.cc.Invoke(ctx, ApiService_IsAdminByContext_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -221,6 +233,7 @@ func (c *apiServiceClient) ConnectWallet(ctx context.Context, in *ConnectWalletR
 type ApiServiceServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error)
+	IsAdminByContext(context.Context, *IsAdminByContextRequest) (*IsAdminByContextResponse, error)
 	SetPriorityChannels(context.Context, *SetPriorityChannelsRequest) (*SetPriorityChannelsResponse, error)
 	GetRecommendatedPosts(context.Context, *GetRecommendatedPostsRequest) (*GetRecommendatedPostsResponse, error)
 	GetUserPriorityChannels(context.Context, *GetUserPriorityChannelsRequest) (*GetUserPriorityChannelsResponse, error)
@@ -248,6 +261,9 @@ func (UnimplementedApiServiceServer) Login(context.Context, *LoginRequest) (*Log
 }
 func (UnimplementedApiServiceServer) IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method IsAdmin not implemented")
+}
+func (UnimplementedApiServiceServer) IsAdminByContext(context.Context, *IsAdminByContextRequest) (*IsAdminByContextResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method IsAdminByContext not implemented")
 }
 func (UnimplementedApiServiceServer) SetPriorityChannels(context.Context, *SetPriorityChannelsRequest) (*SetPriorityChannelsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method SetPriorityChannels not implemented")
@@ -340,6 +356,24 @@ func _ApiService_IsAdmin_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApiServiceServer).IsAdmin(ctx, req.(*IsAdminRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApiService_IsAdminByContext_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IsAdminByContextRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApiServiceServer).IsAdminByContext(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ApiService_IsAdminByContext_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApiServiceServer).IsAdminByContext(ctx, req.(*IsAdminByContextRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -592,6 +626,10 @@ var ApiService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IsAdmin",
 			Handler:    _ApiService_IsAdmin_Handler,
+		},
+		{
+			MethodName: "IsAdminByContext",
+			Handler:    _ApiService_IsAdminByContext_Handler,
 		},
 		{
 			MethodName: "SetPriorityChannels",

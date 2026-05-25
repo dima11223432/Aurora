@@ -10,24 +10,13 @@ from internal.brokers.kafka.AnaliticKafka import KafkaController
 from internal.services.handlers.AI_handler import AI_handler
 
 
-def redact_value(value: str) -> str:
-    if not isinstance(value, str):
-        return value
-    value = re.sub(
-        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", value
-    )
-    value = re.sub(r"\d{6,}", "[REDACTED_DIGITS]", value)
-    value = re.sub(r"[A-Fa-f0-9]{20,}", "[REDACTED_KEY]", value)
-    return value
-
-
 def redact_recursive(obj):
     if isinstance(obj, dict):
         return {k: redact_recursive(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [redact_recursive(v) for v in obj]
     if isinstance(obj, str):
-        return redact_value(obj)
+        return obj
     return obj
 
 
@@ -117,7 +106,7 @@ class App:
 
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
-        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "news_data")
+        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "news_topic")
 
         try:
             kafka_controller = KafkaController(self.logger)

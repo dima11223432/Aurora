@@ -1,5 +1,6 @@
 package models
 
+// User represents an authenticated user with Telegram identity.
 type User struct {
 	ID          int64
 	Telegram_id int64

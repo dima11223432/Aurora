@@ -1,3 +1,4 @@
+// Command main starts the SSO gRPC server with graceful shutdown handling.
 package main
 
 import (
@@ -17,6 +18,7 @@ const (
 	envDev   = "dev"
 )
 
+// main
 func main() {
 	cfg := config.MustLoad()
 	fmt.Println(cfg)
