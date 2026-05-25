@@ -1,6 +1,6 @@
 stages:
-  - docs
   - test
+  - docs
   - deploy
 
 .test-template: &test-template
