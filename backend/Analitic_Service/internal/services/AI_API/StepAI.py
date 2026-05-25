@@ -1,7 +1,22 @@
+"""StepAI (OpenRouter) integration.
+
+Sends text to the minimax-m2.5 model via OpenRouter API
+for stock news analysis and returns the model's response.
+"""
+
 import requests
 import json
 
 def answer(text, token=""):
+  """Send text to StepAI (minimax-m2.5) via OpenRouter.
+
+  Args:
+      text: Input news text to analyze.
+      token: OpenRouter API key.
+
+  Returns:
+      Model response content string.
+  """
   response = requests.post(
     url="https://openrouter.ai/api/v1/chat/completions",
     headers={

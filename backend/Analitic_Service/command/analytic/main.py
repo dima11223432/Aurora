@@ -1,3 +1,9 @@
+"""Entry point for the Analytic Service (command variant).
+
+Initializes logging, creates the main application, and runs it
+asynchronously until interrupted.
+"""
+
 from loguru import logger
 import sys
 from pathlib import Path
@@ -11,6 +17,7 @@ from internal.apps.app import App
 
 
 def setup_logger():
+    """Configure loguru with colored console output."""
     logger.remove()
 
     logger.add(

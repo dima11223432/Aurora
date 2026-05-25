@@ -1,3 +1,9 @@
+"""Kafka integration layer.
+
+Provides the KafkaController class for producing and consuming messages
+to/from Apache Kafka topics using the confluent-kafka library.
+"""
+
 from confluent_kafka import Producer, Consumer, TopicPartition
 from dotenv import load_dotenv
 import os
@@ -10,7 +16,20 @@ load_dotenv(env_path)
 
 
 class KafkaController:
+    """Manages Kafka producer and consumer operations.
+
+    Provides methods for sending single/batch messages and
+    retrieving first/last messages from a topic.
+    """
+
     def __init__(self, logger):
+        """Initialize Kafka producer and consumer.
+
+        Reads KAFKA_BOOTSTRAP_SERVERS from environment variables.
+
+        Args:
+            logger: Loguru logger instance.
+        """
         self.log = logger
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 
@@ -37,6 +56,15 @@ class KafkaController:
             raise
 
     def send_message(self, topic: str, message: Any) -> None:
+        """Send a single message to a Kafka topic.
+
+        Converts the message to dict via ``to_dict()``, serializes to JSON,
+        produces, and flushes.
+
+        Args:
+            topic: Target Kafka topic name.
+            message: Message object with a ``to_dict()`` method.
+        """
         self.log.info(f"Preparing to send message to Kafka topic: {topic}")
         try:
             converted_message = message.to_dict()
@@ -56,6 +84,14 @@ class KafkaController:
             raise
 
     def get_first_message(self, topic: str) -> dict:
+        """Retrieve the first (lowest offset) message from each partition.
+
+        Args:
+            topic: Kafka topic name.
+
+        Returns:
+            Dict mapping partition IDs to their first message value and offset.
+        """
         result = {}
 
         try:
@@ -99,6 +135,17 @@ class KafkaController:
             raise
 
     def get_last_message(self, topic: str) -> dict:
+        """Retrieve the last (highest offset) message from each partition.
+
+        Attempts JSON decoding of the message value.
+
+        Args:
+            topic: Kafka topic name.
+
+        Returns:
+            Dict mapping partition IDs to their last message value, offset,
+            key, and timestamp.
+        """
         result = {}
 
         try:
@@ -148,6 +195,16 @@ class KafkaController:
             raise
 
     def send_batch_messages(self, messages: dict) -> dict:
+        """Send multiple messages to multiple topics in batch.
+
+        Each key in the dict is a topic name, each value is the message.
+
+        Args:
+            messages: Dict of ``{topic: message, ...}``.
+
+        Returns:
+            Dict with success/failure counts and details.
+        """
         if not messages:
             return {
                 "success": True,
