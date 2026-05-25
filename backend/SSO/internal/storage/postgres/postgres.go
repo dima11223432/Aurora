@@ -2,13 +2,14 @@
 package postgres
 
 import (
-	"authService/internal/domain/models"
-	"authService/internal/storage"
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
+
+	"authService/internal/domain/models"
+	"authService/internal/storage"
 
 	pq "github.com/lib/pq"
 )
@@ -109,7 +110,8 @@ func (s *Storage) SaveUser(ctx context.Context, user models.User) (int64, error)
 	`
 	var userID int64
 
-	err = s.DB.QueryRowContext(ctx, query,
+	err = s.DB.QueryRowContext(
+		ctx, query,
 		user.Telegram_id,
 		user.Username,
 		user.First_name,
@@ -148,7 +150,10 @@ func (s *Storage) GetUserById(ctx context.Context, user_id int64) (models.User, 
 }
 
 // User retrieves a user by their Telegram ID.
-func (s *Storage) User(ctx context.Context, telegram_id int64) (models.User, error) {
+func (s *Storage) User(ctx context.Context, telegram_id int64) (
+	models.User,
+	error,
+) {
 	const op = "storage.postgres.User"
 
 	query := `
