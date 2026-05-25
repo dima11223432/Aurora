@@ -315,22 +315,22 @@ doc-gen-analitic:
 doc-gen-sso:
 	@echo "$(GREEN)Генерация документации SSO...$(NC)"
 	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
-	cd SSO && golds -gen -nouses -dir=../$(DOCS_DIR)/sso ./... 2>&1 | grep "Docs are generated"
+	cd SSO && golds -gen -nouses -dir=../$(DOCS_DIR)/sso ./...
 
 doc-gen-api:
 	@echo "$(GREEN)Генерация документации API Gateway...$(NC)"
 	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
-	cd Api_Gateway && golds -gen -nouses -dir=../$(DOCS_DIR)/api-gateway ./... 2>&1 | grep "Docs are generated"
+	cd Api_Gateway && golds -gen -nouses -dir=../$(DOCS_DIR)/api-gateway ./...
 
 doc-gen-recs:
 	@echo "$(GREEN)Генерация документации Recommendation Service...$(NC)"
 	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
-	cd Recommendation_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/recommendation ./... 2>&1 | grep "Docs are generated"
+	cd Recommendation_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/recommendation ./...
 
 doc-gen-cache:
 	@echo "$(GREEN)Генерация документации Cache Service...$(NC)"
 	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
-	cd Cache_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/cache ./... 2>&1 | grep "Docs are generated"
+	cd Cache_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/cache ./...
 
 doc-serve:
 	@echo "$(GREEN)Запуск сервера HTML-документации на http://localhost:56789$(NC)"
