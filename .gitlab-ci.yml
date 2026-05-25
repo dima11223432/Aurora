@@ -50,6 +50,7 @@ generate-docs-python:
   only:
     - main
 
+#run ci
 generate-docs-go:
   stage: docs
   image: golang:latest
