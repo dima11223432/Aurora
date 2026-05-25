@@ -1,3 +1,5 @@
+// Package cacheApp implements the main Cache Service application that consumes
+// analysed data from Kafka and stores it in Redis.
 package cacheApp
 
 import (
@@ -9,12 +11,14 @@ import (
 	"log/slog"
 )
 
+// Consumer defines the interface for Kafka message consumption lifecycle.
 type Consumer interface {
 	StartWorkerPull(ctx context.Context) error
 	Consume(ctx context.Context) error
 	Close()
 }
 
+// App represents the Cache Service application with Kafka consumer lifecycle.
 type App struct {
 	log      *slog.Logger
 	consumer Consumer
@@ -22,6 +26,7 @@ type App struct {
 	cancel context.CancelFunc
 }
 
+// New creates a new App instance, initializing Redis and Kafka consumer.
 func New(log *slog.Logger, cfg *config.Config) *App {
 
 	redisCache := redis.NewRedisController(
@@ -49,6 +54,7 @@ func New(log *slog.Logger, cfg *config.Config) *App {
 	}
 }
 
+// MustRun starts the cache service and panics on error.
 func (a *App) MustRun() {
 	ctx, cancel := context.WithCancel(context.Background())
 	a.cancel = cancel
@@ -57,6 +63,7 @@ func (a *App) MustRun() {
 	}
 }
 
+// Run starts the Kafka consumer and worker pull in background goroutines.
 func (a *App) Run(ctx context.Context) error {
 	const op = "grpcApp"
 
@@ -68,6 +75,7 @@ func (a *App) Run(ctx context.Context) error {
 
 }
 
+// Stop cancels the context, gracefully shutting down the consumer.
 func (a *App) Stop() {
 	const op = "grpcApp"
 

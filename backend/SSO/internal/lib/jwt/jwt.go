@@ -1,3 +1,4 @@
+// Package jwt provides JWT token generation for authenticated users.
 package jwt
 
 import (
@@ -8,6 +9,7 @@ import (
 )
 
 // TODO: write test for this func
+// NewToken generates a signed JWT token for the given user and app with the specified duration.
 func NewToken(user models.User, app models.App, duration time.Duration) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 

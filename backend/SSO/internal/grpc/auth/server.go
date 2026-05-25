@@ -1,3 +1,4 @@
+// Package grpcauth implements the gRPC server for the SSO auth service.
 package grpcauth
 
 import (
@@ -14,6 +15,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// Auth defines the authentication operations exposed via gRPC.
 type Auth interface {
 	Login(ctx context.Context, user models.User, appId int) (token string, err error)
 	IsAdmin(ctx context.Context, telegram_id int64) (bool, error)
@@ -23,6 +25,7 @@ type Auth interface {
 
 type serverAPI struct {
 	ssov1.UnimplementedAuthServiceServer
+
 	auth Auth
 }
 
@@ -30,20 +33,22 @@ const (
 	emptyValue = 0
 )
 
+// Register registers the AuthService gRPC server with the given gRPC server.
 func Register(gRPC *grpc.Server, auth Auth) {
 	ssov1.RegisterAuthServiceServer(gRPC, &serverAPI{
 		auth: auth,
 	})
 }
 
+// NewServerAPI creates a new serverAPI instance.
 func NewServerAPI(auth Auth) *serverAPI {
 	return &serverAPI{
 		auth: auth,
 	}
 }
 
+// Login handles user login requests via gRPC.
 func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.LoginResponse, error) {
-
 	if err := validatelogin(req); err != nil {
 		return nil, err
 	}
@@ -56,7 +61,6 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 	}, int(req.GetAppId()))
 	if err != nil {
 		if errors.Is(err, auth.ErrInvalidCredentials) {
-
 			return nil, status.Error(codes.InvalidArgument, "invalid credentials")
 		}
 		return nil, status.Error(codes.Internal, "internal error")
@@ -64,14 +68,13 @@ func (s *serverAPI) Login(ctx context.Context, req *ssov1.LoginRequest) (*ssov1.
 	return &ssov1.LoginResponse{
 		Token: token,
 	}, nil
-
 }
 
+// SetPriorityChannels handles priority channel setting via gRPC.
 func (s *serverAPI) SetPriorityChannels(
 	ctx context.Context,
 	req *ssov1.SetPriorityChannelsRequest) (
 	*ssov1.SetPriorityChannelsResponse, error) {
-
 	err := s.auth.SetPriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 
 	if err != nil {
@@ -81,9 +84,9 @@ func (s *serverAPI) SetPriorityChannels(
 		return nil, err
 	}
 	return &ssov1.SetPriorityChannelsResponse{}, nil
-
 }
 
+// DeletePriorityChannels handles priority channel deletion via gRPC.
 func (s *serverAPI) DeletePriorityChannels(ctx context.Context, req *ssov1.DeletePriorityChannelsRequest) (*ssov1.DeletePriorityChannelsResponse, error) {
 	err := s.auth.DeletePriorityChannels(ctx, req.GetUserId(), req.GetChannelsUsernames())
 	if err != nil {
@@ -94,6 +97,7 @@ func (s *serverAPI) DeletePriorityChannels(ctx context.Context, req *ssov1.Delet
 	return &ssov1.DeletePriorityChannelsResponse{}, nil
 }
 
+// IsAdmin handles admin status checks via gRPC.
 func (s *serverAPI) IsAdmin(ctx context.Context, req *ssov1.IsAdminRequest) (*ssov1.IsAdminResponse, error) {
 	if err := validateIsAdmin(req); err != nil {
 		return nil, err

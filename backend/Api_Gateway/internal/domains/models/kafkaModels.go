@@ -4,6 +4,7 @@ import (
 	"time"
 )
 
+// GroupCreateEvent is a Kafka event payload for group creation.
 type GroupCreateEvent struct {
 	EventID   string    `json:"event_id"`
 	GroupID   int64     `json:"group_id"`
@@ -11,6 +12,7 @@ type GroupCreateEvent struct {
 	CreatedAt time.Time `json:"created_at"`
 }
 
+// SendNotificationEvent is a Kafka event payload for sending notifications.
 type SendNotificationEvent struct {
 	EventID        string    `json:"event_id"`
 	EventType      string    `json:"event_type"`

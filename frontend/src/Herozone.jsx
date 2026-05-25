@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL_SECURE, routes } from "./config/api";
+import logo from "./assets/Aurora-logo.png";
 
 function Herozone() {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,6 +28,7 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
+      // navigate("/404");
       setTimeout(() => {
         setError("Не удалось получить данные пользователя");
 
@@ -35,7 +37,6 @@ function Herozone() {
       return;
     }
 
-    console.log("Telegram user data:", user);
     setTimeout(() => {
       setIsLoading(true);
     }, 0);
@@ -57,7 +58,7 @@ function Herozone() {
       .then((res) => res.json())
       .then((data) => {
         console.log("JWT Token получен");
-        localStorage.setItem("jwt", data.token);
+        localStorage.setItem("token", data.token);
       })
       .catch((err) => {
         console.error("Login API error:", err);

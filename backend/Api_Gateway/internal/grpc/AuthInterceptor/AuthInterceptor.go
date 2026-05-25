@@ -1,3 +1,5 @@
+// Package authinterceptor provides gRPC unary interceptor for JWT-based authentication.
+// It extracts user identity from incoming requests and injects it into the context.
 package authinterceptor
 
 import (
@@ -13,30 +15,40 @@ import (
 	"google.golang.org/grpc/status"
 )
 
+// CtxUserIdKey is the context key for storing the authenticated user ID.
 type CtxUserIdKey struct{}
+
+// CtxIsAdminKey is the context key for storing the admin status of the authenticated user.
 type CtxIsAdminKey struct{}
 
+// AuthInterceptor provides JWT authentication for gRPC requests.
+// It intercepts incoming calls, validates JWT tokens, and injects
+// user ID and admin status into the context.
 type AuthInterceptor struct {
 	AuthConfig AuthConfig
 }
 
+// Claims represents the JWT token claims used for authentication.
 type Claims struct {
 	ID      int64 `json:"id"`
 	IsAdmin bool  `json:"is_admin"`
 	jwt.RegisteredClaims
 }
 
+// AuthConfig holds configuration for the authentication interceptor.
 type AuthConfig struct {
 	JwtSecret    string
 	PublicRoutes []string
 }
 
+// NewAuthInterceptor creates a new AuthInterceptor with the given configuration.
 func NewAuthInterceptor(authConfig AuthConfig) *AuthInterceptor {
 	return &AuthInterceptor{
 		AuthConfig: authConfig,
 	}
 }
 
+// parseToken parses and validates a JWT token string using the given secret.
 func (a *AuthInterceptor) parseToken(tokenStr, secret string) (*Claims, error) {
 	parser := jwt.NewParser(jwt.WithoutClaimsValidation())
 
@@ -60,6 +72,8 @@ func (a *AuthInterceptor) parseToken(tokenStr, secret string) (*Claims, error) {
 	return claims, nil
 }
 
+// SetAuthInterceptor returns a gRPC UnaryServerInterceptor that validates JWT tokens
+// for non-public routes and injects user context.
 func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
 	publicMethods := make(map[string]bool)
 	for _, method := range a.AuthConfig.PublicRoutes {
@@ -100,6 +114,7 @@ func (a *AuthInterceptor) SetAuthInterceptor() grpc.UnaryServerInterceptor {
 	}
 }
 
+// GetUserIdFromContext extracts the authenticated user ID from the context.
 func (a *AuthInterceptor) GetUserIdFromContext(ctx context.Context) (int64, error) {
 	userID, ok := ctx.Value(CtxUserIdKey{}).(int64)
 	if !ok {
@@ -108,6 +123,7 @@ func (a *AuthInterceptor) GetUserIdFromContext(ctx context.Context) (int64, erro
 	return userID, nil
 }
 
+// GetIsAdminFromContext extracts the admin status of the authenticated user from context.
 func (a *AuthInterceptor) GetIsAdminFromContext(ctx context.Context) (bool, error) {
 	isAdmin, ok := ctx.Value(CtxIsAdminKey{}).(bool)
 	if !ok {

@@ -1,5 +1,8 @@
 """Telegram parser service for monitoring channels and sending posts to Kafka."""
+
 import os
+from asyncpg import TransactionIntegrityConstraintViolationError
+from asyncpg.connection import asyncio
 import socks
 
 from telethon import TelegramClient, events
@@ -12,9 +15,26 @@ from internal.storage.main import ChannelStorage
 
 
 class ParserService:
-    """Service for parsing Telegram channels and producing messages to Kafka."""
+    """Service for parsing Telegram channels and producing messages to Kafka.
+
+    Connects to Telegram via MTProto, subscribes to configured channels,
+    listens for new messages, and publishes them to Kafka.
+
+    Attributes:
+        client: Telethon TelegramClient instance.
+        parsing_channels: Set of channel identifiers being monitored.
+        channel_storage: Database handler for channel persistence.
+        kafka_controller: Kafka producer.
+    """
 
     def __init__(self, logger, cfg, parsing_channels):
+        """Initialize the ParserService.
+
+        Args:
+            logger: Logger instance.
+            cfg: Application Config object.
+            parsing_channels: Iterable of channel usernames to monitor.
+        """
         self.log = logger
         self.kafka_controller = KafkaController(logger)
         self.channel_storage = ChannelStorage(cfg)
@@ -22,7 +42,7 @@ class ParserService:
         self.parsing_channels = set(parsing_channels)
         self.api_id = cfg.API_ID
         self.api_hash = cfg.API_HASH
-        self.proxy = (socks.SOCKS5, cfg.PROXY_URL, int(cfg.PROXY_PORT))
+        self.proxy = (socks.SOCKS5, cfg.PROXY_HOST, int(cfg.PROXY_PORT))
         self.topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
 
         self.client = TelegramClient(
@@ -31,17 +51,57 @@ class ParserService:
         self.log.success("ParserService initialized")
 
     async def connect(self):
-        """Connect to Telegram client."""
+        """Connect to Telegram client and start connection watchdog."""
         if not self.client.is_connected():
             try:
+                self.client.flood_sleep_threshold = 24 * 3600
                 await self.client.start(self.phone_number)
                 self.log.success("Successfully connected to Telegram")
+                if not hasattr(self, "watchdog_task") or self.watchdog_task.done():
+                    self.watchdog_task = asyncio.create_task(self.watchdog())
             except Exception as e:
                 self.log.error(f"Connection failed: {e}")
                 raise
 
+    async def watchdog(self):
+        """Periodically check Telegram connection and reconnect if needed."""
+        self.log.info("Starting watchdog...")
+        while True:
+            try:
+                if not self.client.is_connected():
+                    self.log.warning("Client disconnected, reconnecting...")
+                    await self.connect()
+                else:
+                    await asyncio.wait_for(self.client.get_me(), timeout=30)
+                    self.log.info("Client connected")
+            except asyncio.TimeoutError:
+                self.log.warning("Client disconnected, reconnecting...")
+                await self.reconnect()
+            except Exception as e:
+                self.log.error(f"Watchdog have founded error with connection: {e}")
+                await self.reconnect()
+            await asyncio.sleep(120)
+
+    async def reconnect(self):
+        """Disconnect and reconnect to Telegram."""
+        try:
+            await self.client.disconnect()
+            await asyncio.sleep(5)
+            await self.connect()
+            self.log.success("Successfully reconnected to Telegram")
+        except Exception as e:
+            self.log.error(f"Reconnect failed: {e}")
+            raise
+
     async def _ensure_subscribed(self, channels):
-        """Ensure account is subscribed to all channels."""
+        """Ensure the account is subscribed to all given channels.
+
+        Validates channel entities, joins if not already a member,
+        and removes invalid channels from the database.
+
+        Args:
+            channels: Iterable of channel usernames.
+        """
         for channel in list(channels):
             try:
                 entity = await self.client.get_entity(channel)
@@ -69,15 +129,29 @@ class ParserService:
                 self.clear_db_from_channel(channel)
 
     def _build_post_link(self, chat, message_id):
-        """Build post link from chat and message ID."""
+        """Build a Telegram post URL from chat info and message ID.
+
+        Args:
+            chat: Telethon Chat object.
+            message_id: Message ID number.
+
+        Returns:
+            str: Full URL to the post.
+        """
         if getattr(chat, "username", None):
             return f"https://t.me/{chat.username}/{message_id}"
 
         clean_id = str(chat.id).replace("-100", "")
-        return f"https://t.me/c/{clean_id}/{message_id}"  # noqa: E501
+        return f"https://t.me/c/{clean_id}/{message_id}"
 
     async def handle_new_message(self, event):
-        """Handle incoming new message events."""
+        """Handle an incoming new message from a monitored channel.
+
+        Constructs a TelegramPost and sends it to Kafka.
+
+        Args:
+            event: Telethon NewMessage event.
+        """
         try:
             chat = await event.get_chat()
             text = event.message.message or ""
@@ -98,7 +172,15 @@ class ParserService:
             self.log.error(f"Error processing message: {e}")
 
     async def get_posts(self, quantity, channel_name):
-        """Fetch posts from a specific channel."""
+        """Fetch a specific number of recent posts from a channel.
+
+        Args:
+            quantity: Number of posts to fetch.
+            channel_name: Channel username.
+
+        Returns:
+            list[dict] | None: List of post dicts or None on failure.
+        """
         await self.connect()
         try:
             entity = await self.client.get_entity(channel_name)
@@ -123,7 +205,17 @@ class ParserService:
             return None
 
     async def _handle_delete_channel(self, connection, pid, channel, payload):
-        """Handle channel deletion event from database trigger."""
+        """Handle a channel deletion event from the database trigger.
+
+        Removes the channel from the active parsing set and re-registers
+        the event handler.
+
+        Args:
+            connection: Database connection.
+            pid: Process ID.
+            channel: Channel name.
+            payload: Channel payload from trigger.
+        """
         try:
             self.parsing_channels.remove(payload)
             self.log.info(
@@ -146,7 +238,16 @@ class ParserService:
             )
 
     async def _handle_new_channel(self, connection, pid, channel, payload):
-        """Handle new channel event from database trigger."""
+        """Handle a new channel event from the database trigger.
+
+        Subscribes to the new channel and re-registers the event handler.
+
+        Args:
+            connection: Database connection.
+            pid: Process ID.
+            channel: Channel name.
+            payload: Channel payload from trigger.
+        """
         try:
             await self._ensure_subscribed([payload])
 
@@ -169,7 +270,12 @@ class ParserService:
             self.log.error(f"Failed to subscribe to {channel}: {e}")
 
     async def start_monitoring(self):
-        """Start monitoring all parsing channels for new messages."""
+        """Start monitoring all parsing channels for new messages.
+
+        Connects to Telegram, validates subscriptions, registers an
+        event handler for new messages, and listens for database-triggered
+        channel changes.
+        """
         self.log.info(f"Starting monitoring for: {self.parsing_channels}")
         await self.connect()
         await self._ensure_subscribed(self.parsing_channels)
@@ -188,7 +294,11 @@ class ParserService:
             await self.client.disconnect()
 
     def clear_db_from_channel(self, channel):
-        """Remove channel from database and parsing list."""
+        """Remove a channel from the database and the parsing set.
+
+        Args:
+            channel: Channel username to remove.
+        """
         self.channel_storage.delete_channel(channel)
         self.channel_storage.delete_channel_from_user_custom_channels(channel)
         if channel in self.parsing_channels:

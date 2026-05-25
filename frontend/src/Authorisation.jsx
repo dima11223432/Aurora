@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "./styles/Landing.css";
-import Logo from "./assets/Aurora.png";
+import Logo from "./assets/Aurora-logo.png";
 import { API_BASE_URL_NGROK } from "./config/api";
 
 export const Landing = () => {
