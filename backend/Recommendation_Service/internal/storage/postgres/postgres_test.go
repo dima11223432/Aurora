@@ -142,9 +142,35 @@ func (p *PostgresTestSuite) TestGetAllCategoriesScanString() {
 	}
 }
 
+func TestGetAllCategoriesErrorReturnsNilAndOp(t *testing.T) {
+	const op = "internal.storage.postgres.GetAllCategories"
+
+	cfg := config.MustLoadByPath("../../../config/local.yaml")
+	s, err := New(cfg.StoragePass, cfg.ParsingServiceStoragePass)
+	if err != nil {
+		t.Fatalf("failed to create storage: %v", err)
+	}
+
+	if err := s.parserDB.Close(); err != nil {
+		t.Fatalf("failed to close parser db: %v", err)
+	}
+
+	categories, err := s.GetAllCategories(context.Background())
+	if categories != nil {
+		t.Fatalf("expected nil categories on error, got: %#v", categories)
+	}
+	if err == nil {
+		t.Fatalf("expected non-nil error")
+	}
+	if !strings.Contains(err.Error(), op) {
+		t.Fatalf("expected error to contain op %q, got: %v", op, err)
+	}
+}
+
 func TestPostgresTestSuite(t *testing.T) {
 	suite.Run(t, new(PostgresTestSuite))
 }
+
 
 func TestGetDublicateErrorPostgresMatch(t *testing.T) {
 	err := &pq.Error{Code: "23505"}
