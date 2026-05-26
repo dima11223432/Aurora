@@ -1,3 +1,5 @@
+// Command main starts the API Gateway service, including gRPC server,
+// HTTP REST gateway, Prometheus metrics, and graceful shutdown handling.
 package main
 
 import (

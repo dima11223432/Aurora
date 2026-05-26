@@ -1319,6 +1319,86 @@ func (x *IsAdminResponse) GetIsAdmin() bool {
 	return false
 }
 
+type IsAdminByContextRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IsAdminByContextRequest) Reset() {
+	*x = IsAdminByContextRequest{}
+	mi := &file_v1_ApiService_proto_msgTypes[30]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IsAdminByContextRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IsAdminByContextRequest) ProtoMessage() {}
+
+func (x *IsAdminByContextRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[30]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IsAdminByContextRequest.ProtoReflect.Descriptor instead.
+func (*IsAdminByContextRequest) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{30}
+}
+
+type IsAdminByContextResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	IsAdmin       bool                   `protobuf:"varint,1,opt,name=is_admin,json=isAdmin,proto3" json:"is_admin,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *IsAdminByContextResponse) Reset() {
+	*x = IsAdminByContextResponse{}
+	mi := &file_v1_ApiService_proto_msgTypes[31]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *IsAdminByContextResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*IsAdminByContextResponse) ProtoMessage() {}
+
+func (x *IsAdminByContextResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_v1_ApiService_proto_msgTypes[31]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use IsAdminByContextResponse.ProtoReflect.Descriptor instead.
+func (*IsAdminByContextResponse) Descriptor() ([]byte, []int) {
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{31}
+}
+
+func (x *IsAdminByContextResponse) GetIsAdmin() bool {
+	if x != nil {
+		return x.IsAdmin
+	}
+	return false
+}
+
 type Post struct {
 	state           protoimpl.MessageState `protogen:"open.v1"`
 	Stocks          []*Stock               `protobuf:"bytes,1,rep,name=stocks,proto3" json:"stocks,omitempty"`
@@ -1333,7 +1413,7 @@ type Post struct {
 
 func (x *Post) Reset() {
 	*x = Post{}
-	mi := &file_v1_ApiService_proto_msgTypes[30]
+	mi := &file_v1_ApiService_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1345,7 +1425,7 @@ func (x *Post) String() string {
 func (*Post) ProtoMessage() {}
 
 func (x *Post) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[30]
+	mi := &file_v1_ApiService_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1358,7 +1438,7 @@ func (x *Post) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Post.ProtoReflect.Descriptor instead.
 func (*Post) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{30}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *Post) GetStocks() []*Stock {
@@ -1413,7 +1493,7 @@ type Stock struct {
 
 func (x *Stock) Reset() {
 	*x = Stock{}
-	mi := &file_v1_ApiService_proto_msgTypes[31]
+	mi := &file_v1_ApiService_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1425,7 +1505,7 @@ func (x *Stock) String() string {
 func (*Stock) ProtoMessage() {}
 
 func (x *Stock) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[31]
+	mi := &file_v1_ApiService_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1438,7 +1518,7 @@ func (x *Stock) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Stock.ProtoReflect.Descriptor instead.
 func (*Stock) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{31}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *Stock) GetStockName() string {
@@ -1465,7 +1545,7 @@ type Cursor struct {
 
 func (x *Cursor) Reset() {
 	*x = Cursor{}
-	mi := &file_v1_ApiService_proto_msgTypes[32]
+	mi := &file_v1_ApiService_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1477,7 +1557,7 @@ func (x *Cursor) String() string {
 func (*Cursor) ProtoMessage() {}
 
 func (x *Cursor) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[32]
+	mi := &file_v1_ApiService_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1490,7 +1570,7 @@ func (x *Cursor) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Cursor.ProtoReflect.Descriptor instead.
 func (*Cursor) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{32}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *Cursor) GetScore() int64 {
@@ -1516,7 +1596,7 @@ type ChannelList struct {
 
 func (x *ChannelList) Reset() {
 	*x = ChannelList{}
-	mi := &file_v1_ApiService_proto_msgTypes[33]
+	mi := &file_v1_ApiService_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1528,7 +1608,7 @@ func (x *ChannelList) String() string {
 func (*ChannelList) ProtoMessage() {}
 
 func (x *ChannelList) ProtoReflect() protoreflect.Message {
-	mi := &file_v1_ApiService_proto_msgTypes[33]
+	mi := &file_v1_ApiService_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1541,7 +1621,7 @@ func (x *ChannelList) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChannelList.ProtoReflect.Descriptor instead.
 func (*ChannelList) Descriptor() ([]byte, []int) {
-	return file_v1_ApiService_proto_rawDescGZIP(), []int{33}
+	return file_v1_ApiService_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *ChannelList) GetUsernames() []string {
@@ -1621,6 +1701,9 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\vtelegram_id\x18\x01 \x01(\x03R\n" +
 	"telegramId\",\n" +
 	"\x0fIsAdminResponse\x12\x19\n" +
+	"\bis_admin\x18\x01 \x01(\bR\aisAdmin\"\x19\n" +
+	"\x17IsAdminByContextRequest\"5\n" +
+	"\x18IsAdminByContextResponse\x12\x19\n" +
 	"\bis_admin\x18\x01 \x01(\bR\aisAdmin\"\xde\x01\n" +
 	"\x04Post\x12%\n" +
 	"\x06stocks\x18\x01 \x03(\v2\r.api.v1.StockR\x06stocks\x12\x1b\n" +
@@ -1637,11 +1720,12 @@ const file_v1_ApiService_proto_rawDesc = "" +
 	"\x05score\x18\x01 \x01(\x03R\x05score\x12\x0e\n" +
 	"\x02id\x18\x02 \x01(\tR\x02id\"+\n" +
 	"\vChannelList\x12\x1c\n" +
-	"\tusernames\x18\x01 \x03(\tR\tusernames2\xce\x11\n" +
+	"\tusernames\x18\x01 \x03(\tR\tusernames2\xc6\x12\n" +
 	"\n" +
 	"ApiService\x12J\n" +
 	"\x05Login\x12\x14.api.v1.LoginRequest\x1a\x15.api.v1.LoginResponse\"\x14\x82\xd3\xe4\x93\x02\x0e:\x01*\"\t/v1/login\x12S\n" +
-	"\aIsAdmin\x12\x16.api.v1.IsAdminRequest\x1a\x17.api.v1.IsAdminResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/is_admin\x12\x84\x01\n" +
+	"\aIsAdmin\x12\x16.api.v1.IsAdminRequest\x1a\x17.api.v1.IsAdminResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/v1/is_admin\x12v\n" +
+	"\x10IsAdminByContext\x12\x1f.api.v1.IsAdminByContextRequest\x1a .api.v1.IsAdminByContextResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/v1/is_admin_by_context\x12\x84\x01\n" +
 	"\x13SetPriorityChannels\x12\".api.v1.SetPriorityChannelsRequest\x1a#.api.v1.SetPriorityChannelsResponse\"$\x82\xd3\xe4\x93\x02\x1e:\x01*\"\x19/v1/set_priority_channels\x12\x8c\x01\n" +
 	"\x15GetRecommendatedPosts\x12$.api.v1.GetRecommendatedPostsRequest\x1a%.api.v1.GetRecommendatedPostsResponse\"&\x82\xd3\xe4\x93\x02 :\x01*\"\x1b/v1/get_recommendated_posts\x12\x92\x01\n" +
 	"\x17GetUserPriorityChannels\x12&.api.v1.GetUserPriorityChannelsRequest\x1a'.api.v1.GetUserPriorityChannelsResponse\"&\x82\xd3\xe4\x93\x02 \x12\x1e/v1/get_user_priority_channels\x12\x8e\x01\n" +
@@ -1668,7 +1752,7 @@ func file_v1_ApiService_proto_rawDescGZIP() []byte {
 	return file_v1_ApiService_proto_rawDescData
 }
 
-var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 35)
+var file_v1_ApiService_proto_msgTypes = make([]protoimpl.MessageInfo, 37)
 var file_v1_ApiService_proto_goTypes = []any{
 	(*ConnectWalletRequest)(nil),                               // 0: api.v1.ConnectWalletRequest
 	(*ConnectWalletResponse)(nil),                              // 1: api.v1.ConnectWalletResponse
@@ -1700,53 +1784,57 @@ var file_v1_ApiService_proto_goTypes = []any{
 	(*LoginResponse)(nil),                                      // 27: api.v1.LoginResponse
 	(*IsAdminRequest)(nil),                                     // 28: api.v1.IsAdminRequest
 	(*IsAdminResponse)(nil),                                    // 29: api.v1.IsAdminResponse
-	(*Post)(nil),                                               // 30: api.v1.Post
-	(*Stock)(nil),                                              // 31: api.v1.Stock
-	(*Cursor)(nil),                                             // 32: api.v1.Cursor
-	(*ChannelList)(nil),                                        // 33: api.v1.ChannelList
-	nil,                                                        // 34: api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.ChannelsEntry
-	(*timestamppb.Timestamp)(nil),                              // 35: google.protobuf.Timestamp
+	(*IsAdminByContextRequest)(nil),                            // 30: api.v1.IsAdminByContextRequest
+	(*IsAdminByContextResponse)(nil),                           // 31: api.v1.IsAdminByContextResponse
+	(*Post)(nil),                                               // 32: api.v1.Post
+	(*Stock)(nil),                                              // 33: api.v1.Stock
+	(*Cursor)(nil),                                             // 34: api.v1.Cursor
+	(*ChannelList)(nil),                                        // 35: api.v1.ChannelList
+	nil,                                                        // 36: api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.ChannelsEntry
+	(*timestamppb.Timestamp)(nil),                              // 37: google.protobuf.Timestamp
 }
 var file_v1_ApiService_proto_depIdxs = []int32{
-	34, // 0: api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.channels:type_name -> api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.ChannelsEntry
-	32, // 1: api.v1.GetRecommendatedPostsRequest.cursor:type_name -> api.v1.Cursor
-	30, // 2: api.v1.GetRecommendatedPostsResponse.posts:type_name -> api.v1.Post
-	32, // 3: api.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> api.v1.Cursor
-	31, // 4: api.v1.Post.stocks:type_name -> api.v1.Stock
-	35, // 5: api.v1.Post.date:type_name -> google.protobuf.Timestamp
-	33, // 6: api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.ChannelsEntry.value:type_name -> api.v1.ChannelList
+	36, // 0: api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.channels:type_name -> api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.ChannelsEntry
+	34, // 1: api.v1.GetRecommendatedPostsRequest.cursor:type_name -> api.v1.Cursor
+	32, // 2: api.v1.GetRecommendatedPostsResponse.posts:type_name -> api.v1.Post
+	34, // 3: api.v1.GetRecommendatedPostsResponse.next_cursor:type_name -> api.v1.Cursor
+	33, // 4: api.v1.Post.stocks:type_name -> api.v1.Stock
+	37, // 5: api.v1.Post.date:type_name -> google.protobuf.Timestamp
+	35, // 6: api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse.ChannelsEntry.value:type_name -> api.v1.ChannelList
 	26, // 7: api.v1.ApiService.Login:input_type -> api.v1.LoginRequest
 	28, // 8: api.v1.ApiService.IsAdmin:input_type -> api.v1.IsAdminRequest
-	24, // 9: api.v1.ApiService.SetPriorityChannels:input_type -> api.v1.SetPriorityChannelsRequest
-	22, // 10: api.v1.ApiService.GetRecommendatedPosts:input_type -> api.v1.GetRecommendatedPostsRequest
-	18, // 11: api.v1.ApiService.GetUserPriorityChannels:input_type -> api.v1.GetUserPriorityChannelsRequest
-	20, // 12: api.v1.ApiService.DeletePriorityChannels:input_type -> api.v1.DeletePriorityChannelRequest
-	2,  // 13: api.v1.ApiService.GetAllUserCustomParsingChannels:input_type -> api.v1.GetAllUserCustomParsingChannelsRequest
-	16, // 14: api.v1.ApiService.GetAllDefaultParsingChannels:input_type -> api.v1.GetAllDefaultParsingChannelsRequest
-	12, // 15: api.v1.ApiService.AddNewDefaultParsingChannel:input_type -> api.v1.AddNewDefaultParsingChannelRequest
-	6,  // 16: api.v1.ApiService.AddNewUserCustomParsingChannel:input_type -> api.v1.AddNewUserCustomParsingChannelRequest
-	4,  // 17: api.v1.ApiService.DeleteUserCustomParsingChannel:input_type -> api.v1.DeleteUserCustomParsingChannelRequest
-	14, // 18: api.v1.ApiService.DeleteDefaultParsingChannel:input_type -> api.v1.DeleteDefaultParsingChannelRequest
-	10, // 19: api.v1.ApiService.GetAllDefaultParsingChannelsWithCategories:input_type -> api.v1.GetAllDefaultParsingChannelsWithCategoriesRequest
-	8,  // 20: api.v1.ApiService.GetAllCategories:input_type -> api.v1.GetAllCategoriesRequest
-	0,  // 21: api.v1.ApiService.ConnectWallet:input_type -> api.v1.ConnectWalletRequest
-	27, // 22: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
-	29, // 23: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
-	25, // 24: api.v1.ApiService.SetPriorityChannels:output_type -> api.v1.SetPriorityChannelsResponse
-	23, // 25: api.v1.ApiService.GetRecommendatedPosts:output_type -> api.v1.GetRecommendatedPostsResponse
-	19, // 26: api.v1.ApiService.GetUserPriorityChannels:output_type -> api.v1.GetUserPriorityChannelsResponse
-	21, // 27: api.v1.ApiService.DeletePriorityChannels:output_type -> api.v1.DeletePriorityChannelResponse
-	3,  // 28: api.v1.ApiService.GetAllUserCustomParsingChannels:output_type -> api.v1.GetAllUserCustomParsingChannelsResponse
-	17, // 29: api.v1.ApiService.GetAllDefaultParsingChannels:output_type -> api.v1.GetAllDefaultParsingChannelsResponse
-	13, // 30: api.v1.ApiService.AddNewDefaultParsingChannel:output_type -> api.v1.AddNewDefaultParsingChannelResponse
-	7,  // 31: api.v1.ApiService.AddNewUserCustomParsingChannel:output_type -> api.v1.AddNewUserCustomParsingChannelResponse
-	5,  // 32: api.v1.ApiService.DeleteUserCustomParsingChannel:output_type -> api.v1.DeleteUserCustomParsingChannelResponse
-	15, // 33: api.v1.ApiService.DeleteDefaultParsingChannel:output_type -> api.v1.DeleteDefaultParsingChannelResponse
-	11, // 34: api.v1.ApiService.GetAllDefaultParsingChannelsWithCategories:output_type -> api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse
-	9,  // 35: api.v1.ApiService.GetAllCategories:output_type -> api.v1.GetAllCategoriesResponse
-	1,  // 36: api.v1.ApiService.ConnectWallet:output_type -> api.v1.ConnectWalletResponse
-	22, // [22:37] is the sub-list for method output_type
-	7,  // [7:22] is the sub-list for method input_type
+	30, // 9: api.v1.ApiService.IsAdminByContext:input_type -> api.v1.IsAdminByContextRequest
+	24, // 10: api.v1.ApiService.SetPriorityChannels:input_type -> api.v1.SetPriorityChannelsRequest
+	22, // 11: api.v1.ApiService.GetRecommendatedPosts:input_type -> api.v1.GetRecommendatedPostsRequest
+	18, // 12: api.v1.ApiService.GetUserPriorityChannels:input_type -> api.v1.GetUserPriorityChannelsRequest
+	20, // 13: api.v1.ApiService.DeletePriorityChannels:input_type -> api.v1.DeletePriorityChannelRequest
+	2,  // 14: api.v1.ApiService.GetAllUserCustomParsingChannels:input_type -> api.v1.GetAllUserCustomParsingChannelsRequest
+	16, // 15: api.v1.ApiService.GetAllDefaultParsingChannels:input_type -> api.v1.GetAllDefaultParsingChannelsRequest
+	12, // 16: api.v1.ApiService.AddNewDefaultParsingChannel:input_type -> api.v1.AddNewDefaultParsingChannelRequest
+	6,  // 17: api.v1.ApiService.AddNewUserCustomParsingChannel:input_type -> api.v1.AddNewUserCustomParsingChannelRequest
+	4,  // 18: api.v1.ApiService.DeleteUserCustomParsingChannel:input_type -> api.v1.DeleteUserCustomParsingChannelRequest
+	14, // 19: api.v1.ApiService.DeleteDefaultParsingChannel:input_type -> api.v1.DeleteDefaultParsingChannelRequest
+	10, // 20: api.v1.ApiService.GetAllDefaultParsingChannelsWithCategories:input_type -> api.v1.GetAllDefaultParsingChannelsWithCategoriesRequest
+	8,  // 21: api.v1.ApiService.GetAllCategories:input_type -> api.v1.GetAllCategoriesRequest
+	0,  // 22: api.v1.ApiService.ConnectWallet:input_type -> api.v1.ConnectWalletRequest
+	27, // 23: api.v1.ApiService.Login:output_type -> api.v1.LoginResponse
+	29, // 24: api.v1.ApiService.IsAdmin:output_type -> api.v1.IsAdminResponse
+	31, // 25: api.v1.ApiService.IsAdminByContext:output_type -> api.v1.IsAdminByContextResponse
+	25, // 26: api.v1.ApiService.SetPriorityChannels:output_type -> api.v1.SetPriorityChannelsResponse
+	23, // 27: api.v1.ApiService.GetRecommendatedPosts:output_type -> api.v1.GetRecommendatedPostsResponse
+	19, // 28: api.v1.ApiService.GetUserPriorityChannels:output_type -> api.v1.GetUserPriorityChannelsResponse
+	21, // 29: api.v1.ApiService.DeletePriorityChannels:output_type -> api.v1.DeletePriorityChannelResponse
+	3,  // 30: api.v1.ApiService.GetAllUserCustomParsingChannels:output_type -> api.v1.GetAllUserCustomParsingChannelsResponse
+	17, // 31: api.v1.ApiService.GetAllDefaultParsingChannels:output_type -> api.v1.GetAllDefaultParsingChannelsResponse
+	13, // 32: api.v1.ApiService.AddNewDefaultParsingChannel:output_type -> api.v1.AddNewDefaultParsingChannelResponse
+	7,  // 33: api.v1.ApiService.AddNewUserCustomParsingChannel:output_type -> api.v1.AddNewUserCustomParsingChannelResponse
+	5,  // 34: api.v1.ApiService.DeleteUserCustomParsingChannel:output_type -> api.v1.DeleteUserCustomParsingChannelResponse
+	15, // 35: api.v1.ApiService.DeleteDefaultParsingChannel:output_type -> api.v1.DeleteDefaultParsingChannelResponse
+	11, // 36: api.v1.ApiService.GetAllDefaultParsingChannelsWithCategories:output_type -> api.v1.GetAllDefaultParsingChannelsWithCategoriesResponse
+	9,  // 37: api.v1.ApiService.GetAllCategories:output_type -> api.v1.GetAllCategoriesResponse
+	1,  // 38: api.v1.ApiService.ConnectWallet:output_type -> api.v1.ConnectWalletResponse
+	23, // [23:39] is the sub-list for method output_type
+	7,  // [7:23] is the sub-list for method input_type
 	7,  // [7:7] is the sub-list for extension type_name
 	7,  // [7:7] is the sub-list for extension extendee
 	0,  // [0:7] is the sub-list for field type_name
@@ -1763,7 +1851,7 @@ func file_v1_ApiService_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_v1_ApiService_proto_rawDesc), len(file_v1_ApiService_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   35,
+			NumMessages:   37,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

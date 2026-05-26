@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState, useCallback } from "react";
 import { routes } from "./config/api";
+import { useNavigate } from "react-router-dom";
 
 export default function AdminPanel() {
   const [parsingChannels, setParsingChannels] = useState([]);
@@ -9,35 +10,41 @@ export default function AdminPanel() {
   const [addedChannelCategory, setAddedChannelCategory] = useState("");
   const [deletedChannel, setDeletedChannel] = useState("");
   const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const login = async () => {
+    const isAdmin = () => {
       try {
-        const res = await axios.post(routes.login, {
-          telegram_id: 123456789,
-          username: "john_doe",
-          first_name: "John",
-          last_name: "Doe",
-          is_admin: false,
-          app_id: 1,
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/404");
+          return;
+        }
+        const resp = axios.post(routes.isAdmin, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
-
-        localStorage.setItem("token", res.data.token);
-        setIsLoggedIn(true);
+        if (resp.data.is_admin === true) {
+          setIsLoggedIn(true);
+        } else {
+          navigate("/404");
+          return;
+        }
+        return resp;
       } catch (e) {
-        console.error("Login error:", e);
+        console.log(e);
       }
     };
-
-    login();
+    isAdmin();
   }, []);
 
   useEffect(() => {
-    if (!isLoggedIn) return;
-
     const fetchParsingChannels = async () => {
       try {
         const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/404");
+          return;
+        }
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -62,6 +69,15 @@ export default function AdminPanel() {
   const AddNewParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/404");
+        return;
+      }
+      console.log(
+        "Adding new parsing channel as admin",
+        addedChannel,
+        addedChannelCategory,
+      );
       axios.post(
         routes.addNewDefaultParsingChannel,
         { channel_username: addedChannel, category: addedChannelCategory },
@@ -75,6 +91,10 @@ export default function AdminPanel() {
   const DeleteParsingChannel = () => {
     try {
       const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/404");
+        return;
+      }
       axios.post(
         routes.deleteDefaultParsingChannel,
         { channel_username: deletedChannel },
@@ -86,6 +106,7 @@ export default function AdminPanel() {
   };
 
   return (
+    <>
     <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6 font-sans">
       <div className="max-w-2xl w-full bg-[rgba(20,25,50,0.7)] backdrop-blur-md rounded-[2.5rem] p-6 sm:p-8 md:p-10 shadow-2xl border border-white/5">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-8 text-center">
@@ -210,5 +231,33 @@ export default function AdminPanel() {
         </div>
       </div>
     </div>
+    <button
+        onClick={() => setIsShtoraOpen(!isShtoraOpen)}
+        className="fixed top-4 right-4 z-50 text-white font-bold py-2 px-5 rounded-xl"
+        style={{ background: "linear-gradient(to right, #208390, #36DEF4)" }}
+      >
+        {isShtoraOpen ? "Скрыть ТГК" : "Показать ТГК"}
+      </button>
+
+      {isShtoraOpen && (
+        <div className="fixed top-20 right-4 z-40 w-80 bg-gray-900/90 rounded-2xl shadow-2xl border border-blue-700 p-5 backdrop-blur-xl">
+          <h3 className="text-xl font-bold text-blue-400 mb-3">
+            Каналы для парсинга
+          </h3>
+          <ul className="max-h-96 overflow-y-auto space-y-2">
+            {parsingChannels.length === 0 ? (
+              <li className="text-gray-400 text-sm italic">Нет доступных каналов</li>
+            ) : (
+              parsingChannels.flatMap((item) => item.usernames).map((username, idx) => (
+                <li key={idx} className="py-2 px-3 rounded-lg hover:bg-blue-700/70 text-white flex items-center gap-2">
+                  <input type="checkbox" className="w-4 h-4 rounded" />
+                  <span>@{username}</span>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,5 +1,7 @@
+// Package models defines the domain types for the SSO service.
 package models
 
+// User represents an authenticated user with Telegram-based identity.
 type User struct {
 	ID          int64
 	Telegram_id int64

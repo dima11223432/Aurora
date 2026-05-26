@@ -1,3 +1,5 @@
+// Package grpcauth implements the gRPC server for the Recommendation Service,
+// exposing endpoints for user data, parsing channels, and recommended posts.
 package grpcauth
 
 import (
@@ -17,10 +19,12 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
+// UserDataProvider defines storage operations for user priority channels.
 type UserDataProvider interface {
 	GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error)
 }
 
+// ParsingChannelsProvider defines storage operations for parsing channels.
 type ParsingChannelsProvider interface {
 	GetAllDefaultParsingChannels(ctx context.Context) ([]string, error)
 	AddNewDefaultParsingChannel(ctx context.Context, channel string, category string) error
@@ -32,6 +36,7 @@ type ParsingChannelsProvider interface {
 	GetAllCategories(ctx context.Context) ([]string, error)
 }
 
+// NewsDataProvider defines storage operations for recommended posts.
 type NewsDataProvider interface {
 	GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error)
 }
@@ -47,6 +52,7 @@ const (
 	emptyValue = 0
 )
 
+// Register registers the RecommendationService gRPC server with the given gRPC server.
 func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsNewsDataProvider NewsDataProvider) {
 	recv1.RegisterRecommendationServiceServer(gRPC, &serverAPI{
 		userDataProvider:        userDataProvider,
@@ -55,6 +61,7 @@ func Register(gRPC *grpc.Server, userDataProvider UserDataProvider, parsingChann
 	})
 }
 
+// NewServerAPI creates a new serverAPI instance.
 func NewServerAPI(userDataProvider UserDataProvider, parsingChannelsProvider ParsingChannelsProvider, newsDataProvider NewsDataProvider) *serverAPI {
 	return &serverAPI{
 		userDataProvider:        userDataProvider,
@@ -63,6 +70,7 @@ func NewServerAPI(userDataProvider UserDataProvider, parsingChannelsProvider Par
 	}
 }
 
+// GetUserPriorityChannels handles priority channel retrieval via gRPC.
 func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *recv1.GetUserPriorityChannelsRequest) (*recv1.GetUserPriorityChannelsResponse, error) {
 	channels, err := s.userDataProvider.GetUserPriorityChannels(ctx, req.GetUserId())
 	if err != nil {
@@ -75,6 +83,7 @@ func (s *serverAPI) GetUserPriorityChannels(ctx context.Context, req *recv1.GetU
 	}, nil
 }
 
+// GetRecommendatedPosts handles recommended post retrieval with cursor pagination via gRPC.
 func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRecommendatedPostsRequest) (*recv1.GetRecommendatedPostsResponse, error) {
 	const op = "Recommendation_Service.internal.grpc.UserDataProvider.server.GetRecommendatedPosts"
 
@@ -122,6 +131,7 @@ func (s *serverAPI) GetRecommendatedPosts(ctx context.Context, req *recv1.GetRec
 	}, nil
 }
 
+// GetAllDefaultParsingChannels handles retrieval of all default parsing channels via gRPC.
 func (s *serverAPI) GetAllDefaultParsingChannels(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsRequest) (*recv1.GetAllDefaultParsingChannelsResponse, error) {
 	channels, err := s.parsingChannelsProvider.GetAllDefaultParsingChannels(ctx)
 	if err != nil {
@@ -132,6 +142,7 @@ func (s *serverAPI) GetAllDefaultParsingChannels(ctx context.Context, req *recv1
 	}, nil
 }
 
+// GetAllUserCustomParsingChannels handles retrieval of user custom parsing channels via gRPC.
 func (s *serverAPI) GetAllUserCustomParsingChannels(
 	ctx context.Context,
 	req *recv1.GetAllUserCustomParsingChannelsRequest,
@@ -147,6 +158,7 @@ func (s *serverAPI) GetAllUserCustomParsingChannels(
 	}, nil
 }
 
+// AddNewUserCustomParsingChannel handles adding a new user custom parsing channel via gRPC.
 func (s *serverAPI) AddNewUserCustomParsingChannel(
 	ctx context.Context,
 	req *recv1.AddNewUserCustomParsingChannelRequest,
@@ -164,6 +176,7 @@ func (s *serverAPI) AddNewUserCustomParsingChannel(
 	return &recv1.AddNewUserCustomParsingChannelResponse{}, nil
 }
 
+// AddNewDefaultParsingChannel handles adding a new default parsing channel via gRPC.
 func (s *serverAPI) AddNewDefaultParsingChannel(ctx context.Context, req *recv1.AddNewDefaultParsingChannelRequest) (*recv1.AddNewDefaultParsingChannelResponse, error) {
 	channelUsername := req.GetChannelUsername()
 	channelCategory := req.GetCategory()
@@ -180,6 +193,7 @@ func (s *serverAPI) AddNewDefaultParsingChannel(ctx context.Context, req *recv1.
 	return &recv1.AddNewDefaultParsingChannelResponse{}, nil
 }
 
+// DeleteUserCustomParsingChannel handles deletion of a user custom parsing channel via gRPC.
 func (s *serverAPI) DeleteUserCustomParsingChannel(
 	ctx context.Context,
 	req *recv1.DeleteUserCustomParsingChannelRequest,
@@ -193,6 +207,7 @@ func (s *serverAPI) DeleteUserCustomParsingChannel(
 	return &recv1.DeleteUserCustomParsingChannelResponse{}, nil
 }
 
+// DeleteDefaultParsingChannel handles deletion of a default parsing channel via gRPC.
 func (s *serverAPI) DeleteDefaultParsingChannel(ctx context.Context, req *recv1.DeleteDefaultParsingChannelRequest) (*recv1.DeleteDefaultParsingChannelResponse, error) {
 	channelUsername := req.GetChannelUsername()
 	if channelUsername == "" {
@@ -205,6 +220,7 @@ func (s *serverAPI) DeleteDefaultParsingChannel(ctx context.Context, req *recv1.
 	return &recv1.DeleteDefaultParsingChannelResponse{}, nil
 }
 
+// GetAllDefaultParsingChannelsWithCategories handles retrieval of default channels grouped by category via gRPC.
 func (s *serverAPI) GetAllDefaultParsingChannelsWithCategories(ctx context.Context, req *recv1.GetAllDefaultParsingChannelsWithCategoriesRequest) (*recv1.GetAllDefaultParsingChannelsWithCategoriesResponse, error) {
 	channelsWithCategories, err := s.parsingChannelsProvider.GetDefaultParsingChannelsWithCategories(ctx)
 	if err != nil {

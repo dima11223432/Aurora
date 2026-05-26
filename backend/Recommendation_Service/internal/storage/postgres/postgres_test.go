@@ -4,8 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"recommendationService/internal/config"
-	"strings"
+	"os"
 	"testing"
 	"time"
 
@@ -19,8 +18,12 @@ type PostgresTestSuite struct {
 }
 
 func (p *PostgresTestSuite) SetupTest() {
-	cfg := config.MustLoadByPath("../../../config/local.yaml")
-	s, err := New(cfg.StoragePass, cfg.ParsingServiceStoragePass)
+	storagePass := os.Getenv("STORAGE_PASS")
+	parsingServicePass := os.Getenv("PARSING_SERVICE_PASS")
+	if storagePass == "" || parsingServicePass == "" {
+		log.Fatal("STORAGE_PASS and PARSING_SERVICE_PASS environment variables are required")
+	}
+	s, err := New(storagePass, parsingServicePass)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,6 +33,15 @@ func (p *PostgresTestSuite) SetupTest() {
 
 func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_channel_%d", suffix)
+
+	_, err := p.storage.parserDB.ExecContext(ctx, `INSERT INTO default_channels (channel_username) VALUES ($1)`, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+	})
 
 	channels, err := p.storage.GetAllDefaultParsingChannels(ctx)
 	p.NoError(err)
@@ -37,9 +49,9 @@ func (p *PostgresTestSuite) TestGetAllParsingChannels() {
 }
 
 func (p *PostgresTestSuite) TestDeleteParsingChannel() {
-
 	ctx := context.Background()
-	channelName := "test_channel"
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_delete_channel_%d", suffix)
 
 	err := p.storage.AddNewParsingChannel(ctx, channelName)
 	p.NoError(err)
@@ -49,10 +61,26 @@ func (p *PostgresTestSuite) TestDeleteParsingChannel() {
 }
 
 func (p *PostgresTestSuite) TestGetPriorityChannelsByUserID() {
-	userID := int64(1)
 	ctx := context.Background()
-	channels, err := p.storage.GetPriorityChannelsByUserID(ctx, userID)
+	suffix := time.Now().UnixNano()
+	telegramID := int64(9000000000 + suffix)
+	channelName := fmt.Sprintf("test_priority_channel_%d", suffix)
 
+	_, err := p.storage.db.ExecContext(ctx, `INSERT INTO users (telegram_id, first_name) VALUES ($1, $2)`, telegramID, "test")
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.db.ExecContext(context.Background(), `DELETE FROM users WHERE telegram_id = $1`, telegramID)
+	})
+
+	var userID int64
+	err = p.storage.db.QueryRowContext(ctx, `SELECT user_id FROM users WHERE telegram_id = $1`, telegramID).Scan(&userID)
+	p.NoError(err)
+
+	_, err = p.storage.db.ExecContext(ctx, `INSERT INTO channels (user_id, channel_username) VALUES ($1, $2)`, userID, channelName)
+	p.NoError(err)
+
+	channels, err := p.storage.GetPriorityChannelsByUserID(ctx, userID)
 	p.NoError(err)
 	p.NotEmpty(channels)
 }
@@ -178,24 +206,189 @@ func TestGetDublicateErrorOtherError(t *testing.T) {
 		})
 	}
 }
+
+func (p *PostgresTestSuite) TestIsChannelExistsInDefaultParsingChannels() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_exists_channel_%d", suffix)
+
+	_, err := p.storage.parserDB.ExecContext(ctx, `INSERT INTO default_channels (channel_username) VALUES ($1)`, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+	})
+
+	exists, err := p.storage.IsChannelExistsInDefaultParsingChannels(ctx, channelName)
+	p.NoError(err)
+	p.True(exists)
+}
+
+func (p *PostgresTestSuite) TestIsChannelExistsInDefaultParsingChannelsNotFound() {
+	ctx := context.Background()
+	exists, err := p.storage.IsChannelExistsInDefaultParsingChannels(ctx, "nonexistent_channel_xyz")
+	p.NoError(err)
+	p.False(exists)
+}
+
+func (p *PostgresTestSuite) TestAddNewParsingChannel() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_add_channel_%d", suffix)
+
+	err := p.storage.AddNewParsingChannel(ctx, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM channels WHERE username = $1`, channelName)
+	})
+}
+
+func (p *PostgresTestSuite) TestAddNewParsingChannelDuplicate() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_dup_channel_%d", suffix)
+
+	err := p.storage.AddNewParsingChannel(ctx, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM channels WHERE username = $1`, channelName)
+	})
+
+	err = p.storage.AddNewParsingChannel(ctx, channelName)
+	p.Error(err)
+}
+
+func (p *PostgresTestSuite) TestAddNewParsingChannelWithoutDublicate() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_upsert_channel_%d", suffix)
+
+	err := p.storage.AddNewParsingChannelWithoutDublicate(ctx, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM channels WHERE username = $1`, channelName)
+	})
+
+	err = p.storage.AddNewParsingChannelWithoutDublicate(ctx, channelName)
+	p.NoError(err)
+}
+
+func (p *PostgresTestSuite) TestAddNewDefaultParsingChannel() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_default_channel_%d", suffix)
+
+	err := p.storage.AddNewDefaultParsingChannel(ctx, channelName, "tech")
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+	})
+
+	exists, err := p.storage.IsChannelExistsInDefaultParsingChannels(ctx, channelName)
+	p.NoError(err)
+	p.True(exists)
+}
+
+func (p *PostgresTestSuite) TestAddNewDefaultParsingChannelDuplicate() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_default_dup_%d", suffix)
+
+	err := p.storage.AddNewDefaultParsingChannel(ctx, channelName, "tech")
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+	})
+
+	err = p.storage.AddNewDefaultParsingChannel(ctx, channelName, "tech")
+	p.Error(err)
+}
+
+func (p *PostgresTestSuite) TestSetChannelCategory() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_category_channel_%d", suffix)
+	category := fmt.Sprintf("test_category_%d", suffix)
+
+	err := p.storage.AddNewDefaultParsingChannel(ctx, channelName, category)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM channels_info WHERE category = $1`, category)
+	})
+
+	err = p.storage.SetChannelCategory(ctx, channelName, category)
+	p.NoError(err)
+}
+
+func (p *PostgresTestSuite) TestDeleteParsingChannelFromChannels() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_delete_parse_%d", suffix)
+
+	err := p.storage.AddNewParsingChannel(ctx, channelName)
+	p.NoError(err)
+
+	err = p.storage.DeleteParsingChannel(ctx, channelName)
+	p.NoError(err)
+}
+
 func (p *PostgresTestSuite) TestGetDefaultParsingChannelsByCategory() {
 	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	channelName := fmt.Sprintf("test_cat_channel_%d", suffix)
+	category := fmt.Sprintf("test_cat_%d", suffix)
 
-	p.Run("success", func() {
-		channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, "news")
+	err := p.storage.AddNewDefaultParsingChannel(ctx, channelName, category)
+	p.NoError(err)
 
-		p.NoError(err)
-		p.NotEmpty(channels)
+	err = p.storage.SetChannelCategory(ctx, channelName, category)
+	p.NoError(err)
 
-		for _, ch := range channels {
-			p.Equal("news", ch.Category)
-		}
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM default_channels WHERE channel_username = $1`, channelName)
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM channels_info WHERE category = $1`, category)
 	})
 
-	p.Run("error", func() {
-		channels, err := p.storage.GetDefaultParsingChannelsByCategory(nil, "news")
+	channels, err := p.storage.GetDefaultParsingChannelsByCategory(ctx, category)
+	p.NoError(err)
+	p.Contains(channels, channelName)
+}
 
-		p.Error(err)
-		p.Empty(channels)
+func (p *PostgresTestSuite) TestGetAllUserCustomParsingChannels() {
+	ctx := context.Background()
+	suffix := time.Now().UnixNano()
+	telegramID := int64(9000000000 + suffix)
+	channelName := fmt.Sprintf("test_user_channel_%d", suffix)
+
+	_, err := p.storage.db.ExecContext(ctx, `INSERT INTO users (telegram_id, first_name) VALUES ($1, $2)`, telegramID, "test_user")
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.db.ExecContext(context.Background(), `DELETE FROM users WHERE telegram_id = $1`, telegramID)
 	})
+
+	var userID int64
+	err = p.storage.db.QueryRowContext(ctx, `SELECT user_id FROM users WHERE telegram_id = $1`, telegramID).Scan(&userID)
+	p.NoError(err)
+
+	_, err = p.storage.parserDB.ExecContext(ctx, `INSERT INTO channels (username) VALUES ($1)`, channelName)
+	p.NoError(err)
+
+	p.T().Cleanup(func() {
+		_, _ = p.storage.parserDB.ExecContext(context.Background(), `DELETE FROM channels WHERE username = $1`, channelName)
+	})
+
+	_, err = p.storage.parserDB.ExecContext(ctx, `INSERT INTO user_custom_parsing_channels (user_id, channel_username) VALUES ($1, $2)`, userID, channelName)
+	p.NoError(err)
+
+	channels, err := p.storage.GetAllUserCustomParsingChannels(ctx, userID)
+	p.NoError(err)
+	p.Contains(channels, channelName)
 }

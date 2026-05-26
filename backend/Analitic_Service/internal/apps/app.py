@@ -1,3 +1,9 @@
+"""Main application layer.
+
+Contains the core App class that orchestrates Kafka message consumption,
+AI analysis, and result publishing.
+"""
+
 import asyncio
 import threading
 import os
@@ -10,29 +16,32 @@ from internal.brokers.kafka.AnaliticKafka import KafkaController
 from internal.services.handlers.AI_handler import AI_handler
 
 
-def redact_value(value: str) -> str:
-    if not isinstance(value, str):
-        return value
-    value = re.sub(
-        r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}", "[REDACTED_EMAIL]", value
-    )
-    value = re.sub(r"\d{6,}", "[REDACTED_DIGITS]", value)
-    value = re.sub(r"[A-Fa-f0-9]{20,}", "[REDACTED_KEY]", value)
-    return value
-
-
 def redact_recursive(obj):
+    """Recursively walk a nested structure for safe logging.
+
+    Currently returns the object unchanged (pass-through).
+    """
     if isinstance(obj, dict):
         return {k: redact_recursive(v) for k, v in obj.items()}
     if isinstance(obj, list):
         return [redact_recursive(v) for v in obj]
     if isinstance(obj, str):
-        return redact_value(obj)
+        return obj
     return obj
 
 
 class App:
+    """Main application class.
+
+    Orchestrates Kafka consumer polling, AI analysis, and result publishing.
+    """
+
     def __init__(self, logger=logger):
+        """Initialize the application.
+
+        Args:
+            logger: Loguru logger instance.
+        """
         self.logger = logger
         self._running = False
         self._consumer_thread = None
@@ -41,6 +50,16 @@ class App:
     def _start_kafka_consumer(
         self, kafka_controller: KafkaController, topic: str, result_topic: str
     ):
+        """Run the Kafka consumer loop in a background thread.
+
+        Polls messages from the input topic, processes them through
+        AI_handler, and publishes results to the result topic.
+
+        Args:
+            kafka_controller: KafkaController instance.
+            topic: Input Kafka topic to consume from.
+            result_topic: Output Kafka topic to publish results to.
+        """
         consumer = kafka_controller.consumer
         try:
             consumer.subscribe([topic])
@@ -53,6 +72,8 @@ class App:
                 if msg.error():
                     self.logger.error(f"Error: {msg.error()}")
                     continue
+                result = None
+                payload = None
                 try:
                     raw = msg.value().decode("utf-8") if msg.value() else ""
                     try:
@@ -108,6 +129,12 @@ class App:
             self.logger.exception(f"Kafka consumer loop terminated: {e}")
 
     async def run(self):
+        """Start the application.
+
+        Loads environment variables, initializes the Kafka controller,
+        starts the consumer thread, and keeps the event loop alive
+        until stopped.
+        """
         self.logger.info("Analitic Service запущен")
         self._running = True
         env_path = os.path.join(os.path.dirname(__file__), "config/config.env")
@@ -115,7 +142,7 @@ class App:
 
         kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
         topic = os.getenv("KAFKA_TOPIC", "telegram_posts")
-        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "news_data")
+        result_topic = os.getenv("KAFKA_RESULT_TOPIC", "news_topic")
 
         try:
             kafka_controller = KafkaController(self.logger)
@@ -141,5 +168,6 @@ class App:
             self.logger.info("Analitic Service остановлен")
 
     def stop(self):
+        """Signal the application and consumer to stop."""
         self._running = False
         self._stop_event.set()

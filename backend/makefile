@@ -29,7 +29,9 @@ AURORA_MIGRATIONS_PATH := ./migrations/aurora
         migrate-sso-up migrate-sso-down migrate-sso-force migrate-sso-create \
         migrate-gateway-up migrate-gateway-down migrate-gateway-force migrate-gateway-create \
         migrate-aurora-up migrate-aurora-down migrate-aurora-force migrate-aurora-create \
-        db-create db-drop db-list docker-up docker-down test clean
+        db-create db-drop db-list docker-up docker-down test clean \
+        doc-gen doc-gen-all doc-gen-parsing doc-gen-analitic \
+        doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache
 
 # ===== Помощь =====
 help:
@@ -69,6 +71,20 @@ help:
 	@echo "  make docker-up         - Запустить все сервисы в Docker"
 	@echo "  make docker-down       - Остановить все сервисы в Docker"
 	@echo "  make docker-logs       - Просмотр логов Docker"
+	@echo ""
+	@echo "$(YELLOW)Документация (Python — Sphinx):$(NC)"
+	@echo "  make doc-gen-parsing   - Сгенерировать HTML-документацию Parsing_Service"
+	@echo "  make doc-gen-analitic  - Сгенерировать HTML-документацию Analitic_Service"
+	@echo ""
+	@echo "$(YELLOW)Документация (Go — golds):$(NC)"
+	@echo "  make doc-gen-sso       - Сгенерировать документацию SSO"
+	@echo "  make doc-gen-api       - Сгенерировать документацию API Gateway"
+	@echo "  make doc-gen-recs      - Сгенерировать документацию Recommendation Service"
+	@echo "  make doc-gen-cache     - Сгенерировать документацию Cache Service"
+	@echo "  make doc-gen           - Сгенерировать документацию Go-сервисов"
+	@echo ""
+	@echo "$(YELLOW)Документация (все сервисы):$(NC)"
+	@echo "  make doc-gen-all       - Сгенерировать документацию всех сервисов"
 	@echo ""
 	@echo "$(YELLOW)Прочее:$(NC)"
 	@echo "  make test              - Запустить все тесты"
@@ -244,6 +260,83 @@ clean:
 	find . -type f -name "*.test" -delete
 	find . -type f -name "coverage.out" -delete
 	@echo "$(GREEN)Готово!$(NC)"
+
+# ===== Документация (go doc) =====
+define print_doc
+	@echo "$(GREEN)========== $(1) ==========$(NC)"
+	cd $(2) && for pkg in $$(go list ./internal/... ./cmd/... 2>/dev/null); do \
+		rel=".$${pkg#$$(go list -m)}"; \
+		echo "$(YELLOW)--- $$rel ---$(NC)"; \
+		go doc ./$$rel 2>/dev/null | head -15; \
+		echo ""; \
+	done
+endef
+
+doc-api:
+	$(call print_doc,API Gateway,Api_Gateway)
+
+doc-sso:
+	$(call print_doc,SSO,SSO)
+
+doc-recs:
+	$(call print_doc,Recommendation Service,Recommendation_Service)
+
+doc-cache:
+	$(call print_doc,Cache Service,Cache_Service)
+
+doc-all: doc-sso doc-api doc-recs doc-cache
+	@echo "$(GREEN)Документация всех сервисов выведена выше.$(NC)"
+
+# ===== Документация (HTML — Sphinx-like) =====
+DOCS_DIR := docs
+DOCS_BUILD := docs
+PYTHON ?= python3
+
+doc-gen: doc-gen-sso doc-gen-api doc-gen-recs doc-gen-cache 
+	@echo "$(GREEN)Генерация HTML-документации Go-сервисов завершена.$(NC)"
+
+doc-gen-all: doc-gen doc-gen-parsing doc-gen-analitic
+	@echo "$(GREEN)Генерация HTML-документации всех сервисов завершена.$(NC)"
+	@echo "$(GREEN)Артефакты в $(DOCS_BUILD)/$(NC)"
+
+doc-gen-python: doc-gen-parsing doc-gen-analitic
+	@echo "$(GREEN)Python-документация сгенерирована в $(DOCS_BUILD)/$(NC)"
+
+doc-gen-parsing:
+	@echo "$(GREEN)Генерация документации Parsing Service...$(NC)"
+	cd Parsing_Service/docs && $(PYTHON) -m sphinx -b html source/ ../../$(DOCS_BUILD)/parsing/ -q
+	@echo "$(GREEN)Готово: $(DOCS_BUILD)/parsing/$(NC)"
+
+doc-gen-analitic:
+	@echo "$(GREEN)Генерация документации Analitic Service...$(NC)"
+	cd Analitic_Service/docs && $(PYTHON) -m sphinx -b html source/ ../../$(DOCS_BUILD)/analitic/ -q
+	@echo "$(GREEN)Готово: $(DOCS_BUILD)/analitic/$(NC)"
+
+doc-gen-sso:
+	@echo "$(GREEN)Генерация документации SSO...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd SSO && golds -gen -nouses -dir=../$(DOCS_DIR)/sso ./...
+
+doc-gen-api:
+	@echo "$(GREEN)Генерация документации API Gateway...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd Api_Gateway && golds -gen -nouses -dir=../$(DOCS_DIR)/api-gateway ./...
+
+doc-gen-recs:
+	@echo "$(GREEN)Генерация документации Recommendation Service...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd Recommendation_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/recommendation ./...
+
+doc-gen-cache:
+	@echo "$(GREEN)Генерация документации Cache Service...$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	cd Cache_Service && golds -gen -nouses -dir=../$(DOCS_DIR)/cache ./...
+
+doc-serve:
+	@echo "$(GREEN)Запуск сервера HTML-документации на http://localhost:56789$(NC)"
+	@command -v golds >/dev/null 2>&1 || go install go101.org/golds@latest
+	@echo "$(YELLOW)Нажмите Ctrl+C для остановки$(NC)"
+	golds -dir=$(DOCS_DIR)/sso,$(DOCS_DIR)/api-gateway,$(DOCS_DIR)/recommendation,$(DOCS_DIR)/cache
 
 # ===== Утилиты =====
 deps:

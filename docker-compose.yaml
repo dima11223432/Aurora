@@ -1,45 +1,49 @@
-version: "3.8"
-
-networks:
-  app_net:
-    driver: bridge
-  kafka-net:
-    driver: bridge
-  aurora-network:
-    driver: bridge
-volumes:
-  postgres_data:
-  redis_master_data:
-  redis_replica_data:
-
 services:
+  # Infrastructure
   postgres:
     image: postgres:15-alpine
     container_name: aurora-db
-    networks:
-      - aurora-network
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: self_improvement
+      POSTGRES_DB: aurora
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - aurora-network
+
+  postgres-parser:
+    image: postgres:15-alpine
+    container_name: aurora-parser-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: parser
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_parser_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - aurora-network
 
   redis-master:
     image: redis:7-alpine
-    container_name: redis_master
+    container_name: redis-master
     restart: unless-stopped
-    networks:
-      - aurora-network
     command: >
       redis-server
       --bind 0.0.0.0
@@ -57,48 +61,8 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-
-  redis-replica:
-    image: redis:7-alpine
-    container_name: redis_replica
-    restart: unless-stopped
     networks:
       - aurora-network
-    command: >
-      redis-server
-      --bind 0.0.0.0
-      --protected-mode no
-      --requirepass "1111"
-      --masterauth "1111"
-      --replicaof redis-master 6379
-      --appendonly yes
-    depends_on:
-      - redis-master
-    ports:
-      - "6380:6379"
-    volumes:
-      - redis_replica_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "-a", "1111", "ping"]
-      interval: 5s
-      timeout: 3s
-      retries: 5
-
-  redis-sentinel-1:
-    image: redis:7-alpine
-    container_name: redis_sentinel_1
-    restart: unless-stopped
-    networks:
-      - aurora-network
-    command: >
-      redis-sentinel /usr/local/etc/redis/sentinel.conf
-    depends_on:
-      - redis-master
-      - redis-replica
-    ports:
-      - "26379:26379"
-    volumes:
-      - ./redis-sentinel.conf:/usr/local/etc/redis/sentinel.conf
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.4.0
@@ -121,136 +85,180 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     networks:
       - aurora-network
 
-  # sso:
-  #   build:
-  #     context: ./backend/SSO
-  #     dockerfile: Dockerfile
-  #   container_name: aurora-sso
-  #   ports:
-  #     - "44044:44044"
-  #   # volumes:
-  #   #   - ./backend/SSO/config:/app/config
-  #   #   - ./backend/SSO/migrations:/app/migrations
-  #   environment:
-  #     - ENV=local
-  #     - TOKEN_TTL=1h
-  #     - GRPC_PORT=44044
-  #     - GRPC_TIMEOUT=10h
-  #     - DB_HOST=postgres
-  #     - DB_PORT=5432
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=postgres
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - aurora-network
-  #   command: >
-  #     sh -c "
-  #     echo 'Waiting for DB...' &&
-  #     until pg_isready -h postgres -p 5432 -U postgres; do sleep 2; done &&
-  #     echo 'Running migrations...' &&
-  #     ./migrator -db-dsn 'postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable' -migrations-path ./migrations -migrations-table schema_migrations up &&
-  #     echo 'Starting SSO...' &&
-  #     ./main --config ./config/local.yaml
-  #     "
-  #   healthcheck:
-  #     test:
-  #       ["CMD-SHELL", "pg_isready -h postgres -p 5432 -U postgres || exit 1"]
-  #     interval: 5s
-  #     timeout: 3s
-  #     retries: 10
-  #
-  # recommendation-service:
-  #   build:
-  #     context: ./backend/Recommendation_Service
-  #     dockerfile: Dockerfile
-  #   container_name: aurora-recommendation
-  #   ports:
-  #     - "44040:44040"
-  #   volumes:
-  #     - ./backend/Recommendation_Service/config:/app/config
-  #   environment:
-  #     - ENV=local
-  #     - TOKEN_TTL=1h
-  #     - GRPC_PORT=44040
-  #     - GRPC_TIMEOUT=10h
-  #     - DB_HOST=postgres
-  #     - DB_PORT=5432
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=postgres
-  #   depends_on:
-  #     - postgres
-  #     - sso
-  #     - redis-master
-  #     - kafka
-  #   networks:
-  #     - aurora-network
-  #
-  # api-gateway:
-  #   build:
-  #     context: ./backend/Api_Gateway
-  #     dockerfile: Dockerfile
-  #   container_name: aurora-api-gateway
-  #   ports:
-  #     - "8081:8081"
-  #     - "44000:44000"
-  #   volumes:
-  #     - ./backend/Api_Gateway/config:/app/config
-  #   environment:
-  #     - REDIS_HOST=redis-master
-  #     - REDIS_PORT=6379
-  #     - REDIS_PASSWORD=1111
-  #     - DB_HOST=postgres
-  #     - DB_PORT=5432
-  #     - DB_USER=postgres
-  #     - DB_PASSWORD=postgres
-  #     - DB_NAME=aurora
-  #     - AUTH_HOST=sso
-  #     - RECS_ADDR=recommendation-service
-  #     - RECS_PORT=44040
-  #     - AUTH_PORT=44044
-  #   depends_on:
-  #     - postgres
-  #     - sso
-  #     - recommendation-service
-  #     - redis-master
-  #     - kafka
-  #   networks:
-  #     - aurora-network
-  # # frontend-prod:
-  # #   build:
-  # #     context: ./frontend
-  # #     dockerfile: Dockerfile.prod
-  # #     args:
-  # #       - VITE_API_URL=http://api-gateway:8081
-  # #       - VITE_SSO_URL=http://sso:44044
-  # #   container_name: aurora-frontend-prod
-  # #   ports:
-  # #     - "5173:5173"
-  # #   depends_on:
-  # #     - api-gateway
-  # #     - sso
-  # #   networks:
-  # #     - aurora-network
-  # #   restart: unless-stopped
-  # # prometheus:
-  # #   image: prom/prometheus
-  # #   container_name: prometheus
-  # #   volumes:
-  # #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
-  # #   ports:
-  # #     - "9090:9090"
-  #
-  # # grafana:
-  # #   image: grafana/grafana
-  # #   container_name: grafana
-  # #   ports:
-  # #     - "3000:3000"
-  # #   environment:
-  # #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  # Services
+  api-gateway:
+    build:
+      context: ./Api_Gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+      - "44043:44043"
+    volumes:
+      - ./Api_Gateway/config:/app/config
+    environment:
+      - ENV=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  sso:
+    build:
+      context: ./SSO
+      dockerfile: Dockerfile
+    container_name: sso
+    restart: unless-stopped
+    ports:
+      - "44044:44044"
+    volumes:
+      - ./SSO/config:/app/config
+      - ./SSO/migrations:/app/migrations
+    environment:
+      - ENV=prod
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/aurora?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  recommendation-service:
+    build:
+      context: ./Recommendation_Service
+      dockerfile: Dockerfile
+    container_name: recommendation-service
+    restart: unless-stopped
+    ports:
+      - "44040:44040"
+    volumes:
+      - ./Recommendation_Service/config:/app/config
+    environment:
+      - ENV=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+    networks:
+      - aurora-network
+
+  cache-service:
+    build:
+      context: ./Cache_Service
+      dockerfile: Dockerfile
+    container_name: cache-service
+    restart: unless-stopped
+    ports:
+      - "44045:44044"
+      - "44046:44045"
+    volumes:
+      - ./Cache_Service/config:/app/config
+      - ./Cache_Service/migrations:/app/migrations
+    environment:
+      - ENV=prod
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis-master:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - aurora-network
+
+  parsing-service:
+    build:
+      context: ./Parsing_Service
+      dockerfile: Dockerfile
+    container_name: parsing-service
+    restart: unless-stopped
+    ports:
+      - "44042:44042"
+    volumes:
+      - ./Parsing_Service/config:/app/config
+      - ./Parsing_Service/logs:/app/logs
+      - ./Parsing_Service/vpn.json:/app/vpn.json:ro
+      - ./Parsing_Service/pars_session.session:/app/pars_session.session:ro
+    environment:
+      - ENV=prod
+      - PYTHONPATH=/app
+      - ENV_PATH=/app/config/config.env
+      - DATABASE_URL=postgres://postgres:pass@postgres-parser:5432/parser?sslmode=disable
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - KAFKA_TOPIC=telegram_posts
+      - DB_HOST=postgres-parser
+      - DB_PORT=5432
+      - DB_NAME=parser
+      - DB_USER=postgres
+      - DB_PASSWORD=pass
+      - PROXY_HOST=127.0.0.1
+      - PROXY_PORT=10808
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres-parser:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+    networks:
+      - aurora-network
+
+  analytic-service:
+    build:
+      context: ./Analitic_Service
+      dockerfile: Dockerfile
+    container_name: analytic-service
+    restart: unless-stopped
+    ports:
+      - "44047:44043"
+    volumes:
+      - ./Analitic_Service/logs:/app/logs
+    environment:
+      - ENV=prod
+      - PYTHONPATH=/app
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+    depends_on:
+      kafka:
+        condition: service_started
+    networks:
+      - aurora-network
+
+  frontend-prod:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_URL=http://api-gateway:8081
+        - VITE_SSO_URL=http://sso:44044
+    container_name: aurora-frontend-prod
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5173:5173"
+    depends_on:
+      - api-gateway
+      - sso
+    networks:
+      - aurora-network
+    restart: unless-stopped
+
+networks:
+  aurora-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  postgres_parser_data:
+  redis_master_data:

@@ -1,3 +1,9 @@
+"""Kafka integration layer.
+
+Provides the KafkaController class for producing and consuming messages
+to/from Apache Kafka topics using the confluent-kafka library.
+"""
+
 from confluent_kafka import Producer, Consumer, TopicPartition
 from dotenv import load_dotenv
 import os
@@ -10,9 +16,22 @@ load_dotenv(env_path)
 
 
 class KafkaController:
+    """Manages Kafka producer and consumer operations.
+
+    Provides methods for sending single/batch messages and
+    retrieving first/last messages from a topic.
+    """
+
     def __init__(self, logger):
+        """Initialize Kafka producer and consumer.
+
+        Reads KAFKA_BOOTSTRAP_SERVERS from environment variables.
+
+        Args:
+            logger: Loguru logger instance.
+        """
         self.log = logger
-        kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+        kafka_servers = os.getenv("KAFKA_BOOTSTRAP_SERVERS", "kafka:9092")
 
         self.log.info(
             f"Initializing Kafka producer with bootstrap servers: {kafka_servers}"
@@ -37,6 +56,15 @@ class KafkaController:
             raise
 
     def send_message(self, topic: str, message: Any) -> None:
+        """Send a single message to a Kafka topic.
+
+        Converts the message to dict via ``to_dict()``, serializes to JSON,
+        produces, and flushes.
+
+        Args:
+            topic: Target Kafka topic name.
+            message: Message object with a ``to_dict()`` method.
+        """
         self.log.info(f"Preparing to send message to Kafka topic: {topic}")
         try:
             converted_message = message.to_dict()
@@ -54,56 +82,79 @@ class KafkaController:
             self.log.error(f"Failed to send message to Kafka: {e}")
             self.log.exception("Kafka send error details:")
             raise
+
     def get_first_message(self, topic: str) -> dict:
+        """Retrieve the first (lowest offset) message from each partition.
+
+        Args:
+            topic: Kafka topic name.
+
+        Returns:
+            Dict mapping partition IDs to their first message value and offset.
+        """
         result = {}
-    
+
         try:
             metadata = self.consumer.list_topics(topic)
-            
+
             if topic not in metadata.topics:
                 self.log.warning(f"Topic {topic} not found")
                 return result
-            
+
             for partition_id in metadata.topics[topic].partitions:
                 msg = None
                 try:
                     tp = TopicPartition(topic, partition_id)
                     self.consumer.assign([tp])
-                    
+
                     low, high = self.consumer.get_watermark_offsets(tp)
-                    
-                    if high > 0: 
+
+                    if high > 0:
                         self.consumer.seek(TopicPartition(topic, partition_id, low))
                         msgs = self.consumer.consume(1, timeout=5.0)
                         if msgs:
                             msg = msgs[0]
-                        
+
                         if msg and not msg.error():
                             result[partition_id] = {
-                                'value': msg.value().decode('utf-8') if msg.value() else None,
-                                'offset': msg.offset()
+                                "value": (
+                                    msg.value().decode("utf-8") if msg.value() else None
+                                ),
+                                "offset": msg.offset(),
                             }
-                        
+
                 except Exception as e:
                     self.log.error(f"Error in partition {partition_id}: {e}")
                 finally:
                     self.consumer.unassign()
-            
+
             return result
-        
+
         except Exception as e:
             self.log.error(f"Error: {e}")
             raise
+
     def get_last_message(self, topic: str) -> dict:
+        """Retrieve the last (highest offset) message from each partition.
+
+        Attempts JSON decoding of the message value.
+
+        Args:
+            topic: Kafka topic name.
+
+        Returns:
+            Dict mapping partition IDs to their last message value, offset,
+            key, and timestamp.
+        """
         result = {}
-        
+
         try:
             metadata = self.consumer.list_topics(topic)
-            
+
             if topic not in metadata.topics:
                 self.log.warning(f"Topic {topic} not found")
                 return result
-            
+
             for partition_id in metadata.topics[topic].partitions:
                 msg = None
                 try:
@@ -111,55 +162,66 @@ class KafkaController:
                     self.consumer.assign([tp])
                     low, high = self.consumer.get_watermark_offsets(tp)
                     if high > 0:
-                        self.consumer.seek(TopicPartition(topic, partition_id, high-1))
+                        self.consumer.seek(
+                            TopicPartition(topic, partition_id, high - 1)
+                        )
                         msgs = self.consumer.consume(1, timeout=5.0)
                         if msgs:
                             msg = msgs[0]
                         if msg and not msg.error():
-                            value = msg.value().decode('utf-8') if msg.value() else None
+                            value = msg.value().decode("utf-8") if msg.value() else None
                             try:
-                                if value and value.strip().startswith(('{', '[')):
+                                if value and value.strip().startswith(("{", "[")):
                                     value = json.loads(value)
                             except json.JSONDecodeError:
                                 pass
-                            
+
                             result[partition_id] = {
-                                'value': value,
-                                'offset': msg.offset(),
-                                'key': msg.key().decode('utf-8') if msg.key() else None,
-                                'timestamp': msg.timestamp()
+                                "value": value,
+                                "offset": msg.offset(),
+                                "key": msg.key().decode("utf-8") if msg.key() else None,
+                                "timestamp": msg.timestamp(),
                             }
-                            
-                        
+
                 except Exception as e:
                     self.log.error(f"Error in partition {partition_id}: {e}")
                 finally:
                     self.consumer.unassign()
-            
+
             return result
-            
+
         except Exception as e:
             self.log.error(f" Error: {e}")
             raise
-    
+
     def send_batch_messages(self, messages: dict) -> dict:
+        """Send multiple messages to multiple topics in batch.
+
+        Each key in the dict is a topic name, each value is the message.
+
+        Args:
+            messages: Dict of ``{topic: message, ...}``.
+
+        Returns:
+            Dict with success/failure counts and details.
+        """
         if not messages:
             return {
                 "success": True,
                 "total": 0,
                 "successful": 0,
                 "failed": 0,
-                "failed_details": []
+                "failed_details": [],
             }
-        
+
         results = {
             "success": True,
             "total": len(messages),
             "successful": 0,
             "failed": 0,
-            "failed_details": []
+            "failed_details": [],
         }
-        
+
         for topic, message in messages.items():
             try:
                 if not topic or not isinstance(topic, str):
@@ -167,47 +229,53 @@ class KafkaController:
                     self.log.error(error_msg)
                     results["failed"] += 1
                     results["success"] = False
-                    results["failed_details"].append({
-                        "topic": str(topic),
-                        "message": str(message)[:100], 
-                        "error": error_msg
-                    })
+                    results["failed_details"].append(
+                        {
+                            "topic": str(topic),
+                            "message": str(message)[:100],
+                            "error": error_msg,
+                        }
+                    )
                     continue
-                
-                converted_message = message.to_dict() if hasattr(message, 'to_dict') else message
+
+                converted_message = (
+                    message.to_dict() if hasattr(message, "to_dict") else message
+                )
                 json_message = json.dumps(converted_message, ensure_ascii=False)
                 self.producer.produce(topic, json_message.encode("utf-8"))
-                
+
                 results["successful"] += 1
                 self.log.debug(f"Successfully queued message for topic: {topic}")
-                
+
             except Exception as e:
                 error_msg = f"Failed to send message to topic {topic}: {str(e)}"
                 self.log.error(error_msg)
                 self.log.exception("Detailed error:")
-                
+
                 results["failed"] += 1
                 results["success"] = False
-                results["failed_details"].append({
-                    "topic": topic,
-                    "message": str(message)[:100] if message else None,
-                    "error": str(e)
-                })
-        
+                results["failed_details"].append(
+                    {
+                        "topic": topic,
+                        "message": str(message)[:100] if message else None,
+                        "error": str(e),
+                    }
+                )
 
         if results["successful"] > 0:
             try:
                 self.log.debug("Flushing producer for batch messages")
                 self.producer.flush()
-                self.log.success(f"Batch send completed. Success: {results['successful']}, Failed: {results['failed']}")
+                self.log.success(
+                    f"Batch send completed. Success: {results['successful']}, Failed: {results['failed']}"
+                )
             except Exception as e:
                 error_msg = f"Error during flush: {str(e)}"
                 self.log.error(error_msg)
                 results["success"] = False
-                results["failed_details"].append({
-                    "topic": "flush_error",
-                    "message": None,
-                    "error": error_msg
-                })
-        
+                results["failed_details"].append(
+                    {"topic": "flush_error", "message": None, "error": error_msg}
+                )
+
         return results
+

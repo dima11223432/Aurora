@@ -20,8 +20,6 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.rename_table("channels", "default_channels")
-
     op.drop_constraint(
         "channels_info_channel_id_fkey", "channels_info", type_="foreignkey"
     )
@@ -41,12 +39,10 @@ def downgrade() -> None:
         "channels_info_channel_id_fkey", "channels_info", type_="foreignkey"
     )
 
-    op.rename_table("default_channels", "channels")
-
     op.create_foreign_key(
         "channels_info_channel_id_fkey",
         "channels_info",
-        "channels",
+        "default_channels",
         ["channel_id"],
         ["id"],
         ondelete="CASCADE",

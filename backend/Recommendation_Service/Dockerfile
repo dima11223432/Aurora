@@ -1,13 +1,17 @@
 FROM golang:1.25-alpine
+USER root
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/ftp.halifax.rwth-aachen.de/g' /etc/apk/repositories
 
 RUN apk add --no-cache git ca-certificates
 
 WORKDIR /app
-
 COPY go.mod go.sum ./
+
 RUN go mod download
 
 COPY . .
+
 
 RUN go build -o recommendation_service ./cmd/recomendation_service/main.go
 
@@ -17,6 +21,6 @@ RUN adduser -D -g '' appuser
 RUN chown -R appuser:appuser /app
 USER appuser
 
-EXPOSE 44000
+EXPOSE 44040
 
-CMD ["./recommendation_service", "--config", "./config/local.yaml"]
+CMD ["./recommendation_service"]

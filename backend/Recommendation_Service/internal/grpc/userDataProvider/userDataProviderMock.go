@@ -13,16 +13,30 @@ type UserDataProviderMock struct {
 
 func (m *UserDataProviderMock) GetUserPriorityChannels(ctx context.Context, userID int64) ([]models.PriorityChannel, error) {
 	args := m.Called(ctx, userID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).([]models.PriorityChannel), args.Error(1)
 }
 
 func (m *UserDataProviderMock) GetRecommendatedPosts(ctx context.Context, userID int64, cursor *models.Cursor) ([]models.Post, *models.Cursor, error) {
 	args := m.Called(ctx, userID, cursor)
-	return args.Get(0).([]models.Post), args.Get(1).(*models.Cursor), args.Error(2)
+	var posts []models.Post
+	var nextCursor *models.Cursor
+	if args.Get(0) != nil {
+		posts = args.Get(0).([]models.Post)
+	}
+	if args.Get(1) != nil {
+		nextCursor = args.Get(1).(*models.Cursor)
+	}
+	return posts, nextCursor, args.Error(2)
 }
 
 func (m *UserDataProviderMock) GetAllDefaultParsingChannels(ctx context.Context) ([]string, error) {
 	args := m.Called(ctx)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).([]string), args.Error(1)
 }
 
@@ -48,11 +62,17 @@ func (m *UserDataProviderMock) DeleteUserCustomParsingChannel(ctx context.Contex
 
 func (m *UserDataProviderMock) GetAllUserCustomParsingChannels(ctx context.Context, userID int64) ([]string, error) {
 	args := m.Called(ctx, userID)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).([]string), args.Error(1)
 }
 
 func (m *UserDataProviderMock) GetDefaultParsingChannelsWithCategories(ctx context.Context) (map[string][]string, error) {
 	args := m.Called(ctx)
+	if args.Get(0) == nil {
+		return nil, args.Error(1)
+	}
 	return args.Get(0).(map[string][]string), args.Error(1)
 }
 
