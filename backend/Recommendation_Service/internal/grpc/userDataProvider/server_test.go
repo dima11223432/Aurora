@@ -25,6 +25,63 @@ func (u *UserDataProviderSuite) SetupTest() {
 	u.s = NewServerAPI(u.mock, u.mock, u.mock)
 }
 
+func (u *UserDataProviderSuite) TestAddNewParsingChannel() {
+    ctx := context.Background()
+    
+    u.Run("Success", func() {
+        channelUsername := "channel"
+        req := &recv1.AddNewParsingChannelRequest{
+            ChannelUsername: channelUsername,
+        }
+        
+        u.mock.On("AddNewParsingChannel", ctx, channelUsername).
+            Return(nil).Once()
+        
+        resp, err := u.s.AddNewParsingChannel(ctx, req)
+        
+        u.NoError(err)
+        u.NotNil(resp)
+        u.mock.AssertExpectations(u.T())
+    })
+
+	u.Run("Invalid Input", func() {
+        req := &recv1.AddNewParsingChannelRequest{
+            ChannelUsername: "", 
+        }
+        
+        resp, err := u.s.AddNewParsingChannel(ctx, req)
+        
+        u.Error(err) 
+        
+        status, ok := status.FromError(err)
+        u.True(ok, "Должна быть ошибка")
+        u.Equal(codes.InvalidArgument, status.Code(), "Неверный код")
+        
+        u.Nil(resp)
+        
+        u.mock.AssertNotCalled(u.T(), "AddNewParsingChannel", ctx, "")
+    })
+    
+	u.Run("Database Error", func() {
+        channelUsername := "channel"
+        req := &recv1.AddNewParsingChannelRequest{
+            ChannelUsername: channelUsername,
+        }
+        
+        dbError := errors.New("db error")
+        u.mock.On("AddNewParsingChannel", ctx, channelUsername).
+            Return(dbError).Once()
+        
+        resp, err := u.s.AddNewParsingChannel(ctx, req)
+        
+        u.Error(err)
+        u.Nil(resp)
+
+		u.mock.AssertExpectations(u.T())
+	})
+
+}
+
 func (u *UserDataProviderSuite) TestGetUserPriorityChannels() {
 	ctx := context.Background()
 	userID := int64(1)
