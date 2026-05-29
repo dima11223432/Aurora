@@ -1,4 +1,5 @@
 import { Sparkles } from "lucide-react";
+import { useState } from "react";
 export default function RecommendationCard({
   postText,
   postUri,
@@ -7,6 +8,10 @@ export default function RecommendationCard({
   date,
   reasoning,
 }) {
+  const [expanded, setExpanded] = useState(false);
+  const words = (reasoning || "").split(/\s+/).filter(Boolean);
+  const preview = words.slice(0, 30).join(" ");
+  const needsToggle = words.length > 30;
   return (
     <div>
       <div className="bg-[#0f172a] border border-slate-800 rounded-xl p-6 shadow-xl w-full max-w-2xl">
@@ -50,8 +55,15 @@ export default function RecommendationCard({
           ))}
         </div>
         <p className="text-slate-400 leading-relaxed">
-          {reasoning || "Текст обоснования отсутствует..."}
+          {reasoning ? expanded ? reasoning : needsToggle ? preview + "..." : reasoning : "Текст обоснования отсутствует..."}
         </p>
+        {needsToggle && (
+          <div className="flex justify-end mt-2">
+            <button onClick={() => setExpanded(!expanded)} className="text-cyan-500 text-sm">
+              {expanded ? "Свернуть" : "Развернуть"}
+            </button>
+          </div>
+        )}
         <div className="flex justify-end">
           <a className="text-cyan-500" href={postUri}>
             Оригинальный пост
