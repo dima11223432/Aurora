@@ -55,12 +55,34 @@ export default function RecommendationCard({
           ))}
         </div>
         <p className="text-slate-400 leading-relaxed">
-          {reasoning ? expanded ? reasoning : needsToggle ? preview + "..." : reasoning : "Текст обоснования отсутствует..."}
+          {reasoning
+            ? expanded
+              ? reasoning
+              : needsToggle
+                ? preview + "..."
+                : reasoning
+            : "Текст обоснования отсутствует..."}
         </p>
         {needsToggle && (
           <div className="flex justify-end mt-2">
-            <button onClick={() => setExpanded(!expanded)} className="text-cyan-500 text-sm">
-              {expanded ? "Свернуть" : "Развернуть"}
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="flex items-center gap-1 text-gray-400 hover:text-cyan-400 text-sm font-medium transition-colors duration-200"
+            >
+              <span>{expanded ? "Свернуть" : "Развернуть"}</span>
+              <svg
+                className={`w-4 h-4 transition-transform duration-200 ${expanded ? "rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
             </button>
           </div>
         )}
