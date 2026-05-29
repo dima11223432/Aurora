@@ -85,25 +85,23 @@ export default function RecommendationFeed() {
   }, []);
   const EmptyFeedState = () => (
     <div className="flex flex-col items-center justify-center min-h-[400px] text-center px-4">
-      <svg 
+      <svg
         className="w-24 h-24 mb-6 text-gray-600"
-        fill="none" 
-        stroke="currentColor" 
+        fill="none"
+        stroke="currentColor"
         viewBox="0 0 24 24"
       >
-        <path 
-          strokeLinecap="round" 
-          strokeLinejoin="round" 
-          strokeWidth={1.5} 
-          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" 
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={1.5}
+          d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
         />
       </svg>
-      <p className="text-gray-300 text-lg mb-2">
-        Нет новостей для отображения
-      </p>
+      <p className="text-gray-300 text-lg mb-2">Нет новостей для отображения</p>
       <p className="text-gray-400 text-sm max-w-md">
-        Для того, чтобы получать аналитику, откройте раздел "Настройки" 
-        и отметьте галочкой нужные вам каналы
+        Для того, чтобы получать аналитику, откройте раздел "Настройки" и
+        отметьте галочкой нужные вам каналы
       </p>
     </div>
   );
@@ -123,8 +121,8 @@ export default function RecommendationFeed() {
         <TonConnectButton />
       </div>
 
-      <div className="flex-grow flex flex-col items-center gap-6">
-         {!isLoading && recommendatedPosts.length === 0 ? (
+      <div className="flex-grow flex flex-col items-center gap-6 pb-16">
+        {!isLoading && recommendatedPosts.length === 0 ? (
           <EmptyFeedState />
         ) : (
           <>
