@@ -71,6 +71,7 @@ deploy-staging:
   script:
     - cd backend
     - cp "$ENV_FILE" .env
+    - cp "$VPN" vpn.json
     - docker-compose down --remove-orphans
     - docker-compose build
     - docker-compose up -d
