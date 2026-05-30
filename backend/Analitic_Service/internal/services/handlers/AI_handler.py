@@ -39,23 +39,21 @@ def AI_handler(context):
         Dict with ``{"ds": {"answer": ..., "reason": ...}}``.
     """
     AI_answer = {
-        "ds": {"answer": [], "reason": ""},
-        "ge": {"answer": [], "reason": ""},
-        "st": {"answer": [], "reason": ""},
-        "ya": {"answer": [], "reason": ""},
-        "qw": {"answer": [], "reason": ""},
-        "qws": {"answer": [], "reason": ""},
+        "ds": {},
+        "ge": {},
+        "st": {},
+        "ya": {},
+        "qw": {},
+        "qws": {},
     }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex, qws - qwenSecond
     AI_list = {"ds", "ya"}
 
     for i in AI_list:
         try:
             token = os.getenv(i.upper())
-            part = globals()[i](context, token).split("-%91%8FROG-COD")
-            count = len(part)
-            for g in range(count-1):
-                AI_answer[i]["answer"].append(part[g].replace(" \n", ""))
-            AI_answer[i]["reason"] = part[-1]
+            part = globals()[i](context, token).split("-%91%8FROG-COD", maxsplit=1)
+            AI_answer[i]["answer"] = part[0].replace(" \n", "")
+            AI_answer[i]["reason"] = part[1]
             logger.info(
                 f"AI [{i.upper()}] - Answer: {AI_answer[i]['answer'][:100]}... | Reason: {AI_answer[i]['reason'][:100]}..."
             )
@@ -70,11 +68,7 @@ def AI_handler(context):
         AI_answer["qw"]["graphic_analis"] = "error"
 
     parts_final = qw(str(AI_answer), str(getenv("YA"))).split(
-        "-%91%8FROG-COD"
+        "-%91%8FROG-COD", maxsplit=1
     )
-    stocks = []
-    count = len(parts_final)
-    for h in range(count-1):
-        stocks.append(parts_final[h])
-    
-    return {"ds": {"answer": stocks, "reason": parts_final[1]}}
+
+    return {"ds": {"answer": parts_final[0], "reason": parts_final[1]}}
