@@ -18,6 +18,7 @@ function App() {
         <Route path="/settings" element={<Settings />}></Route>
         <Route path="/admin" element={<AdminPanel />} />
         <Route path="/404" element={<ErrorPage />}></Route>
+        <Route path="*" element={<Navigate to="/404" replace />} />
       </Routes>
     </BrowserRouter>
   );
