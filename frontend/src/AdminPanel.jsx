@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { routes } from "./config/api";
 import { useNavigate } from "react-router-dom";
 
@@ -9,48 +9,47 @@ export default function AdminPanel() {
   const [addedChannel, setAddedChannel] = useState("");
   const [addedChannelCategory, setAddedChannelCategory] = useState("");
   const [deletedChannel, setDeletedChannel] = useState("");
-  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const isAdmin = () => {
+    const checkIsAdmin = async () => {
       try {
         const token = localStorage.getItem("token");
         if (!token) {
           navigate("/404");
           return;
         }
-        const resp = axios.post(routes.isAdmin, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+
+        const resp = await axios.get(routes.isAdmin, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        if (resp.data.is_admin === true) {
+
+        if (resp.data.isAdmin === true || resp.data.is_admin === true) {
           setIsLoggedIn(true);
         } else {
           navigate("/404");
-          return;
         }
-        return resp;
       } catch (e) {
-        console.log(e);
+        console.error("Ошибка проверки прав:", e);
+        navigate("/404");
       }
     };
-    isAdmin();
-  }, []);
+
+    checkIsAdmin();
+  }, [navigate]);
 
   useEffect(() => {
     const fetchParsingChannels = async () => {
+      if (!isLoggedIn) return;
+
       try {
         const token = localStorage.getItem("token");
-        if (!token) {
-          navigate("/404");
-          return;
-        }
         const resp = await axios.get(
           routes.getAllDefaultParsingChannelsWithCategories,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
-        const formatted = Object.entries(resp.data.channels).map(
+        const formatted = Object.entries(resp.data.channels || {}).map(
           ([cat, data]) => ({
             category: cat,
             usernames: data.usernames || [],
@@ -66,47 +65,52 @@ export default function AdminPanel() {
     fetchParsingChannels();
   }, [isLoggedIn]);
 
-  const AddNewParsingChannel = () => {
+  const AddNewParsingChannel = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         navigate("/404");
         return;
       }
-      console.log(
-        "Adding new parsing channel as admin",
-        addedChannel,
-        addedChannelCategory,
-      );
-      axios.post(
+
+      await axios.post(
         routes.addNewDefaultParsingChannel,
         { channel_username: addedChannel, category: addedChannelCategory },
         { headers: { Authorization: `Bearer ${token}` } },
       );
+
+      setAddedChannel("");
+      setAddedChannelCategory("");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
-  const DeleteParsingChannel = () => {
+  const DeleteParsingChannel = async () => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
         navigate("/404");
         return;
       }
-      axios.post(
+
+      await axios.post(
         routes.deleteDefaultParsingChannel,
         { channel_username: deletedChannel },
         { headers: { Authorization: `Bearer ${token}` } },
       );
+
+      setDeletedChannel("");
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
+  if (!isLoggedIn) {
+    return null;
+  }
+
   return (
-    <>
     <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6 font-sans">
       <div className="max-w-2xl w-full bg-[rgba(20,25,50,0.7)] backdrop-blur-md rounded-[2.5rem] p-6 sm:p-8 md:p-10 shadow-2xl border border-white/5">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-8 text-center">
@@ -147,6 +151,7 @@ export default function AdminPanel() {
               )}
             </div>
           </section>
+
           <hr className="border-white/5" />
 
           <section className="flex flex-col gap-4">
@@ -156,24 +161,23 @@ export default function AdminPanel() {
             >
               Добавить новый канал
             </label>
-            <div className="grid grid-cls-2 sm:flex-row gap-3">
-              <div className="flex justify-between">
+            <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex justify-between flex-1 gap-2">
                 <input
                   id="channel-input"
-                  className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-[#0fd2f5] focus:ring-1 focus:ring-[#0fd2f5] transition-all placeholder:text-gray-600"
+                  className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-[#0fd2f5] focus:ring-1 focus:ring-[#0fd2f5] transition-all placeholder:text-gray-600 w-full"
                   placeholder="durov"
                   value={addedChannel}
                   onChange={(e) => setAddedChannel(e.target.value)}
                 />
                 <select
-                  className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-red-400/50 appearance-none cursor-pointer"
+                  className="flex-1 bg-white/5 border border-[#0fd2f5]/20 rounded-2xl px-5 py-3 text-white focus:outline-none focus:border-red-400/50 appearance-none cursor-pointer w-full"
                   onChange={(e) => setAddedChannelCategory(e.target.value)}
                   value={addedChannelCategory}
                 >
                   <option value="" className="bg-[#0F1A2F]">
                     -- Выберите категорию --
                   </option>
-
                   {parsingChannels.length > 0 &&
                     parsingChannels.map((item) => (
                       <option
@@ -187,7 +191,7 @@ export default function AdminPanel() {
                 </select>
               </div>
               <button
-                onClick={() => AddNewParsingChannel()}
+                onClick={AddNewParsingChannel}
                 className="bg-[#0fd2f5] text-[#0A0F1F] font-bold py-3 px-6 rounded-2xl hover:bg-white active:scale-95 transition-all shadow-lg shadow-[#0fd2f5]/20"
               >
                 Добавить
@@ -221,7 +225,7 @@ export default function AdminPanel() {
                   ))}
               </select>
               <button
-                onClick={() => DeleteParsingChannel()}
+                onClick={DeleteParsingChannel}
                 className="border border-red-500/50 text-red-400 font-semibold py-3 px-6 rounded-2xl hover:bg-red-500/10 active:scale-95 transition-all"
               >
                 Удалить
@@ -231,33 +235,5 @@ export default function AdminPanel() {
         </div>
       </div>
     </div>
-    <button
-        onClick={() => setIsShtoraOpen(!isShtoraOpen)}
-        className="fixed top-4 right-4 z-50 text-white font-bold py-2 px-5 rounded-xl"
-        style={{ background: "linear-gradient(to right, #208390, #36DEF4)" }}
-      >
-        {isShtoraOpen ? "Скрыть ТГК" : "Показать ТГК"}
-      </button>
-
-      {isShtoraOpen && (
-        <div className="fixed top-20 right-4 z-40 w-80 bg-gray-900/90 rounded-2xl shadow-2xl border border-blue-700 p-5 backdrop-blur-xl">
-          <h3 className="text-xl font-bold text-blue-400 mb-3">
-            Каналы для парсинга
-          </h3>
-          <ul className="max-h-96 overflow-y-auto space-y-2">
-            {parsingChannels.length === 0 ? (
-              <li className="text-gray-400 text-sm italic">Нет доступных каналов</li>
-            ) : (
-              parsingChannels.flatMap((item) => item.usernames).map((username, idx) => (
-                <li key={idx} className="py-2 px-3 rounded-lg hover:bg-blue-700/70 text-white flex items-center gap-2">
-                  <input type="checkbox" className="w-4 h-4 rounded" />
-                  <span>@{username}</span>
-                </li>
-              ))
-            )}
-          </ul>
-        </div>
-      )}
-    </>
   );
 }
