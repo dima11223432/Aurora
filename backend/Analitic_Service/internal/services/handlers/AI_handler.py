@@ -51,9 +51,11 @@ def AI_handler(context):
     for i in AI_list:
         try:
             token = os.getenv(i.upper())
-            part = globals()[i](context, token).split("-%91%8FROG-COD", maxsplit=1)
-            AI_answer[i]["answer"] = part[0].replace(" \n", "")
-            AI_answer[i]["reason"] = part[1]
+            part = globals()[i](context, token).split("-%91%8FROG-COD")
+            count = len(part)
+            for g in range(count - 1):
+                AI_answer[i]["answer"].append(part[g].replace(" \n", ""))
+            AI_answer[i]["reason"] = part[-1]
             logger.info(
                 f"AI [{i.upper()}] - Answer: {AI_answer[i]['answer'][:100]}... | Reason: {AI_answer[i]['reason'][:100]}..."
             )
@@ -67,8 +69,11 @@ def AI_handler(context):
         logger.error(f"Ошибка в В LSTM Laura: {str(e)}")
         AI_answer["qw"]["graphic_analis"] = "error"
 
-    parts_final = qw(str(AI_answer), str(getenv("YA"))).split(
-        "-%91%8FROG-COD", maxsplit=1
-    )
+    parts_final = qw(str(AI_answer), str(getenv("YA"))).split("-%91%8FROG-COD")
+    stocks = []
+    count = len(parts_final)
+    for h in range(count - 1):
+        stocks.append(parts_final[h])
+    qwen_reason = parts_final[-1] if count > 0 else "No reasoning provided"
 
-    return {"ds": {"answer": parts_final[0], "reason": parts_final[1]}}
+    return {"ds": {"answer": stocks, "reason": qwen_reason}}
