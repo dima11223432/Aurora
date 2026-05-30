@@ -75,6 +75,6 @@ def AI_handler(context):
     stocks = []
     count = len(parts_final)
     for h in range(count-1):
-        stocks[h] = parts_final[h]
+        stocks.append(parts_final[h])
     
     return {"ds": {"answer": stocks, "reason": parts_final[1]}}
