@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { routes } from "./config/api";
 import { useNavigate } from "react-router-dom";
+import Footer from "./Footer";
 
 export default function AdminPanel() {
   const [parsingChannels, setParsingChannels] = useState([]);
@@ -111,7 +112,7 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 sm:p-6 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-[#0A0F1F] via-[#0F1A2F] to-[#02B7DB] flex items-center justify-center p-4 pb-24 sm:p-6 sm:pb-28 font-sans">
       <div className="max-w-2xl w-full bg-[rgba(20,25,50,0.7)] backdrop-blur-md rounded-[2.5rem] p-6 sm:p-8 md:p-10 shadow-2xl border border-white/5">
         <h1 className="text-2xl sm:text-3xl font-bold text-white mb-8 text-center">
           Управление <span className="text-[#0fd2f5]">Парсингом</span>
@@ -234,6 +235,7 @@ export default function AdminPanel() {
           </section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
