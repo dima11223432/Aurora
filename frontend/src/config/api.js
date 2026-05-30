@@ -22,7 +22,7 @@ const routes = {
   addNewUserCustomParsingChannel: `${API_BASE_URL}/v1/add_new_user_custom_parsing_channel`,
   getAllUserCustomParsingChannels: `${API_BASE_URL}/v1/get_all_user_custom_parsing_channels`,
 
-  isAdmin: `${API_BASE_URL}/v1/is_admin`,
+  isAdmin: `${API_BASE_URL}/v1/is_admin_by_context`,
 };
 
 export { routes, API_BASE_URL, API_BASE_URL_SECURE, API_BASE_URL_NGROK };
