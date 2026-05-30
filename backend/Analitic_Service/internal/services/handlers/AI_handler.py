@@ -26,35 +26,40 @@ from ..AI_API.QwenAI import answer as qws
 
 
 def AI_handler(context):
-    """Orchestrate multi-model AI analysis on news text."""
+    """Orchestrate multi-model AI analysis on news text.
 
+    Calls DeepSeek and YandexGPT for sentiment analysis, identifies
+    the stock ticker via AnalysAI, runs LSTM Laura for technical
+    prediction, and aggregates all results through QwenAnalis.
+
+    Args:
+        context: News text to analyze.
+
+    Returns:
+        Dict with ``{"ds": {"answer": ..., "reason": ...}}``.
+    """
     AI_answer = {
-        "ds": {"answer": [], "reason": ""},
-        "ge": {"answer": [], "reason": ""},
-        "st": {"answer": [], "reason": ""},
-        "ya": {"answer": [], "reason": ""},
-        "qw": {"answer": [], "reason": ""},
-        "qws": {"answer": [], "reason": ""},
-    }
-
+        "ds": {},
+        "ge": {},
+        "st": {},
+        "ya": {},
+        "qw": {},
+        "qws": {},
+    }  # ds - deepseek, ge - gemma, st - stepAI, ya - yandex, qws - qwenSecond
     AI_list = {"ds", "ya"}
 
     for i in AI_list:
         try:
             token = os.getenv(i.upper())
-            part = globals()[i](context, token).split("-%91%8FROG-COD")
-            count = len(part)
-            for g in range(count - 1):
-                AI_answer[i]["answer"].append(part[g].replace(" \n", ""))
-            AI_answer[i]["reason"] = part[-1]
+            part = globals()[i](context, token).split("-%91%8FROG-COD", maxsplit=1)
+            AI_answer[i]["answer"] = part[0].replace(" \n", "")
+            AI_answer[i]["reason"] = part[1]
             logger.info(
                 f"AI [{i.upper()}] - Answer: {AI_answer[i]['answer'][:100]}... | Reason: {AI_answer[i]['reason'][:100]}..."
             )
         except Exception as e:
             logger.error(f"Error AI handler [{i.upper()}]: {str(e)}")
-            AI_answer[i]["answer"] = []
-            AI_answer[i]["reason"] = f"Error occurred: {str(e)}"
-
+            AI_answer[i]["answer"] = 0
     try:
         m, s, d = run(ticker_id(context, str(getenv("AN"))))
         AI_answer["qw"]["graphic_analis"] = predict(m, s, d)
@@ -62,14 +67,8 @@ def AI_handler(context):
         logger.error(f"Ошибка в В LSTM Laura: {str(e)}")
         AI_answer["qw"]["graphic_analis"] = "error"
 
-    parts_final = qw(str(AI_answer), str(getenv("YA"))).split("-%91%8FROG-COD")
-    stocks = []
-    count = len(parts_final)
-    for h in range(count - 1):
-        ticker_clean = parts_final[h].strip()
-        if ticker_clean:
-            stocks.append(ticker_clean)
+    parts_final = qw(str(AI_answer), str(getenv("YA"))).split(
+        "-%91%8FROG-COD", maxsplit=1
+    )
 
-    qwen_reason = parts_final[-1].strip() if count > 0 else "No reasoning provided"
-
-    return {"ds": {"answer": stocks, "reason": qwen_reason}}
+    return {"ds": {"answer": parts_final[0], "reason": parts_final[1]}}
