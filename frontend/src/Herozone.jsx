@@ -28,7 +28,7 @@ function Herozone() {
 
     if (!user || !user.id) {
       console.error("Данные пользователя не найдены");
-      // navigate("/404");
+      navigate("/404");
       setTimeout(() => {
         setError("Не удалось получить данные пользователя");
 
@@ -102,7 +102,7 @@ function Herozone() {
           <p className="text-[#95bec7] text-base text-center sm:text-lg mb-8 sm:mb-12 pl-4 to-transparent">
             Добро пожаловать в{" "}
             <span className="text-[#0fd2f5] font-bold">Aurora</span>
-            <br /> ИИ-поддерживаемые прогнозы TON и T-Investments
+            <br /> ИИ-поддерживаемая аналитика новостей
           </p>
 
           <div className="space-y-4 sm:space-y-5 mb-8 sm:mb-12">
@@ -132,6 +132,10 @@ function Herozone() {
               Начать
             </button>
           </div>
+          <p className="text-xs text-[#95bec7]/60 text-center mt-6">
+            * Aurora предоставляет исключительно аналитическую информацию и не
+            является финансовым консультантом.
+          </p>
         </div>
       </div>
     </>
