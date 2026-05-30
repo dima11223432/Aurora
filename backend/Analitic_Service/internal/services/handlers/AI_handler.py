@@ -54,7 +54,7 @@ def AI_handler(context):
             part = globals()[i](context, token).split("-%91%8FROG-COD")
             count = len(part)
             for g in range(count-1):
-                AI_answer[i]["answer"][g] = part[g].replace(" \n", "")
+                AI_answer[i]["answer"].append(part[g].replace(" \n", ""))
             AI_answer[i]["reason"] = part[-1]
             logger.info(
                 f"AI [{i.upper()}] - Answer: {AI_answer[i]['answer'][:100]}... | Reason: {AI_answer[i]['reason'][:100]}..."
