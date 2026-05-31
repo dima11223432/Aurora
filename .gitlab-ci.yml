@@ -1,6 +1,6 @@
 stages:
   # - test
-  - docs
+  # - docs
   - deploy
 
 # .test-template: &test-template
@@ -72,6 +72,8 @@ deploy-staging:
     - cd backend
     - cp "$ENV_FILE" .env
     - echo "$VPN" > vpn.json
+    - cp vpn.json Parsing_Service/vpn.json
+    - cp vpn.json Telegram_bot/vpn.json
     - docker-compose down --remove-orphans
     - docker-compose build
     - docker-compose up -d
