@@ -33,38 +33,38 @@ stages:
 #   variables:
 #     SERVICE_NAME: "cache-service-tests"
 
-generate-docs-python:
-  stage: docs
-  image: python:3.11-slim
-  before_script:
-    - apt-get update && apt-get install -y --no-install-recommends make && rm -rf /var/lib/apt/lists/*
-    - cd backend
-    - pip install sphinx 2>/dev/null || true
-  script:
-    - make doc-gen-python
-    - tar -czf ../docs-python.tar.gz docs/parsing/ docs/analitic/
-  artifacts:
-    paths:
-      - docs-python.tar.gz
-    expire_in: 30 days
-  only:
-    - main
-
-#run ci
-generate-docs-go:
-  stage: docs
-  image: golang:latest
-  before_script:
-    - cd backend
-  script:
-    - make doc-gen
-    - tar -czf ../docs-go.tar.gz docs/sso/ docs/api-gateway/ docs/recommendation/ docs/cache/
-  artifacts:
-    paths:
-      - docs-go.tar.gz
-    expire_in: 30 days
-  only:
-    - main
+# generate-docs-python:
+#   stage: docs
+#   image: python:3.11-slim
+#   before_script:
+#     - apt-get update && apt-get install -y --no-install-recommends make && rm -rf /var/lib/apt/lists/*
+#     - cd backend
+#     - pip install sphinx 2>/dev/null || true
+#   script:
+#     - make doc-gen-python
+#     - tar -czf ../docs-python.tar.gz docs/parsing/ docs/analitic/
+#   artifacts:
+#     paths:
+#       - docs-python.tar.gz
+#     expire_in: 30 days
+#   only:
+#     - main
+#
+# #run ci
+# generate-docs-go:
+#   stage: docs
+#   image: golang:latest
+#   before_script:
+#     - cd backend
+#   script:
+#     - make doc-gen
+#     - tar -czf ../docs-go.tar.gz docs/sso/ docs/api-gateway/ docs/recommendation/ docs/cache/
+#   artifacts:
+#     paths:
+#       - docs-go.tar.gz
+#     expire_in: 30 days
+#   only:
+#     - main
 
 deploy-staging:
   stage: deploy
